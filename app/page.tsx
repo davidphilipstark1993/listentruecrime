@@ -1,6 +1,8 @@
+export const revalidate = 300
+
 import Link from 'next/link'
 import { Search, ArrowRight, TrendingUp, Star, Zap } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { supabasePublic } from '@/lib/supabase/public'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { Header } from '@/components/layout/header'
@@ -9,63 +11,42 @@ import { CATEGORIES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
 async function getFeaturedPodcasts() {
-  const supabase = await createClient()
-  const { data } = await supabase
+  const { data } = await supabasePublic
     .from('podcasts')
-    .select(`
-      *,
-      rating_stats:podcast_rating_stats(*)
-    `)
+    .select(`*, rating_stats:podcast_rating_stats(*)`)
     .eq('is_featured', true)
     .eq('is_published', true)
     .limit(6)
-
   return data ?? []
 }
 
 async function getTopRated() {
-  const supabase = await createClient()
-  const { data } = await supabase
+  const { data } = await supabasePublic
     .from('podcasts')
-    .select(`
-      *,
-      rating_stats:podcast_rating_stats(*)
-    `)
+    .select(`*, rating_stats:podcast_rating_stats(*)`)
     .eq('is_published', true)
     .order('binge_factor', { ascending: false })
     .limit(6)
-
   return data ?? []
 }
 
 async function getNewest() {
-  const supabase = await createClient()
-  const { data } = await supabase
+  const { data } = await supabasePublic
     .from('podcasts')
-    .select(`
-      *,
-      rating_stats:podcast_rating_stats(*)
-    `)
+    .select(`*, rating_stats:podcast_rating_stats(*)`)
     .eq('is_published', true)
     .order('created_at', { ascending: false })
     .limit(4)
-
   return data ?? []
 }
 
 async function getRecentReviews() {
-  const supabase = await createClient()
-  const { data } = await supabase
+  const { data } = await supabasePublic
     .from('reviews')
-    .select(`
-      *,
-      profile:profiles(username, avatar_url),
-      podcast:podcasts(title, slug)
-    `)
+    .select(`*, profile:profiles(username, avatar_url), podcast:podcasts(title, slug)`)
     .eq('approved', true)
     .order('created_at', { ascending: false })
     .limit(4)
-
   return data ?? []
 }
 
@@ -84,7 +65,6 @@ export default async function HomePage() {
       <main>
         {/* ═══════════════ HERO ═══════════════ */}
         <section className="relative min-h-[92vh] flex flex-col items-center justify-center px-4 pt-24 pb-16 overflow-hidden">
-          {/* Background layers */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(190,18,60,0.12),transparent)]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_30%_at_50%_100%,rgba(190,18,60,0.06),transparent)]" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:64px_64px]" />
@@ -116,7 +96,6 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            {/* CTAs */}
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Link href="/browse" className="btn-primary px-6 py-3 text-sm">
                 Browse Podcasts
@@ -127,7 +106,6 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* Social proof */}
             <div className="flex items-center justify-center gap-6 mt-12 text-stone-subtle text-sm">
               <div className="flex flex-col items-center">
                 <span className="text-stone font-semibold text-2xl font-serif">100+</span>
@@ -135,7 +113,7 @@ export default async function HomePage() {
               </div>
               <div className="w-px h-8 bg-white/[0.06]" />
               <div className="flex flex-col items-center">
-                <span className="text-stone font-semibold text-2xl font-serif">10</span>
+                <span className="text-stone font-semibold text-2xl font-serif">7</span>
                 <span className="text-xs">Rating dimensions</span>
               </div>
               <div className="w-px h-8 bg-white/[0.06]" />
@@ -200,13 +178,13 @@ export default async function HomePage() {
           <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 section-divider">
             <div className="flex items-end justify-between mb-8">
               <div>
-                <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Community</p>
+                <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Rankings</p>
                 <h2 className="heading-section text-2xl sm:text-3xl">
                   <Star size={18} className="inline mr-2 text-gold-light mb-0.5" fill="currentColor" />
                   Highest binge factor
                 </h2>
               </div>
-              <Link href="/browse?sort=highest_rated" className="text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
+              <Link href="/browse?sort=binge_desc" className="text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
                 Full rankings <ArrowRight size={14} />
               </Link>
             </div>
@@ -238,13 +216,13 @@ export default async function HomePage() {
           <div className="relative overflow-hidden rounded-2xl bg-ink-800 border border-white/[0.06] p-8 sm:p-12">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(190,18,60,0.1),transparent_60%)]" />
             <div className="relative z-10 max-w-lg">
-              <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-3">Coming Soon</p>
+              <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-3">Newsletter</p>
               <h2 className="heading-section text-2xl sm:text-3xl mb-3">
-                Join the waiting list
+                Your weekly true crime briefing
               </h2>
               <p className="text-stone-muted text-sm mb-6 leading-relaxed">
-                We're putting together a weekly true crime briefing — new podcast reviews, community picks, and hidden gems.
-                Leave your email and you'll be first to know when it launches.
+                New podcast reviews, community picks, and hidden gems delivered every week.
+                No filler, no spam — unsubscribe any time.
               </p>
               <NewsletterForm source="homepage_section" />
             </div>

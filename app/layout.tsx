@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Toaster } from 'react-hot-toast'
 import '@/app/globals.css'
 import { organizationSchema, websiteSchema } from '@/lib/seo'
+
+const GA_ID = 'G-9EHFH28GZF'
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://listentruecrime.com'
 
@@ -39,6 +42,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-GB" className="dark">
       <body className="antialiased">
+        {/* Google Analytics */}
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}');
+          `}
+        </Script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}

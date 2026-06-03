@@ -12,6 +12,8 @@ import { useSearchParams, useRouter } from 'next/navigation'
 
 type SortOption = 'newest' | 'title_asc' | 'binge_desc'
 
+const VALID_SORTS: SortOption[] = ['newest', 'title_asc', 'binge_desc']
+
 const CASE_TYPES = [
   'Murder', 'Cold Case', 'Missing Person', 'Serial Killer', 'Fraud',
   'Systemic Injustice', 'Courtroom', 'Domestic Abuse', 'Wrongful Conviction',
@@ -45,7 +47,8 @@ export function BrowseClient() {
   const [formatType, setFormatType] = useState('')
   const [platform, setPlatform] = useState('')
   const [minBinge, setMinBinge] = useState(0)
-  const [sort, setSort] = useState<SortOption>('newest')
+  const urlSort = searchParams.get('sort') as SortOption | null
+  const [sort, setSort] = useState<SortOption>(urlSort && VALID_SORTS.includes(urlSort) ? urlSort : 'newest')
 
   const supabase = createClient()
 

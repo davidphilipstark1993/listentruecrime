@@ -1,16 +1,19 @@
 import type { ReactNode } from 'react'
 import Link from 'next/link'
-import { Mail, Users, ArrowLeft } from 'lucide-react'
+import { Mail, Users, ArrowLeft, Headphones, MessageSquare, Upload, LayoutDashboard } from 'lucide-react'
 
 const navItems = [
-  { href: '/admin', label: 'Newsletter', icon: Mail },
+  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/podcasts', label: 'Podcasts', icon: Headphones },
+  { href: '/admin/reviews', label: 'Reviews', icon: MessageSquare },
+  { href: '/admin/newsletter', label: 'Newsletter', icon: Mail },
+  { href: '/admin/import', label: 'Import CSV', icon: Upload },
   { href: '/admin/users', label: 'Users', icon: Users },
 ]
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen flex">
-      {/* Sidebar */}
       <aside className="w-52 shrink-0 bg-ink-900 border-r border-white/[0.06] flex flex-col">
         <div className="p-5 border-b border-white/[0.06]">
           <Link href="/" className="flex items-center gap-1.5 text-stone-subtle hover:text-stone transition-colors text-xs mb-4">
@@ -34,7 +37,6 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           ))}
         </nav>
       </aside>
-
       <div className="flex-1 overflow-auto bg-ink-950">
         {children}
       </div>

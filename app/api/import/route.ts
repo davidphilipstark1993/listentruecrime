@@ -76,7 +76,6 @@ function rowToPodcast(row: CSVRow) {
     country: row.country ?? null,
     platforms: parseArray(row.platforms),
     image_url: row.image_url || null,
-    website_url: row.website_url || null,
     is_published: true,
   }
 }
