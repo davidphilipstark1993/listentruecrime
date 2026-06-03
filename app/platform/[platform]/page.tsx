@@ -118,5 +118,5 @@ export default async function PlatformPage({ params }: Props) {
 }
 
 export async function generateStaticParams() {
-  return PLATFORMS.map(p => ({ platform: encodeURIComponent(p) }))
+  return PLATFORMS.map(p => ({ platform: p }))
 }

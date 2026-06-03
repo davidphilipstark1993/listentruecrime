@@ -1,8 +1,10 @@
+export const revalidate = 3600
+
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { supabasePublic } from '@/lib/supabase/public'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
@@ -38,8 +40,7 @@ export default async function CountryPage({ params }: Props) {
   const name = COUNTRIES[country]
   if (!name) notFound()
 
-  const supabase = await createClient()
-  const { data } = await supabase
+  const { data } = await supabasePublic
     .from('podcasts')
     .select(`*, rating_stats:podcast_rating_stats(*)`)
     .eq('is_published', true)
@@ -116,4 +117,8 @@ export default async function CountryPage({ params }: Props) {
       <Footer />
     </>
   )
+}
+
+export async function generateStaticParams() {
+  return Object.keys(COUNTRIES).map(code => ({ country: code }))
 }
