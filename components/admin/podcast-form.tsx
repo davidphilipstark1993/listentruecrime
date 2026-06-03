@@ -43,6 +43,7 @@ export function PodcastForm({ podcast }: PodcastFormProps) {
     quick_verdict: podcast?.quick_verdict ?? '',
     platforms: (podcast?.platforms ?? []) as string[],
     image_url: podcast?.image_url ?? '',
+    website_url: podcast?.website_url ?? '',
     is_published: podcast?.is_published ?? false,
     is_featured: podcast?.is_featured ?? false,
   })
@@ -206,6 +207,10 @@ export function PodcastForm({ podcast }: PodcastFormProps) {
         <div>
           <label className={labelClass}>Image URL</label>
           <input className={inputClass} value={form.image_url} onChange={e => set('image_url', e.target.value)} placeholder="https://…" />
+        </div>
+        <div>
+          <label className={labelClass}>Website URL</label>
+          <input className={inputClass} type="url" value={form.website_url} onChange={e => set('website_url', e.target.value)} placeholder="https://…" />
         </div>
         <div>
           <label className={labelClass}>Platforms</label>
