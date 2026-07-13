@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { Star, Headphones, ArrowRight, ChevronDown, ChevronUp, Users, Mic, Play, ThumbsUp, ThumbsDown } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { RatingWidget } from '@/components/podcasts/rating-widget'
@@ -24,7 +24,7 @@ interface Props {
 type PodcastWithStats = Podcast & { rating_stats: RatingStats | null }
 
 async function getPodcast(slug: string) {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data } = await supabase
     .from('podcasts')
     .select(`*, rating_stats:podcast_rating_stats(*), review_count:podcast_review_counts(review_count)`)
@@ -35,7 +35,7 @@ async function getPodcast(slug: string) {
 }
 
 async function getReviews(podcastId: string) {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data } = await supabase
     .from('reviews')
     .select(`*, profile:profiles(username, avatar_url)`)
@@ -47,7 +47,7 @@ async function getReviews(podcastId: string) {
 }
 
 async function getSimilarPodcasts(podcast: any): Promise<PodcastWithStats[]> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const results: PodcastWithStats[] = []
   const seen = new Set<string>([podcast.slug])
 
@@ -167,14 +167,13 @@ const RatingBar = ({ label, value }: { label: string; value: number | null }) =>
 
 export default async function PodcastPage({ params }: Props) {
   const { slug } = await params
-  const [podcast, reviews] = await Promise.all([
-    getPodcast(slug),
-    getPodcast(slug).then(p => p ? getReviews(p.id) : []),
-  ])
-
+  const podcast = await getPodcast(slug)
   if (!podcast) notFound()
 
-  const similar = await getSimilarPodcasts(podcast)
+  const [reviews, similar] = await Promise.all([
+    getReviews(podcast.id),
+    getSimilarPodcasts(podcast),
+  ])
   const podcastCategories = getPodcastCategories(podcast)
   const whoIsItFor = getWhoIsItFor(podcast)
   const stats = podcast.rating_stats
@@ -772,4 +771,4 @@ export default async function PodcastPage({ params }: Props) {
   )
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
