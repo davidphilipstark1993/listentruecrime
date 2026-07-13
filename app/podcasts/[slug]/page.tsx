@@ -220,6 +220,8 @@ export default async function PodcastPage({ params }: Props) {
     },
   ]
 
+  const ratingCount = stats?.rating_count ?? 0
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'PodcastSeries',
@@ -228,16 +230,48 @@ export default async function PodcastPage({ params }: Props) {
     image: podcast.image_url,
     url: `${BASE}/podcasts/${slug}`,
     inLanguage: 'en',
+    datePublished: podcast.created_at?.split('T')[0],
+    dateModified: podcast.updated_at?.split('T')[0],
+    ...(podcast.case_types?.length && { genre: podcast.case_types }),
     ...(podcast.country && { countryOfOrigin: { '@type': 'Country', name: COUNTRIES[podcast.country] ?? podcast.country } }),
     ...(podcast.platforms?.length && { potentialAction: podcast.platforms.map((p: string) => ({ '@type': 'ListenAction', target: p })) }),
-    aggregateRating: overallScore ? {
-      '@type': 'AggregateRating',
-      ratingValue: overallScore,
+    // Only emit aggregateRating when there are real community ratings
+    ...(ratingCount >= 1 && overallScore != null && {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: overallScore,
+        bestRating: 10,
+        worstRating: 1,
+        ratingCount,
+      },
+    }),
+  }
+
+  // Editorial review schema — only when we have editorial content
+  const reviewSchema = (podcast.binge_factor != null || podcast.quick_verdict || podcast.newsletter_worthy_summary) ? {
+    '@context': 'https://schema.org',
+    '@type': 'Review',
+    itemReviewed: {
+      '@type': 'PodcastSeries',
+      name: podcast.title,
+      url: `${BASE}/podcasts/${slug}`,
+    },
+    author: {
+      '@type': 'Organization',
+      name: 'ListenTrueCrime',
+      url: BASE,
+    },
+    reviewRating: {
+      '@type': 'Rating',
+      ratingValue: podcast.binge_factor ?? 5,
       bestRating: 10,
       worstRating: 1,
-      ratingCount: stats?.rating_count,
-    } : undefined,
-  }
+      ...(podcast.quick_verdict && { description: podcast.quick_verdict }),
+    },
+    ...(podcast.newsletter_worthy_summary && { reviewBody: podcast.newsletter_worthy_summary }),
+    datePublished: podcast.created_at?.split('T')[0],
+    dateModified: podcast.updated_at?.split('T')[0],
+  } : null
 
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', url: BASE },
@@ -260,6 +294,7 @@ export default async function PodcastPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {reviewSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }} />}
       {personSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />}
 
       <Header />
