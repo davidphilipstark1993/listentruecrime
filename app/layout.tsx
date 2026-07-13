@@ -22,13 +22,13 @@ export const metadata: Metadata = {
     siteName: 'ListenTrueCrime',
     title: 'ListenTrueCrime — Discover Your Next True Crime Podcast',
     description: 'Discover, rate, and review the best true crime podcasts. Expert reviews, community ratings, and curated lists.',
-    images: [{ url: '/og-default.jpg', width: 1200, height: 630, alt: 'ListenTrueCrime' }],
+    images: [{ url: '/og', width: 1200, height: 630, alt: 'ListenTrueCrime' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'ListenTrueCrime',
     description: 'Discover your next true crime podcast.',
-    images: ['/og-default.jpg'],
+    images: ['/og'],
   },
   robots: { index: true, follow: true },
   alternates: { canonical: BASE },
@@ -55,7 +55,7 @@ const organizationSchema = {
   '@type': 'Organization',
   name: 'ListenTrueCrime',
   url: BASE,
-  logo: `${BASE}/og-default.jpg`,
+  logo: `${BASE}/og`,
   sameAs: [],
 }
 

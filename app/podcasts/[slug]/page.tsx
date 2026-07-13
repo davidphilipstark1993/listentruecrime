@@ -126,16 +126,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const description = podcast.short_description ?? podcast.description?.slice(0, 160) ?? ''
 
+  const ogParams = new URLSearchParams({ title: podcast.title })
+  if (podcast.quick_verdict) ogParams.set('verdict', podcast.quick_verdict)
+  if (podcast.binge_factor) ogParams.set('score', String(podcast.binge_factor))
+  ogParams.set('sub', podcast.case_types?.slice(0, 2).join(' · ') ?? 'True Crime Podcast')
+  const brandedOg = `${BASE}/og?${ogParams.toString()}`
+
   return {
     title: `${podcast.title} Review — Is It Worth Listening To?`,
     description,
     openGraph: {
       title: `${podcast.title} | ListenTrueCrime`,
       description,
-      images: podcast.image_url ? [{ url: podcast.image_url }] : [],
+      // Use podcast cover art when available, otherwise fall back to branded OG
+      images: podcast.image_url
+        ? [{ url: podcast.image_url, width: 1400, height: 1400, alt: podcast.title }]
+        : [{ url: brandedOg, width: 1200, height: 630, alt: podcast.title }],
       url: `${BASE}/podcasts/${slug}`,
     },
-    twitter: { card: 'summary_large_image', title: podcast.title, description },
+    twitter: {
+      card: 'summary_large_image',
+      title: podcast.title,
+      description,
+      images: podcast.image_url ? [podcast.image_url] : [brandedOg],
+    },
     alternates: { canonical: `${BASE}/podcasts/${slug}` },
   }
 }
@@ -294,7 +308,7 @@ export default async function PodcastPage({ params }: Props) {
           <div className="absolute inset-0 h-72 bg-gradient-to-b from-ink-800 to-ink-950" />
           {podcast.image_url && (
             <div className="absolute inset-0 h-72 opacity-10">
-              <Image src={podcast.image_url} alt="" fill className="object-cover" />
+              <Image src={podcast.image_url} alt="" fill className="object-cover" sizes="100vw" />
             </div>
           )}
           <div className="absolute inset-0 h-72 bg-gradient-to-b from-transparent via-ink-950/50 to-ink-950" />
@@ -313,7 +327,7 @@ export default async function PodcastPage({ params }: Props) {
               {/* Cover */}
               <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] shrink-0 bg-ink-700">
                 {podcast.image_url ? (
-                  <Image src={podcast.image_url} alt={podcast.title} fill className="object-cover" priority />
+                  <Image src={podcast.image_url} alt={podcast.title} fill className="object-cover" priority sizes="(max-width: 640px) 128px, 160px" />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <Headphones size={40} className="text-ink-500" />
