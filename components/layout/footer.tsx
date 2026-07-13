@@ -23,6 +23,7 @@ const FOOTER_LINKS = {
   ],
   site: [
     { href: '/about', label: 'About' },
+    { href: '/how-we-review', label: 'How We Review' },
     { href: '/browse', label: 'Browse' },
   ],
 }

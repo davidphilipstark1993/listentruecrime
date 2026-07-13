@@ -396,7 +396,7 @@ export default async function PodcastPage({ params }: Props) {
             {/* Main column */}
             <div className="lg:col-span-2 space-y-8">
 
-              {/* AI Summary / Quick verdict */}
+              {/* Editorial Quick Verdict */}
               {(podcast.newsletter_worthy_summary || podcast.quick_verdict) && (
                 <div className="card p-6 border-crimson/20 bg-crimson/5">
                   <div className="flex items-center gap-2 mb-3">
@@ -417,6 +417,14 @@ export default async function PodcastPage({ params }: Props) {
                       "{podcast.newsletter_worthy_summary}"
                     </blockquote>
                   )}
+                  <div className="mt-3 pt-3 border-t border-white/[0.06] flex items-center justify-between">
+                    <span className="text-stone-subtle text-xs">
+                      By the <span className="text-stone-muted">ListenTrueCrime</span> editorial team
+                    </span>
+                    <Link href="/how-we-review" className="text-xs text-stone-subtle hover:text-crimson transition-colors">
+                      How we review →
+                    </Link>
+                  </div>
                 </div>
               )}
 

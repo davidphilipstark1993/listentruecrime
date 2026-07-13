@@ -113,6 +113,9 @@ export default function AboutPage() {
             <p>
               Reviews are moderated before appearing publicly to keep the community constructive and on-topic.
             </p>
+            <Link href="/how-we-review" className="inline-flex items-center gap-1.5 text-crimson text-sm hover:underline">
+              Read our full review methodology →
+            </Link>
           </div>
         </section>
 
