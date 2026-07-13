@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --font-inter: 'Inter', system-ui, sans-serif;
+  --font-playfair: 'Playfair Display', Georgia, serif;
+}
+
+@layer base {
+  * {
+    border-color: rgba(255, 255, 255, 0.07);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ink-950 text-stone font-sans;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+    min-height: 100dvh;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-crimson/30 text-stone;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { @apply bg-ink-900; }
+  ::-webkit-scrollbar-thumb { @apply bg-ink-600 rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-ink-500; }
+}
+
+@layer components {
+  /* ——— Typography ——— */
+  .heading-display {
+    @apply font-serif text-stone leading-tight tracking-tight;
+  }
+
+  .heading-section {
+    @apply font-serif text-stone tracking-tight;
+  }
+
+  /* ——— Cards ——— */
+  .card {
+    @apply bg-ink-800 border border-white/[0.06] rounded-lg shadow-card
+           transition-all duration-300;
+  }
+
+  .card-hover {
+    @apply card hover:border-white/[0.12] hover:shadow-card-hover
+           hover:-translate-y-0.5;
+  }
+
+  /* ——— Score badge ——— */
+  .score-badge {
+    @apply inline-flex items-center justify-center
+           w-9 h-9 rounded-lg text-sm font-semibold tabular-nums;
+  }
+
+  /* ——— Buttons ——— */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-lg
+           bg-crimson text-white font-medium text-sm
+           transition-all duration-200 hover:bg-crimson-hover
+           active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg
+           text-stone-muted font-medium text-sm
+           transition-all duration-200 hover:bg-ink-700 hover:text-stone
+           active:scale-[0.98];
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-lg
+           border border-white/10 text-stone font-medium text-sm
+           transition-all duration-200 hover:border-white/20 hover:bg-ink-700
+           active:scale-[0.98];
+  }
+
+  /* ——— Input ——— */
+  .input-base {
+    @apply w-full bg-ink-800 border border-white/10 rounded-lg px-4 py-2.5
+           text-stone placeholder:text-stone-subtle text-sm
+           outline-none focus:border-crimson/50 focus:ring-1 focus:ring-crimson/20
+           transition-colors duration-200;
+  }
+
+  /* ——— Section divider ——— */
+  .section-divider {
+    @apply border-t border-white/[0.06];
+  }
+
+  /* ——— Skeleton loader ——— */
+  .skeleton {
+    @apply bg-ink-700 rounded animate-pulse;
+    background-image: linear-gradient(
+      90deg,
+      theme('colors.ink.700') 0%,
+      theme('colors.ink.600') 50%,
+      theme('colors.ink.700') 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* ——— Tag pill ——— */
+  .tag {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full
+           text-2xs font-medium uppercase tracking-wide
+           bg-ink-700 text-stone-muted border border-white/[0.06];
+  }
+
+  .tag-crimson {
+    @apply tag bg-crimson/10 text-crimson border-crimson/20;
+  }
+
+  /* ——— Star rating ——— */
+  .star-filled { @apply text-gold-light; }
+  .star-empty  { @apply text-ink-500; }
+}
+
+/* ——— Noise texture overlay ——— */
+.noise-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
