@@ -13,11 +13,6 @@ export const metadata: Metadata = {
   },
   description:
     'Discover, rate, and review the best true crime podcasts. Expert reviews, community ratings, and curated lists — find your next obsession.',
-  keywords: [
-    'true crime podcasts', 'best true crime podcasts', 'podcast recommendations',
-    'true crime podcast reviews', 'crime podcast database', 'podcasts like serial',
-    'best investigative podcasts', 'best cold case podcasts',
-  ],
   authors: [{ name: 'ListenTrueCrime' }],
   creator: 'ListenTrueCrime',
   openGraph: {

@@ -17,22 +17,22 @@ export const metadata: Metadata = {
   title: `Best True Crime Podcasts (${YEAR}) — Expert Reviews & Rankings`,
   description:
     'The definitive list of the best true crime podcasts, ranked by expert review and community ratings. From Serial to Crime Junkie, Casefile to Teacher\'s Pet — find your next obsession.',
-  keywords: [
-    'best true crime podcasts', 'top true crime podcasts', `best true crime podcasts ${YEAR}`,
-    'true crime podcast rankings', 'podcasts like serial', 'true crime podcast recommendations',
-    'best investigative podcasts', 'best cold case podcasts',
-  ],
   openGraph: {
     title: `Best True Crime Podcasts (${YEAR}) | ListenTrueCrime`,
     description: 'Expert-reviewed and community-rated. Find your next true crime obsession.',
     url: `${BASE}/best-true-crime-podcasts`,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `Best True Crime Podcasts (${YEAR})`,
+    description: 'Expert-reviewed and community-rated. From Serial to Crime Junkie, Casefile to Teacher\'s Pet — find your next obsession.',
   },
   alternates: { canonical: `${BASE}/best-true-crime-podcasts` },
 }
 
 const faqs = [
   {
-    q: 'What are the best true crime podcasts in 2024/2025?',
+    q: `What are the best true crime podcasts in ${YEAR}?`,
     a: 'The best true crime podcasts right now include Serial (the podcast that started the genre\'s golden age), Casefile (the definitive Australian crime podcast), Crime Junkie (for weekly case summaries), In the Dark (for serious investigative journalism), and Teacher\'s Pet (arguably the finest single-season true crime podcast ever made). Our community ratings and expert scores are updated regularly as new shows emerge.',
   },
   {

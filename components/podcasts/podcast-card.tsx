@@ -81,7 +81,9 @@ export function PodcastCard({ podcast, priority = false, className }: PodcastCar
           <div className="flex items-center gap-1 text-stone-subtle text-2xs">
             <Star size={10} className="text-gold-light" fill="currentColor" />
             {score ? score.toFixed(1) : '—'}
-            <span className="text-stone-faint">({ratingCount})</span>
+            {ratingCount > 0 && (
+              <span className="text-stone-faint">({ratingCount})</span>
+            )}
           </div>
           {podcast.binge_factor && (
             <span className="text-stone-subtle text-2xs">

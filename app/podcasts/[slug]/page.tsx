@@ -125,20 +125,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!podcast) return {}
 
   const description = podcast.short_description ?? podcast.description?.slice(0, 160) ?? ''
-  const caseTypeKeywords = podcast.case_types?.map((t: string) => `${t.toLowerCase()} podcast`) ?? []
-  const countryKeyword = podcast.country ? [`${COUNTRIES[podcast.country]?.toLowerCase() ?? podcast.country.toLowerCase()} true crime`] : []
 
   return {
     title: `${podcast.title} Review — Is It Worth Listening To?`,
     description,
-    keywords: [
-      `${podcast.title}`,
-      `${podcast.title} podcast review`,
-      `${podcast.title} episodes`,
-      ...caseTypeKeywords,
-      ...countryKeyword,
-      'true crime podcast',
-    ],
     openGraph: {
       title: `${podcast.title} | ListenTrueCrime`,
       description,
@@ -343,8 +333,22 @@ export default async function PodcastPage({ params }: Props) {
                 </div>
 
                 <h1 className="heading-display text-3xl sm:text-4xl mb-2">{podcast.title}</h1>
-                <p className="text-stone-subtle text-sm mb-3">
+                <p className="text-stone-subtle text-sm mb-1">
                   True crime podcast review — {year}
+                </p>
+                <p className="text-stone-subtle text-xs mb-3">
+                  Reviewed{' '}
+                  <time dateTime={podcast.created_at?.split('T')[0]}>
+                    {new Date(podcast.created_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
+                  </time>
+                  {podcast.updated_at !== podcast.created_at && (
+                    <>
+                      {' · Updated '}
+                      <time dateTime={podcast.updated_at?.split('T')[0]}>
+                        {new Date(podcast.updated_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
+                      </time>
+                    </>
+                  )}
                 </p>
 
                 {/* Score row */}
