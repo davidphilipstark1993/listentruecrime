@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Toaster } from 'react-hot-toast'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { ExitIntent } from '@/components/newsletter/exit-intent'
 import '@/app/globals.css'
 
@@ -73,6 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         {children}
         <ExitIntent />
+        <GoogleAnalytics gaId="G-9EHFH28GZF" />
         <Toaster
           position="bottom-right"
           toastOptions={{
