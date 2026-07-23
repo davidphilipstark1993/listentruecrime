@@ -308,7 +308,7 @@ export default async function PodcastPage({ params }: Props) {
           <div className="absolute inset-0 h-72 bg-gradient-to-b from-ink-800 to-ink-950" />
           {podcast.image_url && (
             <div className="absolute inset-0 h-72 opacity-10">
-              <Image src={podcast.image_url} alt="" fill className="object-cover" sizes="100vw" />
+              <Image src={podcast.image_url} alt="" fill className="object-cover" sizes="100vw" quality={20} />
             </div>
           )}
           <div className="absolute inset-0 h-72 bg-gradient-to-b from-transparent via-ink-950/50 to-ink-950" />
@@ -795,6 +795,18 @@ export default async function PodcastPage({ params }: Props) {
       <Footer />
     </>
   )
+}
+
+// Pre-build all published podcast pages at deploy time so every deploy
+// serves current HTML (header, canonicals, schema) without waiting for ISR.
+// revalidate keeps community rating data fresh in the background.
+export async function generateStaticParams() {
+  const supabase = createAdminClient()
+  const { data } = await supabase
+    .from('podcasts')
+    .select('slug')
+    .eq('is_published', true)
+  return (data ?? []).map(p => ({ slug: p.slug }))
 }
 
 export const revalidate = 3600

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, ChevronDown, ChevronUp, Headphones, Star } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
@@ -96,7 +97,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    keywords: [`podcasts like ${podcast.title}`, `${podcast.title} alternatives`, `similar to ${podcast.title}`, 'true crime podcast recommendations'],
     openGraph: {
       title,
       description,
@@ -435,6 +435,13 @@ export default async function PodcastsLikePage({ params }: Props) {
   )
 }
 
-// Pages are generated on-demand; sitemap.ts ensures they're indexed
+export async function generateStaticParams() {
+  const supabase = createAdminClient()
+  const { data } = await supabase
+    .from('podcasts')
+    .select('slug')
+    .eq('is_published', true)
+  return (data ?? []).map(p => ({ slug: p.slug }))
+}
+
 export const revalidate = 3600
-export async function generateStaticParams() { return [] }

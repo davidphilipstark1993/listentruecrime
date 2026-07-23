@@ -28,7 +28,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${h1} (${year}) | ListenTrueCrime`,
     description,
-    keywords: [`${name.toLowerCase()} true crime podcasts`, `best podcasts on ${name.toLowerCase()}`, `true crime ${name.toLowerCase()}`, 'true crime podcast recommendations'],
     openGraph: {
       title: `${h1} (${year}) | ListenTrueCrime`,
       description,

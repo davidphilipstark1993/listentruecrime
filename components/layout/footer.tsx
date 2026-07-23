@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 
 const FOOTER_LINKS = {
@@ -24,6 +25,7 @@ const FOOTER_LINKS = {
   site: [
     { href: '/about', label: 'About' },
     { href: '/how-we-review', label: 'How We Review' },
+    { href: '/blog', label: 'Blog' },
     { href: '/browse', label: 'Browse' },
   ],
 }
@@ -50,11 +52,10 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 rounded bg-crimson flex items-center justify-center text-white text-xs font-bold font-serif">
-                TC
-              </div>
-              <span className="font-serif text-stone font-medium text-sm">ListenTrueCrime</span>
+            <div className="mb-3">
+              <Link href="/">
+                <Image src="/logo.png" alt="ListenTrueCrime" width={100} height={100} className="h-10 w-auto object-contain" />
+              </Link>
             </div>
             <p className="text-stone-subtle text-xs leading-relaxed mb-4">
               The best place to discover, rate, and discuss true crime podcasts. Expert reviews and community ratings.

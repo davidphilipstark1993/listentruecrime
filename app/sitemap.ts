@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { CATEGORIES, COUNTRIES, PLATFORMS } from '@/lib/types/database'
-
+import { getAllPosts, getAllCategories, getAllTags } from '@/lib/blog'
 import { BASE } from '@/lib/seo/config'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -43,15 +43,42 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }))
 
+  const blogPosts = getAllPosts()
+  const blogCategories = getAllCategories()
+  const blogTags = getAllTags()
+
+  const blogPostUrls: MetadataRoute.Sitemap = blogPosts.map(p => ({
+    url: `${BASE}/blog/${p.slug}`,
+    lastModified: new Date(p.updated ?? p.date),
+    changeFrequency: 'weekly',
+    priority: 0.75,
+  }))
+
+  const blogCategoryUrls: MetadataRoute.Sitemap = blogCategories.map(c => ({
+    url: `${BASE}/blog/category/${c.slug}`,
+    changeFrequency: 'weekly',
+    priority: 0.6,
+  }))
+
+  const blogTagUrls: MetadataRoute.Sitemap = blogTags.map(t => ({
+    url: `${BASE}/blog/tag/${t.slug}`,
+    changeFrequency: 'weekly',
+    priority: 0.5,
+  }))
+
   return [
     { url: BASE, changeFrequency: 'daily', priority: 1.0, lastModified: new Date() },
     { url: `${BASE}/browse`, changeFrequency: 'daily', priority: 0.9, lastModified: new Date() },
     { url: `${BASE}/best-true-crime-podcasts`, changeFrequency: 'weekly', priority: 0.95, lastModified: new Date() },
+    { url: `${BASE}/blog`, changeFrequency: 'daily', priority: 0.85, lastModified: new Date() },
     { url: `${BASE}/about`, changeFrequency: 'monthly', priority: 0.4 },
     ...podcastUrls,
     ...podcastsLikeUrls,
     ...categoryUrls,
     ...countryUrls,
     ...platformUrls,
+    ...blogPostUrls,
+    ...blogCategoryUrls,
+    ...blogTagUrls,
   ]
 }

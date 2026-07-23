@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { Search, Menu, X, BookMarked, User } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -11,6 +12,7 @@ import { cn } from '@/lib/utils'
 const NAV_LINKS = [
   { href: '/browse', label: 'Browse' },
   { href: '/best-true-crime-podcasts', label: 'Best Podcasts' },
+  { href: '/blog', label: 'Blog' },
   { href: '/category/cold-cases', label: 'Cold Cases' },
   { href: '/about', label: 'About' },
 ]
@@ -51,13 +53,15 @@ export function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-7 h-7 rounded bg-crimson flex items-center justify-center text-white text-xs font-bold font-serif tracking-tight shadow-glow-crimson group-hover:shadow-none transition-shadow">
-                TC
-              </div>
-              <span className="font-serif text-stone font-medium text-[15px] hidden sm:block">
-                ListenTrueCrime
-              </span>
+            <Link href="/" className="flex items-center group">
+              <Image
+                src="/logo.png"
+                alt="ListenTrueCrime"
+                width={160}
+                height={160}
+                className="h-14 w-auto object-contain"
+                priority
+              />
             </Link>
 
             {/* Desktop nav */}
