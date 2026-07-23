@@ -26,6 +26,7 @@ const FOOTER_LINKS = {
     { href: '/about', label: 'About' },
     { href: '/how-we-review', label: 'How We Review' },
     { href: '/blog', label: 'Blog' },
+    { href: '/cases', label: 'Cases' },
     { href: '/browse', label: 'Browse' },
   ],
 }

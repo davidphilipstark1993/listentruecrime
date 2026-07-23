@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils'
 const NAV_LINKS = [
   { href: '/browse', label: 'Browse' },
   { href: '/best-true-crime-podcasts', label: 'Best Podcasts' },
+  { href: '/cases', label: 'Cases' },
   { href: '/blog', label: 'Blog' },
   { href: '/category/cold-cases', label: 'Cold Cases' },
   { href: '/about', label: 'About' },

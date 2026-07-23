@@ -16,6 +16,7 @@ import { BASE } from '@/lib/seo/config'
 import { countryFlag, formatRelativeDate, scoreBg, cn } from '@/lib/utils'
 import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
+import { getCasesForPodcast } from '@/lib/cases'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -180,6 +181,7 @@ export default async function PodcastPage({ params }: Props) {
   ])
   const podcastCategories = getPodcastCategories(podcast)
   const whoIsItFor = getWhoIsItFor(podcast)
+  const relatedCases = getCasesForPodcast(slug)
   const stats = podcast.rating_stats
   const overallScore = stats?.avg_overall
   const year = new Date().getFullYear()
@@ -718,6 +720,25 @@ export default async function PodcastPage({ params }: Props) {
                     <span>{COUNTRIES[podcast.country]} True Crime</span>
                     <ArrowRight size={12} className="ml-auto" />
                   </Link>
+                </div>
+              )}
+
+              {/* Cases covered */}
+              {relatedCases.length > 0 && (
+                <div className="card p-5">
+                  <h3 className="font-serif text-sm text-stone mb-3 uppercase tracking-wide">Cases covered</h3>
+                  <div className="space-y-2">
+                    {relatedCases.map(c => (
+                      <Link
+                        key={c.slug}
+                        href={`/cases/${c.slug}`}
+                        className="flex items-start gap-2 text-stone-muted hover:text-stone text-xs transition-colors group"
+                      >
+                        <ArrowRight size={11} className="text-crimson shrink-0 mt-0.5" />
+                        <span>{c.name}</span>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               )}
 

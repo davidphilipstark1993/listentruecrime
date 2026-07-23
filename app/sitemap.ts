@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { CATEGORIES, COUNTRIES, PLATFORMS } from '@/lib/types/database'
 import { getAllPosts, getAllCategories, getAllTags } from '@/lib/blog'
+import { getAllCases } from '@/lib/cases'
 import { BASE } from '@/lib/seo/config'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -43,6 +44,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }))
 
+  const cases = getAllCases()
+  const caseUrls: MetadataRoute.Sitemap = cases.map(c => ({
+    url: `${BASE}/cases/${c.slug}`,
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  }))
+
   const blogPosts = getAllPosts()
   const blogCategories = getAllCategories()
   const blogTags = getAllTags()
@@ -67,6 +75,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   return [
+    { url: `${BASE}/cases`, changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
+    ...caseUrls,
     { url: BASE, changeFrequency: 'daily', priority: 1.0, lastModified: new Date() },
     { url: `${BASE}/browse`, changeFrequency: 'daily', priority: 0.9, lastModified: new Date() },
     { url: `${BASE}/best-true-crime-podcasts`, changeFrequency: 'weekly', priority: 0.95, lastModified: new Date() },
