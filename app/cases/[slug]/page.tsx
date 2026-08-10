@@ -8,6 +8,7 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { getAllCaseSlugs, getCaseBySlug } from '@/lib/cases'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
+import { getAuthor } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
 import { COUNTRIES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
@@ -96,7 +97,11 @@ export default async function CasePage({ params }: Props) {
     headline: `${c.name} — Overview and Podcast Guide`,
     description: c.summary[0],
     url: `${BASE}/cases/${slug}`,
-    author: { '@type': 'Organization', name: 'ListenTrueCrime', url: BASE },
+    author: {
+      '@type': 'Person',
+      name: getAuthor('david-stark').name,
+      url: `${BASE}/authors/david-stark`,
+    },
     publisher: { '@type': 'Organization', name: 'ListenTrueCrime', url: BASE },
   }
 
