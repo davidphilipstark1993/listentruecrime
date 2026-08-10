@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Star, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
@@ -61,8 +61,10 @@ const faqs = [
   },
 ]
 
+export const revalidate = 3600
+
 export default async function BestTrueCrimePodcastsPage() {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const [{ data: topRated }, { data: newest }, { data: featured }] = await Promise.all([
     supabase

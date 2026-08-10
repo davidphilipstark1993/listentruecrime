@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Search, ArrowRight, TrendingUp, Star, Zap } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { NewsletterLeadMagnet } from '@/components/newsletter/newsletter-lead-magnet'
@@ -9,8 +9,10 @@ import { Footer } from '@/components/layout/footer'
 import { CATEGORIES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
+export const revalidate = 3600
+
 async function getFeaturedPodcasts() {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data } = await supabase
     .from('podcasts')
     .select(`
@@ -25,7 +27,7 @@ async function getFeaturedPodcasts() {
 }
 
 async function getTopRated() {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data } = await supabase
     .from('podcasts')
     .select(`
@@ -40,7 +42,7 @@ async function getTopRated() {
 }
 
 async function getNewest() {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data } = await supabase
     .from('podcasts')
     .select(`
@@ -55,7 +57,7 @@ async function getNewest() {
 }
 
 async function getRecentReviews() {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data } = await supabase
     .from('reviews')
     .select(`

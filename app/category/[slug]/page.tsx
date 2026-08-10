@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
@@ -16,6 +16,8 @@ import type { Podcast, RatingStats } from '@/lib/types/database'
 interface Props {
   params: Promise<{ slug: string }>
 }
+
+export const revalidate = 3600
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
@@ -35,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const baseDescription = seo?.intro[0] ?? `Discover the best ${cat.label.toLowerCase()} true crime podcasts. ${cat.description}`
 
   return {
-    title: `${h1} (${year}) — Curated Picks | ListenTrueCrime`,
+    title: `${h1} (${year}) — Curated Picks`,
     description: (baseDescription + descriptionSuffix).slice(0, 160),
     openGraph: {
       title: `${h1} (${year}) | ListenTrueCrime`,
@@ -55,7 +57,7 @@ export default async function CategoryPage({ params }: Props) {
   const caseTypes = CATEGORY_TO_CASE_TYPES[slug] ?? []
   const year = new Date().getFullYear()
 
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   let q = supabase
     .from('podcasts')
     .select(`*, rating_stats:podcast_rating_stats(*)`)

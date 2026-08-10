@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight, ChevronDown, ChevronUp } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
@@ -17,6 +17,8 @@ interface Props {
   params: Promise<{ country: string }>
 }
 
+export const revalidate = 3600
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { country } = await params
   const name = COUNTRIES[country]
@@ -28,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = seo?.intro[0] ?? `The best true crime podcasts from ${name}. Real cases, real crimes, expertly reviewed and community-rated.`
 
   return {
-    title: `${h1} (${year}) | ListenTrueCrime`,
+    title: `${h1} (${year})`,
     description,
     openGraph: {
       title: `${h1} (${year}) | ListenTrueCrime`,
@@ -48,7 +50,7 @@ export default async function CountryPage({ params }: Props) {
   const h1 = seo?.h1 ?? `Best ${name} True Crime Podcasts`
   const year = new Date().getFullYear()
 
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data } = await supabase
     .from('podcasts')
     .select(`*, rating_stats:podcast_rating_stats(*)`)
