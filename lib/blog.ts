@@ -20,6 +20,7 @@ export interface BlogPost {
   tags: string[]
   featured?: boolean
   image?: string
+  author?: string          // author slug — defaults to 'david-stark'
   relatedPodcasts?: string[]
   faqs?: BlogFAQ[]
   content: string
@@ -50,6 +51,7 @@ export function getAllPosts(): BlogPost[] {
         tags: data.tags ?? [],
         featured: data.featured ?? false,
         image: data.image,
+        author: data.author ?? 'david-stark',
         relatedPodcasts: data.relatedPodcasts ?? [],
         faqs: data.faqs ?? [],
         content,
@@ -78,6 +80,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
     tags: data.tags ?? [],
     featured: data.featured ?? false,
     image: data.image,
+    author: data.author ?? 'david-stark',
     relatedPodcasts: data.relatedPodcasts ?? [],
     faqs: data.faqs ?? [],
     content,

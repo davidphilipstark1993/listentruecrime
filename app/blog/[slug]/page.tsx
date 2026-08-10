@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { getAllPosts, getPostBySlug, getRelatedPosts, extractTOC } from '@/lib/blog'
+import { getAuthor } from '@/lib/authors'
 import { Breadcrumbs } from '@/components/blog/Breadcrumbs'
 import { AuthorBox } from '@/components/blog/AuthorBox'
 import { TableOfContents } from '@/components/blog/TableOfContents'
@@ -13,10 +14,13 @@ import { RelatedPosts } from '@/components/blog/RelatedPosts'
 import { ShareButtons } from '@/components/blog/ShareButtons'
 import { Callout } from '@/components/blog/Callout'
 import { PodcastRecommendation } from '@/components/blog/PodcastRecommendation'
+import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { BASE } from '@/lib/seo/config'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { autolinkPodcasts } from '@/lib/podcast-autolink'
 
 function slugifyText(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -54,11 +58,13 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }): Promise<Metadata> {
-  const post = getPostBySlug(params.slug)
+  const { slug } = await params
+  const post = getPostBySlug(slug)
   if (!post) return {}
 
+  const author = getAuthor(post.author ?? 'david-stark')
   const ogParams = new URLSearchParams({ title: post.title })
   ogParams.set('sub', post.category)
   const ogImage = `${BASE}/og?${ogParams.toString()}`
@@ -74,6 +80,7 @@ export async function generateMetadata({
       type: 'article',
       publishedTime: post.date,
       modifiedTime: post.updated ?? post.date,
+      authors: [`${BASE}/authors/${author.slug}`],
       tags: post.tags,
       images: [{ url: ogImage, width: 1200, height: 630 }],
     },
@@ -82,17 +89,39 @@ export async function generateMetadata({
       title: post.title,
       description: post.description,
       images: [ogImage],
+      creator: author.twitter,
     },
   }
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = getPostBySlug(params.slug)
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const post = getPostBySlug(slug)
   if (!post) notFound()
 
+  const author = getAuthor(post.author ?? 'david-stark')
   const related = getRelatedPosts(post, 3)
   const toc = extractTOC(post.content)
-  const postUrl = `${BASE}/blog/${post.slug}`
+  const postUrl = `${BASE}/blog/${slug}`
+
+  // Fetch related podcasts and all podcast titles for auto-linking
+  const supabase = createAdminClient()
+  const [relatedPodcastsRes, allPodcastTitlesRes] = await Promise.all([
+    post.relatedPodcasts?.length
+      ? supabase
+          .from('podcasts')
+          .select('*, rating_stats:podcast_rating_stats(*)')
+          .in('slug', post.relatedPodcasts)
+          .eq('is_published', true)
+      : Promise.resolve({ data: [] }),
+    supabase.from('podcasts').select('slug, title').eq('is_published', true),
+  ])
+
+  const relatedPodcastData = relatedPodcastsRes.data ?? []
+  const allTitles = (allPodcastTitlesRes.data ?? []) as Array<{ slug: string; title: string }>
+
+  // Pre-process MDX content to auto-link podcast names
+  const linkedContent = autolinkPodcasts(post.content, allTitles)
 
   const schema = {
     '@context': 'https://schema.org',
@@ -103,9 +132,10 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     dateModified: post.updated ?? post.date,
     url: postUrl,
     author: {
-      '@type': 'Organization',
-      name: 'ListenTrueCrime',
-      url: BASE,
+      '@type': 'Person',
+      name: author.name,
+      jobTitle: author.role,
+      url: `${BASE}/authors/${author.slug}`,
     },
     publisher: {
       '@type': 'Organization',
@@ -158,6 +188,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
                   date={post.date}
                   updated={post.updated}
                   readingTime={post.readingTime}
+                  authorSlug={post.author}
                 />
               </header>
 
@@ -199,7 +230,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
                 prose-table:text-sm prose-thead:text-stone prose-tbody:text-stone-muted
                 prose-th:border-white/[0.1] prose-td:border-white/[0.06]">
                 <MDXRemote
-                  source={post.content}
+                  source={linkedContent}
                   options={{
                     mdxOptions: {
                       remarkPlugins: [remarkGfm],
@@ -213,6 +244,20 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
 
               {/* FAQs */}
               {post.faqs && post.faqs.length > 0 && <FAQ faqs={post.faqs} />}
+
+              {/* Related podcasts */}
+              {relatedPodcastData.length > 0 && (
+                <section className="mt-12">
+                  <h2 className="font-serif text-xl font-semibold text-stone mb-5">
+                    Podcasts mentioned in this article
+                  </h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {relatedPodcastData.map((pod: any) => (
+                      <PodcastCard key={pod.slug} podcast={pod} />
+                    ))}
+                  </div>
+                </section>
+              )}
 
               {/* Newsletter */}
               <div className="mt-12 rounded-xl border border-crimson/20 bg-crimson/[0.04] p-6">

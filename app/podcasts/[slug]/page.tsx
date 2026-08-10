@@ -7,11 +7,13 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { RatingWidget } from '@/components/podcasts/rating-widget'
+import { HelpfulWidget } from '@/components/podcasts/helpful-widget'
 import { ReviewForm } from '@/components/podcasts/review-form'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
 import { getPros, getCons, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
+import { getAuthor } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
 import { countryFlag, formatRelativeDate, scoreBg, cn } from '@/lib/utils'
 import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/database'
@@ -262,9 +264,9 @@ export default async function PodcastPage({ params }: Props) {
       url: `${BASE}/podcasts/${slug}`,
     },
     author: {
-      '@type': 'Organization',
-      name: 'ListenTrueCrime',
-      url: BASE,
+      '@type': 'Person',
+      name: getAuthor('david-stark').name,
+      url: `${BASE}/authors/david-stark`,
     },
     reviewRating: {
       '@type': 'Rating',
@@ -435,7 +437,7 @@ export default async function PodcastPage({ params }: Props) {
                   )}
                   <div className="mt-3 pt-3 border-t border-white/[0.06] flex items-center justify-between">
                     <span className="text-stone-subtle text-xs">
-                      By the <span className="text-stone-muted">ListenTrueCrime</span> editorial team
+                      By <Link href="/authors/david-stark" className="text-stone-muted hover:text-crimson transition-colors">David Stark</Link>
                     </span>
                     <Link href="/how-we-review" className="text-xs text-stone-subtle hover:text-crimson transition-colors">
                       How we review →
@@ -587,7 +589,10 @@ export default async function PodcastPage({ params }: Props) {
 
               {/* Rate this */}
               <div>
-                <h2 className="font-serif text-xl text-stone mb-4">Rate this podcast</h2>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-serif text-xl text-stone">Rate this podcast</h2>
+                  <HelpfulWidget podcastSlug={podcast.slug} />
+                </div>
                 <RatingWidget podcastId={podcast.id} podcastTitle={podcast.title} />
               </div>
 
@@ -754,6 +759,23 @@ export default async function PodcastPage({ params }: Props) {
                 </Link>
                 <p className="text-stone-subtle text-xs mt-2">Find your next obsession</p>
               </div>
+
+              {/* Badge */}
+              {podcast.quick_verdict && podcast.quick_verdict !== 'Avoid' && (
+                <div className="card p-5">
+                  <h3 className="font-serif text-sm text-stone mb-2 uppercase tracking-wide">Podcaster?</h3>
+                  <p className="text-stone-subtle text-xs mb-3">
+                    Show listeners this podcast has been independently reviewed.
+                  </p>
+                  <Link
+                    href="/badge"
+                    className="flex items-center gap-2 text-crimson hover:text-crimson/80 text-sm font-medium transition-colors"
+                  >
+                    Get your badge
+                    <ArrowRight size={12} className="ml-auto" />
+                  </Link>
+                </div>
+              )}
 
               {/* Newsletter */}
               <div className="card p-5 bg-gradient-to-br from-ink-800 to-ink-700">

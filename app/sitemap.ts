@@ -1,12 +1,13 @@
 import type { MetadataRoute } from 'next'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { CATEGORIES, COUNTRIES, PLATFORMS } from '@/lib/types/database'
 import { getAllPosts, getAllCategories, getAllTags } from '@/lib/blog'
 import { getAllCases } from '@/lib/cases'
+import { getAllAuthors } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data: podcasts } = await supabase
     .from('podcasts')
     .select('slug, updated_at')
@@ -74,9 +75,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }))
 
+  const authors = getAllAuthors()
+  const authorUrls: MetadataRoute.Sitemap = authors.map(a => ({
+    url: `${BASE}/authors/${a.slug}`,
+    changeFrequency: 'monthly' as const,
+    priority: 0.5,
+  }))
+
   return [
     { url: `${BASE}/cases`, changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
     ...caseUrls,
+    { url: `${BASE}/badge`, changeFrequency: 'monthly', priority: 0.4 },
+    ...authorUrls,
     { url: BASE, changeFrequency: 'daily', priority: 1.0, lastModified: new Date() },
     { url: `${BASE}/browse`, changeFrequency: 'daily', priority: 0.9, lastModified: new Date() },
     { url: `${BASE}/best-true-crime-podcasts`, changeFrequency: 'weekly', priority: 0.95, lastModified: new Date() },
