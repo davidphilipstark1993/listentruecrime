@@ -164,4 +164,7 @@ export const COUNTRIES: Record<string, string> = {
   CA: 'Canada',
   IE: 'Ireland',
   NZ: 'New Zealand',
+  MT: 'Malta',
+  BE: 'Belgium',
+  KE: 'Kenya',
 }

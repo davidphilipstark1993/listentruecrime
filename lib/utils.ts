@@ -36,6 +36,7 @@ export function countryFlag(code: string | null | undefined): string {
   if (!code) return ''
   const flags: Record<string, string> = {
     US: '🇺🇸', UK: '🇬🇧', AU: '🇦🇺', CA: '🇨🇦', IE: '🇮🇪', NZ: '🇳🇿',
+    MT: '🇲🇹', BE: '🇧🇪', KE: '🇰🇪',
   }
   return flags[code] ?? ''
 }
