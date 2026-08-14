@@ -37,6 +37,12 @@ export function countryFlag(code: string | null | undefined): string {
   const flags: Record<string, string> = {
     US: '🇺🇸', UK: '🇬🇧', AU: '🇦🇺', CA: '🇨🇦', IE: '🇮🇪', NZ: '🇳🇿',
     MT: '🇲🇹', BE: '🇧🇪', KE: '🇰🇪',
+    BR: '🇧🇷', IN: '🇮🇳', PH: '🇵🇭', ZA: '🇿🇦',
+    IS: '🇮🇸', SE: '🇸🇪', PK: '🇵🇰', SG: '🇸🇬', HK: '🇭🇰', JP: '🇯🇵',
+    KR: '🇰🇷', CN: '🇨🇳', DE: '🇩🇪', FR: '🇫🇷', ES: '🇪🇸', MX: '🇲🇽',
+    AR: '🇦🇷', IT: '🇮🇹', NL: '🇳🇱', NO: '🇳🇴', DK: '🇩🇰', FI: '🇫🇮',
+    PL: '🇵🇱', GR: '🇬🇷', RU: '🇷🇺', TR: '🇹🇷', NG: '🇳🇬', JM: '🇯🇲',
+    TT: '🇹🇹', TH: '🇹🇭',
   }
   return flags[code] ?? ''
 }
