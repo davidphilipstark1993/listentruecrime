@@ -7,6 +7,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { getAllCaseSlugs, getCaseBySlug } from '@/lib/cases'
+import { getAllTags } from '@/lib/blog'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
 import { getAuthor } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
@@ -84,6 +85,10 @@ export default async function CasePage({ params }: Props) {
       return db ? { ...db, caseNote: cp.note, bestStart: cp.bestStart } : null
     })
     .filter(Boolean) as (PodcastWithStats & { caseNote?: string; bestStart?: boolean })[]
+
+  const seriesTag = getAllTags().find(t =>
+    c.aliases.some(a => a.toLowerCase() === t.name.toLowerCase())
+  )
 
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', url: BASE },
@@ -308,6 +313,21 @@ export default async function CasePage({ params }: Props) {
                       </li>
                     ))}
                   </ul>
+                </div>
+              )}
+
+              {seriesTag && (
+                <div className="card p-5 border-crimson/25 bg-crimson/5">
+                  <h3 className="font-serif text-sm text-stone mb-3 uppercase tracking-wide">Blog series</h3>
+                  <p className="text-stone-muted text-xs mb-3 leading-relaxed">
+                    {seriesTag.count} in-depth articles on this case, from the original investigation to the latest developments.
+                  </p>
+                  <Link
+                    href={`/blog/tag/${seriesTag.slug}`}
+                    className="inline-flex items-center gap-1 text-xs text-crimson hover:underline font-medium"
+                  >
+                    Read the full series <ArrowRight size={11} />
+                  </Link>
                 </div>
               )}
 

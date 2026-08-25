@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Rss } from 'lucide-react'
-import { getAllPosts, getAllCategories } from '@/lib/blog'
+import { getAllPosts, getAllCategories, getAllTags } from '@/lib/blog'
+import { getAllCases } from '@/lib/cases'
 import { PostCard } from '@/components/blog/PostCard'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
@@ -25,6 +26,12 @@ export const metadata: Metadata = {
 export default function BlogIndexPage() {
   const posts = getAllPosts()
   const categories = getAllCategories()
+  const tags = getAllTags()
+  const series = getAllCases()
+    .map(c => tags.find(t => c.aliases.some(a => a.toLowerCase() === t.name.toLowerCase())))
+    .filter((t): t is NonNullable<typeof t> => Boolean(t) && t!.count >= 3)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 3)
   const featured = posts.filter(p => p.featured).slice(0, 3)
   const latest = posts.slice(0, 12)
 
@@ -124,6 +131,30 @@ export default function BlogIndexPage() {
 
             {/* Sidebar */}
             <aside className="space-y-8">
+              {/* Case deep-dive series */}
+              {series.length > 0 && (
+                <div className="rounded-xl border border-white/[0.07] bg-ink-800/40 p-5">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-stone-subtle mb-4">
+                    Case Deep Dives
+                  </p>
+                  <ul className="space-y-2">
+                    {series.map(tag => (
+                      <li key={tag.slug}>
+                        <Link
+                          href={`/blog/tag/${tag.slug}`}
+                          className="flex items-center justify-between text-sm text-stone-muted hover:text-stone transition-colors"
+                        >
+                          <span>{tag.name} Case</span>
+                          <span className="text-xs text-stone-subtle bg-ink-700 px-1.5 py-0.5 rounded">
+                            {tag.count}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               {/* Categories */}
               {categories.length > 0 && (
                 <div className="rounded-xl border border-white/[0.07] bg-ink-800/40 p-5">

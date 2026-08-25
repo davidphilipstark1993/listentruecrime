@@ -3,7 +3,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  serverExternalPackages: ['gray-matter', 'reading-time'],
+  experimental: {
+    serverComponentsExternalPackages: ['gray-matter', 'reading-time'],
+  },
   transpilePackages: ['next-mdx-remote'],
   trailingSlash: false,
   images: {

@@ -41,6 +41,17 @@ Our methodology is fully explained at: ${BASE}/how-we-review
 - True crime on Spotify: ${BASE}/platform/Spotify
 - True crime on Apple Podcasts: ${BASE}/platform/Apple%20Podcasts
 
+## Case deep-dive articles and blog
+
+Beyond podcast reviews, we publish original editorial coverage of major true crime cases — fact-checked, sourced, and clearly distinguishing established facts from allegations and unproven claims.
+
+- All true crime cases (overview + podcast guide per case): ${BASE}/cases
+- Full article blog: ${BASE}/blog
+- Christian Brueckner / Madeleine McCann case (10-article series): ${BASE}/cases/madeleine-mccann and ${BASE}/blog/tag/madeleine-mccann
+  - Start here: ${BASE}/blog/who-is-christian-brueckner-madeleine-mccann
+- Lucy Letby case (4-article series): ${BASE}/cases/lucy-letby and ${BASE}/blog/tag/lucy-letby
+  - Start here: ${BASE}/blog/lucy-letby-timeline
+
 ## Full podcast listing
 
 A compact listing of every podcast in our database (name, verdict, binge score, description, URL) is available at: ${BASE}/llms-full.txt

@@ -450,4 +450,36 @@ export const CASES: CaseData[] = [
       },
     ],
   },
+  {
+    slug: 'lucy-letby',
+    name: 'The Countess of Chester Hospital Murders',
+    aliases: ['Lucy Letby', 'Countess of Chester', 'Operation Hummingbird'],
+    year: 2015,
+    location: 'Chester, England',
+    country: 'UK',
+    status: 'solved',
+    published: true,
+    summary: [
+      'Between June 2015 and June 2016, seventeen babies on the neonatal unit at the Countess of Chester Hospital died or suffered sudden, unexplained collapses. Nurse Lucy Letby, who had worked on the unit since 2012, was present for a disproportionate number of the incidents — a pattern consultant paediatricians began raising informally with hospital management from October 2015, only for Letby to remain on the ward, by the consultants\' own later account, for several more months before being moved to an administrative role in July 2016.',
+      'Cheshire Police launched Operation Hummingbird in May 2017, building a case with no crime scene or forensic trace evidence — instead working through years of medical charts, staffing rotas, and material recovered from Letby\'s home, including handwritten notes and more than 250 nursing handover sheets she should not have had. She was charged in November 2020 and tried at Manchester Crown Court from October 2022. On 18 August 2023, a jury convicted her of seven counts of murder and seven of attempted murder; a 2024 retrial on a single remaining count added a fifteenth conviction. She is serving 15 whole-life prison terms and denies all charges.',
+      'Letby\'s convictions remain the legal record, upheld through two rounds of appeal. Since 2025, however, an international panel of neonatal specialists led by Dr Shoo Lee — whose own published research the prosecution relied on for its central medical theory — has said publicly it found no medical evidence of deliberate harm in the cases reviewed. A formal application is under active review by the Criminal Cases Review Commission, and a statutory public inquiry chaired by Lady Justice Thirlwall is separately examining how the hospital handled the concerns raised about her. As of August 2026, neither process has changed her legal status.',
+    ],
+    podcasts: [
+      { slug: 'amanda-knox-hosts-doubt-lucy-letby', bestStart: true, note: 'Amanda Knox examines the case in detail, episode by episode' },
+    ],
+    faqs: [
+      {
+        q: 'Was Lucy Letby convicted?',
+        a: 'Yes. Two juries convicted her — in August 2023 and at a retrial in July 2024 — of murdering seven babies and attempting to murder seven others. She is serving 15 whole-life prison terms and two applications for permission to appeal have been refused by the Court of Appeal.',
+      },
+      {
+        q: 'Is Lucy Letby\'s conviction being challenged?',
+        a: 'Yes, through two separate active processes: a formal application under review by the Criminal Cases Review Commission, following a 2025 challenge to the medical evidence by an international panel of specialists, and a statutory public inquiry into how the hospital handled concerns raised about her. Neither has changed her legal status — her convictions remain in place as of August 2026.',
+      },
+      {
+        q: 'What podcast covers the Lucy Letby case?',
+        a: 'DOUBT: The Case of Lucy Letby, hosted by Amanda Knox and reviewed on this site, gives a detailed episode-by-episode account running from the original investigation through to the ongoing legal challenge.',
+      },
+    ],
+  },
 ]
