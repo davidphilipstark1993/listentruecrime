@@ -35,8 +35,8 @@ export default async function AdminDashboard() {
   const cards = [
     { label: 'Total podcasts', value: stats.podcasts, icon: Mic2, href: '/admin/podcasts', color: 'text-crimson' },
     { label: 'Pending reviews', value: stats.pendingReviews, icon: MessageSquare, href: '/admin/reviews', color: 'text-gold-light' },
-    { label: 'Newsletter subs', value: stats.subscribers, icon: Users, href: '#', color: 'text-stone' },
-    { label: 'Community ratings', value: stats.ratings, icon: Star, href: '#', color: 'text-gold-light' },
+    { label: 'Newsletter subs', value: stats.subscribers, icon: Users, href: '/admin/newsletter', color: 'text-stone' },
+    { label: 'Community ratings', value: stats.ratings, icon: Star, href: '/admin/ratings', color: 'text-gold-light' },
   ]
 
   return (
