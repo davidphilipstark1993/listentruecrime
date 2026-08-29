@@ -6,6 +6,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// Strips stray wrapping quotes and a literal trailing "\n" (backslash-n as two
+// characters, not a real newline) from an env var value — a copy/paste artifact
+// from a malformed .env file that has broken builds when values were pasted
+// straight into Vercel's dashboard/CLI.
+export function sanitizeEnv(raw: string): string {
+  return raw.trim().replace(/^"+|"+$/g, '').replace(/\\n$/g, '').trim()
+}
+
 export function slugify(text: string): string {
   return text
     .toLowerCase()

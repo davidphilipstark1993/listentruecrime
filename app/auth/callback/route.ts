@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { sanitizeEnv } from '@/lib/utils'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -10,8 +11,8 @@ export async function GET(request: Request) {
   if (code) {
     const cookieStore = await cookies()
     const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      sanitizeEnv(process.env.NEXT_PUBLIC_SUPABASE_URL!),
+      sanitizeEnv(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!),
       {
         cookies: {
           getAll() { return cookieStore.getAll() },
@@ -27,7 +28,10 @@ export async function GET(request: Request) {
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`)
     }
+    return NextResponse.redirect(`${origin}/auth/error?reason=${encodeURIComponent(error.message)}`)
   }
 
-  return NextResponse.redirect(`${origin}/auth/error`)
+  const errorParam = searchParams.get('error_description') ?? searchParams.get('error')
+  const suffix = errorParam ? `?reason=${encodeURIComponent(errorParam)}` : ''
+  return NextResponse.redirect(`${origin}/auth/error${suffix}`)
 }

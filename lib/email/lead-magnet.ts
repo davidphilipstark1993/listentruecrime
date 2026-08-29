@@ -1,4 +1,5 @@
 import { BASE } from '@/lib/seo/config'
+import { sanitizeEnv } from '@/lib/utils'
 
 interface PodcastEntry {
   title: string
@@ -132,7 +133,7 @@ export function buildLeadMagnetHtml(podcasts: PodcastEntry[]): string {
 }
 
 export async function sendLeadMagnetEmail(email: string, podcasts: PodcastEntry[]): Promise<void> {
-  const apiKey = process.env.RESEND_API_KEY
+  const apiKey = process.env.RESEND_API_KEY ? sanitizeEnv(process.env.RESEND_API_KEY) : undefined
   if (!apiKey) return // graceful degradation — no key, no send
 
   const html = buildLeadMagnetHtml(podcasts)
