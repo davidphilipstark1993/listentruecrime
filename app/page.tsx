@@ -244,13 +244,13 @@ export default async function HomePage() {
               <div className="relative z-10">
                 <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-3">Newsletter</p>
                 <h2 className="heading-section text-2xl sm:text-3xl mb-3">
-                  Your weekly true crime briefing
+                  5 True Crime Podcasts Worth Listening To
                 </h2>
                 <p className="text-stone-muted text-sm mb-6 leading-relaxed">
-                  New podcast reviews, community picks, and the hidden gems you haven't found yet.
-                  Sent every week. Unsubscribe any time.
+                  Every week, we'll send you five true crime podcasts we've discovered and think are
+                  worth your time — from new shows and hidden gems to established favourites.
                 </p>
-                <NewsletterForm source="homepage_section" />
+                <NewsletterForm source="homepage_section" showFirstName />
               </div>
             </div>
             <NewsletterLeadMagnet variant="card" source="homepage_lead_magnet" />

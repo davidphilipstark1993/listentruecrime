@@ -54,7 +54,7 @@ export function ExitIntent() {
       const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'exit_intent' }),
+        body: JSON.stringify({ email, source: 'exit_intent', consent: true }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Something went wrong')
@@ -136,6 +136,9 @@ export function ExitIntent() {
             >
               No thanks, I'll find podcasts on my own
             </button>
+            <p className="text-2xs text-stone-subtle mt-3 text-center leading-snug">
+              By subscribing you agree to receive the weekly ListenTrueCrime newsletter. Unsubscribe anytime.
+            </p>
           </>
         )}
       </div>

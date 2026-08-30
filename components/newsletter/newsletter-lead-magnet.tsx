@@ -27,7 +27,7 @@ export function NewsletterLeadMagnet({
       const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source }),
+        body: JSON.stringify({ email, source, consent: true }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Something went wrong')
@@ -56,19 +56,22 @@ export function NewsletterLeadMagnet({
 
   if (variant === 'inline') {
     return (
-      <form onSubmit={handleSubmit} className={cn('flex gap-2', className)}>
-        <input
-          type="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          placeholder="your@email.com"
-          required
-          className="input-base flex-1 text-sm py-2"
-        />
-        <button type="submit" disabled={loading} className="btn-primary py-2 px-4 text-sm shrink-0">
-          {loading ? '…' : 'Get the list'}
-        </button>
-      </form>
+      <div className={className}>
+        <form onSubmit={handleSubmit} className="flex gap-2">
+          <input
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="your@email.com"
+            required
+            className="input-base flex-1 text-sm py-2"
+          />
+          <button type="submit" disabled={loading} className="btn-primary py-2 px-4 text-sm shrink-0">
+            {loading ? '…' : 'Get the list'}
+          </button>
+        </form>
+        <p className="text-2xs text-stone-subtle mt-1.5">Plus our weekly newsletter. Unsubscribe anytime.</p>
+      </div>
     )
   }
 
@@ -86,19 +89,22 @@ export function NewsletterLeadMagnet({
               <p className="text-stone-subtle text-xs">Our editors' definitive list with ratings and where to start.</p>
             </div>
           </div>
-          <form onSubmit={handleSubmit} className="flex gap-2 sm:w-auto w-full">
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="your@email.com"
-              required
-              className="input-base flex-1 sm:w-48 text-sm py-2"
-            />
-            <button type="submit" disabled={loading} className="btn-primary py-2 px-3 text-sm shrink-0">
-              {loading ? '…' : <><ArrowRight size={14} /></>}
-            </button>
-          </form>
+          <div className="sm:w-auto w-full">
+            <form onSubmit={handleSubmit} className="flex gap-2">
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                required
+                className="input-base flex-1 sm:w-48 text-sm py-2"
+              />
+              <button type="submit" disabled={loading} className="btn-primary py-2 px-3 text-sm shrink-0">
+                {loading ? '…' : <><ArrowRight size={14} /></>}
+              </button>
+            </form>
+            <p className="text-2xs text-stone-subtle mt-1.5">Plus our weekly newsletter. Unsubscribe anytime.</p>
+          </div>
         </div>
       </div>
     )

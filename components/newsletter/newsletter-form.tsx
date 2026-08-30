@@ -7,11 +7,13 @@ import { cn } from '@/lib/utils'
 interface NewsletterFormProps {
   source?: string
   variant?: 'default' | 'hero' | 'minimal'
+  showFirstName?: boolean
   className?: string
 }
 
-export function NewsletterForm({ source = 'unknown', variant = 'default', className }: NewsletterFormProps) {
+export function NewsletterForm({ source = 'unknown', variant = 'default', showFirstName = false, className }: NewsletterFormProps) {
   const [email, setEmail] = useState('')
+  const [firstName, setFirstName] = useState('')
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
 
@@ -24,7 +26,7 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', classN
       const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source }),
+        body: JSON.stringify({ email, first_name: firstName || undefined, source, consent: true }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Something went wrong')
@@ -36,6 +38,12 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', classN
       setLoading(false)
     }
   }
+
+  const consentNote = (
+    <p className="text-2xs text-stone-subtle mt-2 leading-snug">
+      By subscribing you agree to receive the weekly ListenTrueCrime newsletter. Unsubscribe anytime.
+    </p>
+  )
 
   if (done) {
     return (
@@ -52,46 +60,61 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', classN
 
   if (variant === 'minimal') {
     return (
-      <form onSubmit={handleSubmit} className={cn('flex gap-2', className)}>
-        <input
-          type="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          placeholder="your@email.com"
-          required
-          className="input-base flex-1 text-sm py-2"
-        />
-        <button type="submit" disabled={loading} className="btn-primary py-2 px-4 text-sm">
-          {loading ? '…' : 'Subscribe'}
-        </button>
-      </form>
+      <div className={className}>
+        <form onSubmit={handleSubmit} className="flex gap-2">
+          <input
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="your@email.com"
+            required
+            className="input-base flex-1 text-sm py-2"
+          />
+          <button type="submit" disabled={loading} className="btn-primary py-2 px-4 text-sm">
+            {loading ? '…' : 'Subscribe'}
+          </button>
+        </form>
+        <p className="text-2xs text-stone-subtle mt-1.5">You can unsubscribe anytime.</p>
+      </div>
     )
   }
 
   return (
-    <form onSubmit={handleSubmit} className={cn('flex flex-col sm:flex-row gap-2', className)}>
-      <div className="relative flex-1">
-        <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-subtle pointer-events-none" />
-        <input
-          type="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          placeholder="your@email.com"
-          required
-          className="input-base pl-9"
-        />
-      </div>
-      <button
-        type="submit"
-        disabled={loading || !email}
-        className={cn(
-          'btn-primary shrink-0',
-          variant === 'hero' && 'px-6'
+    <div className={className}>
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
+        {showFirstName && (
+          <input
+            type="text"
+            value={firstName}
+            onChange={e => setFirstName(e.target.value)}
+            placeholder="First name (optional)"
+            className="input-base sm:w-40"
+          />
         )}
-      >
-        {loading ? 'Subscribing…' : 'Subscribe'}
-        {!loading && <ArrowRight size={14} />}
-      </button>
-    </form>
+        <div className="relative flex-1">
+          <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-subtle pointer-events-none" />
+          <input
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="your@email.com"
+            required
+            className="input-base pl-9"
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={loading || !email}
+          className={cn(
+            'btn-primary shrink-0',
+            variant === 'hero' && 'px-6'
+          )}
+        >
+          {loading ? 'Subscribing…' : 'Subscribe'}
+          {!loading && <ArrowRight size={14} />}
+        </button>
+      </form>
+      {consentNote}
+    </div>
   )
 }
