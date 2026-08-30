@@ -8,9 +8,14 @@ interface FeedFields {
   language?: string
 }
 
-const parser = new Parser<FeedFields>({
+interface ItemFields {
+  itunesDuration?: string
+}
+
+const parser = new Parser<FeedFields, ItemFields>({
   customFields: {
     feed: ['itunes:author', 'language'],
+    item: [['itunes:duration', 'itunesDuration']],
   },
 })
 
@@ -21,6 +26,19 @@ export interface ParsedFeed {
   itemCount: number
   earliestItemDate: string | null
   latestItemDate: string | null
+  /** Average duration (minutes) of the most recent episodes that publish a duration — null if none do. */
+  averageEpisodeMinutes: number | null
+}
+
+/** Parses itunes:duration, which may be "HH:MM:SS", "MM:SS", or a plain seconds integer. */
+function parseDurationToMinutes(raw: string): number | null {
+  const trimmed = raw.trim()
+  if (/^\d+$/.test(trimmed)) return Number(trimmed) / 60
+  const parts = trimmed.split(':').map(Number)
+  if (parts.some(isNaN)) return null
+  if (parts.length === 3) return (parts[0] * 3600 + parts[1] * 60 + parts[2]) / 60
+  if (parts.length === 2) return (parts[0] * 60 + parts[1]) / 60
+  return null
 }
 
 /**
@@ -36,6 +54,15 @@ export async function parseFeed(rssUrl: string): Promise<ParsedFeed | null> {
       .filter((t): t is number => t !== null)
       .sort((a, b) => a - b)
 
+    const recentDurations = feed.items
+      .slice(0, 10)
+      .map(item => (item.itunesDuration ? parseDurationToMinutes(item.itunesDuration) : null))
+      .filter((m): m is number => m !== null && m > 0)
+
+    const averageEpisodeMinutes = recentDurations.length
+      ? recentDurations.reduce((sum, m) => sum + m, 0) / recentDurations.length
+      : null
+
     return {
       description: feed.description ?? null,
       hostName: feed['itunes:author'] ?? null,
@@ -43,6 +70,7 @@ export async function parseFeed(rssUrl: string): Promise<ParsedFeed | null> {
       itemCount: feed.items.length,
       earliestItemDate: dates.length ? new Date(dates[0]).toISOString().slice(0, 10) : null,
       latestItemDate: dates.length ? new Date(dates[dates.length - 1]).toISOString().slice(0, 10) : null,
+      averageEpisodeMinutes,
     }
   } catch (err) {
     console.error(`RSS parse error for ${rssUrl}:`, err)

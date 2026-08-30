@@ -54,6 +54,10 @@ export async function researchCandidate(candidate: CandidateFeed): Promise<Resea
     notes.push('Case focus could not be determined from the available description.')
   }
 
+  if (feed && feed.averageEpisodeMinutes == null) {
+    notes.push('Episode length could not be determined (feed does not publish itunes:duration).')
+  }
+
   return {
     ...candidate,
     sourceNotes,
@@ -64,6 +68,7 @@ export async function researchCandidate(candidate: CandidateFeed): Promise<Resea
     episodeCount,
     launchDate: feed?.earliestItemDate ?? null,
     latestEpisodeDate: feed?.latestItemDate ?? null,
+    averageEpisodeMinutes: feed?.averageEpisodeMinutes ?? null,
     format: null, // deliberately not inferred — no reliable signal from feed metadata alone
     language: feed?.language ?? null,
     country: null, // not reliably derivable from RSS/iTunes without guessing

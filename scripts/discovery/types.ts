@@ -18,6 +18,8 @@ export interface ResearchedCandidate extends CandidateFeed {
   language: string | null
   country: string | null
   caseFocus: string[]
+  /** Average minutes per episode across the 10 most recent items with a published duration — null if unavailable. */
+  averageEpisodeMinutes: number | null
   researchNotes: string[]
   researchFailed: boolean
 }
