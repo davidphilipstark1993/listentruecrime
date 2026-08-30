@@ -87,6 +87,7 @@ async function main() {
           score: withScore.score,
           apple_url: withScore.appleUrl,
           artwork_url: withScore.artworkUrl,
+          sources: withScore.sourceNotes,
           status: withScore.researchFailed ? 'discovered' : 'researched',
           researched_at: withScore.researchFailed ? null : new Date().toISOString(),
         })

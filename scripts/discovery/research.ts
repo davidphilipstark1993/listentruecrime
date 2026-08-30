@@ -21,12 +21,19 @@ const TRUE_CRIME_CASE_TERMS: { term: string; label: string }[] = [
  */
 export async function researchCandidate(candidate: CandidateFeed): Promise<ResearchedCandidate> {
   const notes: string[] = []
+  const sourceNotes = [...candidate.sourceNotes]
 
   const feed = candidate.rssUrl ? await parseFeed(candidate.rssUrl) : null
   const itunes = await enrichFromItunes(candidate.podcastName)
 
   if (candidate.rssUrl && !feed) {
     notes.push('RSS feed could not be fetched or parsed.')
+  }
+  if (feed && candidate.rssUrl) {
+    sourceNotes.push({ url: candidate.rssUrl, note: 'Podcast\'s own RSS feed — description, episode count, dates, host (if present)' })
+  }
+  if (itunes) {
+    sourceNotes.push({ url: 'https://itunes.apple.com/search', note: 'Apple iTunes Search API — artwork, genre, approximate episode count' })
   }
 
   const hostName = feed?.hostName ?? null
@@ -49,6 +56,7 @@ export async function researchCandidate(candidate: CandidateFeed): Promise<Resea
 
   return {
     ...candidate,
+    sourceNotes,
     appleUrl: candidate.appleUrl ?? itunes?.appleUrl ?? null,
     artworkUrl: candidate.artworkUrl ?? itunes?.artworkUrl ?? null,
     description,
