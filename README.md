@@ -66,12 +66,13 @@ Then visit `/admin` to access the dashboard.
 
 Set `NEWSLETTER_PROVIDER` in your env to one of:
 
+- `sendgrid` — default for ListenTrueCrime. Requires `SENDGRID_API_KEY`, `SENDGRID_FROM_EMAIL`, `SENDGRID_FROM_NAME`, `SENDGRID_LIST_ID`. Also powers the weekly newsletter send, welcome email, and unsubscribe/bounce sync — see `NEWSLETTER_SYSTEM.md` for the full weekly automation.
 - `supabase` — stores emails in the `newsletter_subscribers` table only (no external provider)
 - `beehiiv` — requires `BEEHIIV_API_KEY` and `BEEHIIV_PUBLICATION_ID`
 - `convertkit` — requires `CONVERTKIT_API_KEY` and `CONVERTKIT_FORM_ID`
 - `mailchimp` — requires `MAILCHIMP_API_KEY`, `MAILCHIMP_LIST_ID`, `MAILCHIMP_SERVER_PREFIX`
 
-All providers also log subscriptions to Supabase.
+All providers also log subscriptions to Supabase — a provider sync failure never loses the subscriber record.
 
 ## Importing podcasts from CSV
 
