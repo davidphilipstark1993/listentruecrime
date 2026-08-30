@@ -82,6 +82,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }))
 
+  const { data: newsletters } = await supabase
+    .from('newsletters')
+    .select('slug, updated_at')
+    .in('status', ['sent', 'archived'])
+
+  const newsletterUrls: MetadataRoute.Sitemap = (newsletters ?? []).map(n => ({
+    url: `${BASE}/newsletter/${n.slug}`,
+    lastModified: n.updated_at ?? new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.75,
+  }))
+
   return [
     { url: `${BASE}/cases`, changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
     ...caseUrls,
@@ -91,6 +103,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/browse`, changeFrequency: 'daily', priority: 0.9, lastModified: new Date() },
     { url: `${BASE}/best-true-crime-podcasts`, changeFrequency: 'weekly', priority: 0.95, lastModified: new Date() },
     { url: `${BASE}/blog`, changeFrequency: 'daily', priority: 0.85, lastModified: new Date() },
+    { url: `${BASE}/newsletter`, changeFrequency: 'daily', priority: 0.85, lastModified: new Date() },
     { url: `${BASE}/about`, changeFrequency: 'monthly', priority: 0.4 },
     ...podcastUrls,
     ...podcastsLikeUrls,
@@ -100,5 +113,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...blogPostUrls,
     ...blogCategoryUrls,
     ...blogTagUrls,
+    ...newsletterUrls,
   ]
 }
