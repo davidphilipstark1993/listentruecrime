@@ -29,7 +29,7 @@ export async function POST(req: Request, { params }: Props) {
   const { data: newDiscovery } = await admin.from('podcast_discoveries').select('*').eq('id', newDiscoveryId).single()
   if (!newDiscovery) return NextResponse.json({ error: 'Replacement candidate not found' }, { status: 404 })
 
-  const blurb = await draftBlurb({
+  const { text: blurb } = await draftBlurb({
     podcastName: newDiscovery.podcast_name,
     description: newDiscovery.description,
     hosts: newDiscovery.hosts,

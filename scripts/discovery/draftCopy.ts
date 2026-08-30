@@ -37,10 +37,16 @@ Ground rules — these are hard constraints, not suggestions:
 - Keep it to 2-3 short paragraphs: what it is, why it was picked, who it's for.
 - Output plain text only, no markdown, no headers.`
 
-export async function draftBlurb(candidate: BlurbInput): Promise<string> {
+export interface DraftBlurbResult {
+  text: string
+  usedAI: boolean
+  usage?: { inputTokens: number; outputTokens: number }
+}
+
+export async function draftBlurb(candidate: BlurbInput): Promise<DraftBlurbResult> {
   const apiKey = process.env.ANTHROPIC_API_KEY ? sanitizeEnv(process.env.ANTHROPIC_API_KEY) : undefined
   if (!apiKey) {
-    return templateBlurb(candidate)
+    return { text: templateBlurb(candidate), usedAI: false }
   }
 
   const facts = {
@@ -78,15 +84,23 @@ export async function draftBlurb(candidate: BlurbInput): Promise<string> {
 
     if (!res.ok) {
       console.error(`Anthropic API error ${res.status}: ${await res.text()}`)
-      return templateBlurb(candidate)
+      return { text: templateBlurb(candidate), usedAI: false }
     }
 
     const data = await res.json()
     const text = data.content?.[0]?.text?.trim()
-    return text || templateBlurb(candidate)
+    if (!text) return { text: templateBlurb(candidate), usedAI: false }
+
+    const usage = data.usage
+      ? { inputTokens: data.usage.input_tokens, outputTokens: data.usage.output_tokens }
+      : undefined
+    if (usage) {
+      console.log(`Anthropic usage for "${candidate.podcastName}": ${usage.inputTokens} in / ${usage.outputTokens} out`)
+    }
+    return { text, usedAI: true, usage }
   } catch (err) {
     console.error('Anthropic API request failed:', err)
-    return templateBlurb(candidate)
+    return { text: templateBlurb(candidate), usedAI: false }
   }
 }
 
