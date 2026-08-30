@@ -1,6 +1,6 @@
 import { createDiscoveryClient } from './supabaseClient'
 import { searchPodcastIndex } from './sources/podcastIndex'
-import { loadExistingKeys, filterNewCandidates } from './dedupe'
+import { loadExistingRecords, classifyCandidates } from './dedupe'
 import { researchCandidate } from './research'
 import { scoreCandidate } from './score'
 import { buildShortlist } from './shortlist'
@@ -13,20 +13,42 @@ async function main() {
 
   console.log('Step 1/6: discovering candidates from Podcast Index…')
   const found = await searchPodcastIndex()
-  const existing = await loadExistingKeys(supabase)
-  const newCandidates = filterNewCandidates(found, existing).slice(0, 30)
-  console.log(`  found ${found.length}, ${newCandidates.length} new after dedupe`)
+  const existingRecords = await loadExistingRecords(supabase)
+  const { newCandidates: newCandidatesAll, likelyDuplicates, possibleDuplicates } = classifyCandidates(found, existingRecords)
+  const newCandidates = newCandidatesAll.slice(0, 30)
+  console.log(`  found ${found.length}: ${newCandidates.length} new, ${likelyDuplicates.length} likely duplicates, ${possibleDuplicates.length} possible duplicates`)
 
-  if (!newCandidates.length) {
-    console.log('No new candidates this run. Exiting.')
+  if (likelyDuplicates.length) {
+    console.log('Step 1b/6: recording likely duplicates (rejected, with reason)…')
+    await supabase.from('podcast_discoveries').insert(
+      likelyDuplicates.map(({ candidate, match }) => ({
+        podcast_name: candidate.podcastName,
+        normalized_name: candidate.normalizedName,
+        rss_url: candidate.rssUrl,
+        website_url: candidate.websiteUrl,
+        apple_url: candidate.appleUrl,
+        artwork_url: candidate.artworkUrl,
+        sources: candidate.sourceNotes,
+        status: 'rejected',
+        rejection_reason: match.reason,
+      }))
+    )
+  }
+
+  if (!newCandidates.length && !possibleDuplicates.length) {
+    console.log('No new or possible-duplicate candidates this run. Exiting.')
     return
   }
 
-  console.log('Step 2/6: inserting discovered candidates…')
+  console.log('Step 2/6: inserting discovered candidates (including possible duplicates, flagged)…')
+  const toInsert = [
+    ...newCandidates.map(c => ({ candidate: c, note: null as string | null })),
+    ...possibleDuplicates.map(({ candidate, match }) => ({ candidate, note: `POSSIBLE DUPLICATE: ${match.reason}` })),
+  ]
   const { data: inserted, error: insertError } = await supabase
     .from('podcast_discoveries')
     .insert(
-      newCandidates.map(c => ({
+      toInsert.map(({ candidate: c, note }) => ({
         podcast_name: c.podcastName,
         normalized_name: c.normalizedName,
         rss_url: c.rssUrl,
@@ -34,6 +56,7 @@ async function main() {
         apple_url: c.appleUrl,
         artwork_url: c.artworkUrl,
         sources: c.sourceNotes,
+        research_notes: note,
         status: 'discovered',
       }))
     )
@@ -68,6 +91,11 @@ async function main() {
       scored.push(withScore)
       discoveryIds.push(row.id)
 
+      // Preserve a "POSSIBLE DUPLICATE:" flag set at insert time — research
+      // notes get appended, not overwritten, so the flag stays visible.
+      const priorNote = row.research_notes as string | null
+      const combinedNotes = [priorNote, ...withScore.researchNotes].filter(Boolean).join(' ')
+
       await supabase
         .from('podcast_discoveries')
         .update({
@@ -80,7 +108,7 @@ async function main() {
           language: withScore.language,
           country: withScore.country,
           case_focus: withScore.caseFocus,
-          research_notes: withScore.researchNotes.join(' '),
+          research_notes: combinedNotes,
           pros: withScore.pros,
           cons: withScore.cons,
           editorial_verdict: withScore.editorialVerdict,
@@ -111,7 +139,7 @@ async function main() {
       if (!candidate) continue
 
       try {
-        const blurb = await draftBlurb(candidate)
+        const { text: blurb } = await draftBlurb(candidate)
         await supabase
           .from('newsletter_podcasts')
           .update({ blurb })
