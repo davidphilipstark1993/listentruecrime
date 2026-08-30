@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { sanitizeEnv } from '@/lib/utils'
 
 // Standalone Supabase client for scripts run outside the Next.js request
 // lifecycle (this GitHub Action script, not Vercel). Do not import
@@ -10,5 +11,5 @@ export function createDiscoveryClient() {
   if (!url || !serviceRoleKey) {
     throw new Error('NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set')
   }
-  return createClient(url, serviceRoleKey, { auth: { autoRefreshToken: false, persistSession: false } })
+  return createClient(sanitizeEnv(url), sanitizeEnv(serviceRoleKey), { auth: { autoRefreshToken: false, persistSession: false } })
 }
