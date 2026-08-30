@@ -10,7 +10,6 @@ type Tab = 'pending' | 'approved' | 'flagged' | 'all'
 interface Review {
   id: string
   content: string
-  rating: number | null
   approved: boolean
   flagged: boolean
   created_at: string
@@ -118,9 +117,6 @@ export function ReviewManager({ initialReviews }: { initialReviews: Review[] }) 
                             {review.podcast.title}
                           </Link>
                         </>
-                      )}
-                      {review.rating && (
-                        <span className="text-xs text-stone-subtle">· ★ {review.rating}/10</span>
                       )}
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
