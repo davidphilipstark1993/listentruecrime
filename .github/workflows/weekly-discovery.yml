@@ -1,0 +1,40 @@
+name: Weekly Podcast Discovery
+
+on:
+  schedule:
+    # 07:00 UTC every Monday. This is 07:00 GMT in winter / 08:00 BST in
+    # summer (UK) — GitHub Actions cron is always UTC and doesn't observe
+    # daylight saving, so the local run time drifts by an hour seasonally.
+    - cron: '0 7 * * 1'
+  workflow_dispatch: {} # manual trigger for testing or re-runs
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: Run discovery, research, scoring, and shortlist pipeline
+        run: npx tsx scripts/discovery/index.ts
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          PODCASTINDEX_API_KEY: ${{ secrets.PODCASTINDEX_API_KEY }}
+          PODCASTINDEX_API_SECRET: ${{ secrets.PODCASTINDEX_API_SECRET }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          SENDGRID_FROM_EMAIL: ${{ secrets.SENDGRID_FROM_EMAIL }}
+          SENDGRID_FROM_NAME: ${{ secrets.SENDGRID_FROM_NAME }}
+          ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
+
+      # This workflow only ever writes podcast_discoveries/newsletters rows
+      # up to status='review' and emails the admin. It never sends the
+      # newsletter — sending requires an explicit approval + send in
+      # /admin/newsletter-issues.
