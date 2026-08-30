@@ -1,12 +1,14 @@
 import type { ReactNode } from 'react'
 import Link from 'next/link'
-import { LayoutDashboard, Mic2, MessageSquare, Upload, ArrowLeft, Users, Star } from 'lucide-react'
+import { LayoutDashboard, Mic2, MessageSquare, Upload, ArrowLeft, Users, Star, Compass, Mail } from 'lucide-react'
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/podcasts', label: 'Podcasts', icon: Mic2 },
+  { href: '/admin/discoveries', label: 'Discoveries', icon: Compass },
+  { href: '/admin/newsletter-issues', label: 'Newsletter Issues', icon: Mail },
   { href: '/admin/reviews', label: 'Reviews', icon: MessageSquare },
-  { href: '/admin/newsletter', label: 'Newsletter', icon: Users },
+  { href: '/admin/newsletter', label: 'Subscribers', icon: Users },
   { href: '/admin/ratings', label: 'Ratings', icon: Star },
   { href: '/admin/import', label: 'Import CSV', icon: Upload },
 ]
