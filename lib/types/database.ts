@@ -37,6 +37,7 @@ export interface Podcast {
   quick_verdict: string | null
   host_name: string | null
   host_bio: string | null
+  website_url: string | null
   created_at: string
   updated_at: string
 }
@@ -91,10 +92,123 @@ export interface Favourite {
   created_at: string
 }
 
+export type NewsletterSubscriberStatus = 'active' | 'unsubscribed' | 'bounced' | 'suppressed'
+
 export interface NewsletterSubscriber {
   id: string
   email: string
+  first_name: string | null
   source: string | null
+  source_detail: string | null
+  status: NewsletterSubscriberStatus
+  consent: boolean
+  subscribed_at: string
+  unsubscribed_at: string | null
+  sendgrid_synced: boolean
+  sendgrid_contact_id: string | null
+  welcome_sent: boolean
+  created_at: string
+  updated_at: string
+}
+
+// ============================================================
+// Podcast discovery / newsletter automation types
+// ============================================================
+
+export type PodcastDiscoveryStatus =
+  | 'discovered'
+  | 'researching'
+  | 'researched'
+  | 'shortlisted'
+  | 'approved'
+  | 'rejected'
+  | 'featured'
+
+export interface PodcastDiscoveryHost {
+  name: string
+  verified: boolean
+}
+
+export interface PodcastDiscoverySource {
+  url: string
+  note: string
+}
+
+export interface PodcastDiscovery {
+  id: string
+  podcast_name: string
+  normalized_name: string
+  rss_url: string | null
+  website_url: string | null
+  apple_url: string | null
+  spotify_url: string | null
+  youtube_url: string | null
+  artwork_url: string | null
+  hosts: PodcastDiscoveryHost[] | null
+  description: string | null
+  country: string | null
+  language: string | null
+  episode_count: number | null
+  launch_date: string | null
+  latest_episode_date: string | null
+  format: string | null
+  case_focus: string[] | null
+  research_notes: string | null
+  sources: PodcastDiscoverySource[] | null
+  pros: string[] | null
+  cons: string[] | null
+  editorial_verdict: string | null
+  score: number | null
+  matched_podcast_id: string | null
+  discovered_at: string
+  researched_at: string | null
+  status: PodcastDiscoveryStatus
+  newsletter_id: string | null
+  rejection_reason: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type NewsletterStatus = 'draft' | 'review' | 'approved' | 'sent' | 'archived'
+
+export interface Newsletter {
+  id: string
+  title: string
+  slug: string
+  issue_number: number
+  publication_date: string
+  intro: string | null
+  status: NewsletterStatus
+  html_content: string | null
+  plain_text_content: string | null
+  created_at: string
+  sent_at: string | null
+  sendgrid_campaign_id: string | null
+  updated_at: string
+}
+
+export interface NewsletterPodcast {
+  id: string
+  newsletter_id: string
+  podcast_discovery_id: string | null
+  podcast_id: string | null
+  position: number
+  blurb: string | null
+  created_at: string
+  // Joined fields
+  discovery?: PodcastDiscovery
+  podcast?: Pick<Podcast, 'title' | 'slug' | 'image_url'>
+}
+
+export type NewsletterEventType = 'open' | 'click' | 'bounce' | 'unsubscribe' | 'group_unsubscribe' | 'spamreport'
+
+export interface NewsletterEvent {
+  id: string
+  newsletter_id: string | null
+  event_type: NewsletterEventType
+  email: string
+  podcast_id: string | null
+  url: string | null
   created_at: string
 }
 
@@ -166,4 +280,11 @@ export const COUNTRIES: Record<string, string> = {
   CA: 'Canada',
   IE: 'Ireland',
   NZ: 'New Zealand',
+  ZA: 'South Africa',
+  KE: 'Kenya',
+  BE: 'Belgium',
+  MT: 'Malta',
+  BR: 'Brazil',
+  PH: 'Philippines',
+  IN: 'India',
 }
