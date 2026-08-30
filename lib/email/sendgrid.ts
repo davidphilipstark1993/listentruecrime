@@ -94,7 +94,7 @@ export async function sendSendGridWelcomeEmail(email: string, firstName?: string
   const apiKey = process.env.SENDGRID_API_KEY ? sanitizeEnv(process.env.SENDGRID_API_KEY) : undefined
   if (!apiKey) return // graceful degradation — no key, no send
 
-  const fromEmail = process.env.SENDGRID_FROM_EMAIL ? sanitizeEnv(process.env.SENDGRID_FROM_EMAIL) : 'hello@listentruecrime.com'
+  const fromEmail = process.env.SENDGRID_FROM_EMAIL ? sanitizeEnv(process.env.SENDGRID_FROM_EMAIL) : 'info@listentruecrime.com'
   const fromName = process.env.SENDGRID_FROM_NAME ? sanitizeEnv(process.env.SENDGRID_FROM_NAME) : 'Listen True Crime'
   const groupId = process.env.SENDGRID_UNSUBSCRIBE_GROUP_ID ? Number(sanitizeEnv(process.env.SENDGRID_UNSUBSCRIBE_GROUP_ID)) : undefined
 

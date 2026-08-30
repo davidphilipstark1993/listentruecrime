@@ -22,7 +22,7 @@ export async function sendNewsletterCampaign(
   if (!newsletter.html_content) throw new Error('Newsletter has no generated html_content')
   if (!recipients.length) throw new Error('No active recipients to send to')
 
-  const fromEmail = process.env.SENDGRID_FROM_EMAIL ? sanitizeEnv(process.env.SENDGRID_FROM_EMAIL) : 'hello@listentruecrime.com'
+  const fromEmail = process.env.SENDGRID_FROM_EMAIL ? sanitizeEnv(process.env.SENDGRID_FROM_EMAIL) : 'info@listentruecrime.com'
   const fromName = process.env.SENDGRID_FROM_NAME ? sanitizeEnv(process.env.SENDGRID_FROM_NAME) : 'Listen True Crime'
   const groupId = process.env.SENDGRID_UNSUBSCRIBE_GROUP_ID ? Number(sanitizeEnv(process.env.SENDGRID_UNSUBSCRIBE_GROUP_ID)) : undefined
 

@@ -22,7 +22,7 @@ export async function notifyReviewReady(summary: RunSummary): Promise<void> {
     return
   }
 
-  const fromEmail = process.env.SENDGRID_FROM_EMAIL ? sanitizeEnv(process.env.SENDGRID_FROM_EMAIL) : 'hello@listentruecrime.com'
+  const fromEmail = process.env.SENDGRID_FROM_EMAIL ? sanitizeEnv(process.env.SENDGRID_FROM_EMAIL) : 'info@listentruecrime.com'
   const fromName = process.env.SENDGRID_FROM_NAME ? sanitizeEnv(process.env.SENDGRID_FROM_NAME) : 'Listen True Crime'
   const reviewUrl = summary.newsletterId ? `${BASE}/admin/newsletter-issues/${summary.newsletterId}` : `${BASE}/admin/discoveries`
 
