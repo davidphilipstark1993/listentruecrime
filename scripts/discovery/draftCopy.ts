@@ -63,6 +63,10 @@ export async function draftBlurb(candidate: BlurbInput): Promise<string> {
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
         'Content-Type': 'application/json',
+        // Only needed for identity-linked personal API keys (Console keys
+        // tied to a user login rather than a workspace); harmless to omit
+        // for standard workspace API keys.
+        ...(process.env.ANTHROPIC_WORKSPACE_ID ? { 'anthropic-workspace-id': process.env.ANTHROPIC_WORKSPACE_ID } : {}),
       },
       body: JSON.stringify({
         model: 'claude-sonnet-5',
