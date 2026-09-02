@@ -5,6 +5,8 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { scoreColor } from '@/lib/utils'
 import { DiscoveryActions } from '@/components/admin/discovery-actions'
 
+export const dynamic = 'force-dynamic'
+
 interface Props {
   params: Promise<{ id: string }>
 }

@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase/admin'
 import type { NewsletterStatus } from '@/lib/types/database'
 
+export const dynamic = 'force-dynamic'
+
 const STATUS_COLOR: Record<NewsletterStatus, string> = {
   draft: 'bg-white/5 text-stone-subtle',
   review: 'bg-amber-900/40 text-amber-400',

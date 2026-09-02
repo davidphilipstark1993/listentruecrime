@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { NewsletterIssueReview } from '@/components/admin/newsletter-issue-review'
 
+export const dynamic = 'force-dynamic'
+
 interface Props {
   params: Promise<{ id: string }>
 }

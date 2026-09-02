@@ -3,6 +3,8 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { scoreColor } from '@/lib/utils'
 import type { PodcastDiscoveryStatus } from '@/lib/types/database'
 
+export const dynamic = 'force-dynamic'
+
 const STATUS_LABEL: Record<PodcastDiscoveryStatus, string> = {
   discovered: 'Discovered',
   researching: 'Researching',
