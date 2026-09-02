@@ -113,6 +113,7 @@ export async function POST(_req: Request, { params }: Props) {
       blurb: slot.blurb!,
       appleUrl: slot.discovery?.apple_url ?? null,
       spotifyUrl: slot.discovery?.spotify_url ?? null,
+      listenUrl: null,
       websiteUrl,
     })
   }

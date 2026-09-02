@@ -13,6 +13,8 @@ export interface NewsletterRenderItem {
   appleUrl: string | null
   spotifyUrl: string | null
   websiteUrl: string | null
+  /** Generic listen link for manually-curated picks that only have one URL, not a split Apple/Spotify pair. */
+  listenUrl: string | null
 }
 
 export interface NewsletterRenderInput {
@@ -32,7 +34,7 @@ function renderItemHtml(item: NewsletterRenderItem): string {
     item.hosts ? `Hosted by ${escHtml(item.hosts)}` : null,
     item.format,
     item.episodeCount != null ? `${item.episodeCount} episodes` : null,
-    item.score != null ? `${item.score}/10 (internal editorial ranking)` : null,
+    item.score != null ? `${item.score}/10` : null,
   ].filter(Boolean).join(' · ')
 
   return `
@@ -56,6 +58,7 @@ function renderItemHtml(item: NewsletterRenderItem): string {
               <div>
                 ${listenLink('Apple Podcasts', item.appleUrl)}
                 ${listenLink('Spotify', item.spotifyUrl)}
+                ${listenLink('Listen', item.listenUrl)}
                 ${listenLink('Website', item.websiteUrl)}
               </div>
             </td>
@@ -132,6 +135,7 @@ export function renderNewsletterPlainText(input: NewsletterRenderInput): string 
     if (podcastUrl) parts.push(`Read more: ${podcastUrl}`)
     if (item.appleUrl) parts.push(`Apple Podcasts: ${item.appleUrl}`)
     if (item.spotifyUrl) parts.push(`Spotify: ${item.spotifyUrl}`)
+    if (item.listenUrl) parts.push(`Listen: ${item.listenUrl}`)
     parts.push('')
   }
 

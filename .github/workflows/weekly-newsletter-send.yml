@@ -1,0 +1,43 @@
+name: Weekly Manual Newsletter Send
+
+on:
+  schedule:
+    # 08:00 UTC every Sunday — 08:00 GMT in winter / 09:00 BST in summer
+    # (UK). GitHub Actions cron is always UTC and doesn't observe daylight
+    # saving, so the local run time drifts by an hour seasonally.
+    - cron: '0 8 * * 0'
+  workflow_dispatch: {} # manual trigger for testing or a rerun
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      # Deliberately does NOT include ANTHROPIC_API_KEY — this workflow
+      # never imports or calls the Anthropic-backed copy-drafting code.
+      # The manual weekly newsletter only needs Supabase + SendGrid.
+      - name: Check this week's approved podcasts and send if ready
+        run: npx tsx scripts/newsletter/weekly-send.ts
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          SENDGRID_FROM_EMAIL: ${{ secrets.SENDGRID_FROM_EMAIL }}
+          SENDGRID_FROM_NAME: ${{ secrets.SENDGRID_FROM_NAME }}
+          SENDGRID_UNSUBSCRIBE_GROUP_ID: ${{ secrets.SENDGRID_UNSUBSCRIBE_GROUP_ID }}
+          ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
+
+      # This job only ever sends when: (a) exactly 5 podcasts are
+      # individually approved, AND (b) the curator has explicitly clicked
+      # "Approve for Sunday Sending" in /admin/weekly-newsletter (sets
+      # newsletters.status='approved'). Any other state — including the
+      # weekly discovery automation simply having run — results in a
+      # "not sent" notification email, never a send.

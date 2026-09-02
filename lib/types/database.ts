@@ -192,12 +192,37 @@ export interface NewsletterPodcast {
   newsletter_id: string
   podcast_discovery_id: string | null
   podcast_id: string | null
+  newsletter_submission_id: string | null
   position: number
   blurb: string | null
   created_at: string
   // Joined fields
   discovery?: PodcastDiscovery
   podcast?: Pick<Podcast, 'title' | 'slug' | 'image_url'>
+  submission?: Pick<NewsletterSubmission, 'podcast_name' | 'artwork_url' | 'hosts' | 'podcast_url' | 'website_url' | 'curator_rating' | 'matched_podcast_id'>
+}
+
+export type NewsletterSubmissionStatus = 'draft' | 'approved'
+
+export interface NewsletterSubmission {
+  id: string
+  newsletter_id: string
+  podcast_name: string
+  normalized_name: string
+  podcast_url: string | null
+  website_url: string | null
+  rss_url: string | null
+  hosts: string | null
+  description: string | null
+  recommendation: string | null
+  notes: string | null
+  curator_rating: number | null
+  artwork_url: string | null
+  additional_info: string | null
+  status: NewsletterSubmissionStatus
+  matched_podcast_id: string | null
+  created_at: string
+  updated_at: string
 }
 
 export type NewsletterEventType = 'open' | 'click' | 'bounce' | 'unsubscribe' | 'group_unsubscribe' | 'spamreport'

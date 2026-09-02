@@ -23,7 +23,7 @@ async function getIssues() {
   const admin = createAdminClient()
   const { data } = await admin
     .from('newsletters')
-    .select('id, slug, title, issue_number, publication_date, intro, newsletter_podcasts(position, podcast:podcasts(title))')
+    .select('id, slug, title, issue_number, publication_date, intro, newsletter_podcasts(position, podcast:podcasts(title), submission:newsletter_submissions(podcast_name))')
     .in('status', ['sent', 'archived'])
     .order('issue_number', { ascending: false })
   return data ?? []
@@ -60,9 +60,9 @@ export default async function NewsletterArchivePage() {
 
         <div className="grid sm:grid-cols-2 gap-4">
           {issues.map(issue => {
-            const featuredTitles = (issue.newsletter_podcasts as unknown as { position: number; podcast: { title: string } | null }[] | null)
+            const featuredTitles = (issue.newsletter_podcasts as unknown as { position: number; podcast: { title: string } | null; submission: { podcast_name: string } | null }[] | null)
               ?.sort((a, b) => a.position - b.position)
-              .map(np => np.podcast?.title)
+              .map(np => np.podcast?.title ?? np.submission?.podcast_name)
               .filter(Boolean) as string[] | undefined
 
             return (

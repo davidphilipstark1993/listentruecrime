@@ -23,7 +23,8 @@ async function getIssue(slug: string) {
       newsletter_podcasts (
         position, blurb,
         podcast:podcasts (title, slug, image_url, website_url),
-        discovery:podcast_discoveries (podcast_name, artwork_url, website_url, apple_url, spotify_url, score, hosts, format, episode_count)
+        discovery:podcast_discoveries (podcast_name, artwork_url, website_url, apple_url, spotify_url, score, hosts, format, episode_count),
+        submission:newsletter_submissions (podcast_name, artwork_url, hosts, podcast_url, website_url, curator_rating)
       )
     `)
     .eq('slug', slug)
@@ -101,10 +102,16 @@ export default async function NewsletterIssuePage({ params }: Props) {
 
         <div className="space-y-8 mb-12">
           {items.map((item: any) => {
-            const title = item.podcast?.title ?? item.discovery?.podcast_name ?? 'Untitled'
-            const artwork = item.podcast?.image_url ?? item.discovery?.artwork_url
+            // Three possible sources, in priority order: a linked directory
+            // podcast, an auto-discovery candidate, or (most common for the
+            // manual weekly workflow) the curator's own submission fields —
+            // a podcast doesn't need a directory page to appear here.
+            const title = item.podcast?.title ?? item.discovery?.podcast_name ?? item.submission?.podcast_name ?? 'Untitled'
+            const artwork = item.podcast?.image_url ?? item.discovery?.artwork_url ?? item.submission?.artwork_url
             const podcastHref = item.podcast?.slug ? `/podcasts/${item.podcast.slug}` : undefined
-            const hosts = item.discovery?.hosts?.map((h: { name: string }) => h.name).join(', ')
+            const hosts = item.discovery?.hosts?.map((h: { name: string }) => h.name).join(', ') ?? item.submission?.hosts
+            const score = item.discovery?.score ?? item.submission?.curator_rating
+            const externalUrl = item.submission?.podcast_url ?? item.submission?.website_url
 
             return (
               <div key={item.position} className="card p-6">
@@ -125,8 +132,8 @@ export default async function NewsletterIssuePage({ params }: Props) {
                       {[hosts, item.discovery?.format, item.discovery?.episode_count != null ? `${item.discovery.episode_count} episodes` : null]
                         .filter(Boolean)
                         .join(' · ')}
-                      {item.discovery?.score != null && (
-                        <span className={`ml-2 font-medium ${scoreColor(item.discovery.score)}`}>{item.discovery.score}/10</span>
+                      {score != null && (
+                        <span className={`ml-2 font-medium ${scoreColor(score)}`}>{score}/10</span>
                       )}
                     </p>
                   </div>
@@ -136,6 +143,7 @@ export default async function NewsletterIssuePage({ params }: Props) {
                   {podcastHref && <Link href={podcastHref} className="text-crimson hover:underline">Full review →</Link>}
                   {item.discovery?.apple_url && <a href={item.discovery.apple_url} target="_blank" className="text-crimson hover:underline">Apple Podcasts →</a>}
                   {item.discovery?.spotify_url && <a href={item.discovery.spotify_url} target="_blank" className="text-crimson hover:underline">Spotify →</a>}
+                  {!podcastHref && externalUrl && <a href={externalUrl} target="_blank" className="text-crimson hover:underline">Listen →</a>}
                 </div>
               </div>
             )
