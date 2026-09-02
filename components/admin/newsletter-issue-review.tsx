@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
+import { Eye } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { scoreColor } from '@/lib/utils'
 import type { Newsletter, NewsletterPodcast, PodcastDiscovery } from '@/lib/types/database'
@@ -142,6 +143,9 @@ export function NewsletterIssueReview({ newsletter, slots: initialSlots, shortli
       </div>
 
       <div className="card p-5 flex items-center gap-3">
+        <a href={`/api/newsletter-issues/${newsletter.id}/preview`} target="_blank" rel="noopener noreferrer" className="btn-outline text-sm flex items-center gap-2">
+          <Eye size={14} /> Preview
+        </a>
         <button
           onClick={approve}
           disabled={busy !== null || status !== 'review'}
@@ -157,6 +161,7 @@ export function NewsletterIssueReview({ newsletter, slots: initialSlots, shortli
           {busy === 'send' ? 'Sending…' : 'Send to subscribers'}
         </button>
         <span className="text-stone-subtle text-xs ml-auto">
+          {status === 'draft' && "This newsletter is being built manually elsewhere (This Week's Newsletter) — nothing to review here yet."}
           {status === 'review' && 'Fill in all 5 blurbs, then approve.'}
           {status === 'approved' && 'Approved — ready to send.'}
           {status === 'sent' && 'This issue has already been sent.'}

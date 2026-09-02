@@ -4,9 +4,8 @@
 // system, which remains available separately for future use.
 import { createDiscoveryClient } from '../discovery/supabaseClient'
 import { sanitizeEnv } from '@/lib/utils'
-import { renderNewsletterHtml, renderNewsletterPlainText, type NewsletterRenderItem } from '@/lib/newsletter/render'
-import { sendNewsletterCampaign } from '@/lib/email/sendgrid-campaign'
 import { nextSunday } from '@/lib/newsletter/week'
+import { sendApprovedManualNewsletter } from '@/lib/newsletter/manualSend'
 
 async function notifyAdmin(subject: string, text: string): Promise<void> {
   const apiKey = process.env.SENDGRID_API_KEY ? sanitizeEnv(process.env.SENDGRID_API_KEY) : undefined
@@ -53,81 +52,21 @@ async function main() {
     return
   }
 
-  const { data: submissions } = await supabase
-    .from('newsletter_submissions')
-    .select('*')
-    .eq('newsletter_id', newsletter.id)
-    .order('created_at', { ascending: true })
+  const result = await sendApprovedManualNewsletter(supabase, newsletter.id)
 
-  const approved = (submissions ?? []).filter(s => s.status === 'approved')
-
-  console.log(`Newsletter status: ${newsletter.status}. Approved submissions: ${approved.length}/5.`)
-
-  if (newsletter.status !== 'approved' || approved.length !== 5) {
-    console.log('Not ready to send — missing either 5 approved podcasts or explicit "approve for sending".')
+  if (!result.ok && result.reason === 'not_ready') {
+    console.log(`Not ready to send — ${result.approvedCount}/5 approved, explicitly approved for sending: ${result.explicitlyApproved}.`)
     await notifyAdmin(
       'Newsletter not sent this week — not fully approved',
       `This week's newsletter (issue #${newsletter.issue_number}, target date ${publicationDate}) was NOT sent.\n\n` +
-      `Approved podcasts: ${approved.length}/5\n` +
-      `Explicitly approved for sending: ${newsletter.status === 'approved' ? 'yes' : 'no'}\n\n` +
+      `Approved podcasts: ${result.approvedCount}/5\n` +
+      `Explicitly approved for sending: ${result.explicitlyApproved ? 'yes' : 'no'}\n\n` +
       `Nothing was sent and no content was generated. Review and approve at /admin/weekly-newsletter when ready.`
     )
     return
   }
 
-  console.log('Ready — building newsletter content from curator-supplied data only (no AI, no auto-research)...')
-
-  const renderItems: NewsletterRenderItem[] = []
-
-  for (let i = 0; i < approved.length; i++) {
-    const s = approved[i]
-    // Directory publication is a separate, explicit admin action ("Add to
-    // Directory" on /admin/weekly-newsletter) — the Sunday send never
-    // creates or requires a podcasts row. If the curator has already
-    // linked/published this one, matched_podcast_id carries its slug
-    // through for a real internal link; otherwise the newsletter renders
-    // entirely from the submission's own fields.
-    let slug: string | null = null
-    if (s.matched_podcast_id) {
-      const { data: existing } = await supabase.from('podcasts').select('slug').eq('id', s.matched_podcast_id).single()
-      slug = existing?.slug ?? null
-    }
-
-    await supabase.from('newsletter_podcasts').insert({
-      newsletter_id: newsletter.id,
-      podcast_id: s.matched_podcast_id ?? null,
-      newsletter_submission_id: s.id,
-      position: i + 1,
-      blurb: s.recommendation ?? s.description ?? '',
-    })
-
-    renderItems.push({
-      position: i + 1,
-      title: s.podcast_name,
-      slug,
-      artworkUrl: s.artwork_url,
-      hosts: s.hosts,
-      format: null,
-      episodeCount: null,
-      score: s.curator_rating,
-      blurb: s.recommendation ?? s.description ?? '',
-      appleUrl: null,
-      spotifyUrl: null,
-      listenUrl: s.podcast_url,
-      websiteUrl: s.website_url,
-    })
-  }
-
-  const renderInput = { title: newsletter.title, intro: newsletter.intro, items: renderItems }
-  const html_content = renderNewsletterHtml(renderInput)
-  const plain_text_content = renderNewsletterPlainText(renderInput)
-
-  await supabase.from('newsletters').update({ html_content, plain_text_content }).eq('id', newsletter.id)
-
-  console.log('Content generated. Fetching active subscribers...')
-  const { data: subscribers } = await supabase.from('newsletter_subscribers').select('email').eq('status', 'active')
-
-  if (!subscribers?.length) {
+  if (!result.ok && result.reason === 'no_subscribers') {
     console.log('No active subscribers — content generated but nothing to send.')
     await notifyAdmin(
       'Newsletter not sent — no active subscribers',
@@ -136,19 +75,13 @@ async function main() {
     return
   }
 
-  console.log(`Sending to ${subscribers.length} active subscribers via SendGrid...`)
-  const { campaignId, sentCount } = await sendNewsletterCampaign(newsletter, subscribers)
-
-  await supabase
-    .from('newsletters')
-    .update({ status: 'sent', sent_at: new Date().toISOString(), sendgrid_campaign_id: campaignId })
-    .eq('id', newsletter.id)
-
-  console.log(`Sent to ${sentCount} subscribers. Campaign id: ${campaignId}`)
-  await notifyAdmin(
-    `Newsletter sent — issue #${newsletter.issue_number}`,
-    `This week's newsletter was sent successfully.\n\nRecipients: ${sentCount}\nSendGrid campaign id: ${campaignId}\nSent at: ${new Date().toISOString()}\n\nArchive page: ${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/newsletter/${newsletter.slug}`
-  )
+  if (result.ok) {
+    console.log(`Sent to ${result.sentCount} subscribers. Campaign id: ${result.campaignId}`)
+    await notifyAdmin(
+      `Newsletter sent — issue #${newsletter.issue_number}`,
+      `This week's newsletter was sent successfully.\n\nRecipients: ${result.sentCount}\nSendGrid campaign id: ${result.campaignId}\nSent at: ${new Date().toISOString()}\n\nArchive page: ${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/newsletter/${newsletter.slug}`
+    )
+  }
 }
 
 main().catch(async err => {

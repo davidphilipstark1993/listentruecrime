@@ -1,0 +1,36 @@
+import { NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { sendApprovedManualNewsletter } from '@/lib/newsletter/manualSend'
+
+interface Props {
+  params: Promise<{ id: string }>
+}
+
+// Sends immediately instead of waiting for the Sunday cron. Uses the exact
+// same send logic (lib/newsletter/manualSend.ts) as
+// scripts/newsletter/weekly-send.ts, so this can never produce different
+// content than the scheduled send would have. Still enforces the same
+// gate: exactly 5 approved podcasts AND explicit "approve for sending".
+export async function POST(_req: Request, { params }: Props) {
+  const { id } = await params
+  const cookieClient = await createClient()
+  const { data: { user } } = await cookieClient.auth.getUser()
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const { data: profile } = await cookieClient.from('profiles').select('is_admin').eq('id', user.id).single()
+  if (!profile?.is_admin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+
+  const admin = createAdminClient()
+
+  const result = await sendApprovedManualNewsletter(admin, id)
+
+  if (!result.ok) {
+    const message = result.reason === 'not_ready'
+      ? `Not ready to send — ${result.approvedCount}/5 approved, explicitly approved for sending: ${result.explicitlyApproved ? 'yes' : 'no'}.`
+      : 'No active subscribers to send to.'
+    return NextResponse.json({ error: message }, { status: 400 })
+  }
+
+  return NextResponse.json({ ok: true, sentCount: result.sentCount, campaignId: result.campaignId })
+}

@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Plus, Pencil, Trash2, AlertTriangle, CheckCircle2, BookPlus } from 'lucide-react'
+import { Plus, Pencil, Trash2, AlertTriangle, CheckCircle2, BookPlus, Eye } from 'lucide-react'
 import toast from 'react-hot-toast'
 import type { Newsletter, NewsletterSubmission } from '@/lib/types/database'
 
@@ -25,6 +25,7 @@ export function WeeklyNewsletterManager() {
   const [form, setForm] = useState(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
   const [approving, setApproving] = useState(false)
+  const [sending, setSending] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -130,6 +131,23 @@ export function WeeklyNewsletterManager() {
     }
   }
 
+  const sendNow = async () => {
+    if (!newsletter) return
+    if (!confirm(`Send issue #${newsletter.issue_number} to all active subscribers now, instead of waiting for Sunday? This cannot be undone.`)) return
+    setSending(true)
+    try {
+      const res = await fetch(`/api/newsletters/${newsletter.id}/send-now`, { method: 'POST' })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error)
+      toast.success(`Sent to ${data.sentCount} subscribers`)
+      load()
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Send failed')
+    } finally {
+      setSending(false)
+    }
+  }
+
   if (loading) return <p className="text-stone-subtle text-sm p-8">Loading…</p>
   if (!newsletter) return null
 
@@ -142,9 +160,14 @@ export function WeeklyNewsletterManager() {
             Issue #{newsletter.issue_number} · Sending {new Date(newsletter.publication_date).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}
           </p>
         </div>
-        <button onClick={openAdd} className="btn-primary flex items-center gap-2">
-          <Plus size={15} /> Add Podcast
-        </button>
+        <div className="flex items-center gap-2">
+          <a href={`/api/newsletters/${newsletter.id}/preview`} target="_blank" rel="noopener noreferrer" className="btn-outline flex items-center gap-2">
+            <Eye size={15} /> Preview
+          </a>
+          <button onClick={openAdd} className="btn-primary flex items-center gap-2">
+            <Plus size={15} /> Add Podcast
+          </button>
+        </div>
       </div>
 
       <div className="card p-4 mb-6 flex items-center justify-between">
@@ -152,7 +175,12 @@ export function WeeklyNewsletterManager() {
         {newsletter.status === 'sent' ? (
           <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center gap-1"><CheckCircle2 size={12} /> Sent</span>
         ) : newsletter.status === 'approved' ? (
-          <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center gap-1"><CheckCircle2 size={12} /> Approved for Sunday sending</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center gap-1"><CheckCircle2 size={12} /> Approved for Sunday sending</span>
+            <button onClick={sendNow} disabled={sending} className="btn-outline text-sm">
+              {sending ? 'Sending…' : 'Send Now'}
+            </button>
+          </div>
         ) : ready ? (
           <button onClick={approveForSending} disabled={approving} className="btn-primary text-sm">
             {approving ? 'Approving…' : 'Approve for Sunday Sending'}
