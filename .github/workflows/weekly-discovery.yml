@@ -18,7 +18,11 @@ jobs:
         with:
           node-version: 22
 
-      - run: npm ci
+      # npm ci fails here on a platform-specific optionalDependencies quirk
+      # (the wasm32 fallback packages resolve differently on the Linux
+      # runner than on the macOS machine that generated the lockfile).
+      # npm install self-heals instead of hard-failing on that mismatch.
+      - run: npm install
 
       - name: Run discovery, research, scoring, and shortlist pipeline
         run: npx tsx scripts/discovery/index.ts
