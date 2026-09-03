@@ -8,6 +8,7 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { CATEGORIES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
+import { getPodcastCount, roundedPodcastCount } from '@/lib/podcast-count'
 
 export const revalidate = 3600
 
@@ -73,12 +74,14 @@ async function getRecentReviews() {
 }
 
 export default async function HomePage() {
-  const [featured, topRated, newest, recentReviews] = await Promise.all([
+  const [featured, topRated, newest, recentReviews, podcastCount] = await Promise.all([
     getFeaturedPodcasts(),
     getTopRated(),
     getNewest(),
     getRecentReviews(),
+    getPodcastCount(),
   ])
+  const podcastCountLabel = roundedPodcastCount(podcastCount)
 
   return (
     <>
@@ -95,7 +98,7 @@ export default async function HomePage() {
           <div className="relative z-10 max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-crimson/10 border border-crimson/20 text-crimson text-xs font-medium mb-8">
               <Zap size={11} fill="currentColor" />
-              100+ podcasts reviewed and rated
+              {podcastCountLabel} podcasts reviewed and rated
             </div>
 
             <h1 className="heading-display text-5xl sm:text-6xl lg:text-7xl mb-6 leading-[1.05]">
@@ -133,7 +136,7 @@ export default async function HomePage() {
             {/* Social proof */}
             <div className="flex items-center justify-center gap-6 mt-12 text-stone-subtle text-sm">
               <div className="flex flex-col items-center">
-                <span className="text-stone font-semibold text-2xl font-serif">100+</span>
+                <span className="text-stone font-semibold text-2xl font-serif">{podcastCountLabel}</span>
                 <span className="text-xs">Podcasts reviewed</span>
               </div>
               <div className="w-px h-8 bg-white/[0.06]" />
