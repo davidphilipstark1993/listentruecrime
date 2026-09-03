@@ -30,6 +30,25 @@ export interface ParsedFeed {
   averageEpisodeMinutes: number | null
 }
 
+/**
+ * Podcast RSS <description>/<itunes:summary> fields are frequently authored
+ * as HTML (podcast apps render them as such) — strip markup so this text is
+ * safe to drop straight into a plain-text template or hand to the AI
+ * blurb-drafter as a "fact" without leaking tags into the output.
+ */
+function stripHtml(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#0?39;/gi, "'")
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 /** Parses itunes:duration, which may be "HH:MM:SS", "MM:SS", or a plain seconds integer. */
 function parseDurationToMinutes(raw: string): number | null {
   const trimmed = raw.trim()
@@ -64,7 +83,7 @@ export async function parseFeed(rssUrl: string): Promise<ParsedFeed | null> {
       : null
 
     return {
-      description: feed.description ?? null,
+      description: feed.description ? stripHtml(feed.description) : null,
       hostName: feed['itunes:author'] ?? null,
       language: feed.language ?? null,
       itemCount: feed.items.length,
