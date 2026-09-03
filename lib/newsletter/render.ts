@@ -39,7 +39,7 @@ function renderItemHtml(item: NewsletterRenderItem): string {
 
   return `
     <tr>
-      <td style="padding:28px 32px;border-bottom:1px solid #f0f0f0;">
+      <td style="padding:28px 32px;border-bottom:1px solid #262626;">
         <table width="100%" cellpadding="0" cellspacing="0" border="0">
           <tr>
             ${item.artworkUrl ? `
@@ -50,11 +50,11 @@ function renderItemHtml(item: NewsletterRenderItem): string {
               <div style="display:inline-block;width:24px;height:24px;background:#be123c;border-radius:50%;text-align:center;line-height:24px;color:#fff;font-weight:700;font-size:12px;font-family:Georgia,serif;margin-bottom:6px;">
                 ${item.position}
               </div>
-              <a href="${podcastUrl}" style="color:#111118;font-weight:700;font-size:17px;font-family:Georgia,serif;text-decoration:none;display:block;margin-bottom:4px;">
+              <a href="${podcastUrl}" style="color:#ffffff;font-weight:700;font-size:17px;font-family:Georgia,serif;text-decoration:none;display:block;margin-bottom:4px;">
                 ${escHtml(item.title)}
               </a>
-              ${meta ? `<p style="color:#888;font-size:12px;margin:0 0 10px;">${escHtml(meta)}</p>` : ''}
-              <div style="color:#333;font-size:14px;line-height:1.6;white-space:pre-line;margin-bottom:10px;">${escHtml(item.blurb)}</div>
+              ${meta ? `<p style="color:#999;font-size:12px;margin:0 0 10px;">${escHtml(meta)}</p>` : ''}
+              <div style="color:#e5e5e5;font-size:14px;line-height:1.6;white-space:pre-line;margin-bottom:10px;">${escHtml(item.blurb)}</div>
               <div>
                 ${listenLink('Apple Podcasts', item.appleUrl)}
                 ${listenLink('Spotify', item.spotifyUrl)}
@@ -78,16 +78,19 @@ export function renderNewsletterHtml(input: NewsletterRenderInput): string {
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
 <title>${escHtml(input.title)}</title>
 </head>
-<body style="margin:0;padding:0;background:#f6f6f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f6f6f7;">
+<body style="margin:0;padding:0;background:#000000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#000000;">
   <tr><td align="center" style="padding:32px 16px;">
-    <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border-radius:12px;overflow:hidden;max-width:600px;">
+    <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#000000;border:1px solid #1a1a1a;border-radius:12px;overflow:hidden;max-width:600px;">
       <tr>
-        <td style="background:#111118;padding:32px 32px 28px;text-align:center;">
-          <a href="${BASE}" style="color:#be123c;font-family:Georgia,serif;font-size:22px;font-weight:700;text-decoration:none;letter-spacing:0.5px;">
+        <td style="background:#000000;padding:32px 32px 20px;text-align:center;">
+          <a href="${BASE}">
+            <img src="${BASE}/logo.png" width="72" height="72" alt="ListenTrueCrime" style="border-radius:50%;display:block;margin:0 auto 12px;" />
+          </a>
+          <a href="${BASE}" style="color:#ffffff;font-family:Georgia,serif;font-size:22px;font-weight:700;text-decoration:none;letter-spacing:0.5px;">
             ListenTrueCrime
           </a>
-          <p style="color:#a0a0b0;font-size:13px;margin:8px 0 0;">The true crime podcast database</p>
+          <p style="color:#999;font-size:13px;margin:8px 0 0;">The true crime podcast database</p>
         </td>
       </tr>
       <tr>
@@ -100,7 +103,7 @@ export function renderNewsletterHtml(input: NewsletterRenderInput): string {
       ${input.intro ? `
       <tr>
         <td style="padding:24px 32px 0;">
-          <p style="color:#333;font-size:15px;line-height:1.6;margin:0;">${escHtml(input.intro)}</p>
+          <p style="color:#e5e5e5;font-size:15px;line-height:1.6;margin:0;">${escHtml(input.intro)}</p>
         </td>
       </tr>` : ''}
       <tr><td><table width="100%" cellpadding="0" cellspacing="0" border="0">${rows}</table></td></tr>
@@ -109,7 +112,7 @@ export function renderNewsletterHtml(input: NewsletterRenderInput): string {
           <p style="color:#999;font-size:12px;margin:0 0 6px;">
             You're receiving this because you subscribed at listentruecrime.com.
           </p>
-          <p style="color:#bbb;font-size:11px;margin:0;">
+          <p style="color:#777;font-size:11px;margin:0;">
             © ${new Date().getFullYear()} ListenTrueCrime &nbsp;·&nbsp;
             <a href="${BASE}" style="color:#be123c;text-decoration:none;">Visit site</a>
             &nbsp;·&nbsp;
