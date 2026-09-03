@@ -17,31 +17,30 @@ export function composeSubmissionBlurb(s: Pick<NewsletterSubmission, 'descriptio
 }
 
 async function buildRenderItems(supabase: SupabaseClient, approved: NewsletterSubmission[]): Promise<NewsletterRenderItem[]> {
-  const items: NewsletterRenderItem[] = []
-  for (let i = 0; i < approved.length; i++) {
-    const s = approved[i]
-    let slug: string | null = null
-    if (s.matched_podcast_id) {
-      const { data: existing } = await supabase.from('podcasts').select('slug').eq('id', s.matched_podcast_id).single()
-      slug = existing?.slug ?? null
-    }
-    items.push({
-      position: i + 1,
-      title: s.podcast_name,
-      slug,
-      artworkUrl: s.artwork_url,
-      hosts: s.hosts,
-      format: null,
-      episodeCount: null,
-      score: s.curator_rating,
-      blurb: composeSubmissionBlurb(s),
-      appleUrl: null,
-      spotifyUrl: null,
-      listenUrl: s.podcast_url,
-      websiteUrl: s.website_url,
-    })
-  }
-  return items
+  // Parallelized rather than one lookup at a time — this function sits on
+  // the critical path before the actual SendGrid call, and serverless
+  // functions have a hard wall-clock timeout.
+  const slugs = await Promise.all(approved.map(async s => {
+    if (!s.matched_podcast_id) return null
+    const { data: existing } = await supabase.from('podcasts').select('slug').eq('id', s.matched_podcast_id).single()
+    return existing?.slug ?? null
+  }))
+
+  return approved.map((s, i) => ({
+    position: i + 1,
+    title: s.podcast_name,
+    slug: slugs[i],
+    artworkUrl: s.artwork_url,
+    hosts: s.hosts,
+    format: null,
+    episodeCount: null,
+    score: s.curator_rating,
+    blurb: composeSubmissionBlurb(s),
+    appleUrl: null,
+    spotifyUrl: null,
+    listenUrl: s.podcast_url,
+    websiteUrl: s.website_url,
+  }))
 }
 
 async function loadApprovedSubmissions(supabase: SupabaseClient, newsletterId: string): Promise<NewsletterSubmission[]> {
@@ -93,16 +92,20 @@ export async function sendApprovedManualNewsletter(supabase: SupabaseClient, new
 
   const items = await buildRenderItems(supabase, approved)
 
-  for (let i = 0; i < approved.length; i++) {
-    const s = approved[i]
-    await supabase.from('newsletter_podcasts').insert({
+  // Idempotent by design: delete-then-insert instead of appending, so a
+  // retried/interrupted send (e.g. a prior attempt that crashed or timed
+  // out partway) can never leave duplicate podcasts in this newsletter's
+  // archive page. Single bulk insert instead of one round trip per podcast.
+  await supabase.from('newsletter_podcasts').delete().eq('newsletter_id', newsletterId)
+  await supabase.from('newsletter_podcasts').insert(
+    approved.map((s, i) => ({
       newsletter_id: newsletterId,
       podcast_id: s.matched_podcast_id ?? null,
       newsletter_submission_id: s.id,
       position: i + 1,
       blurb: items[i].blurb,
-    })
-  }
+    }))
+  )
 
   const input: NewsletterRenderInput = { title: newsletter.title, intro: newsletter.intro, items }
   const html_content = renderNewsletterHtml(input)

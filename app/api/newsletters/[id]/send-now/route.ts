@@ -7,6 +7,12 @@ interface Props {
   params: Promise<{ id: string }>
 }
 
+// Extra headroom over the platform default — this does several sequential
+// DB round trips plus a SendGrid call before it can return, and a
+// serverless timeout here returns an empty body that the client can't
+// parse as JSON, looking like a crash even when it's really just slow.
+export const maxDuration = 60
+
 // Sends immediately instead of waiting for the Sunday cron. Uses the exact
 // same send logic (lib/newsletter/manualSend.ts) as
 // scripts/newsletter/weekly-send.ts, so this can never produce different
