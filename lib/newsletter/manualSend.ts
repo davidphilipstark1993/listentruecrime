@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { renderNewsletterHtml, renderNewsletterPlainText, type NewsletterRenderItem, type NewsletterRenderInput } from './render'
-import { sendNewsletterCampaign } from '@/lib/email/sendgrid-campaign'
+import { sendNewsletterCampaign } from '@/lib/email/newsletter-campaign'
 import type { Newsletter, NewsletterSubmission } from '@/lib/types/database'
 
 /**

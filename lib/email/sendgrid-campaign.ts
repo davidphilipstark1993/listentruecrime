@@ -13,7 +13,7 @@ interface Recipient {
  * setup required). Returns the last batch's X-Message-Id as a lightweight
  * campaign reference, stored on newsletters.sendgrid_campaign_id.
  */
-export async function sendNewsletterCampaign(
+export async function sendNewsletterCampaignViaSendGrid(
   newsletter: Pick<Newsletter, 'id' | 'title' | 'html_content' | 'plain_text_content'>,
   recipients: Recipient[]
 ): Promise<{ campaignId: string; sentCount: number }> {

@@ -29,14 +29,22 @@ export async function POST(_req: Request, { params }: Props) {
 
   const admin = createAdminClient()
 
-  const result = await sendApprovedManualNewsletter(admin, id)
+  // Wrapped so a thrown error (e.g. email provider misconfigured, API
+  // failure) still returns a JSON body — an uncaught exception here gives
+  // the client an empty 500 response it can't parse as JSON.
+  try {
+    const result = await sendApprovedManualNewsletter(admin, id)
 
-  if (!result.ok) {
-    const message = result.reason === 'not_ready'
-      ? `Not ready to send — ${result.approvedCount}/5 approved, explicitly approved for sending: ${result.explicitlyApproved ? 'yes' : 'no'}.`
-      : 'No active subscribers to send to.'
-    return NextResponse.json({ error: message }, { status: 400 })
+    if (!result.ok) {
+      const message = result.reason === 'not_ready'
+        ? `Not ready to send — ${result.approvedCount}/5 approved, explicitly approved for sending: ${result.explicitlyApproved ? 'yes' : 'no'}.`
+        : 'No active subscribers to send to.'
+      return NextResponse.json({ error: message }, { status: 400 })
+    }
+
+    return NextResponse.json({ ok: true, sentCount: result.sentCount, campaignId: result.campaignId })
+  } catch (err) {
+    console.error('Newsletter send-now error:', err)
+    return NextResponse.json({ error: err instanceof Error ? err.message : 'Send failed' }, { status: 500 })
   }
-
-  return NextResponse.json({ ok: true, sentCount: result.sentCount, campaignId: result.campaignId })
 }

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { sendNewsletterCampaign } from '@/lib/email/sendgrid-campaign'
+import { sendNewsletterCampaign } from '@/lib/email/newsletter-campaign'
 
 interface Props {
   params: Promise<{ id: string }>
