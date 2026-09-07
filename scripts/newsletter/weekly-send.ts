@@ -3,32 +3,9 @@
 // in this file — the manual workflow never depends on the AI/discovery
 // system, which remains available separately for future use.
 import { createDiscoveryClient } from '../discovery/supabaseClient'
-import { sanitizeEnv } from '@/lib/utils'
 import { nextSunday } from '@/lib/newsletter/week'
 import { sendApprovedManualNewsletter } from '@/lib/newsletter/manualSend'
-
-async function notifyAdmin(subject: string, text: string): Promise<void> {
-  const apiKey = process.env.SENDGRID_API_KEY ? sanitizeEnv(process.env.SENDGRID_API_KEY) : undefined
-  const adminEmails = (process.env.ADMIN_EMAILS ?? '').split(',').map(e => e.trim()).filter(Boolean)
-  if (!apiKey || !adminEmails.length) {
-    console.log(`(no SENDGRID_API_KEY/ADMIN_EMAILS — would have notified: ${subject})`)
-    return
-  }
-  const fromEmail = process.env.SENDGRID_FROM_EMAIL ? sanitizeEnv(process.env.SENDGRID_FROM_EMAIL) : 'info@listentruecrime.com'
-  const fromName = process.env.SENDGRID_FROM_NAME ? sanitizeEnv(process.env.SENDGRID_FROM_NAME) : 'Listen True Crime'
-
-  const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      personalizations: [{ to: adminEmails.map(email => ({ email })) }],
-      from: { email: fromEmail, name: fromName },
-      subject,
-      content: [{ type: 'text/plain', value: text }],
-    }),
-  })
-  if (!res.ok) console.error(`Admin notification failed: ${res.status} ${await res.text()}`)
-}
+import { notifyAdmin } from '@/lib/email/adminNotify'
 
 async function main() {
   const supabase = createDiscoveryClient()

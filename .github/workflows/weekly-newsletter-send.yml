@@ -26,7 +26,9 @@ jobs:
 
       # Deliberately does NOT include ANTHROPIC_API_KEY — this workflow
       # never imports or calls the Anthropic-backed copy-drafting code.
-      # The manual weekly newsletter only needs Supabase + SendGrid.
+      # The manual weekly newsletter only needs Supabase + an email provider
+      # (SendGrid if configured, otherwise Resend — see
+      # lib/email/newsletter-campaign.ts and lib/email/adminNotify.ts).
       - name: Check this week's approved podcasts and send if ready
         run: npx tsx scripts/newsletter/weekly-send.ts
         env:
@@ -37,11 +39,14 @@ jobs:
           SENDGRID_FROM_EMAIL: ${{ secrets.SENDGRID_FROM_EMAIL }}
           SENDGRID_FROM_NAME: ${{ secrets.SENDGRID_FROM_NAME }}
           SENDGRID_UNSUBSCRIBE_GROUP_ID: ${{ secrets.SENDGRID_UNSUBSCRIBE_GROUP_ID }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
 
       # This job only ever sends when: (a) exactly 5 podcasts are
-      # individually approved, AND (b) the curator has explicitly clicked
-      # "Approve for Sunday Sending" in /admin/weekly-newsletter (sets
-      # newsletters.status='approved'). Any other state — including the
-      # weekly discovery automation simply having run — results in a
-      # "not sent" notification email, never a send.
+      # individually approved, AND (b) newsletters.status='approved' — set
+      # either by the curator explicitly clicking "Approve for Sunday
+      # Sending" in /admin/weekly-newsletter, or by Monday's
+      # weekly-newsletter-autofill.yml auto-picking 5 directory podcasts.
+      # Any other state — including the separate discovery automation
+      # simply having run — results in a "not sent" notification email,
+      # never a send.

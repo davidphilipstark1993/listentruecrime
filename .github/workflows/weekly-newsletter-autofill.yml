@@ -1,0 +1,41 @@
+name: Weekly Newsletter Auto-Fill
+
+on:
+  schedule:
+    # 08:00 UTC every Monday — an hour after Weekly Podcast Discovery, so the
+    # two jobs never race on issue_number. Runs early in the week to leave
+    # time to review/override at /admin/weekly-newsletter before Sunday.
+    - cron: '0 8 * * 1'
+  workflow_dispatch: {} # manual trigger for testing or a rerun
+
+jobs:
+  autofill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - name: Auto-fill this week's newsletter from the podcast directory
+        run: npx tsx scripts/newsletter/auto-feature.ts
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          SENDGRID_FROM_EMAIL: ${{ secrets.SENDGRID_FROM_EMAIL }}
+          SENDGRID_FROM_NAME: ${{ secrets.SENDGRID_FROM_NAME }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
+
+      # Only ever inserts newsletter_submissions rows and, when it fills a
+      # newsletter, sets its status to 'approved' — the same state the
+      # curator's manual "Approve for Sunday Sending" click sets. It never
+      # sends anything; Sunday's existing weekly-newsletter-send.yml is the
+      # only job that sends, and only if the newsletter is still 'approved'
+      # when it runs. Editing/unapproving any pick in /admin/weekly-newsletter
+      # any time before Sunday overrides this run.
