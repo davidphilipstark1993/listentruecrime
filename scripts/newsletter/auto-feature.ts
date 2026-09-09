@@ -1,9 +1,10 @@
-// Runs early in the week (Monday) so there's time to notice and override in
-// /admin/weekly-newsletter before Sunday's send job (weekly-send.ts) picks
-// up whatever the newsletter is left at. Only touches the Sunday-dated
-// manual newsletter (lib/newsletter/week.ts) — entirely separate from the
-// Monday-dated AI discovery pipeline (scripts/discovery/index.ts), which
-// still runs independently and is reviewed at /admin/newsletter-issues.
+// Runs Sunday 07:00 UTC, one hour before the send job (weekly-send.ts) — a
+// last-minute catch, not an early-week draft: it only fills in when nobody
+// (e.g. the Grok-curated workflow) has added any picks for this Sunday's
+// newsletter yet. Only touches the Sunday-dated manual newsletter
+// (lib/newsletter/week.ts) — entirely separate from the Monday-dated AI
+// discovery pipeline (scripts/discovery/index.ts), which still runs
+// independently and is reviewed at /admin/newsletter-issues.
 import { createDiscoveryClient } from '../discovery/supabaseClient'
 import { getOrCreateThisWeeksNewsletter } from '@/lib/newsletter/week'
 import { autoFeatureFromCatalog } from '@/lib/newsletter/autoFeature'

@@ -44,9 +44,10 @@ jobs:
 
       # This job only ever sends when: (a) exactly 5 podcasts are
       # individually approved, AND (b) newsletters.status='approved' — set
-      # either by the curator explicitly clicking "Approve for Sunday
-      # Sending" in /admin/weekly-newsletter, or by Monday's
-      # weekly-newsletter-autofill.yml auto-picking 5 directory podcasts.
+      # either by explicitly clicking "Approve for Sunday Sending" in
+      # /admin/weekly-newsletter, or by weekly-newsletter-autofill.yml's
+      # 07:00 UTC last-minute catch (same day, one hour before this job)
+      # auto-picking 5 directory podcasts if nothing was added that week.
       # Any other state — including the separate discovery automation
       # simply having run — results in a "not sent" notification email,
       # never a send.
