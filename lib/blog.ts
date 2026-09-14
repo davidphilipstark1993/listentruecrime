@@ -60,7 +60,11 @@ export function getAllPosts(): BlogPost[] {
       } as BlogPost
     })
     .filter(p => p.title)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    // Several posts share the same publish date (e.g. a whole series
+    // published together) — `slug` as a tiebreaker keeps the order fully
+    // deterministic, since /blog's pagination depends on it never shifting
+    // between requests.
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime() || a.slug.localeCompare(b.slug))
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {

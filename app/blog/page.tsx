@@ -1,30 +1,50 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { Rss } from 'lucide-react'
 import { getAllPosts, getAllCategories, getAllTags } from '@/lib/blog'
 import { getAllCases } from '@/lib/cases'
 import { PostCard } from '@/components/blog/PostCard'
+import { Pagination } from '@/components/ui/pagination'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { BASE } from '@/lib/seo/config'
 
-export const metadata: Metadata = {
-  title: 'True Crime Podcast Blog — Guides, Reviews & Recommendations',
-  description:
-    'Expert guides to the best true crime podcasts. Beginner guides, deep dives, comparisons, and recommendations for every type of true crime listener.',
-  alternates: {
-    canonical: `${BASE}/blog`,
-    types: { 'application/rss+xml': `${BASE}/blog/feed.xml` },
-  },
-  openGraph: {
-    title: 'True Crime Podcast Blog | ListenTrueCrime',
-    description: 'Expert guides, comparisons, and recommendations for true crime podcast lovers.',
-    url: `${BASE}/blog`,
-  },
+const PAGE_SIZE = 12
+
+interface Props {
+  searchParams: Promise<{ page?: string }>
 }
 
-export default function BlogIndexPage() {
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const { page } = await searchParams
+  const pageNum = Math.max(1, Number(page ?? 1) || 1)
+  const suffix = pageNum > 1 ? ` — Page ${pageNum}` : ''
+
+  return {
+    title: `True Crime Podcast Blog — Guides, Reviews & Recommendations${suffix}`,
+    description:
+      'Expert guides to the best true crime podcasts. Beginner guides, deep dives, comparisons, and recommendations for every type of true crime listener.',
+    alternates: {
+      canonical: pageNum > 1 ? `${BASE}/blog?page=${pageNum}` : `${BASE}/blog`,
+      types: { 'application/rss+xml': `${BASE}/blog/feed.xml` },
+    },
+    openGraph: {
+      title: `True Crime Podcast Blog${suffix} | ListenTrueCrime`,
+      description: 'Expert guides, comparisons, and recommendations for true crime podcast lovers.',
+      url: `${BASE}/blog`,
+    },
+  }
+}
+
+export default async function BlogIndexPage({ searchParams }: Props) {
+  const { page } = await searchParams
+  const pageNum = Math.max(1, Number(page ?? 1) || 1)
+
   const posts = getAllPosts()
+  const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE))
+  if (pageNum > totalPages) notFound()
+
   const categories = getAllCategories()
   const tags = getAllTags()
   const series = getAllCases()
@@ -32,8 +52,10 @@ export default function BlogIndexPage() {
     .filter((t): t is NonNullable<typeof t> => Boolean(t) && t!.count >= 3)
     .sort((a, b) => b.count - a.count)
     .slice(0, 3)
-  const featured = posts.filter(p => p.featured).slice(0, 3)
-  const latest = posts.slice(0, 12)
+  // Featured strip only makes sense as a "start here" on page 1 — later
+  // pages are pure chronological pagination of every post.
+  const featured = pageNum === 1 ? posts.filter(p => p.featured).slice(0, 3) : []
+  const latest = posts.slice((pageNum - 1) * PAGE_SIZE, pageNum * PAGE_SIZE)
 
   const schema = {
     '@context': 'https://schema.org',
@@ -118,7 +140,7 @@ export default function BlogIndexPage() {
                 <div className="flex items-center gap-2 mb-5">
                   <div className="w-4 h-px bg-crimson" />
                   <p className="text-xs font-semibold uppercase tracking-widest text-stone-subtle">
-                    Latest Articles
+                    {pageNum === 1 ? 'Latest Articles' : `Articles — Page ${pageNum}`}
                   </p>
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
@@ -126,6 +148,7 @@ export default function BlogIndexPage() {
                     <PostCard key={post.slug} post={post} />
                   ))}
                 </div>
+                <Pagination currentPage={pageNum} totalPages={totalPages} basePath="/blog" />
               </section>
             </div>
 
