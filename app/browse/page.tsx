@@ -1,266 +1,195 @@
-'use client'
-import { Suspense } from 'react'
-import { useState, useEffect, useCallback } from 'react'
-import { Search, SlidersHorizontal, X, ChevronDown } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
+import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
-import { PodcastCard, PodcastCardSkeleton } from '@/components/podcasts/podcast-card'
-import { CATEGORIES, PLATFORMS, COUNTRIES } from '@/lib/types/database'
+import { PodcastCard } from '@/components/podcasts/podcast-card'
+import { BrowseControls } from '@/components/browse/browse-controls'
+import { Pagination } from '@/components/ui/pagination'
+import { BASE } from '@/lib/seo/config'
 import type { Podcast, RatingStats } from '@/lib/types/database'
-import { cn } from '@/lib/utils'
-import { useSearchParams, useRouter } from 'next/navigation'
 
-type SortOption = 'newest' | 'title_asc' | 'binge_desc'
+const PAGE_SIZE = 48
 
-const CASE_TYPES = [
-  'Cold Case', 'Missing Person', 'Murder', 'Serial Killer', 'Courtroom',
-  'Wrongful Conviction', 'Fraud', 'White-Collar Crime', 'Investigative',
-  'Systemic Injustice', 'Historical Crime', 'Organised Crime',
-]
-
-const SORT_OPTIONS: { value: SortOption; label: string }[] = [
-  { value: 'newest', label: 'Newest' },
-  { value: 'title_asc', label: 'A–Z' },
-  { value: 'binge_desc', label: 'Highest Binge Factor' },
-]
+interface Props {
+  searchParams: Promise<{
+    q?: string
+    types?: string
+    country?: string
+    format?: string
+    platform?: string
+    minBinge?: string
+    sort?: string
+    page?: string
+  }>
+}
 
 type PodcastWithStats = Podcast & { rating_stats: RatingStats | null }
 
-function BrowsePageInner() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
+// Any filter/search/sort narrows or reorders the same underlying set —
+// indexing every combination would be thin/duplicate content, so only the
+// plain paginated catalogue (no params beyond `page`) is indexable. Filtered
+// views stay `follow` so link equity still flows through them.
+function hasNonPageParams(sp: Awaited<Props['searchParams']>): boolean {
+  return Boolean(sp.q || sp.types || sp.country || sp.format || sp.platform || sp.minBinge || sp.sort)
+}
 
-  const [podcasts, setPodcasts] = useState<PodcastWithStats[]>([])
-  const [loading, setLoading] = useState(true)
-  const [total, setTotal] = useState(0)
-  const [filtersOpen, setFiltersOpen] = useState(false)
+// Self-referencing canonical, page-aware — a paginated page canonicalised
+// to page 1 tells Google "this is a duplicate, don't index it separately",
+// which would undo the whole point of paginating (every page needs its own
+// indexable URL, since each one links a different 48 podcasts).
+function canonicalUrl(sp: Awaited<Props['searchParams']>): string {
+  const params = new URLSearchParams()
+  for (const [key, value] of Object.entries(sp)) {
+    if (value) params.set(key, value)
+  }
+  const qs = params.toString()
+  return qs ? `${BASE}/browse?${qs}` : `${BASE}/browse`
+}
 
-  // Filters
-  const [query, setQuery] = useState(searchParams.get('q') ?? '')
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([])
-  const [country, setCountry] = useState('')
-  const [formatType, setFormatType] = useState('')
-  const [platform, setPlatform] = useState('')
-  const [minBinge, setMinBinge] = useState(0)
-  const [sort, setSort] = useState<SortOption>('newest')
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const sp = await searchParams
+  const filtered = hasNonPageParams(sp)
 
-  const supabase = createClient()
+  const pageNum = Math.max(1, Number(sp.page ?? 1) || 1)
+  const title = `Browse True Crime Podcasts — Filter by Category, Country & Platform${pageNum > 1 ? ` — Page ${pageNum}` : ''}`
+  const description = 'Search and filter our complete database of reviewed true crime podcasts. Filter by case type, country, platform, binge factor, format, and more.'
 
-  const fetchPodcasts = useCallback(async () => {
-    setLoading(true)
-    let q = supabase
-      .from('podcasts')
-      .select(`*, rating_stats:podcast_rating_stats(*)`, { count: 'exact' })
-      .eq('is_published', true)
+  return {
+    title,
+    description,
+    alternates: { canonical: canonicalUrl(sp) },
+    robots: filtered ? { index: false, follow: true } : { index: true, follow: true },
+    openGraph: {
+      title: `${title} | ListenTrueCrime`,
+      description,
+      url: canonicalUrl(sp),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | ListenTrueCrime`,
+      description,
+    },
+  }
+}
 
-    if (query.trim()) {
-      q = q.textSearch('search_vector', query.trim().split(' ').join(' & '))
-    }
-    if (selectedTypes.length > 0) {
-      q = q.overlaps('case_types', selectedTypes)
-    }
-    if (country) q = q.eq('country', country)
-    if (formatType) q = q.eq('format_type', formatType)
-    if (platform) q = q.contains('platforms', [platform])
-    if (minBinge > 0) q = q.gte('binge_factor', minBinge)
+// Two near-identical builders rather than one parameterised function: the
+// Supabase client infers each query's row type from a literal .select()
+// string, so making that string dynamic (e.g. a ternary) breaks type
+// inference entirely. Keeping both calls literal is worth the duplication.
+function parseFilterParams(sp: Awaited<Props['searchParams']>) {
+  const types = (sp.types ?? '').split(',').filter(Boolean)
+  const minBinge = Number(sp.minBinge ?? 0)
+  return { types, minBinge, sort: sp.sort ?? 'newest' }
+}
 
-    if (sort === 'newest') q = q.order('created_at', { ascending: false })
-    else if (sort === 'title_asc') q = q.order('title', { ascending: true })
-    else if (sort === 'binge_desc') q = q.order('binge_factor', { ascending: false })
+function buildCountQuery(sp: Awaited<Props['searchParams']>) {
+  const { types, minBinge } = parseFilterParams(sp)
+  let q = createAdminClient()
+    .from('podcasts')
+    .select('id', { count: 'exact', head: true })
+    .eq('is_published', true)
 
-    const { data, count } = await q.limit(48)
-    setPodcasts((data ?? []) as PodcastWithStats[])
-    setTotal(count ?? 0)
-    setLoading(false)
-  }, [query, selectedTypes, country, formatType, platform, minBinge, sort])
+  if (sp.q?.trim()) q = q.textSearch('search_vector', sp.q.trim().split(' ').join(' & '))
+  if (types.length > 0) q = q.overlaps('case_types', types)
+  if (sp.country) q = q.eq('country', sp.country)
+  if (sp.format) q = q.eq('format_type', sp.format)
+  if (sp.platform) q = q.contains('platforms', [sp.platform])
+  if (minBinge > 0) q = q.gte('binge_factor', minBinge)
+  return q
+}
 
-  useEffect(() => {
-    const timer = setTimeout(fetchPodcasts, 300)
-    return () => clearTimeout(timer)
-  }, [fetchPodcasts])
+function buildDataQuery(sp: Awaited<Props['searchParams']>) {
+  const { types, minBinge, sort } = parseFilterParams(sp)
+  let q = createAdminClient()
+    .from('podcasts')
+    .select(`*, rating_stats:podcast_rating_stats(*)`)
+    .eq('is_published', true)
 
-  const toggleType = (t: string) => {
-    setSelectedTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])
+  if (sp.q?.trim()) q = q.textSearch('search_vector', sp.q.trim().split(' ').join(' & '))
+  if (types.length > 0) q = q.overlaps('case_types', types)
+  if (sp.country) q = q.eq('country', sp.country)
+  if (sp.format) q = q.eq('format_type', sp.format)
+  if (sp.platform) q = q.contains('platforms', [sp.platform])
+  if (minBinge > 0) q = q.gte('binge_factor', minBinge)
+
+  // Bulk-imported podcasts share identical created_at timestamps in large
+  // batches, so `created_at desc` alone is not a stable sort — PostgREST can
+  // return tied rows in a different order on each request, which silently
+  // duplicates some podcasts across pages and skips others entirely. Every
+  // sort mode gets `id` as a deterministic tiebreaker so .range() pagination
+  // is actually stable.
+  if (sort === 'title_asc') return q.order('title', { ascending: true }).order('id', { ascending: true })
+  if (sort === 'binge_desc') return q.order('binge_factor', { ascending: false }).order('id', { ascending: true })
+  return q.order('created_at', { ascending: false }).order('id', { ascending: true })
+}
+
+async function fetchPodcasts(sp: Awaited<Props['searchParams']>) {
+  const requestedPage = Math.max(1, Number(sp.page ?? 1) || 1)
+
+  // Count first, with no .range() — an out-of-bounds range 416s and loses
+  // the real count, which would otherwise silently defeat the 404 check.
+  const { count } = await buildCountQuery(sp)
+  const total = count ?? 0
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+
+  if (requestedPage > totalPages) {
+    return { podcasts: [] as PodcastWithStats[], total, page: requestedPage, totalPages, outOfRange: true }
   }
 
-  const clearFilters = () => {
-    setQuery(''); setSelectedTypes([]); setCountry(''); setFormatType('')
-    setPlatform(''); setMinBinge(0); setSort('newest')
-  }
+  const from = (requestedPage - 1) * PAGE_SIZE
+  const to = from + PAGE_SIZE - 1
+  const { data } = await buildDataQuery(sp).range(from, to)
 
-  const hasFilters = query || selectedTypes.length || country || formatType || platform || minBinge
+  return {
+    podcasts: (data ?? []) as PodcastWithStats[],
+    total,
+    page: requestedPage,
+    totalPages,
+    outOfRange: false,
+  }
+}
+
+export default async function BrowsePage({ searchParams }: Props) {
+  const sp = await searchParams
+  const { podcasts, total, page, totalPages, outOfRange } = await fetchPodcasts(sp)
+
+  // An out-of-range page is a dead/duplicate URL, not a valid result — 404
+  // rather than silently clamping, so it can't get indexed as a thin page.
+  if (outOfRange) notFound()
+
+  const preservedParams = {
+    q: sp.q, types: sp.types, country: sp.country,
+    format: sp.format, platform: sp.platform, minBinge: sp.minBinge, sort: sp.sort,
+  }
 
   return (
     <>
       <Header />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 min-h-screen">
-        {/* Page header */}
         <div className="mb-8">
           <h1 className="heading-display text-3xl sm:text-4xl mb-2">Browse podcasts</h1>
           <p className="text-stone-muted text-sm">{total} podcasts in the database</p>
         </div>
 
-        {/* Search + controls */}
-        <div className="flex gap-3 mb-6">
-          <div className="relative flex-1">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-subtle pointer-events-none" />
-            <input
-              type="search"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              placeholder="Search by title, case type, host…"
-              className="input-base pl-10"
-            />
-          </div>
+        <BrowseControls />
 
-          <button
-            onClick={() => setFiltersOpen(!filtersOpen)}
-            className={cn('btn-outline flex items-center gap-2 shrink-0', filtersOpen && 'border-crimson/40 text-stone')}
-          >
-            <SlidersHorizontal size={15} />
-            Filters
-            {hasFilters && (
-              <span className="w-4 h-4 rounded-full bg-crimson text-white text-2xs flex items-center justify-center">
-                {[selectedTypes.length > 0, country, formatType, platform, minBinge > 0].filter(Boolean).length}
-              </span>
-            )}
-          </button>
-
-          {/* Sort */}
-          <div className="relative shrink-0">
-            <select
-              value={sort}
-              onChange={e => setSort(e.target.value as SortOption)}
-              className="input-base pr-8 appearance-none cursor-pointer"
-            >
-              {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-            </select>
-            <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-subtle pointer-events-none" />
-          </div>
-        </div>
-
-        {/* Filter panel */}
-        {filtersOpen && (
-          <div className="card p-5 mb-6 animate-fade-in">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {/* Case types */}
-              <div>
-                <p className="text-xs font-semibold text-stone mb-3 uppercase tracking-wide">Case type</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {CASE_TYPES.map(t => (
-                    <button
-                      key={t}
-                      onClick={() => toggleType(t)}
-                      className={cn('tag cursor-pointer transition-colors', selectedTypes.includes(t) && 'tag-crimson')}
-                    >
-                      {t}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Country */}
-              <div>
-                <p className="text-xs font-semibold text-stone mb-3 uppercase tracking-wide">Country</p>
-                <div className="relative">
-                  <select value={country} onChange={e => setCountry(e.target.value)} className="input-base pr-8 appearance-none">
-                    <option value="">All countries</option>
-                    {Object.entries(COUNTRIES).map(([code, name]) => (
-                      <option key={code} value={code}>{name}</option>
-                    ))}
-                  </select>
-                  <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-subtle pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Format */}
-              <div>
-                <p className="text-xs font-semibold text-stone mb-3 uppercase tracking-wide">Format</p>
-                <div className="relative">
-                  <select value={formatType} onChange={e => setFormatType(e.target.value)} className="input-base pr-8 appearance-none">
-                    <option value="">All formats</option>
-                    {['Serialized', 'Episodic', 'Both'].map(f => <option key={f} value={f}>{f}</option>)}
-                  </select>
-                  <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-subtle pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Platform */}
-              <div>
-                <p className="text-xs font-semibold text-stone mb-3 uppercase tracking-wide">Platform</p>
-                <div className="relative">
-                  <select value={platform} onChange={e => setPlatform(e.target.value)} className="input-base pr-8 appearance-none">
-                    <option value="">All platforms</option>
-                    {PLATFORMS.map(p => <option key={p} value={p}>{p}</option>)}
-                  </select>
-                  <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-subtle pointer-events-none" />
-                </div>
-              </div>
-            </div>
-
-            {/* Binge factor */}
-            <div className="mt-4 pt-4 border-t border-white/[0.06]">
-              <p className="text-xs font-semibold text-stone mb-2 uppercase tracking-wide">
-                Min. Binge Factor: <span className="text-crimson">{minBinge > 0 ? `${minBinge}+` : 'Any'}</span>
-              </p>
-              <input
-                type="range"
-                min={0} max={9} step={1}
-                value={minBinge}
-                onChange={e => setMinBinge(Number(e.target.value))}
-                className="w-full max-w-xs accent-crimson cursor-pointer"
-              />
-            </div>
-
-            {hasFilters && (
-              <button onClick={clearFilters} className="mt-4 flex items-center gap-1.5 text-xs text-stone-muted hover:text-stone transition-colors">
-                <X size={12} /> Clear all filters
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* Active filter chips */}
-        {hasFilters && (
-          <div className="flex flex-wrap gap-2 mb-5">
-            {selectedTypes.map(t => (
-              <button key={t} onClick={() => toggleType(t)} className="flex items-center gap-1 tag-crimson cursor-pointer hover:bg-crimson/20">
-                {t} <X size={10} />
-              </button>
+        {podcasts.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {podcasts.map((p, i) => (
+              <PodcastCard key={p.id} podcast={p} priority={page === 1 && i < 6} />
             ))}
-            {country && <button onClick={() => setCountry('')} className="flex items-center gap-1 tag-crimson cursor-pointer">
-              {COUNTRIES[country]} <X size={10} />
-            </button>}
-          </div>
-        )}
-
-        {/* Results grid */}
-        {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {[...Array(12)].map((_, i) => <PodcastCardSkeleton key={i} />)}
-          </div>
-        ) : podcasts.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {podcasts.map((p, i) => <PodcastCard key={p.id} podcast={p} priority={i < 6} />)}
           </div>
         ) : (
           <div className="text-center py-24">
             <p className="text-stone-muted text-lg mb-2">No podcasts found</p>
-            <p className="text-stone-subtle text-sm mb-4">Try adjusting your search or filters</p>
-            <button onClick={clearFilters} className="btn-ghost">Clear filters</button>
+            <p className="text-stone-subtle text-sm">Try adjusting your search or filters</p>
           </div>
         )}
+
+        <Pagination currentPage={page} totalPages={totalPages} basePath="/browse" searchParams={preservedParams} />
       </main>
       <Footer />
     </>
-  )
-}
-
-export default function BrowsePage() {
-  return (
-    <Suspense fallback={null}>
-      <BrowsePageInner />
-    </Suspense>
   )
 }

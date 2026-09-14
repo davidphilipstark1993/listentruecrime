@@ -1,22 +1,6 @@
-import type { Metadata } from 'next'
-import { BASE } from '@/lib/seo/config'
-
-export const metadata: Metadata = {
-  title: 'Browse True Crime Podcasts — Filter by Category, Country & Platform',
-  description: 'Search and filter our complete database of reviewed true crime podcasts. Filter by case type, country, platform, binge factor, format, and more.',
-  alternates: { canonical: `${BASE}/browse` },
-  openGraph: {
-    title: 'Browse True Crime Podcasts | ListenTrueCrime',
-    description: 'Search and filter our complete database of reviewed true crime podcasts.',
-    url: `${BASE}/browse`,
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Browse True Crime Podcasts | ListenTrueCrime',
-    description: 'Search and filter our complete database of reviewed true crime podcasts.',
-  },
-}
-
+// Metadata now lives in page.tsx's generateMetadata — it needs to vary
+// per-request (robots noindex on filtered/sorted views, see hasNonPageParams
+// there), which a static layout export can't do.
 export default function BrowseLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }
