@@ -8,6 +8,10 @@ import { BASE } from '@/lib/seo/config'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createAdminClient()
+  // Shared freshness stamp for collections with no per-item updated_at of
+  // their own (categories/countries/platforms are static lists; podcasts,
+  // blog posts, cases, and newsletters each carry their own real date below).
+  const now = new Date()
   const { data: podcasts } = await supabase
     .from('podcasts')
     .select('slug, updated_at')
@@ -29,18 +33,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const categoryUrls: MetadataRoute.Sitemap = CATEGORIES.map(c => ({
     url: `${BASE}/category/${c.slug}`,
+    lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.7,
   }))
 
   const countryUrls: MetadataRoute.Sitemap = Object.keys(COUNTRIES).map(code => ({
     url: `${BASE}/country/${code}`,
+    lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.6,
   }))
 
   const platformUrls: MetadataRoute.Sitemap = PLATFORMS.map(p => ({
     url: `${BASE}/platform/${encodeURIComponent(p)}`,
+    lastModified: now,
     changeFrequency: 'monthly',
     priority: 0.5,
   }))
@@ -48,6 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const cases = getAllCases()
   const caseUrls: MetadataRoute.Sitemap = cases.map(c => ({
     url: `${BASE}/cases/${c.slug}`,
+    lastModified: now,
     changeFrequency: 'monthly',
     priority: 0.7,
   }))
@@ -65,12 +73,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const blogCategoryUrls: MetadataRoute.Sitemap = blogCategories.map(c => ({
     url: `${BASE}/blog/category/${c.slug}`,
+    lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.6,
   }))
 
   const blogTagUrls: MetadataRoute.Sitemap = blogTags.map(t => ({
     url: `${BASE}/blog/tag/${t.slug}`,
+    lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.5,
   }))
@@ -78,6 +88,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const authors = getAllAuthors()
   const authorUrls: MetadataRoute.Sitemap = authors.map(a => ({
     url: `${BASE}/authors/${a.slug}`,
+    lastModified: now,
     changeFrequency: 'monthly' as const,
     priority: 0.5,
   }))
@@ -97,14 +108,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: `${BASE}/cases`, changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
     ...caseUrls,
-    { url: `${BASE}/badge`, changeFrequency: 'monthly', priority: 0.4 },
+    { url: `${BASE}/badge`, changeFrequency: 'monthly', priority: 0.4, lastModified: now },
     ...authorUrls,
     { url: BASE, changeFrequency: 'daily', priority: 1.0, lastModified: new Date() },
     { url: `${BASE}/browse`, changeFrequency: 'daily', priority: 0.9, lastModified: new Date() },
     { url: `${BASE}/best-true-crime-podcasts`, changeFrequency: 'weekly', priority: 0.95, lastModified: new Date() },
+    { url: `${BASE}/editors-choice`, changeFrequency: 'weekly', priority: 0.7, lastModified: now },
     { url: `${BASE}/blog`, changeFrequency: 'daily', priority: 0.85, lastModified: new Date() },
     { url: `${BASE}/newsletter`, changeFrequency: 'daily', priority: 0.85, lastModified: new Date() },
-    { url: `${BASE}/about`, changeFrequency: 'monthly', priority: 0.4 },
+    { url: `${BASE}/about`, changeFrequency: 'monthly', priority: 0.4, lastModified: now },
     ...podcastUrls,
     ...podcastsLikeUrls,
     ...categoryUrls,
