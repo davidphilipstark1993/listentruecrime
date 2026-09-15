@@ -6,7 +6,7 @@ import { ArrowRight, MapPin, Calendar, Headphones, ExternalLink } from 'lucide-r
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
-import { getAllCaseSlugs, getCaseBySlug } from '@/lib/cases'
+import { getAllCaseSlugs, getCaseBySlug, getRelatedCases } from '@/lib/cases'
 import { getAllTags } from '@/lib/blog'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
 import { getAuthor } from '@/lib/authors'
@@ -85,6 +85,8 @@ export default async function CasePage({ params }: Props) {
       return db ? { ...db, caseNote: cp.note, bestStart: cp.bestStart } : null
     })
     .filter(Boolean) as (PodcastWithStats & { caseNote?: string; bestStart?: boolean })[]
+
+  const relatedCases = getRelatedCases(slug)
 
   const seriesTag = getAllTags().find(t =>
     c.aliases.some(a => a.toLowerCase() === t.name.toLowerCase())
@@ -182,6 +184,24 @@ export default async function CasePage({ params }: Props) {
                   ))}
                 </div>
               </section>
+
+              {/* Timeline */}
+              {c.timeline && c.timeline.length > 0 && (
+                <section>
+                  <h2 className="font-serif text-xl text-stone mb-5">Timeline</h2>
+                  <ol className="relative border-l border-white/[0.08] pl-6 space-y-6">
+                    {c.timeline.map((entry, i) => (
+                      <li key={i} className="relative">
+                        <span className="absolute -left-[27px] top-1 w-2.5 h-2.5 rounded-full bg-crimson" />
+                        <p className="text-2xs font-semibold uppercase tracking-widest text-crimson mb-1">
+                          {entry.date}
+                        </p>
+                        <p className="text-stone-muted text-sm leading-relaxed">{entry.event}</p>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+              )}
 
               {/* Podcasts covering this case */}
               {podcasts.length > 0 && (
@@ -328,6 +348,28 @@ export default async function CasePage({ params }: Props) {
                   >
                     Read the full series <ArrowRight size={11} />
                   </Link>
+                </div>
+              )}
+
+              {relatedCases.length > 0 && (
+                <div className="card p-5">
+                  <h3 className="font-serif text-sm text-stone mb-3 uppercase tracking-wide">Related cases</h3>
+                  <ul className="space-y-3">
+                    {relatedCases.map(rc => (
+                      <li key={rc.slug}>
+                        <Link
+                          href={`/cases/${rc.slug}`}
+                          className="flex items-start gap-2 text-stone-muted hover:text-stone text-xs transition-colors group"
+                        >
+                          <ArrowRight size={11} className="text-crimson shrink-0 mt-0.5" />
+                          <span>
+                            {rc.name}
+                            <span className="block text-stone-subtle text-2xs mt-0.5">{rc.year} · {STATUS_LABEL[rc.status]}</span>
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
 

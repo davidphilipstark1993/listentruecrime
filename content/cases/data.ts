@@ -9,6 +9,11 @@ export interface CasePodcast {
   bestStart?: boolean
 }
 
+export interface TimelineEntry {
+  date: string   // e.g. '14 February 2000' or 'August 2023' — display text, not parsed
+  event: string  // one factual sentence
+}
+
 export interface CaseData {
   slug: string
   name: string
@@ -19,6 +24,10 @@ export interface CaseData {
   status: 'solved' | 'cold' | 'ongoing' | 'partial'
   published: boolean    // flip to true after review
   summary: string[]     // 2–3 factual paragraphs; sensitive, no sensationalism
+  timeline?: TimelineEntry[]        // optional — omit rather than pad it out
+  relatedCaseSlugs?: string[]       // optional manual override, in display order;
+                                    // omit to fall back to automatic matching
+                                    // (shared podcasts, then country/status) in lib/cases.ts
   podcasts: CasePodcast[]
   faqs: { q: string; a: string }[]
 }
