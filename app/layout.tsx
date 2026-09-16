@@ -1,10 +1,26 @@
 import type { Metadata } from 'next'
+import { Inter, Playfair_Display } from 'next/font/google'
 import { Toaster } from 'react-hot-toast'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { ExitIntent } from '@/components/newsletter/exit-intent'
 import '@/app/globals.css'
 
 import { BASE } from '@/lib/seo/config'
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+
+const playfairDisplay = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-playfair',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE),
@@ -56,13 +72,18 @@ const organizationSchema = {
   '@type': 'Organization',
   name: 'ListenTrueCrime',
   url: BASE,
-  logo: `${BASE}/og`,
+  logo: {
+    '@type': 'ImageObject',
+    url: `${BASE}/icon.png`,
+    width: 1254,
+    height: 1254,
+  },
   sameAs: [],
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en-GB" className={`dark ${inter.variable} ${playfairDisplay.variable}`}>
       <body className="antialiased">
         <script
           type="application/ld+json"
