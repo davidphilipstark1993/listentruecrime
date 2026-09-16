@@ -27,6 +27,7 @@ const FOOTER_LINKS = {
     { href: '/how-we-review', label: 'How We Review' },
     { href: '/blog', label: 'Blog' },
     { href: '/cases', label: 'Cases' },
+    { href: '/badge', label: 'Podcaster Badges' },
     { href: '/browse', label: 'Browse' },
   ],
 }
