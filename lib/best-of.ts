@@ -1,3 +1,5 @@
+import { BASE } from '@/lib/seo/config'
+
 export interface BestOfPage {
   slug: string
   title: string
@@ -8,6 +10,14 @@ export interface BestOfPage {
   country?: string
   minBinge?: number
   format?: string
+  /**
+   * Set only when this page's filter is identical to an existing
+   * /category/[slug] page (same case_types/country/minBinge, same sort,
+   * just a smaller limit) — canonicalizes to that page instead of self, so
+   * the two aren't competing near-duplicates. Leave unset when the filter
+   * is genuinely distinct from every category.
+   */
+  canonicalOverride?: string
 }
 
 export const BEST_OF_PAGES: BestOfPage[] = [
@@ -29,6 +39,7 @@ export const BEST_OF_PAGES: BestOfPage[] = [
   },
   {
     slug: 'cold-case',
+    canonicalOverride: `${BASE}/category/cold-cases`,
     title: 'Best Cold Case Podcasts 2025',
     h1: 'Best Cold Case True Crime Podcasts',
     description: 'The best podcasts investigating cold cases — unsolved murders, disappearances, and decades-old mysteries finally getting the scrutiny they deserve.',
@@ -37,6 +48,7 @@ export const BEST_OF_PAGES: BestOfPage[] = [
   },
   {
     slug: 'missing-persons',
+    canonicalOverride: `${BASE}/category/missing-persons`,
     title: 'Best Missing Persons Podcasts 2025',
     h1: 'Best Missing Persons True Crime Podcasts',
     description: 'Podcasts investigating missing persons cases, unexplained disappearances, and the communities left searching for answers.',
@@ -61,6 +73,7 @@ export const BEST_OF_PAGES: BestOfPage[] = [
   },
   {
     slug: 'courtroom-drama',
+    canonicalOverride: `${BASE}/category/courtroom`,
     title: 'Best Courtroom True Crime Podcasts 2025',
     h1: 'Best Courtroom & Trial True Crime Podcasts',
     description: 'True crime podcasts covering landmark trials, wrongful convictions, and the machinery of justice. Community-rated and expert-reviewed.',
@@ -69,6 +82,7 @@ export const BEST_OF_PAGES: BestOfPage[] = [
   },
   {
     slug: 'uk-true-crime',
+    canonicalOverride: `${BASE}/category/uk-crime`,
     title: 'Best UK True Crime Podcasts 2025',
     h1: 'Best UK True Crime Podcasts',
     description: 'The best British true crime podcasts covering UK murders, cold cases, and criminal justice stories. Ranked by community ratings.',
@@ -77,6 +91,7 @@ export const BEST_OF_PAGES: BestOfPage[] = [
   },
   {
     slug: 'australian-true-crime',
+    canonicalOverride: `${BASE}/category/australian-crime`,
     title: 'Best Australian True Crime Podcasts 2025',
     h1: 'Best Australian True Crime Podcasts',
     description: 'The top Australian true crime podcasts — from landmark murders to cold cases from across the Lucky Country.',
@@ -85,6 +100,7 @@ export const BEST_OF_PAGES: BestOfPage[] = [
   },
   {
     slug: 'binge-worthy',
+    canonicalOverride: `${BASE}/category/binge-worthy`,
     title: 'Most Binge-Worthy True Crime Podcasts 2025',
     h1: 'Most Binge-Worthy True Crime Podcasts',
     description: 'The most compulsively listenable true crime podcasts with the highest binge factors — once you start, you cannot stop.',

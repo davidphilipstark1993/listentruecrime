@@ -40,10 +40,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const page = getBestOfPage(slug)
   if (!page) return {}
+
+  // A handful of these pages use the exact same filter as an existing
+  // /category/[slug] page (same case_types/country/minBinge, same sort —
+  // just a smaller limit) — canonicalize to that page instead of competing
+  // with it as a near-duplicate.
+  const canonical = page.canonicalOverride ?? `${BASE}/best/${slug}`
+
   return {
     title: page.title,
     description: page.description,
-    alternates: { canonical: `${BASE}/best/${slug}` },
+    alternates: { canonical },
+    ...(page.canonicalOverride && { robots: { index: false, follow: true } }),
     openGraph: {
       title: `${page.title} | ListenTrueCrime`,
       description: page.description,
