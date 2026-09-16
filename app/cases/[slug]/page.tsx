@@ -98,11 +98,16 @@ export default async function CasePage({ params }: Props) {
     { name: c.name, url: `${BASE}/cases/${slug}` },
   ])
 
+  // Same dynamic branded image other templates use for their OG/schema image —
+  // Article rich results require `image`, and no case has a dedicated one yet.
+  const articleImage = `${BASE}/og?${new URLSearchParams({ title: c.name, sub: STATUS_LABEL[c.status] }).toString()}`
+
   const articleSchema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: `${c.name} — Overview and Podcast Guide`,
     description: c.summary[0],
+    image: articleImage,
     url: `${BASE}/cases/${slug}`,
     author: {
       '@type': 'Person',
@@ -110,6 +115,10 @@ export default async function CasePage({ params }: Props) {
       url: `${BASE}/authors/david-stark`,
     },
     publisher: { '@type': 'Organization', name: 'ListenTrueCrime', url: BASE },
+    // Only included when set on the case — a fabricated date would be worse
+    // than no date at all for Article rich-result eligibility.
+    ...(c.publishedDate && { datePublished: c.publishedDate }),
+    ...((c.updatedDate ?? c.publishedDate) && { dateModified: c.updatedDate ?? c.publishedDate }),
   }
 
   const faqSchema = c.faqs.length > 0 ? {

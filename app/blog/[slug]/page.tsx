@@ -123,11 +123,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   // Pre-process MDX content to auto-link podcast names
   const linkedContent = autolinkPodcasts(post.content, allTitles)
 
+  // Same branded OG image generateMetadata() builds for openGraph.images —
+  // recomputed here since Article/BlogPosting rich results require `image`.
+  const schemaImageParams = new URLSearchParams({ title: post.title })
+  schemaImageParams.set('sub', post.category)
+  const schemaImage = `${BASE}/og?${schemaImageParams.toString()}`
+
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.description,
+    image: schemaImage,
     datePublished: post.date,
     dateModified: post.updated ?? post.date,
     url: postUrl,

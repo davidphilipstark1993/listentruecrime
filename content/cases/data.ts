@@ -28,6 +28,9 @@ export interface CaseData {
   relatedCaseSlugs?: string[]       // optional manual override, in display order;
                                     // omit to fall back to automatic matching
                                     // (shared podcasts, then country/status) in lib/cases.ts
+  publishedDate?: string            // ISO date this case page was written — optional;
+                                    // enables full Article rich-result eligibility when set
+  updatedDate?: string              // ISO date last substantively edited; defaults to publishedDate
   podcasts: CasePodcast[]
   faqs: { q: string; a: string }[]
 }
