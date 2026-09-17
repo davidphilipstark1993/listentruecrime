@@ -27,7 +27,12 @@ export async function middleware(request: NextRequest) {
   // Protect admin routes
   if (request.nextUrl.pathname.startsWith('/admin')) {
     if (!user) {
-      return NextResponse.redirect(new URL('/?auth=required', request.url))
+      // Redirect to the noindexed, robots-disallowed /auth/login rather than
+      // an indexable marketing URL — an unauthenticated crawl of /admin must
+      // never resolve to homepage content at a distinct, indexable address.
+      const loginUrl = new URL('/auth/login', request.url)
+      loginUrl.searchParams.set('redirect', request.nextUrl.pathname)
+      return NextResponse.redirect(loginUrl)
     }
 
     // Check admin status

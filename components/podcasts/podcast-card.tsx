@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Headphones, Star } from 'lucide-react'
 import type { Podcast, RatingStats } from '@/lib/types/database'
-import { cn, countryFlag, scoreBg, truncate } from '@/lib/utils'
+import { cn, countryFlag, scoreBg, stripHtml, truncate } from '@/lib/utils'
 
 interface PodcastCardProps {
   podcast: Podcast & { rating_stats?: RatingStats | null; review_count?: number }
@@ -13,6 +13,7 @@ interface PodcastCardProps {
 export function PodcastCard({ podcast, priority = false, className }: PodcastCardProps) {
   const score = podcast.rating_stats?.avg_overall
   const ratingCount = podcast.rating_stats?.rating_count ?? 0
+  const shortDescription = podcast.short_description ? stripHtml(podcast.short_description) : null
 
   return (
     <Link
@@ -24,7 +25,7 @@ export function PodcastCard({ podcast, priority = false, className }: PodcastCar
         {podcast.image_url ? (
           <Image
             src={podcast.image_url}
-            alt={podcast.title}
+            alt={`${podcast.title} podcast artwork`}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -70,9 +71,9 @@ export function PodcastCard({ podcast, priority = false, className }: PodcastCar
         </h3>
 
         {/* Short description */}
-        {podcast.short_description && (
+        {shortDescription && (
           <p className="text-stone-subtle text-[11px] leading-relaxed line-clamp-2 mb-2">
-            {podcast.short_description}
+            {shortDescription}
           </p>
         )}
 

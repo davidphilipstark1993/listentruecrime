@@ -47,10 +47,11 @@ export default async function NewsletterArchivePage() {
 
         <div className="mt-4 mb-10">
           <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-2">Newsletter Archive</p>
-          <h1 className="heading-display text-3xl sm:text-4xl mb-4">5 True Crime Podcasts Worth Listening To</h1>
+          <h1 className="heading-display text-3xl sm:text-4xl mb-4">Newsletter Archive</h1>
           <p className="text-stone-muted text-base leading-relaxed max-w-2xl">
-            Every week, we send subscribers five true crime podcasts we've discovered and think are worth
-            their time. Browse past issues below, or subscribe to get the next one.
+            &ldquo;5 True Crime Podcasts Worth Listening To&rdquo; — every week, we send subscribers five
+            true crime podcasts we&apos;ve discovered and think are worth their time. Browse past issues
+            below, or subscribe to get the next one.
           </p>
         </div>
 

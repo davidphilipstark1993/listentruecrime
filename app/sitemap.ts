@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { CATEGORIES, COUNTRIES, PLATFORMS } from '@/lib/types/database'
+import { CATEGORIES, COUNTRIES, PLATFORMS, PLATFORM_SLUGS } from '@/lib/types/database'
 import { getAllPosts, getAllCategories, getAllTags } from '@/lib/blog'
 import { getAllCases } from '@/lib/cases'
 import { getAllAuthors } from '@/lib/authors'
@@ -24,12 +24,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  const podcastsLikeUrls: MetadataRoute.Sitemap = (podcasts ?? []).map(p => ({
-    url: `${BASE}/podcasts-like/${p.slug}`,
-    lastModified: p.updated_at ?? new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.7,
-  }))
+  // /podcasts-like/* is noindex'd (see app/podcasts-like/[slug]/page.tsx) —
+  // thin, auto-generated mirrors of /podcasts/*, so they don't belong in the
+  // sitemap either.
 
   const categoryUrls: MetadataRoute.Sitemap = CATEGORIES.map(c => ({
     url: `${BASE}/category/${c.slug}`,
@@ -46,7 +43,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   const platformUrls: MetadataRoute.Sitemap = PLATFORMS.map(p => ({
-    url: `${BASE}/platform/${encodeURIComponent(p)}`,
+    url: `${BASE}/platform/${PLATFORM_SLUGS[p] ?? encodeURIComponent(p)}`,
     lastModified: now,
     changeFrequency: 'monthly',
     priority: 0.5,
@@ -113,12 +110,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: BASE, changeFrequency: 'daily', priority: 1.0, lastModified: new Date() },
     { url: `${BASE}/browse`, changeFrequency: 'daily', priority: 0.9, lastModified: new Date() },
     { url: `${BASE}/best-true-crime-podcasts`, changeFrequency: 'weekly', priority: 0.95, lastModified: new Date() },
+    { url: `${BASE}/how-we-review`, changeFrequency: 'monthly', priority: 0.6, lastModified: now },
     { url: `${BASE}/editors-choice`, changeFrequency: 'weekly', priority: 0.7, lastModified: now },
     { url: `${BASE}/blog`, changeFrequency: 'daily', priority: 0.85, lastModified: new Date() },
     { url: `${BASE}/newsletter`, changeFrequency: 'daily', priority: 0.85, lastModified: new Date() },
     { url: `${BASE}/about`, changeFrequency: 'monthly', priority: 0.4, lastModified: now },
     ...podcastUrls,
-    ...podcastsLikeUrls,
     ...categoryUrls,
     ...countryUrls,
     ...platformUrls,

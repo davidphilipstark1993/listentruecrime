@@ -15,7 +15,7 @@ import { buildBreadcrumbSchema } from '@/lib/seo/content'
 import { getPros, getCons, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
 import { getAuthor } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
-import { countryFlag, formatRelativeDate, scoreBg, cn } from '@/lib/utils'
+import { countryFlag, formatRelativeDate, scoreBg, cn, stripHtml } from '@/lib/utils'
 import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
@@ -34,7 +34,15 @@ async function getPodcast(slug: string) {
     .eq('slug', slug)
     .eq('is_published', true)
     .single()
-  return data
+  if (!data) return data
+  // Imported feed copy sometimes carries raw markup (<p>, &nbsp;) that must
+  // never reach a reader — clean it once here rather than at every call site
+  // that reads .description / .short_description below.
+  return {
+    ...data,
+    description: data.description ? stripHtml(data.description) : data.description,
+    short_description: data.short_description ? stripHtml(data.short_description) : data.short_description,
+  }
 }
 
 async function getReviews(podcastId: string) {
@@ -331,7 +339,7 @@ export default async function PodcastPage({ params }: Props) {
               {/* Cover */}
               <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] shrink-0 bg-ink-700">
                 {podcast.image_url ? (
-                  <Image src={podcast.image_url} alt={podcast.title} fill className="object-cover" priority sizes="(max-width: 640px) 128px, 160px" />
+                  <Image src={podcast.image_url} alt={`${podcast.title} podcast artwork`} fill className="object-cover" priority sizes="(max-width: 640px) 128px, 160px" />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <Headphones size={40} className="text-ink-500" />

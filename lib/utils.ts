@@ -44,8 +44,27 @@ export function countryFlag(code: string | null | undefined): string {
   if (!code) return ''
   const flags: Record<string, string> = {
     US: '🇺🇸', UK: '🇬🇧', AU: '🇦🇺', CA: '🇨🇦', IE: '🇮🇪', NZ: '🇳🇿',
+    ZA: '🇿🇦', KE: '🇰🇪', BE: '🇧🇪', MT: '🇲🇹', BR: '🇧🇷', PH: '🇵🇭', IN: '🇮🇳',
   }
   return flags[code] ?? ''
+}
+
+// Podcast descriptions come from imported RSS feeds and often carry raw feed
+// markup (<p>, <br>, &nbsp;) that was never meant to reach a browser as text —
+// React escapes it rather than rendering it, so it shows up literally on the
+// page. Strip tags and decode the handful of entities feeds actually use.
+export function stripHtml(html: string | null | undefined): string {
+  if (!html) return ''
+  return html
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 export function truncate(str: string, maxLength: number): string {

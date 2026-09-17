@@ -10,9 +10,15 @@ export const metadata: Metadata = {
   description: 'Every podcast on ListenTrueCrime is reviewed across 6 dimensions. Learn how our editorial team scores storytelling, research, host quality, production, binge factor, and factual accuracy.',
   alternates: { canonical: `${BASE}/how-we-review` },
   openGraph: {
+    type: 'website',
     title: 'How We Review True Crime Podcasts | ListenTrueCrime',
     description: 'Our editorial methodology: 6 dimensions, 1–10 scoring, and what earns a "Must Listen" verdict.',
     url: `${BASE}/how-we-review`,
+    images: [{
+      url: `${BASE}/og?${new URLSearchParams({ title: 'How We Review', sub: 'Our Editorial Methodology' }).toString()}`,
+      width: 1200,
+      height: 630,
+    }],
   },
 }
 

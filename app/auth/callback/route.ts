@@ -6,7 +6,10 @@ import { sanitizeEnv } from '@/lib/utils'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/'
+  const rawNext = searchParams.get('next')
+  // Only ever redirect back into our own site — a scheme-relative "//host"
+  // value still starts with "/" but browsers treat it as an absolute URL.
+  const next = rawNext && rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : '/'
 
   if (code) {
     const cookieStore = await cookies()

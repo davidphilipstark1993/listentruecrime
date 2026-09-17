@@ -12,7 +12,7 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { buildFAQSchema, buildBreadcrumbSchema } from '@/lib/seo/content'
 import { getPodcastNarrative } from '@/lib/seo/podcast-analysis'
 import { BASE } from '@/lib/seo/config'
-import { countryFlag, cn, scoreBg } from '@/lib/utils'
+import { countryFlag, cn, scoreBg, stripHtml } from '@/lib/utils'
 import { COUNTRIES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
@@ -104,6 +104,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `${BASE}/podcasts-like/${slug}`,
     },
     alternates: { canonical: `${BASE}/podcasts-like/${slug}` },
+    // 700+ near-duplicate "podcasts like X" pages, one per published podcast,
+    // templated from the same fields as /podcasts/{slug} — thin, auto-generated
+    // mirrors that add little unique value per page. noindex,follow keeps them
+    // out of the index (no ranking-dilution/duplicate-content risk) while still
+    // letting crawlers follow their links through to the real podcast pages and
+    // recommendations. See app/sitemap.ts — they're also dropped from the sitemap.
+    robots: { index: false, follow: true },
   }
 }
 
@@ -116,6 +123,8 @@ export default async function PodcastsLikePage({ params }: Props) {
   const year = new Date().getFullYear()
   const stats = podcast.rating_stats
 
+  // Only ask a question when this podcast's data actually gives a distinct
+  // answer — a generic fallback repeated across 160 pages is filler, not FAQ content.
   const faqs = [
     {
       q: `What podcasts are similar to ${podcast.title}?`,
@@ -125,24 +134,24 @@ export default async function PodcastsLikePage({ params }: Props) {
       q: `Why do people love ${podcast.title}?`,
       a: `${podcast.title} is known for its ${podcast.factual_style?.toLowerCase() ?? 'compelling'} approach to ${podcast.case_types?.slice(0, 2).join(' and ') ?? 'true crime'}. ${podcast.binge_factor ? `It scores ${podcast.binge_factor}/10 on our binge factor rating, reflecting how compulsively listenable listeners find it.` : ''} ${podcast.quick_verdict === 'Must listen' ? 'It has earned a "Must Listen" rating from our editorial team.' : ''}`,
     },
-    {
-      q: `How long are episodes of ${podcast.title}?`,
-      a: podcast.episode_length
-        ? `Episodes of ${podcast.title} are typically ${podcast.episode_length} long. ${podcast.format_type === 'Serialized' ? 'It follows a serialized format, covering one story across multiple episodes.' : podcast.format_type === 'Episodic' ? 'It follows an episodic format, with each episode covering a different case.' : 'The format varies between serialized arcs and standalone episodes.'}`
-        : `Episode lengths for ${podcast.title} vary. Check the show\'s feed on your preferred podcast app for the most accurate information.`,
-    },
-    {
-      q: `Where can I listen to ${podcast.title}?`,
-      a: podcast.platforms?.length
-        ? `${podcast.title} is available on ${podcast.platforms.join(', ')}. You can find it by searching the show name on any of those platforms.`
-        : `${podcast.title} is available on major podcast platforms including Spotify and Apple Podcasts. Search for it on your preferred app.`,
-    },
-    {
-      q: `What is the best episode of ${podcast.title} to start with?`,
-      a: podcast.best_episode_to_start
-        ? `New listeners are recommended to start with ${podcast.best_episode_to_start}. ${podcast.format_type === 'Serialized' ? 'As a serialized podcast, it\'s best to start from the beginning of a season.' : 'Episodes can generally be listened to in any order.'}`
-        : `${podcast.format_type === 'Serialized' ? `${podcast.title} is a serialized podcast, so we recommend starting from Episode 1 of any season.` : `${podcast.title} has standalone episodes — start with whatever case sounds most interesting to you.`}`,
-    },
+    ...(podcast.episode_length
+      ? [{
+          q: `How long are episodes of ${podcast.title}?`,
+          a: `Episodes of ${podcast.title} are typically ${podcast.episode_length} long. ${podcast.format_type === 'Serialized' ? 'It follows a serialized format, covering one story across multiple episodes.' : podcast.format_type === 'Episodic' ? 'It follows an episodic format, with each episode covering a different case.' : 'The format varies between serialized arcs and standalone episodes.'}`,
+        }]
+      : []),
+    ...(podcast.platforms?.length
+      ? [{
+          q: `Where can I listen to ${podcast.title}?`,
+          a: `${podcast.title} is available on ${podcast.platforms.join(', ')}. You can find it by searching the show name on any of those platforms.`,
+        }]
+      : []),
+    ...(podcast.best_episode_to_start
+      ? [{
+          q: `What is the best episode of ${podcast.title} to start with?`,
+          a: `New listeners are recommended to start with ${podcast.best_episode_to_start}. ${podcast.format_type === 'Serialized' ? 'As a serialized podcast, it\'s best to start from the beginning of a season.' : 'Episodes can generally be listened to in any order.'}`,
+        }]
+      : []),
   ]
 
   const faqSchema = buildFAQSchema(faqs)
@@ -216,7 +225,7 @@ export default async function PodcastsLikePage({ params }: Props) {
                   </div>
                 )}
                 {podcast.short_description && (
-                  <p className="text-stone-muted text-xs mt-2 leading-relaxed line-clamp-2">{podcast.short_description}</p>
+                  <p className="text-stone-muted text-xs mt-2 leading-relaxed line-clamp-2">{stripHtml(podcast.short_description)}</p>
                 )}
               </div>
             </div>

@@ -30,9 +30,15 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       types: { 'application/rss+xml': `${BASE}/blog/feed.xml` },
     },
     openGraph: {
+      type: 'website',
       title: `True Crime Podcast Blog${suffix} | ListenTrueCrime`,
       description: 'Expert guides, comparisons, and recommendations for true crime podcast lovers.',
       url: `${BASE}/blog`,
+      images: [{
+        url: `${BASE}/og?${new URLSearchParams({ title: 'The Blog', sub: 'Guides, Reviews & Recommendations' }).toString()}`,
+        width: 1200,
+        height: 630,
+      }],
     },
   }
 }
@@ -41,7 +47,16 @@ export default async function BlogIndexPage({ searchParams }: Props) {
   const { page } = await searchParams
   const pageNum = Math.max(1, Number(page ?? 1) || 1)
 
+  // Recent batches of case-deep-dive posts publish several at once and would
+  // otherwise bury the recommendation/guide content — which is what actually
+  // drives podcast discovery — under a wall of chronological case coverage.
+  // Array.prototype.sort is stable, so this only reorders the two clusters
+  // relative to each other; each cluster stays newest-first internally.
+  const RECOMMENDATION_CATEGORIES = new Set([
+    'Podcast Recommendations', 'Listening Guides', 'Comparisons', 'Beginner Guides', 'New Releases',
+  ])
   const posts = getAllPosts()
+    .sort((a, b) => Number(RECOMMENDATION_CATEGORIES.has(b.category)) - Number(RECOMMENDATION_CATEGORIES.has(a.category)))
   const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE))
   if (pageNum > totalPages) notFound()
 

@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight, ChevronDown, ChevronUp } from 'lucide-react'
@@ -7,7 +7,7 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
-import { PLATFORMS } from '@/lib/types/database'
+import { PLATFORMS, PLATFORM_SLUGS } from '@/lib/types/database'
 import { PLATFORM_SEO, buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
 import { BASE } from '@/lib/seo/config'
 import type { Podcast, RatingStats } from '@/lib/types/database'
@@ -18,14 +18,35 @@ interface Props {
 
 export const revalidate = 3600
 
+const SLUG_TO_NAME: Record<string, string> = Object.fromEntries(
+  Object.entries(PLATFORM_SLUGS).map(([name, slug]) => [slug, name])
+)
+
+// A platform with a dedicated slug (e.g. "bbc-sounds") must resolve to its
+// canonical path everywhere — this is also what a stray /platform/BBC%20Sounds
+// visit permanently redirects to below.
+function platformHref(name: string): string {
+  return PLATFORM_SLUGS[name] ? `/platform/${PLATFORM_SLUGS[name]}` : `/platform/${encodeURIComponent(name)}`
+}
+
+// Resolves a route param that may be either a kebab-case slug ("bbc-sounds")
+// or a legacy encoded display name ("BBC%20Sounds") to the display name.
+function resolvePlatform(param: string): string | null {
+  if (SLUG_TO_NAME[param]) return SLUG_TO_NAME[param]
+  const decoded = decodeURIComponent(param)
+  return PLATFORMS.includes(decoded) ? decoded : null
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { platform } = await params
-  const name = decodeURIComponent(platform)
+  const name = resolvePlatform(platform)
+  if (!name) return {}
 
   const seo = PLATFORM_SEO[name]
   const h1 = seo?.h1 ?? `Best True Crime Podcasts on ${name}`
   const year = new Date().getFullYear()
   const description = seo?.intro[0] ?? `Best true crime podcasts available on ${name}, reviewed and rated by the community.`
+  const canonical = `${BASE}${platformHref(name)}`
 
   return {
     title: `${h1} (${year})`,
@@ -33,17 +54,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${h1} (${year}) | ListenTrueCrime`,
       description,
-      url: `${BASE}/platform/${platform}`,
+      url: canonical,
     },
-    alternates: { canonical: `${BASE}/platform/${platform}` },
+    alternates: { canonical },
   }
 }
 
 export default async function PlatformPage({ params }: Props) {
   const { platform } = await params
-  const name = decodeURIComponent(platform)
+  const name = resolvePlatform(platform)
 
-  if (!PLATFORMS.includes(name)) notFound()
+  if (!name) notFound()
+
+  // Landed on the legacy space-encoded URL for a platform that now has its
+  // own clean slug — send crawlers and visitors to the canonical one.
+  if (PLATFORM_SLUGS[name] && platform !== PLATFORM_SLUGS[name]) {
+    permanentRedirect(platformHref(name))
+  }
 
   const seo = PLATFORM_SEO[name]
   const h1 = seo?.h1 ?? `Best True Crime Podcasts on ${name}`
@@ -64,7 +91,7 @@ export default async function PlatformPage({ params }: Props) {
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', url: BASE },
     { name: 'Browse', url: `${BASE}/browse` },
-    { name: h1, url: `${BASE}/platform/${platform}` },
+    { name: h1, url: `${BASE}${platformHref(name)}` },
   ])
   const itemListSchema = podcasts.length > 0 ? buildItemListSchema(
     h1,
@@ -203,5 +230,5 @@ export default async function PlatformPage({ params }: Props) {
 }
 
 export async function generateStaticParams() {
-  return PLATFORMS.map(p => ({ platform: encodeURIComponent(p) }))
+  return PLATFORMS.map(p => ({ platform: PLATFORM_SLUGS[p] ?? encodeURIComponent(p) }))
 }

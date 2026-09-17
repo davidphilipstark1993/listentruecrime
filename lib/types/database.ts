@@ -296,7 +296,15 @@ export const PLATFORMS = [
   'Patreon',
   'RSS',
   'NPR',
+  'BBC Sounds',
 ]
+
+// Platform display names that get a clean kebab-case URL (/platform/bbc-sounds)
+// instead of the default space-encoded one (/platform/BBC%20Sounds) that the
+// rest of PLATFORMS still uses — see app/platform/[platform]/page.tsx.
+export const PLATFORM_SLUGS: Record<string, string> = {
+  'BBC Sounds': 'bbc-sounds',
+}
 
 export const COUNTRIES: Record<string, string> = {
   US: 'United States',

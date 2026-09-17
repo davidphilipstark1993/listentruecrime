@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Search, ArrowRight, TrendingUp, Star, Zap } from 'lucide-react'
+import { Search, ArrowRight, TrendingUp, Star, Zap, BookOpen } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
@@ -9,8 +9,22 @@ import { Footer } from '@/components/layout/footer'
 import { CATEGORIES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getPodcastCount, roundedPodcastCount } from '@/lib/podcast-count'
+import { getPostBySlug } from '@/lib/blog'
+import { stripHtml } from '@/lib/utils'
 
 export const revalidate = 3600
+
+// Homepage discovery modules must only ever surface complete records — an
+// import mid-way through enrichment (no binge score, no host, no real
+// description) reads as broken to a visitor and is exactly the kind of thin
+// content Google penalises on a page it crawls this often. is_featured alone
+// used to be enough to appear here; it no longer is.
+function isCompleteRecord(p: Podcast): boolean {
+  const hasVerdict = Boolean(p.binge_factor) || Boolean(p.quick_verdict)
+  const hasHost = Boolean(p.host_name?.trim())
+  const hasDescription = Boolean(stripHtml(p.short_description ?? p.description).length > 0)
+  return hasVerdict && hasHost && hasDescription
+}
 
 async function getFeaturedPodcasts() {
   const supabase = createAdminClient()
@@ -22,9 +36,11 @@ async function getFeaturedPodcasts() {
     `)
     .eq('is_featured', true)
     .eq('is_published', true)
-    .limit(6)
+    .not('binge_factor', 'is', null)
+    .not('host_name', 'is', null)
+    .limit(12)
 
-  return data ?? []
+  return (data ?? []).filter(isCompleteRecord).slice(0, 6)
 }
 
 async function getTopRated() {
@@ -36,10 +52,12 @@ async function getTopRated() {
       rating_stats:podcast_rating_stats(*)
     `)
     .eq('is_published', true)
+    .not('binge_factor', 'is', null)
+    .not('host_name', 'is', null)
     .order('binge_factor', { ascending: false })
-    .limit(6)
+    .limit(12)
 
-  return data ?? []
+  return (data ?? []).filter(isCompleteRecord).slice(0, 6)
 }
 
 async function getNewest() {
@@ -51,10 +69,12 @@ async function getNewest() {
       rating_stats:podcast_rating_stats(*)
     `)
     .eq('is_published', true)
+    .not('binge_factor', 'is', null)
+    .not('host_name', 'is', null)
     .order('created_at', { ascending: false })
-    .limit(4)
+    .limit(10)
 
-  return data ?? []
+  return (data ?? []).filter(isCompleteRecord).slice(0, 4)
 }
 
 async function getRecentReviews() {
@@ -82,6 +102,23 @@ export default async function HomePage() {
     getPodcastCount(),
   ])
   const podcastCountLabel = roundedPodcastCount(podcastCount)
+
+  // Optional guides that don't exist yet (still with the editorial team) —
+  // this list picks them up automatically once they're published, with no
+  // further code change needed.
+  const guideLinks = [
+    { href: '/blog/best-british-true-crime-podcasts', label: 'Best British True Crime Podcasts' },
+    { href: '/blog/best-bbc-true-crime-podcasts', label: 'Best BBC True Crime Podcasts' },
+    { href: '/blog/true-crime-podcasts-spotify', label: 'Best True Crime Podcasts on Spotify' },
+    ...(getPostBySlug('true-crime-podcasts-with-no-banter')
+      ? [{ href: '/blog/true-crime-podcasts-with-no-banter', label: 'True Crime Podcasts With No Banter' }]
+      : []),
+    ...(getPostBySlug('best-true-crime-podcasts-on-bbc-sounds')
+      ? [{ href: '/blog/best-true-crime-podcasts-on-bbc-sounds', label: 'Best True Crime Podcasts on BBC Sounds' }]
+      : []),
+    { href: '/how-we-review', label: 'How We Review Podcasts' },
+    { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
+  ]
 
   return (
     <>
@@ -196,6 +233,28 @@ export default async function HomePage() {
                 <p className="text-stone-subtle text-xs leading-relaxed line-clamp-2">
                   {cat.description}
                 </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* ═══════════════ GUIDES & RECOMMENDATIONS ═══════════════ */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 section-divider">
+          <div className="mb-8">
+            <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Guides</p>
+            <h2 className="heading-section text-2xl sm:text-3xl">
+              <BookOpen size={20} className="inline mr-2 text-crimson mb-0.5" />
+              Guides &amp; recommendations
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {guideLinks.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="card-hover p-4 flex items-center text-stone-muted text-sm font-medium hover:text-white transition-colors"
+              >
+                {link.label}
               </Link>
             ))}
           </div>
