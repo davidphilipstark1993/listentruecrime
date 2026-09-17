@@ -7,7 +7,9 @@ import { Footer } from '@/components/layout/footer'
 // Next.js serves this for any unmatched route with an HTTP 404 status —
 // it must carry its own title/canonical, never inherit the homepage's.
 export const metadata: Metadata = {
-  title: 'Page Not Found | ListenTrueCrime',
+  // Plain string, not "... | ListenTrueCrime" — the root layout's title
+  // template already appends that suffix to whatever <title> we set here.
+  title: 'Page Not Found',
   description: "The page you're looking for doesn't exist or has moved.",
   robots: { index: false, follow: true },
   // Explicit overrides, not omissions — the root layout sets a homepage
