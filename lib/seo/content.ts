@@ -545,6 +545,244 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
       { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
     ],
   },
+  ZA: {
+    h1: 'Best South African True Crime Podcasts',
+    intro: [
+      'South African true crime podcasts are only beginning to reach an international audience, but the scene at home is already substantial. True Crime South Africa has topped the country\'s own podcast charts against international competition, and a small but committed field of independent producers is now covering cases — and communities — that rarely make it into English-language true crime coverage.',
+      'South African crime stories carry their own particular weight: a still-recent history of institutional violence, deep inequality, and a justice system under constant public scrutiny. The best shows from the country treat their cases with the same rigour and victim focus that define the genre\'s biggest names elsewhere, while surfacing stories that would otherwise stay local.',
+    ],
+    faqs: [
+      {
+        q: 'What is the best South African true crime podcast?',
+        a: 'True Crime South Africa, hosted by award-winning journalist Nicole Engelbrecht, is the country\'s flagship show and has ranked among South Africa\'s most-listened-to podcasts overall, beating international competition in its home market.',
+      },
+      {
+        q: 'Are there South African podcasts covering specific communities or angles?',
+        a: 'Yes — A Crime Most Queer, hosted by Nj Hourquebie, focuses specifically on crimes committed by or against LGBTQ people, mainly but not exclusively in South Africa. It\'s a genuinely uncommon angle within true crime more broadly.',
+      },
+      {
+        q: 'Are South African true crime podcasts available internationally?',
+        a: 'Yes — the major South African shows are available globally on Spotify and Apple Podcasts, the same as any other English-language podcast.',
+      },
+      {
+        q: 'Why is South African true crime coverage less visible internationally?',
+        a: 'English-language true crime review sites and directories have historically focused almost entirely on US, UK, and Australian content. South Africa has a genuine, active podcast scene, but it rarely gets covered outside the country — this page is a small step toward changing that.',
+      },
+      {
+        q: 'What kinds of cases do South African true crime podcasts cover?',
+        a: 'Coverage spans solved and unsolved murders, missing persons cases, and crimes shaped by South Africa\'s specific social context, including cases affecting the LGBTQ community that get little coverage elsewhere.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/country/KE', label: 'Kenyan True Crime Podcasts' },
+      { href: '/country/UK', label: 'UK True Crime Podcasts' },
+      { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
+    ],
+  },
+  KE: {
+    h1: 'Best Kenyan True Crime Podcasts',
+    intro: [
+      'Kenyan true crime coverage in podcast form is still rare in English-language media, which makes the cases that do get covered especially worth seeking out. These are often stories with an international dimension — foreign nationals whose deaths or disappearances in Kenya became major cross-border investigations, reported with the same seriousness as any major Western case.',
+      'As one of the least-covered true crime territories among major review sites, Kenya represents real untapped ground — cases with genuine international news weight that most English-language true crime directories simply never reach.',
+    ],
+    faqs: [
+      {
+        q: 'What is a notable Kenyan true crime podcast?',
+        a: 'Murder in the Maasai Mara investigates the 1988 death of British wildlife photographer Julie Ward, who vanished during a solo safari in Kenya\'s Maasai Mara game reserve — a case that became a major cross-border investigation between the UK and Kenya.',
+      },
+      {
+        q: 'Are Kenyan true crime podcasts produced locally or internationally?',
+        a: 'Coverage of Kenyan cases often comes from international producers — particularly UK outlets — reporting on cases with cross-border significance, alongside a smaller but growing field of homegrown Kenyan podcast production.',
+      },
+      {
+        q: 'Why is there so little true crime podcast coverage of Kenya?',
+        a: 'Most major true crime directories and review sites concentrate almost exclusively on US, UK, and Australian shows. Kenya — like much of East Africa — has real stories and a growing podcast audience, but very little of it reaches English-language true crime coverage.',
+      },
+      {
+        q: 'Are Kenyan true crime podcasts available internationally?',
+        a: 'Yes — the podcasts covering Kenyan cases that are featured here are available globally on Spotify and Apple Podcasts.',
+      },
+      {
+        q: 'What kinds of Kenyan cases get international podcast coverage?',
+        a: 'Cases involving foreign nationals, safari tourism, and cross-border investigations tend to be the ones that reach international true crime podcasting, since they typically involve UK, European, or American media attention alongside Kenyan authorities.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/country/ZA', label: 'South African True Crime Podcasts' },
+      { href: '/country/UK', label: 'UK True Crime Podcasts' },
+      { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
+    ],
+  },
+  BE: {
+    h1: 'Best Belgian True Crime Podcasts',
+    intro: [
+      'Belgian true crime is inseparable from one case above all others — the Marc Dutroux affair, which remains one of the most devastating criminal scandals in modern European history and exposed catastrophic failures across the country\'s police and justice system. Podcast coverage of Belgian crime tends to be serious, investigative, and unflinching about institutional failure.',
+      'Belgium\'s true crime podcast footprint is small compared to its neighbours, but the cases that do get covered carry enormous weight — this is a country where a single case reshaped public trust in policing for a generation.',
+    ],
+    faqs: [
+      {
+        q: 'What is the essential Belgian true crime podcast?',
+        a: 'Le Monstre investigates the Marc Dutroux case, in which Dutroux abducted and imprisoned multiple young girls — a scandal that exposed devastating failures across Belgium\'s police and judicial system and remains the country\'s most significant criminal case.',
+      },
+      {
+        q: 'Why does the Dutroux case dominate Belgian true crime coverage?',
+        a: 'The scale of the failures — police searches that missed victims who were later found alive, years of institutional dysfunction, and public outrage that led to major reforms — make it one of the most consequential criminal cases in modern European history, not just Belgian history.',
+      },
+      {
+        q: 'Are Belgian true crime podcasts available in English?',
+        a: 'Coverage varies. Some Belgian cases have been covered by English-language producers specifically because of their international significance, making them accessible to a global audience despite the local origin of the crimes.',
+      },
+      {
+        q: 'Is Belgium\'s true crime podcast scene growing?',
+        a: 'Like much of continental Europe, Belgium\'s true crime podcast scene is smaller than the English-language markets, but coverage of major domestic cases continues to reach international audiences through translated or English-produced content.',
+      },
+      {
+        q: 'What other kinds of cases do Belgian podcasts cover?',
+        a: 'Beyond the Dutroux case, Belgian true crime coverage touches on organised crime and institutional cover-ups — themes that recur because of the country\'s role as a hub for cross-border European crime.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/country/MT', label: 'Maltese True Crime Podcasts' },
+      { href: '/country/UK', label: 'UK True Crime Podcasts' },
+      { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
+    ],
+  },
+  MT: {
+    h1: 'Best Maltese True Crime Podcasts',
+    intro: [
+      'Maltese true crime podcasting is defined by a single, seismic case: the October 2017 assassination of investigative journalist Daphne Caruana Galizia, killed by a car bomb after years of reporting on corruption at the highest levels of Maltese public life. It remains one of the most significant journalist killings in modern European history.',
+      'Malta is a small country, and its true crime podcast footprint reflects that — but the Caruana Galizia case has drawn serious international investigative attention precisely because of what it revealed about the risks facing journalists who investigate power.',
+    ],
+    faqs: [
+      {
+        q: 'What is the key Maltese true crime podcast?',
+        a: 'Who Killed Daphne examines the October 2017 assassination of Daphne Caruana Galizia, Malta\'s most prominent investigative journalist and anti-corruption reporter, killed by a car bomb outside her home.',
+      },
+      {
+        q: 'Why did the Caruana Galizia case get international attention?',
+        a: 'Her killing was widely seen as an attack on press freedom itself, given her reporting on corruption connected to senior figures in Maltese politics and business. The case triggered EU-level scrutiny of rule of law in Malta and led to protests, resignations, and ongoing prosecutions.',
+      },
+      {
+        q: 'Are Maltese true crime podcasts available internationally?',
+        a: 'Yes — coverage of the Caruana Galizia case in particular has been produced with an international audience in mind, given its significance for press freedom and EU governance more broadly.',
+      },
+      {
+        q: 'Does Malta have a broader true crime podcast scene?',
+        a: 'Malta\'s small population means its true crime podcast output is limited compared to larger countries, but cases with genuine international stakes — like the Caruana Galizia assassination — continue to draw serious investigative podcast coverage.',
+      },
+      {
+        q: 'What made Daphne Caruana Galizia\'s reporting significant?',
+        a: 'She was known for dogged investigation into corruption, money laundering, and organised crime connections within Maltese politics, publishing through her own blog when mainstream outlets wouldn\'t. Her final post, published shortly before her death, ended: "There are crooks everywhere you look now. The situation is desperate."',
+      },
+    ],
+    relatedLinks: [
+      { href: '/country/BE', label: 'Belgian True Crime Podcasts' },
+      { href: '/country/UK', label: 'UK True Crime Podcasts' },
+      { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
+    ],
+  },
+  BR: {
+    h1: 'Best Brazilian & Latin American True Crime Podcasts',
+    intro: [
+      'True crime coverage of Brazil and the wider Latin American region has stayed almost entirely outside English-language podcast directories, despite a huge and engaged Latin American podcast audience and no shortage of cases worth telling. Shows covering this territory tend to be hosted by people with direct ties to the region, bridging cases that stayed local with an English-speaking audience that has never heard of them.',
+      'Latin America spans dozens of countries and legal systems, so true crime coverage here is necessarily broad — but the best shows bring the same care and detail that listeners expect from major US or UK productions, applied to cases that have stayed imprinted in local memory without ever crossing into wider recognition.',
+    ],
+    faqs: [
+      {
+        q: 'What is a notable podcast covering Brazilian and Latin American true crime?',
+        a: 'Suspiria, hosted by Carol and Stephanie — both born and raised in Brazil — covers true crime cases across Latin America, including Brazil, Mexico, and Chile, for an English-speaking audience.',
+      },
+      {
+        q: 'Why is Latin American true crime underrepresented in English-language podcasting?',
+        a: 'Most major true crime directories and review sites are built around US, UK, and Australian content, largely because that\'s where the earliest and best-funded productions came from. Latin America has an enormous domestic podcast audience, but very little of its true crime content is produced in English or reaches international directories.',
+      },
+      {
+        q: 'Are Latin American true crime podcasts available internationally?',
+        a: 'Yes — English-language shows covering the region, like Suspiria, are available globally on Spotify and Apple Podcasts, the same as any other podcast in the genre.',
+      },
+      {
+        q: 'Which countries does Latin American true crime coverage typically span?',
+        a: 'Coverage varies by show, but commonly includes Brazil, Mexico, Chile, Colombia, and Argentina — reflecting both population size and the volume of well-documented cases in each country.',
+      },
+      {
+        q: 'Is this a growing area for true crime podcasting?',
+        a: 'Yes — Latin America has one of the fastest-growing podcast audiences globally, and English-language coverage of the region\'s true crime cases is still catching up to that demand.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/country/US', label: 'American True Crime Podcasts' },
+      { href: '/country/PH', label: 'Filipino True Crime Podcasts' },
+      { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
+    ],
+  },
+  PH: {
+    h1: 'Best Filipino True Crime Podcasts',
+    intro: [
+      'Filipino true crime podcasting brings a distinctive cultural voice to cases that rarely reach international audiences. The word "lagim" — dread, terror — captures the tone well: shows from the Philippines dig into infamous and lesser-known local cases with a specificity and cultural grounding that outside coverage usually misses.',
+      'The Philippines has a large, highly engaged podcast audience, and its true crime scene reflects that — but like much of Southeast Asia, it has stayed largely invisible to English-language true crime directories built around Western content.',
+    ],
+    faqs: [
+      {
+        q: 'What is a notable Filipino true crime podcast?',
+        a: 'LAGIM, hosted by Filipino-German host Christine Abrigana, covers infamous and lesser-known Filipino cases every two weeks. "Lagim" is a Filipino word meaning dread or terror.',
+      },
+      {
+        q: 'How often does LAGIM release new episodes?',
+        a: 'LAGIM releases fortnightly — every two weeks — giving it a steady, sustainable pace compared to some weekly Western shows.',
+      },
+      {
+        q: 'Are Filipino true crime podcasts available internationally?',
+        a: 'Yes — LAGIM and other Filipino true crime podcasts are available globally on Spotify and Apple Podcasts.',
+      },
+      {
+        q: 'Why is there so little English-language coverage of Filipino true crime?',
+        a: 'Major true crime review sites and directories have historically concentrated on US, UK, and Australian content. The Philippines has a substantial domestic true crime podcast audience, but very little of that content has been surfaced for an international English-speaking audience until now.',
+      },
+      {
+        q: 'What kind of cases does Filipino true crime podcasting cover?',
+        a: 'Coverage spans well-known national cases alongside more obscure local stories — the kind of cases that shaped public fear and fascination within the Philippines but stayed almost entirely unknown outside it.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/country/IN', label: 'Indian True Crime Podcasts' },
+      { href: '/country/BR', label: 'Brazilian & Latin American True Crime Podcasts' },
+      { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
+    ],
+  },
+  IN: {
+    h1: 'Best Indian True Crime Podcasts',
+    intro: [
+      'Indian true crime podcasting has produced some of the most meticulously reported serialised audio journalism anywhere in the genre, even though the country is barely represented on most English-language true crime directories. The best Indian shows apply the same investigative depth as the biggest Western productions to cases that shocked the country but rarely made international headlines.',
+      'With one of the largest podcast-listening populations in the world, India\'s true crime scene is enormous — this page is a first step toward surfacing the standout shows for an international audience that\'s likely never encountered them.',
+    ],
+    faqs: [
+      {
+        q: 'What is a notable Indian true crime podcast?',
+        a: 'Death, Lies & Cyanide, a Spotify Original narrated by veteran journalist Sashi Kumar, chronicles the case of Jolly Joseph from Kerala, accused of poisoning six members of her own family over 14 years before coming under suspicion in 2019.',
+      },
+      {
+        q: 'Is Death, Lies & Cyanide based on a real case?',
+        a: 'Yes — it covers the real Koodathayi cyanide killings in Kerala, one of the most notorious family-murder cases in recent Indian history, which also became the subject of the Netflix documentary Curry & Cyanide.',
+      },
+      {
+        q: 'Are Indian true crime podcasts available internationally?',
+        a: 'Yes — Death, Lies & Cyanide is available on Spotify, and other Indian true crime podcasts are widely available on Spotify and Apple Podcasts.',
+      },
+      {
+        q: 'Why has Indian true crime podcasting stayed under the radar internationally?',
+        a: 'Most major true crime review sites and directories are built around US, UK, and Australian content. India has an enormous, highly engaged podcast audience and a growing body of serious true crime journalism, but very little of it has been catalogued for an international English-speaking audience.',
+      },
+      {
+        q: 'What kinds of cases do Indian true crime podcasts cover?',
+        a: 'Coverage includes family poisonings, high-profile murders, and cases that dominated Indian news cycles for months or years — often reported with the same narrative-driven, journalistic approach as the biggest Western serialised true crime shows.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/country/PH', label: 'Filipino True Crime Podcasts' },
+      { href: '/country/US', label: 'American True Crime Podcasts' },
+      { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
+    ],
+  },
 }
 
 // ── Platform pages ───────────────────────────────────────────
