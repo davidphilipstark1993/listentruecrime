@@ -24,6 +24,10 @@ interface RatingWidgetProps {
 
 type ScoreMap = Record<string, number>
 
+function localKey(podcastId: string) {
+  return `ltc_rating_${podcastId}`
+}
+
 export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
   const [user, setUser] = useState<{ id: string } | null>(null)
   const [scores, setScores] = useState<ScoreMap>({})
@@ -31,16 +35,37 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
   const [authOpen, setAuthOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const [savedLocally, setSavedLocally] = useState(false)
 
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
       setUser(user)
-      if (user) fetchExisting(user.id)
-      else setLoaded(true)
+      if (user) {
+        await fetchExisting(user.id)
+        // Flush any pending anonymous rating to Supabase
+        const pending = readLocal()
+        if (pending && Object.keys(pending).length > 0) {
+          await supabase
+            .from('ratings')
+            .upsert({ user_id: user.id, podcast_id: podcastId, ...pending }, { onConflict: 'user_id,podcast_id' })
+          localStorage.removeItem(localKey(podcastId))
+        }
+      } else {
+        const local = readLocal()
+        if (local) { setScores(local); setExisting(local); setSavedLocally(true) }
+        setLoaded(true)
+      }
     })
   }, [])
+
+  function readLocal(): ScoreMap | null {
+    try {
+      const raw = localStorage.getItem(localKey(podcastId))
+      return raw ? JSON.parse(raw) : null
+    } catch { return null }
+  }
 
   const fetchExisting = async (userId: string) => {
     const { data } = await supabase
@@ -60,12 +85,23 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
   }
 
   const handleSave = async () => {
-    if (!user) { setAuthOpen(true); return }
     if (Object.keys(scores).length === 0) { toast.error('Please rate at least one dimension'); return }
+
+    if (!user) {
+      // Anonymous: save to localStorage
+      try {
+        localStorage.setItem(localKey(podcastId), JSON.stringify(scores))
+        setExisting(scores)
+        setSavedLocally(true)
+        toast.success('Rating saved locally!')
+      } catch {
+        toast.error('Could not save rating')
+      }
+      return
+    }
 
     setSaving(true)
     const payload = { user_id: user.id, podcast_id: podcastId, ...scores }
-
     const { error } = await supabase
       .from('ratings')
       .upsert(payload, { onConflict: 'user_id,podcast_id' })
@@ -76,12 +112,12 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
     } else {
       toast.success('Rating saved!')
       setExisting(scores)
+      setSavedLocally(false)
     }
   }
 
   const StarRow = ({ field }: { field: typeof RATING_FIELDS[number] }) => {
     const current = scores[field.key] ?? 0
-
     return (
       <div className="flex items-center justify-between gap-4">
         <span className="text-sm text-stone-muted w-36 shrink-0">{field.label}</span>
@@ -89,10 +125,7 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
           {[...Array(10)].map((_, i) => (
             <button
               key={i}
-              onClick={() => {
-                if (!user) { setAuthOpen(true); return }
-                setScores(prev => ({ ...prev, [field.key]: i + 1 }))
-              }}
+              onClick={() => setScores(prev => ({ ...prev, [field.key]: i + 1 }))}
               className="p-0.5 transition-transform hover:scale-110 focus:outline-none"
               aria-label={`Rate ${field.label} ${i + 1}`}
             >
@@ -118,7 +151,7 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
       <div className="card p-5">
         <h3 className="font-serif text-lg text-stone mb-1">Rate this podcast</h3>
         <p className="text-stone-subtle text-xs mb-5">
-          {user ? 'Your ratings are saved automatically.' : 'Sign in to save your ratings.'}
+          {user ? 'Your ratings are saved to your account.' : 'No account needed — rate anonymously.'}
         </p>
 
         <div className="space-y-4">
@@ -127,20 +160,25 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
           ))}
         </div>
 
-        <div className="mt-6 flex items-center gap-3">
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="btn-primary"
-          >
+        <div className="mt-6 flex items-center gap-3 flex-wrap">
+          <button onClick={handleSave} disabled={saving} className="btn-primary">
             {saving ? 'Saving…' : (Object.keys(existing).length > 0 ? 'Update rating' : 'Submit rating')}
           </button>
-          {!user && (
-            <p className="text-xs text-stone-subtle">
-              <button onClick={() => setAuthOpen(true)} className="text-stone hover:underline">
-                Sign in
-              </button>{' '}to save your rating
-            </p>
+          {!user && savedLocally && (
+            <button
+              onClick={() => setAuthOpen(true)}
+              className="text-xs text-stone-subtle hover:text-stone underline"
+            >
+              Sign in to save permanently
+            </button>
+          )}
+          {!user && !savedLocally && (
+            <button
+              onClick={() => setAuthOpen(true)}
+              className="text-xs text-stone-subtle hover:text-stone underline"
+            >
+              Sign in to sync across devices
+            </button>
           )}
         </div>
       </div>
@@ -148,7 +186,7 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
       <AuthModal
         open={authOpen}
         onClose={() => setAuthOpen(false)}
-        message={`Sign in to rate ${podcastTitle}`}
+        message={`Sign in to save your ${podcastTitle} rating`}
       />
     </>
   )
