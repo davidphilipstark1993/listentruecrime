@@ -1,3 +1,8 @@
+// Single-word podcast titles that are also common English words — autolinking
+// these turns ordinary prose (e.g. "the suspect denies involvement") into
+// misleading links to an unrelated podcast. Exact-match, case-insensitive.
+const AUTOLINK_STOPWORDS = new Set(['suspect', 'believed', 'unsolved'])
+
 export function autolinkPodcasts(
   content: string,
   podcasts: Array<{ slug: string; title: string }>
@@ -5,7 +10,9 @@ export function autolinkPodcasts(
   if (!podcasts.length) return content
 
   // Longest titles first to prefer longer matches over partial ones
-  const sorted = [...podcasts].sort((a, b) => b.title.length - a.title.length)
+  const sorted = [...podcasts]
+    .filter(pod => !AUTOLINK_STOPWORDS.has(pod.title.trim().toLowerCase()))
+    .sort((a, b) => b.title.length - a.title.length)
 
   let inCodeBlock = false
   const lines = content.split('\n')
@@ -32,10 +39,15 @@ export function autolinkPodcasts(
         return `\x00P${idx}\x00`
       })
 
-      // Replace podcast titles in remaining plain text
+      // Replace podcast titles in remaining plain text. Case-sensitive: many
+      // podcast titles are ordinary words or phrases ("Cold", "Proof", "The
+      // Disappearance"), and matching case-insensitively turns everyday lowercase
+      // prose into misleading links. Requiring the title's exact casing keeps
+      // genuine name references (typically capitalized) while leaving normal
+      // sentences alone.
       for (const pod of sorted) {
         const escaped = pod.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-        const re = new RegExp(`\\b${escaped}\\b`, 'gi')
+        const re = new RegExp(`\\b${escaped}\\b`, 'g')
         result = result.replace(re, match => `[${match}](/podcasts/${pod.slug})`)
       }
 
