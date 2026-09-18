@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { slugify } from '@/lib/utils'
+import { resolvePodcastArtwork } from '@/lib/artwork/resolve'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -64,6 +65,14 @@ export async function POST(_req: Request, { params }: Props) {
   }
 
   await admin.from('newsletter_submissions').update({ matched_podcast_id: created.id }).eq('id', id)
+
+  // Best-effort — validates/finds artwork for the new podcast, but a
+  // failure here must never fail podcast creation itself.
+  try {
+    await resolvePodcastArtwork(admin, created.id)
+  } catch (err) {
+    console.error(`Artwork resolution failed for newly created podcast ${created.id}:`, err instanceof Error ? err.message : err)
+  }
 
   return NextResponse.json({ ok: true, alreadyInDirectory: false, podcast: created })
 }

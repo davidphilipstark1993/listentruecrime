@@ -1,0 +1,51 @@
+name: Podcast Artwork Recovery
+
+on:
+  schedule:
+    # 06:00 UTC daily — ahead of the weekly discovery (Mondays 07:00 UTC)
+    # and newsletter (Sundays 08:00 UTC) runs, so newly-added podcasts get
+    # an artwork pass before either of those touches them.
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Max podcasts to process this run'
+        required: false
+        default: '50'
+      scope:
+        description: 'missing | needs_review | failed | broken'
+        required: false
+        default: 'broken'
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # npm ci fails here on a platform-specific optionalDependencies quirk
+      # (the wasm32 fallback packages resolve differently on the Linux
+      # runner than on the macOS machine that generated the lockfile).
+      # npm install self-heals instead of hard-failing on that mismatch.
+      - run: npm install
+
+      # Bounded batch, never the full catalogue in one run — matches the
+      # admin dashboard's own "Recover all" batching. Only ever touches
+      # rows that are missing/failed/needs_review and don't have a manual
+      # override; existing verified artwork is left alone entirely.
+      - name: Recover missing/broken artwork
+        run: npx tsx scripts/artwork/backfill.ts --limit=${{ github.event.inputs.limit || '50' }} --scope=${{ github.event.inputs.scope || 'broken' }}
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          PODCASTINDEX_API_KEY: ${{ secrets.PODCASTINDEX_API_KEY }}
+          PODCASTINDEX_API_SECRET: ${{ secrets.PODCASTINDEX_API_SECRET }}
+
+      # This workflow only ever writes podcasts.image_url/artwork_* columns
+      # (verified high/medium-confidence matches) or podcasts.artwork_candidate
+      # (needs_review — never applied automatically). It never touches
+      # anything with artwork_manual_override set.

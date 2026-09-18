@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { slugify } from '@/lib/utils'
 import { renderNewsletterHtml, renderNewsletterPlainText, type NewsletterRenderItem } from '@/lib/newsletter/render'
+import { resolvePodcastArtwork } from '@/lib/artwork/resolve'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -97,6 +98,14 @@ export async function POST(_req: Request, { params }: Props) {
 
       await admin.from('newsletter_podcasts').update({ podcast_id: podcastId }).eq('id', slot.id)
       await admin.from('podcast_discoveries').update({ matched_podcast_id: podcastId, status: 'featured' }).eq('id', d.id)
+
+      // Best-effort — a failure here must never block sending the newsletter.
+      try {
+        const result = await resolvePodcastArtwork(admin, podcastId)
+        if (result.artworkUrl) imageUrl = result.artworkUrl
+      } catch (err) {
+        console.error(`Artwork resolution failed for newly created podcast ${podcastId}:`, err instanceof Error ? err.message : err)
+      }
     } else if (slot.discovery) {
       await admin.from('podcast_discoveries').update({ status: 'featured' }).eq('id', slot.discovery.id)
     }

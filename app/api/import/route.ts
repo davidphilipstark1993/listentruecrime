@@ -98,6 +98,12 @@ export async function POST(req: Request) {
       image_url: row.image_url ?? null,
       website_url: row.website_url ?? null,
       is_published: true,
+      // A CSV row that already ships an image_url is treated the same as
+      // any other pre-existing artwork — accepted as-is, not re-validated
+      // here (bulk import must stay fast); it just becomes eligible for a
+      // background artwork-recovery pass like any other podcast. Rows
+      // without an image_url keep the column default ('missing').
+      ...(row.image_url ? { artwork_status: 'verified' as const, artwork_source: 'existing' as const } : {}),
     }
 
     const { error } = await admin
