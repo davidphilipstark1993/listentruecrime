@@ -78,7 +78,9 @@ const organizationSchema = {
     width: 1254,
     height: 1254,
   },
-  sameAs: [],
+  // sameAs intentionally omitted — no social/profile URLs exist anywhere in
+  // the site or repo to populate it with (see audit summary). Add it back
+  // here once real profile URLs exist.
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

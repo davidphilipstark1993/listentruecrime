@@ -249,7 +249,15 @@ export default async function PodcastPage({ params }: Props) {
     dateModified: podcast.updated_at?.split('T')[0],
     ...(podcast.case_types?.length && { genre: podcast.case_types }),
     ...(podcast.country && { countryOfOrigin: { '@type': 'Country', name: COUNTRIES[podcast.country] ?? podcast.country } }),
-    ...(podcast.platforms?.length && { potentialAction: podcast.platforms.map((p: string) => ({ '@type': 'ListenAction', target: p })) }),
+    // ListenAction.target needs a real EntryPoint URL — platform names alone
+    // (e.g. "Spotify") aren't valid targets and there's no per-platform URL
+    // in the data, so this only fires when we have the podcast's own site.
+    ...(podcast.website_url && {
+      potentialAction: {
+        '@type': 'ListenAction',
+        target: { '@type': 'EntryPoint', url: podcast.website_url, actionPlatform: ['http://schema.org/DesktopWebPlatform', 'http://schema.org/MobileWebPlatform'] },
+      },
+    }),
     // Only emit aggregateRating when there are real community ratings
     ...(ratingCount >= 1 && overallScore != null && {
       aggregateRating: {
