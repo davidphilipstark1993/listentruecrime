@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const c = getCaseBySlug(slug)
   if (!c) return {}
 
-  const title = `${c.name} — Podcasts and Overview`
+  const title = c.name
   const description = c.summary[0].slice(0, 160)
 
   return {

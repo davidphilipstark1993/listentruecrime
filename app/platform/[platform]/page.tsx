@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const seo = PLATFORM_SEO[name]
   const h1 = seo?.h1 ?? `Best True Crime Podcasts on ${name}`
   const year = new Date().getFullYear()
-  const description = seo?.intro[0] ?? `Best true crime podcasts available on ${name}, reviewed and rated by the community.`
+  const description = seo?.metaDescription ?? `Best true crime podcasts available on ${name}, reviewed and rated by the community.`
   const canonical = `${BASE}${platformHref(name)}`
 
   return {

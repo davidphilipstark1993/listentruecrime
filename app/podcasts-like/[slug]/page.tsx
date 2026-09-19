@@ -91,7 +91,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const podcast = await getSourcePodcast(slug)
   if (!podcast) return {}
 
-  const title = `Podcasts Like ${podcast.title} — Best Alternatives (${new Date().getFullYear()})`
+  const title = `Podcasts Like ${podcast.title}`
   const description = `If you loved ${podcast.title}, here are the best podcasts to listen to next. Similar true crime shows matched by case type, storytelling style, and listener ratings.`
 
   return {

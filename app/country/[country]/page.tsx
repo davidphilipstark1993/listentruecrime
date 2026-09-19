@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const seo = COUNTRY_SEO[country]
   const h1 = seo?.h1 ?? `Best ${name} True Crime Podcasts`
   const year = new Date().getFullYear()
-  const description = seo?.intro[0] ?? `The best true crime podcasts from ${name}. Real cases, real crimes, expertly reviewed and community-rated.`
+  const description = seo?.metaDescription ?? `The best true crime podcasts from ${name}, expertly reviewed and community-rated.`
 
   return {
     title: `${h1} (${year})`,

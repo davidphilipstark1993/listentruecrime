@@ -6,7 +6,7 @@ import { Footer } from '@/components/layout/footer'
 import { BASE } from '@/lib/seo/config'
 
 export const metadata: Metadata = {
-  title: 'How We Review True Crime Podcasts — Our Editorial Methodology',
+  title: 'How We Review True Crime Podcasts',
   description: 'Every podcast on ListenTrueCrime is reviewed across 6 dimensions. Learn how our editorial team scores storytelling, research, host quality, production, binge factor, and factual accuracy.',
   alternates: { canonical: `${BASE}/how-we-review` },
   openGraph: {

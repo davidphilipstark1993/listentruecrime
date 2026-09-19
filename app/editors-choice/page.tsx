@@ -42,7 +42,7 @@ const PICKS = [
 ]
 
 export const metadata: Metadata = {
-  title: "Editor's Choice | ListenTrueCrime",
+  title: "Editor's Choice",
   description:
     "Five personal picks from the ListenTrueCrime editor — the true crime podcasts that set the standard for the genre.",
   alternates: { canonical: `${BASE}/editors-choice` },

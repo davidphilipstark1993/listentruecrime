@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const baseDescription = seo?.intro[0] ?? `Discover the best ${cat.label.toLowerCase()} true crime podcasts. ${cat.description}`
 
   return {
-    title: `${h1} (${year}) — Curated Picks`,
+    title: `${h1} (${year})`,
     description: (baseDescription + descriptionSuffix).slice(0, 160),
     openGraph: {
       title: `${h1} (${year}) | ListenTrueCrime`,

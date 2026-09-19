@@ -144,7 +144,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const brandedOg = `${BASE}/og?${ogParams.toString()}`
 
   return {
-    title: `${podcast.title} Review — Is It Worth Listening To?`,
+    title: `${podcast.title} Review`,
     description,
     openGraph: {
       title: `${podcast.title} | ListenTrueCrime`,

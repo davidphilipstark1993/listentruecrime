@@ -4,6 +4,10 @@
 
 export interface PageSeoContent {
   h1: string
+  // Short, standalone summary for <meta name="description"> — kept separate
+  // from `intro` because intro[0] is on-page body copy (2-3 sentences) and
+  // is too long for a meta description on its own.
+  metaDescription?: string
   intro: string[]
   faqs: { q: string; a: string }[]
   relatedLinks?: { href: string; label: string }[]
@@ -340,6 +344,7 @@ export const CATEGORY_SEO: Record<string, PageSeoContent> = {
 export const COUNTRY_SEO: Record<string, PageSeoContent> = {
   US: {
     h1: 'Best American True Crime Podcasts',
+    metaDescription: 'The best American true crime podcasts, expert-reviewed and community-rated, from NPR classics like Serial to the latest investigative hits.',
     intro: [
       'American true crime podcasts form the backbone of the global genre. From the NPR-produced Serial that launched a podcast revolution to the grassroots investigations that have reopened cold cases, the US produces more true crime content than any other country — and some of the finest.',
       'American crime podcasts reflect the country\'s complex relationship with justice — a system capable of both extraordinary dedication and extraordinary failure. The best American shows use individual cases to explore larger systemic questions about race, policing, and the gap between law and justice.',
@@ -375,6 +380,7 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
   },
   UK: {
     h1: 'Best UK True Crime Podcasts',
+    metaDescription: 'The best UK true crime podcasts, expert-reviewed and community-rated, covering everything from Victorian murders to modern miscarriages of justice.',
     intro: [
       'UK true crime podcasts bring British perspective and journalistic tradition to some of the country\'s most compelling criminal cases. From Victorian murders to contemporary gang crime, British podcasters approach their subjects with a distinctive sensibility — measured, detailed, and attentive to the systemic failures that allow crime to happen.',
       'The UK true crime scene has produced internationally acclaimed shows that compete with the best from the US and Australia. British cases carry their own particular atmosphere — tightly-knit communities, infamous miscarriages of justice, and a legal system with its own distinctive rhythms.',
@@ -410,6 +416,7 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
   },
   AU: {
     h1: 'Best Australian True Crime Podcasts',
+    metaDescription: 'The best Australian true crime podcasts, expert-reviewed and community-rated, including award-winning shows like Casefile and Teachers Pet.',
     intro: [
       'Australia has produced some of the world\'s finest true crime podcasts, with shows like Casefile and Teacher\'s Pet earning global audiences and major awards. Australian crime stories carry a distinctive atmosphere — the country\'s unique geography, colonial history, and tight-knit communities create the conditions for cases that feel both intimate and vast.',
       'The Australian true crime podcast scene is defined by rigorous research and a commitment to justice. Several Australian shows have contributed directly to cases being reopened, charges being brought, and families finally getting answers after decades of silence.',
@@ -445,6 +452,7 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
   },
   CA: {
     h1: 'Best Canadian True Crime Podcasts',
+    metaDescription: 'The best Canadian true crime podcasts, expert-reviewed and community-rated, covering cold cases and the missing and murdered Indigenous women crisis.',
     intro: [
       'Canadian true crime podcasts explore a country often seen as peaceful but with its own profound criminal history — serial killers, Indigenous missing and murdered women, and cold cases spanning vast, remote landscapes. Canadian shows often bring a nuanced social perspective that connects individual crimes to systemic issues.',
       'The Canadian true crime podcast community is growing rapidly, with a particular focus on the ongoing crisis of missing and murdered Indigenous women and girls (MMIWG), historic cold cases, and the country\'s unique legal environment.',
@@ -479,6 +487,7 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
   },
   IE: {
     h1: 'Best Irish True Crime Podcasts',
+    metaDescription: 'The best Irish true crime podcasts, expert-reviewed and community-rated, covering gangland crime, cold cases, and institutional abuse investigations.',
     intro: [
       'Irish true crime podcasts explore the dark side of a country that often presents a friendly face to the world — gangland violence, historical church crimes, and cold cases from the countryside. The Irish podcast scene is intimate and passionate, with a strong tradition of community storytelling.',
       'Ireland\'s size means that crimes often touch communities in ways that feel personal. The best Irish true crime podcasts reflect this intimacy while maintaining journalistic rigour, bringing the same analytical approach to Irish cases that major American and Australian shows bring to theirs.',
@@ -513,6 +522,7 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
   },
   NZ: {
     h1: 'Best New Zealand True Crime Podcasts',
+    metaDescription: 'The best New Zealand true crime podcasts, expert-reviewed and community-rated, covering cold cases and crimes from across the country.',
     intro: [
       'New Zealand true crime podcasts explore the crimes behind one of the world\'s most scenic and seemingly peaceful countries. Beneath New Zealand\'s paradise image lies a complex criminal history — historic cold cases, gang warfare, and crimes that shook small communities to their core.',
       'The New Zealand true crime podcast community is growing, with shows that apply serious investigative rigour to cases that have often been overlooked by international media. New Zealand\'s unique cultural context — Māori history, geographic isolation, tight communities — gives its crime stories a distinctive character.',
@@ -547,6 +557,7 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
   },
   ZA: {
     h1: 'Best South African True Crime Podcasts',
+    metaDescription: 'The best South African true crime podcasts, expert-reviewed and community-rated, led by chart-topping shows like True Crime South Africa.',
     intro: [
       'South African true crime podcasts are only beginning to reach an international audience, but the scene at home is already substantial. True Crime South Africa has topped the country\'s own podcast charts against international competition, and a small but committed field of independent producers is now covering cases — and communities — that rarely make it into English-language true crime coverage.',
       'South African crime stories carry their own particular weight: a still-recent history of institutional violence, deep inequality, and a justice system under constant public scrutiny. The best shows from the country treat their cases with the same rigour and victim focus that define the genre\'s biggest names elsewhere, while surfacing stories that would otherwise stay local.',
@@ -581,6 +592,7 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
   },
   KE: {
     h1: 'Best Kenyan True Crime Podcasts',
+    metaDescription: 'True crime podcasts covering notable Kenyan cases, including cross-border investigations rarely covered by English-language true crime shows.',
     intro: [
       'Kenyan true crime coverage in podcast form is still rare in English-language media, which makes the cases that do get covered especially worth seeking out. These are often stories with an international dimension — foreign nationals whose deaths or disappearances in Kenya became major cross-border investigations, reported with the same seriousness as any major Western case.',
       'As one of the least-covered true crime territories among major review sites, Kenya represents real untapped ground — cases with genuine international news weight that most English-language true crime directories simply never reach.',
@@ -615,6 +627,7 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
   },
   BE: {
     h1: 'Best Belgian True Crime Podcasts',
+    metaDescription: 'Podcasts covering Belgian true crime, centred on the Marc Dutroux case and its lasting impact on policing and justice in Belgium.',
     intro: [
       'Belgian true crime is inseparable from one case above all others — the Marc Dutroux affair, which remains one of the most devastating criminal scandals in modern European history and exposed catastrophic failures across the country\'s police and justice system. Podcast coverage of Belgian crime tends to be serious, investigative, and unflinching about institutional failure.',
       'Belgium\'s true crime podcast footprint is small compared to its neighbours, but the cases that do get covered carry enormous weight — this is a country where a single case reshaped public trust in policing for a generation.',
@@ -649,6 +662,7 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
   },
   MT: {
     h1: 'Best Maltese True Crime Podcasts',
+    metaDescription: 'Podcasts covering Maltese true crime, centred on the assassination of journalist Daphne Caruana Galizia and its impact on press freedom.',
     intro: [
       'Maltese true crime podcasting is defined by a single, seismic case: the October 2017 assassination of investigative journalist Daphne Caruana Galizia, killed by a car bomb after years of reporting on corruption at the highest levels of Maltese public life. It remains one of the most significant journalist killings in modern European history.',
       'Malta is a small country, and its true crime podcast footprint reflects that — but the Caruana Galizia case has drawn serious international investigative attention precisely because of what it revealed about the risks facing journalists who investigate power.',
@@ -683,6 +697,7 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
   },
   BR: {
     h1: 'Best Brazilian & Latin American True Crime Podcasts',
+    metaDescription: 'True crime podcasts covering Brazil and Latin America, bringing lesser-known regional cases to an English-speaking audience.',
     intro: [
       'True crime coverage of Brazil and the wider Latin American region has stayed almost entirely outside English-language podcast directories, despite a huge and engaged Latin American podcast audience and no shortage of cases worth telling. Shows covering this territory tend to be hosted by people with direct ties to the region, bridging cases that stayed local with an English-speaking audience that has never heard of them.',
       'Latin America spans dozens of countries and legal systems, so true crime coverage here is necessarily broad — but the best shows bring the same care and detail that listeners expect from major US or UK productions, applied to cases that have stayed imprinted in local memory without ever crossing into wider recognition.',
@@ -717,6 +732,7 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
   },
   PH: {
     h1: 'Best Filipino True Crime Podcasts',
+    metaDescription: 'True crime podcasts covering notable Filipino cases, bringing local stories rarely reported by English-language true crime shows.',
     intro: [
       'Filipino true crime podcasting brings a distinctive cultural voice to cases that rarely reach international audiences. The word "lagim" — dread, terror — captures the tone well: shows from the Philippines dig into infamous and lesser-known local cases with a specificity and cultural grounding that outside coverage usually misses.',
       'The Philippines has a large, highly engaged podcast audience, and its true crime scene reflects that — but like much of Southeast Asia, it has stayed largely invisible to English-language true crime directories built around Western content.',
@@ -751,6 +767,7 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
   },
   IN: {
     h1: 'Best Indian True Crime Podcasts',
+    metaDescription: 'True crime podcasts covering notable Indian cases, including serialised investigative journalism rarely reported internationally.',
     intro: [
       'Indian true crime podcasting has produced some of the most meticulously reported serialised audio journalism anywhere in the genre, even though the country is barely represented on most English-language true crime directories. The best Indian shows apply the same investigative depth as the biggest Western productions to cases that shocked the country but rarely made international headlines.',
       'With one of the largest podcast-listening populations in the world, India\'s true crime scene is enormous — this page is a first step toward surfacing the standout shows for an international audience that\'s likely never encountered them.',
@@ -790,6 +807,7 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
 export const PLATFORM_SEO: Record<string, PageSeoContent> = {
   'Spotify': {
     h1: 'Best True Crime Podcasts on Spotify',
+    metaDescription: 'The best true crime podcasts on Spotify, expert-reviewed and community-rated, including exclusive shows and premium content.',
     intro: [
       'Spotify has become one of the most important platforms for true crime podcast listeners, hosting both free and premium content from the world\'s leading producers. With exclusive deals, high-quality audio, and a recommendation algorithm that knows what you like, Spotify has transformed how people discover crime podcasts.',
       'Many of the best-reviewed shows on ListenTrueCrime are available on Spotify, including both Spotify-exclusive productions and shows available across all platforms. Our community\'s highest-rated Spotify true crime podcasts are listed below.',
@@ -824,6 +842,7 @@ export const PLATFORM_SEO: Record<string, PageSeoContent> = {
   },
   'Apple Podcasts': {
     h1: 'Best True Crime Podcasts on Apple Podcasts',
+    metaDescription: 'The best true crime podcasts on Apple Podcasts, expert-reviewed and community-rated, covering the full catalogue of the genre.',
     intro: [
       'Apple Podcasts is one of the oldest and most comprehensive podcast platforms, home to the full catalogue of true crime podcasts from the genre\'s earliest days. From the shows that defined the genre to the latest independent productions, Apple Podcasts remains a key destination for serious crime podcast listeners.',
       'Apple Podcasts\' curated sections and community ratings make it one of the best places to discover new true crime shows. Our highest-rated podcasts available on Apple Podcasts are listed below.',
@@ -858,6 +877,7 @@ export const PLATFORM_SEO: Record<string, PageSeoContent> = {
   },
   'Audible': {
     h1: 'Best True Crime Podcasts on Audible',
+    metaDescription: 'The best true crime podcasts and audio documentaries on Audible, expert-reviewed and community-rated for production quality and depth.',
     intro: [
       'Audible has become a major destination for premium true crime audio content, hosting both traditional audiobooks and podcast-style productions with the high production values that the platform is known for. Many of the most in-depth true crime investigations are available exclusively or first on Audible.',
       'Audible\'s true crime catalogue includes both professionally narrated audiobooks and original podcast series produced specifically for the platform. Our community\'s top-rated Audible true crime content is listed below.',

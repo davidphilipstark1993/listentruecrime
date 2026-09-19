@@ -22,7 +22,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const suffix = pageNum > 1 ? ` — Page ${pageNum}` : ''
 
   return {
-    title: `True Crime Podcast Blog — Guides, Reviews & Recommendations${suffix}`,
+    title: `True Crime Podcast Blog${suffix}`,
     description:
       'Expert guides to the best true crime podcasts. Beginner guides, deep dives, comparisons, and recommendations for every type of true crime listener.',
     alternates: {

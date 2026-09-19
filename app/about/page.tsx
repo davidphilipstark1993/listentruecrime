@@ -6,7 +6,7 @@ import { Footer } from '@/components/layout/footer'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 
 export const metadata: Metadata = {
-  title: 'About | ListenTrueCrime',
+  title: 'About',
   description: 'ListenTrueCrime helps you discover the best true crime podcasts through expert reviews, community ratings, and personalised recommendations.',
 }
 

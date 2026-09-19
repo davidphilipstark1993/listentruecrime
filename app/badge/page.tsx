@@ -7,7 +7,7 @@ import { BASE } from '@/lib/seo/config'
 import { BadgeEmbedGenerator } from '@/components/podcasts/badge-embed-generator'
 
 export const metadata: Metadata = {
-  title: 'Podcaster Badge Programme — ListenTrueCrime',
+  title: 'Podcaster Badge Programme',
   description: 'Show listeners your podcast has been independently reviewed. Embed a ListenTrueCrime badge on your website, show notes, or press kit.',
   alternates: { canonical: `${BASE}/badge` },
 }

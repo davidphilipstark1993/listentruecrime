@@ -52,7 +52,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const filtered = hasNonPageParams(sp)
 
   const pageNum = Math.max(1, Number(sp.page ?? 1) || 1)
-  const title = `Browse True Crime Podcasts — Filter by Category, Country & Platform${pageNum > 1 ? ` — Page ${pageNum}` : ''}`
+  const title = `Browse True Crime Podcasts${pageNum > 1 ? ` — Page ${pageNum}` : ''}`
   const description = 'Search and filter our complete database of reviewed true crime podcasts. Filter by case type, country, platform, binge factor, format, and more.'
 
   return {

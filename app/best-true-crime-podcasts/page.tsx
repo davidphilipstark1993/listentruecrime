@@ -14,7 +14,7 @@ import type { Podcast, RatingStats } from '@/lib/types/database'
 const YEAR = new Date().getFullYear()
 
 export const metadata: Metadata = {
-  title: `Best True Crime Podcasts (${YEAR}) — Expert Reviews & Rankings`,
+  title: `Best True Crime Podcasts (${YEAR})`,
   description:
     'The definitive list of the best true crime podcasts, ranked by expert review and community ratings. From Serial to Crime Junkie, Casefile to Teacher\'s Pet — find your next obsession.',
   openGraph: {

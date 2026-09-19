@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const author = getAuthor(slug)
   return {
-    title: `${author.name} — Author at ListenTrueCrime`,
+    title: `${author.name} — Author`,
     description: author.bio.slice(0, 160),
     alternates: { canonical: `${BASE}/authors/${slug}` },
   }
