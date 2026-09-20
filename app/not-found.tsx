@@ -34,7 +34,7 @@ export default function NotFound() {
   return (
     <>
       <Header />
-      <main className="min-h-[70vh] bg-ink-950 flex items-center">
+      <main id="main-content" className="min-h-[70vh] bg-ink-950 flex items-center">
         <div className="max-w-lg mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
           <div className="w-14 h-14 rounded-full bg-crimson/10 border border-crimson/20 flex items-center justify-center mx-auto mb-6">
             <SearchX size={22} className="text-crimson" />

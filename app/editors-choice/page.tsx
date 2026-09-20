@@ -101,7 +101,7 @@ export default async function EditorsChoicePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }} />
       <Header />
 
-      <main className="pt-24 pb-16">
+      <main id="main-content" className="pt-24 pb-16">
 
         {/* ── Hero ─────────────────────────────────────────────────────────── */}
         <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">

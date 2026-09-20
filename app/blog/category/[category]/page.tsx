@@ -36,7 +36,7 @@ export default function CategoryPage({ params }: { params: { category: string } 
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-ink-950">
+      <main id="main-content" className="min-h-screen bg-ink-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
           <Breadcrumbs
             items={[

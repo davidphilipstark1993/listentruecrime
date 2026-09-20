@@ -12,7 +12,7 @@ export default async function AuthErrorPage({
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-ink-950 flex items-center">
+      <main id="main-content" className="min-h-screen bg-ink-950 flex items-center">
         <div className="max-w-lg mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
           <h1 className="text-2xl font-serif font-bold text-stone mb-3">
             Sign-in link didn&apos;t work

@@ -46,7 +46,7 @@ export default async function BadgePage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-ink-950 pt-16">
+      <main id="main-content" className="min-h-screen bg-ink-950 pt-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-xs text-stone-subtle mb-10">

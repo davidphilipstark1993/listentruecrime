@@ -182,7 +182,7 @@ export default async function PodcastsLikePage({ params }: Props) {
 
       <Header />
 
-      <main className="pt-16 pb-16 min-h-screen">
+      <main id="main-content" className="pt-16 pb-16 min-h-screen">
         {/* ── Hero ── */}
         <section className="relative overflow-hidden bg-ink-950 py-12 px-4">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_-10%,rgba(190,18,60,0.08),transparent)]" />

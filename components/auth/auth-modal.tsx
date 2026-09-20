@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useId } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { X, Mail, Chrome } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -16,6 +16,7 @@ export function AuthModal({ open, onClose, message }: AuthModalProps) {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
+  const emailId = useId()
   const supabase = createClient()
 
   const handleMagicLink = async (e: React.FormEvent) => {
@@ -95,11 +96,14 @@ export function AuthModal({ open, onClose, message }: AuthModalProps) {
 
                 {/* Magic link */}
                 <form onSubmit={handleMagicLink} className="space-y-3">
+                  <label htmlFor={emailId} className="sr-only">Email address</label>
                   <input
+                    id={emailId}
                     type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     placeholder="your@email.com"
+                    autoComplete="email"
                     required
                     className="input-base"
                   />

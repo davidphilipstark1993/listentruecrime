@@ -322,7 +322,7 @@ export default async function PodcastPage({ params }: Props) {
 
       <Header />
 
-      <main className="pt-16">
+      <main id="main-content" className="pt-16">
         {/* ═══ HERO ═══ */}
         <div className="relative">
           <div className="absolute inset-0 h-72 bg-gradient-to-b from-ink-800 to-ink-950" />

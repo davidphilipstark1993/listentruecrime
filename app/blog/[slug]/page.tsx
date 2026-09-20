@@ -162,7 +162,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
       <Header />
-      <main className="min-h-screen bg-ink-950">
+      <main id="main-content" className="min-h-screen bg-ink-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-12">
             {/* Article */}

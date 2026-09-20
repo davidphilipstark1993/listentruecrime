@@ -29,6 +29,11 @@ const FOOTER_LINKS = {
     { href: '/cases', label: 'Cases' },
     { href: '/badge', label: 'Podcaster Badges' },
     { href: '/browse', label: 'Browse' },
+    { href: '/contact', label: 'Contact' },
+  ],
+  legal: [
+    { href: '/privacy', label: 'Privacy Policy' },
+    { href: '/terms', label: 'Terms of Use' },
   ],
 }
 
@@ -121,9 +126,16 @@ export function Footer() {
           <p className="text-stone-subtle text-xs">
             © {new Date().getFullYear()} ListenTrueCrime. All rights reserved.
           </p>
-          <p className="text-stone-subtle text-xs">
-            Helping you find your next obsession, one episode at a time.
-          </p>
+          <div className="flex items-center gap-4">
+            {FOOTER_LINKS.legal.map(link => (
+              <Link key={link.href} href={link.href} className="text-stone-subtle hover:text-stone text-xs transition-colors">
+                {link.label}
+              </Link>
+            ))}
+            <p className="text-stone-subtle text-xs">
+              Helping you find your next obsession, one episode at a time.
+            </p>
+          </div>
         </div>
       </div>
     </footer>

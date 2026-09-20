@@ -126,7 +126,7 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
             <button
               key={i}
               onClick={() => setScores(prev => ({ ...prev, [field.key]: i + 1 }))}
-              className="p-0.5 transition-transform hover:scale-110 focus:outline-none"
+              className="p-0.5 rounded-sm transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-crimson/60"
               aria-label={`Rate ${field.label} ${i + 1}`}
             >
               <Star

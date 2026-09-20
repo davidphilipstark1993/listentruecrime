@@ -87,6 +87,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-GB" className={`dark ${inter.variable} ${playfairDisplay.variable}`}>
       <body className="antialiased">
+        <a href="#main-content" className="skip-link">Skip to content</a>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}

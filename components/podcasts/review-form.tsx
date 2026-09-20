@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useId } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { AuthModal } from '@/components/auth/auth-modal'
 import toast from 'react-hot-toast'
@@ -58,15 +58,17 @@ export function ReviewForm({ podcastId, podcastTitle, onSubmitted }: ReviewFormP
   }
 
   const remaining = MAX_CHARS - content.length
+  const headingId = useId()
 
   return (
     <>
       <div className="card p-4">
-        <h4 className="text-sm font-semibold text-stone mb-3">
+        <h4 id={headingId} className="text-sm font-semibold text-stone mb-3">
           {existing ? 'Edit your review' : 'Write a quick review'}
         </h4>
         <form onSubmit={handleSubmit}>
           <textarea
+            aria-labelledby={headingId}
             value={content}
             onChange={e => setContent(e.target.value.slice(0, MAX_CHARS))}
             placeholder={user ? 'What makes this podcast worth listening to? (300 characters max)' : 'Sign in to write a review…'}

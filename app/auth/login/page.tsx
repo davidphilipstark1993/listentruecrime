@@ -22,7 +22,7 @@ export default async function LoginPage({ searchParams }: Props) {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-ink-950 flex items-center">
+      <main id="main-content" className="min-h-screen bg-ink-950 flex items-center">
         <div className="w-full max-w-sm mx-auto px-4 sm:px-6 py-24">
           <div className="bg-ink-800 border border-white/10 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] p-6">
             <div className="mb-6">

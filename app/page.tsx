@@ -124,7 +124,7 @@ export default async function HomePage() {
     <>
       <Header />
 
-      <main>
+      <main id="main-content">
         {/* ═══════════════ HERO ═══════════════ */}
         <section className="relative min-h-[92vh] flex flex-col items-center justify-center px-4 pt-24 pb-16 overflow-hidden">
           {/* Background layers */}

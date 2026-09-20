@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useId } from 'react'
 import { Mail } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import toast from 'react-hot-toast'
@@ -12,6 +12,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
+  const emailId = useId()
   const supabase = createClient()
 
   const nextParam = `?next=${encodeURIComponent(redirectTo)}`
@@ -86,11 +87,14 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
       </div>
 
       <form onSubmit={handleMagicLink} className="space-y-3">
+        <label htmlFor={emailId} className="sr-only">Email address</label>
         <input
+          id={emailId}
           type="email"
           value={email}
           onChange={e => setEmail(e.target.value)}
           placeholder="your@email.com"
+          autoComplete="email"
           required
           className="input-base"
         />

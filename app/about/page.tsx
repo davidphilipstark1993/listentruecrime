@@ -37,7 +37,7 @@ export default function AboutPage() {
   return (
     <>
       <Header />
-      <main className="pt-24 pb-16">
+      <main id="main-content" className="pt-24 pb-16">
         {/* Hero */}
         <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-20">
           <h1 className="heading-display text-4xl sm:text-5xl mb-6">About ListenTrueCrime</h1>

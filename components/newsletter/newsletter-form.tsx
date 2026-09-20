@@ -1,5 +1,6 @@
 'use client'
-import { useState } from 'react'
+import { useState, useId } from 'react'
+import Link from 'next/link'
 import { Mail, ArrowRight } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { cn } from '@/lib/utils'
@@ -16,6 +17,9 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
   const [firstName, setFirstName] = useState('')
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
+  const uid = useId()
+  const emailId = `${uid}-email`
+  const nameId = `${uid}-name`
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,7 +45,8 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
 
   const consentNote = (
     <p className="text-2xs text-stone-subtle mt-2 leading-snug">
-      By subscribing you agree to receive the weekly ListenTrueCrime newsletter. Unsubscribe anytime.
+      By subscribing you agree to receive the weekly ListenTrueCrime newsletter. See our{' '}
+      <Link href="/privacy" className="underline hover:text-stone">Privacy Policy</Link>. Unsubscribe anytime.
     </p>
   )
 
@@ -62,11 +67,14 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
     return (
       <div className={className}>
         <form onSubmit={handleSubmit} className="flex gap-2">
+          <label htmlFor={emailId} className="sr-only">Email address</label>
           <input
+            id={emailId}
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             placeholder="your@email.com"
+            autoComplete="email"
             required
             className="input-base flex-1 text-sm py-2"
           />
@@ -74,7 +82,9 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
             {loading ? '…' : 'Subscribe'}
           </button>
         </form>
-        <p className="text-2xs text-stone-subtle mt-1.5">You can unsubscribe anytime.</p>
+        <p className="text-2xs text-stone-subtle mt-1.5">
+          You can unsubscribe anytime. See our <Link href="/privacy" className="underline hover:text-stone">Privacy Policy</Link>.
+        </p>
       </div>
     )
   }
@@ -83,21 +93,29 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
     <div className={className}>
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
         {showFirstName && (
-          <input
-            type="text"
-            value={firstName}
-            onChange={e => setFirstName(e.target.value)}
-            placeholder="First name (optional)"
-            className="input-base sm:w-40"
-          />
+          <>
+            <label htmlFor={nameId} className="sr-only">First name (optional)</label>
+            <input
+              id={nameId}
+              type="text"
+              value={firstName}
+              onChange={e => setFirstName(e.target.value)}
+              placeholder="First name (optional)"
+              autoComplete="given-name"
+              className="input-base sm:w-40"
+            />
+          </>
         )}
         <div className="relative flex-1">
+          <label htmlFor={emailId} className="sr-only">Email address</label>
           <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-subtle pointer-events-none" />
           <input
+            id={emailId}
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             placeholder="your@email.com"
+            autoComplete="email"
             required
             className="input-base pl-9"
           />

@@ -42,13 +42,13 @@ export function UserMenu({ user }: UserMenuProps) {
           </div>
           <DropdownMenu.Separator className="h-px bg-white/[0.06] my-1" />
 
-          <DropdownMenu.Item className="flex items-center gap-2 px-3 py-2 text-sm text-stone-muted hover:text-stone hover:bg-ink-700 rounded-md cursor-pointer outline-none transition-colors">
+          <DropdownMenu.Item className="flex items-center gap-2 px-3 py-2 text-sm text-stone-muted hover:text-stone hover:bg-ink-700 data-[highlighted]:text-stone data-[highlighted]:bg-ink-700 rounded-md cursor-pointer outline-none transition-colors">
             <BookMarked size={14} />
             Favourites
           </DropdownMenu.Item>
 
           <DropdownMenu.Item
-            className="flex items-center gap-2 px-3 py-2 text-sm text-stone-muted hover:text-stone hover:bg-ink-700 rounded-md cursor-pointer outline-none transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-sm text-stone-muted hover:text-stone hover:bg-ink-700 data-[highlighted]:text-stone data-[highlighted]:bg-ink-700 rounded-md cursor-pointer outline-none transition-colors"
             onClick={() => router.push('/admin')}
           >
             <Shield size={14} />
@@ -59,7 +59,7 @@ export function UserMenu({ user }: UserMenuProps) {
 
           <DropdownMenu.Item
             onClick={signOut}
-            className="flex items-center gap-2 px-3 py-2 text-sm text-stone-muted hover:text-red-400 hover:bg-red-900/20 rounded-md cursor-pointer outline-none transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-sm text-stone-muted hover:text-red-400 hover:bg-red-900/20 data-[highlighted]:text-red-400 data-[highlighted]:bg-red-900/20 rounded-md cursor-pointer outline-none transition-colors"
           >
             <LogOut size={14} />
             Sign out

@@ -98,7 +98,7 @@ export default async function CategoryPage({ params }: Props) {
 
       <Header />
 
-      <main className="min-h-screen pb-16">
+      <main id="main-content" className="min-h-screen pb-16">
         {/* ── Hero ── */}
         <section className="relative overflow-hidden bg-ink-950 pt-24 pb-12 px-4">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_-10%,rgba(190,18,60,0.08),transparent)]" />

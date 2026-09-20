@@ -1,5 +1,6 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useId } from 'react'
+import Link from 'next/link'
 import { X, ArrowRight } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -12,6 +13,7 @@ export function ExitIntent() {
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
   const armed = useRef(false)
+  const emailId = useId()
 
   useEffect(() => {
     // Don't show if already dismissed
@@ -111,11 +113,14 @@ export function ExitIntent() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-3">
+              <label htmlFor={emailId} className="sr-only">Email address</label>
               <input
+                id={emailId}
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="your@email.com"
+                autoComplete="email"
                 required
                 autoFocus
                 className="input-base w-full"
@@ -137,7 +142,8 @@ export function ExitIntent() {
               No thanks, I'll find podcasts on my own
             </button>
             <p className="text-2xs text-stone-subtle mt-3 text-center leading-snug">
-              By subscribing you agree to receive the weekly ListenTrueCrime newsletter. Unsubscribe anytime.
+              By subscribing you agree to receive the weekly ListenTrueCrime newsletter. See our{' '}
+              <Link href="/privacy" className="underline hover:text-stone">Privacy Policy</Link>. Unsubscribe anytime.
             </p>
           </>
         )}

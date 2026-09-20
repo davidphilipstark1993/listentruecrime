@@ -152,7 +152,7 @@ export default async function CasePage({ params }: Props) {
       {itemListSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />}
 
       <Header />
-      <main className="min-h-screen bg-ink-950 pt-16">
+      <main id="main-content" className="min-h-screen bg-ink-950 pt-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* Breadcrumb */}
           <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-stone-subtle mb-8">

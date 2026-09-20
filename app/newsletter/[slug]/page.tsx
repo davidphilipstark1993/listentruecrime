@@ -89,7 +89,7 @@ export default async function NewsletterIssuePage({ params }: Props) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <Header />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main id="main-content" className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Newsletter', href: '/newsletter' }, { label: `Issue #${issue.issue_number}` }]} />
 
         <div className="mt-4 mb-10">

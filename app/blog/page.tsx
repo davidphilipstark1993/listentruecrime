@@ -100,7 +100,7 @@ export default async function BlogIndexPage({ searchParams }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
       <Header />
-      <main className="min-h-screen bg-ink-950">
+      <main id="main-content" className="min-h-screen bg-ink-950">
         {/* Hero */}
         <section className="pt-28 pb-12 border-b border-white/[0.06]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

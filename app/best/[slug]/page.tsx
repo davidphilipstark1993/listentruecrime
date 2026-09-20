@@ -109,7 +109,7 @@ export default async function BestOfPage({ params }: Props) {
 
       <Header />
 
-      <main className="pt-24 pb-16">
+      <main id="main-content" className="pt-24 pb-16">
         {/* Hero */}
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
           <nav aria-label="Breadcrumb" className="flex items-center gap-1 text-xs text-stone-subtle mb-6">

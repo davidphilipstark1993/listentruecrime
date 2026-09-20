@@ -1,5 +1,6 @@
 'use client'
-import { useState } from 'react'
+import { useState, useId } from 'react'
+import Link from 'next/link'
 import { ArrowRight, Download, Check } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { cn } from '@/lib/utils'
@@ -18,6 +19,7 @@ export function NewsletterLeadMagnet({
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
+  const emailId = useId()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -58,11 +60,14 @@ export function NewsletterLeadMagnet({
     return (
       <div className={className}>
         <form onSubmit={handleSubmit} className="flex gap-2">
+          <label htmlFor={emailId} className="sr-only">Email address</label>
           <input
+            id={emailId}
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             placeholder="your@email.com"
+            autoComplete="email"
             required
             className="input-base flex-1 text-sm py-2"
           />
@@ -70,7 +75,9 @@ export function NewsletterLeadMagnet({
             {loading ? '…' : 'Get the list'}
           </button>
         </form>
-        <p className="text-2xs text-stone-subtle mt-1.5">Plus our weekly newsletter. Unsubscribe anytime.</p>
+        <p className="text-2xs text-stone-subtle mt-1.5">
+          Plus our weekly newsletter. Unsubscribe anytime. See our <Link href="/privacy" className="underline hover:text-stone">Privacy Policy</Link>.
+        </p>
       </div>
     )
   }
@@ -91,11 +98,14 @@ export function NewsletterLeadMagnet({
           </div>
           <div className="sm:w-auto w-full">
             <form onSubmit={handleSubmit} className="flex gap-2">
+              <label htmlFor={emailId} className="sr-only">Email address</label>
               <input
+                id={emailId}
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="your@email.com"
+                autoComplete="email"
                 required
                 className="input-base flex-1 sm:w-48 text-sm py-2"
               />
@@ -103,7 +113,9 @@ export function NewsletterLeadMagnet({
                 {loading ? '…' : <><ArrowRight size={14} /></>}
               </button>
             </form>
-            <p className="text-2xs text-stone-subtle mt-1.5">Plus our weekly newsletter. Unsubscribe anytime.</p>
+            <p className="text-2xs text-stone-subtle mt-1.5">
+              Plus our weekly newsletter. Unsubscribe anytime. See our <Link href="/privacy" className="underline hover:text-stone">Privacy Policy</Link>.
+            </p>
           </div>
         </div>
       </div>
@@ -144,11 +156,14 @@ export function NewsletterLeadMagnet({
         </ul>
 
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
+          <label htmlFor={emailId} className="sr-only">Email address</label>
           <input
+            id={emailId}
             type="email"
             value={email}
             onChange={e => setEmail(e.target.value)}
             placeholder="your@email.com"
+            autoComplete="email"
             required
             className="input-base flex-1"
           />
@@ -159,7 +174,8 @@ export function NewsletterLeadMagnet({
         </form>
 
         <p className="text-stone-faint text-xs mt-3">
-          + weekly new podcast reviews. Unsubscribe any time.
+          + weekly new podcast reviews. Unsubscribe any time. See our{' '}
+          <Link href="/privacy" className="underline hover:text-stone">Privacy Policy</Link>.
         </p>
       </div>
     </div>

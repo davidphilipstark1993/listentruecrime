@@ -81,7 +81,9 @@ export function BrowseControls() {
       <div className="flex gap-3 mb-6">
         <div className="relative flex-1">
           <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-subtle pointer-events-none" />
+          <label htmlFor="browse-search" className="sr-only">Search podcasts</label>
           <input
+            id="browse-search"
             type="search"
             value={queryInput}
             onChange={e => setQueryInput(e.target.value)}
@@ -104,7 +106,9 @@ export function BrowseControls() {
         </button>
 
         <div className="relative shrink-0">
+          <label htmlFor="browse-sort" className="sr-only">Sort by</label>
           <select
+            id="browse-sort"
             value={sort}
             onChange={e => pushParams({ sort: e.target.value === 'newest' ? null : e.target.value })}
             className="input-base pr-8 appearance-none cursor-pointer"
@@ -135,9 +139,9 @@ export function BrowseControls() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-stone mb-3 uppercase tracking-wide">Country</p>
+              <p id="filter-country-label" className="text-xs font-semibold text-stone mb-3 uppercase tracking-wide">Country</p>
               <div className="relative">
-                <select value={country} onChange={e => pushParams({ country: e.target.value || null })} className="input-base pr-8 appearance-none">
+                <select aria-labelledby="filter-country-label" value={country} onChange={e => pushParams({ country: e.target.value || null })} className="input-base pr-8 appearance-none">
                   <option value="">All countries</option>
                   {Object.entries(COUNTRIES).map(([code, name]) => (
                     <option key={code} value={code}>{name}</option>
@@ -148,9 +152,9 @@ export function BrowseControls() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-stone mb-3 uppercase tracking-wide">Format</p>
+              <p id="filter-format-label" className="text-xs font-semibold text-stone mb-3 uppercase tracking-wide">Format</p>
               <div className="relative">
-                <select value={formatType} onChange={e => pushParams({ format: e.target.value || null })} className="input-base pr-8 appearance-none">
+                <select aria-labelledby="filter-format-label" value={formatType} onChange={e => pushParams({ format: e.target.value || null })} className="input-base pr-8 appearance-none">
                   <option value="">All formats</option>
                   {['Serialized', 'Episodic', 'Both'].map(f => <option key={f} value={f}>{f}</option>)}
                 </select>
@@ -159,9 +163,9 @@ export function BrowseControls() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-stone mb-3 uppercase tracking-wide">Platform</p>
+              <p id="filter-platform-label" className="text-xs font-semibold text-stone mb-3 uppercase tracking-wide">Platform</p>
               <div className="relative">
-                <select value={platform} onChange={e => pushParams({ platform: e.target.value || null })} className="input-base pr-8 appearance-none">
+                <select aria-labelledby="filter-platform-label" value={platform} onChange={e => pushParams({ platform: e.target.value || null })} className="input-base pr-8 appearance-none">
                   <option value="">All platforms</option>
                   {PLATFORMS.map(p => <option key={p} value={p}>{p}</option>)}
                 </select>
@@ -171,11 +175,12 @@ export function BrowseControls() {
           </div>
 
           <div className="mt-4 pt-4 border-t border-white/[0.06]">
-            <p className="text-xs font-semibold text-stone mb-2 uppercase tracking-wide">
+            <p id="filter-binge-label" className="text-xs font-semibold text-stone mb-2 uppercase tracking-wide">
               Min. Binge Factor: <span className="text-crimson">{minBinge > 0 ? `${minBinge}+` : 'Any'}</span>
             </p>
             <input
               type="range"
+              aria-labelledby="filter-binge-label"
               min={0} max={9} step={1}
               value={minBinge}
               onChange={e => pushParams({ minBinge: Number(e.target.value) > 0 ? e.target.value : null })}
