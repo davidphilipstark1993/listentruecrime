@@ -51,15 +51,18 @@ export default async function CountryPage({ params }: Props) {
   const year = new Date().getFullYear()
 
   const supabase = createAdminClient()
-  const { data } = await supabase
+  const { data, count } = await supabase
     .from('podcasts')
-    .select(`*, rating_stats:podcast_rating_stats(*)`)
+    .select(`*, rating_stats:podcast_rating_stats(*)`, { count: 'exact' })
     .eq('is_published', true)
     .eq('country', country)
     .order('binge_factor', { ascending: false })
-    .limit(48)
+    // Curated "Top" slice, not the full catalogue — /browse covers the rest.
+    // `count: 'exact'` above still returns the true total for the copy below.
+    .limit(24)
 
   const podcasts = (data ?? []) as (Podcast & { rating_stats: RatingStats | null })[]
+  const totalCount = count ?? podcasts.length
 
   const faqSchema = seo?.faqs ? buildFAQSchema(seo.faqs) : null
   const breadcrumbSchema = buildBreadcrumbSchema([
@@ -107,12 +110,12 @@ export default async function CountryPage({ params }: Props) {
               </div>
             ) : (
               <p className="text-stone-muted text-sm">
-                {podcasts.length} podcast{podcasts.length !== 1 ? 's' : ''} from {name} in our database — expert-reviewed and community-rated.
+                {totalCount} podcast{totalCount !== 1 ? 's' : ''} from {name} in our database — expert-reviewed and community-rated.
               </p>
             )}
 
             <p className="text-stone-subtle text-sm mt-4">
-              {podcasts.length} podcast{podcasts.length !== 1 ? 's' : ''} from {name}
+              {totalCount} podcast{totalCount !== 1 ? 's' : ''} from {name}
             </p>
           </div>
         </section>

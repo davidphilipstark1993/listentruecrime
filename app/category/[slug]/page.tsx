@@ -60,7 +60,7 @@ export default async function CategoryPage({ params }: Props) {
   const supabase = createAdminClient()
   let q = supabase
     .from('podcasts')
-    .select(`*, rating_stats:podcast_rating_stats(*)`)
+    .select(`*, rating_stats:podcast_rating_stats(*)`, { count: 'exact' })
     .eq('is_published', true)
 
   if (slug === 'uk-crime') {
@@ -73,8 +73,13 @@ export default async function CategoryPage({ params }: Props) {
     q = q.overlaps('case_types', caseTypes)
   }
 
-  const { data } = await q.order('binge_factor', { ascending: false }).limit(48)
+  // Curated "Top" slice, not the full catalogue — the page already links to
+  // /browse for the rest, so trimming this keeps the page's HTML weight down
+  // (was rendering all 48 at once with no pagination). `count: 'exact'` above
+  // still returns the true total for the copy below.
+  const { data, count } = await q.order('binge_factor', { ascending: false }).limit(24)
   const podcasts = (data ?? []) as (Podcast & { rating_stats: RatingStats | null })[]
+  const totalCount = count ?? podcasts.length
 
   const h1 = seo?.h1 ?? `Best ${cat.label} Podcasts`
 
@@ -127,7 +132,7 @@ export default async function CategoryPage({ params }: Props) {
             )}
 
             <p className="text-stone-subtle text-sm mt-4">
-              {podcasts.length} podcast{podcasts.length !== 1 ? 's' : ''} — expert-reviewed and community-rated
+              {totalCount} podcast{totalCount !== 1 ? 's' : ''} — expert-reviewed and community-rated
             </p>
 
             {/* Differentiation notice for geography-overlap categories */}
