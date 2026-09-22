@@ -2,12 +2,13 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
-import { Search, Menu, X, BookMarked, User } from 'lucide-react'
+import { Search, Menu, X, BookMarked, User, Megaphone } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 import { AuthModal } from '@/components/auth/auth-modal'
 import { UserMenu } from '@/components/auth/user-menu'
 import { cn } from '@/lib/utils'
+import { trackPromotion } from '@/components/promotion/analytics'
 
 const NAV_LINKS = [
   { href: '/browse', label: 'Browse' },
@@ -80,6 +81,15 @@ export function Header() {
 
             {/* Right actions */}
             <div className="flex items-center gap-2">
+              <Link
+                href="/promote-your-podcast"
+                onClick={() => trackPromotion('promote_cta_click', { location: 'header' })}
+                className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm text-white bg-crimson rounded-lg hover:bg-crimson-hover transition-colors duration-150"
+              >
+                <Megaphone size={14} aria-hidden="true" />
+                <span className="lg:hidden">Promote</span>
+                <span className="hidden lg:inline">Promote Your Podcast</span>
+              </Link>
               <Link href="/browse" className="p-2 text-stone-muted hover:text-stone hover:bg-ink-700 rounded-md transition-colors" aria-label="Search">
                 <Search size={18} />
               </Link>
@@ -122,6 +132,14 @@ export function Header() {
                   {link.label}
                 </Link>
               ))}
+              <Link
+                href="/promote-your-podcast"
+                onClick={() => { setMenuOpen(false); trackPromotion('promote_cta_click', { location: 'mobile_menu' }) }}
+                className="mt-2 flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium text-white bg-crimson rounded-lg hover:bg-crimson-hover transition-colors"
+              >
+                <Megaphone size={14} aria-hidden="true" />
+                Promote Your Podcast
+              </Link>
               {!user && (
                 <button
                   onClick={() => { setMenuOpen(false); setAuthOpen(true) }}
