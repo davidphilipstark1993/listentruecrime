@@ -36,6 +36,9 @@ export default function ContactPage() {
             Podcast submissions, corrections, review disputes, privacy requests, or anything else —
             we'd like to hear from you.
           </p>
+          <p className="text-stone-subtle text-sm mb-8 -mt-4">
+            Podcast creator? <Link href="/promote-your-podcast" className="text-crimson hover:underline">List or promote your podcast</Link>.
+          </p>
 
           <div className="card p-8 inline-flex flex-col items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-crimson/10 border border-crimson/20 flex items-center justify-center">

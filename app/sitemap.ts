@@ -106,6 +106,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/cases`, changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
     ...caseUrls,
     { url: `${BASE}/badge`, changeFrequency: 'monthly', priority: 0.4, lastModified: now },
+    { url: `${BASE}/promote-your-podcast`, changeFrequency: 'monthly', priority: 0.5, lastModified: now },
     ...authorUrls,
     { url: BASE, changeFrequency: 'daily', priority: 1.0, lastModified: new Date() },
     { url: `${BASE}/browse`, changeFrequency: 'daily', priority: 0.9, lastModified: new Date() },

@@ -28,6 +28,7 @@ const FOOTER_LINKS = {
     { href: '/blog', label: 'Blog' },
     { href: '/cases', label: 'Cases' },
     { href: '/badge', label: 'Podcaster Badges' },
+    { href: '/promote-your-podcast', label: 'Promote Your Podcast' },
     { href: '/browse', label: 'Browse' },
     { href: '/contact', label: 'Contact' },
   ],

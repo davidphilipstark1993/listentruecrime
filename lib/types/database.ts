@@ -2,6 +2,8 @@
 // Database Types — mirror of Supabase schema
 // ============================================================
 
+import type { PromotionInterest, PromotionEnquiryStatus } from '@/lib/promotion/packages'
+
 export type Json = string | number | boolean | null | { [key: string]: Json } | Json[]
 
 export interface Profile {
@@ -109,6 +111,23 @@ export interface NewsletterSubscriber {
   welcome_sent: boolean
   created_at: string
   updated_at: string
+}
+
+export interface PodcastPromotionEnquiry {
+  id: string
+  created_at: string
+  updated_at: string
+  name: string
+  email: string
+  podcast_name: string
+  podcast_website: string | null
+  rss_feed: string | null
+  package_interest: PromotionInterest
+  campaign_timing: string | null
+  message: string | null
+  newsletter_opt_in: boolean
+  status: PromotionEnquiryStatus
+  admin_notes: string | null
 }
 
 // ============================================================
