@@ -126,7 +126,7 @@ export default async function HomePage() {
 
       <main id="main-content">
         {/* ═══════════════ HERO ═══════════════ */}
-        <section className="relative min-h-[92vh] flex flex-col items-center justify-center px-4 pt-24 pb-16 overflow-hidden">
+        <section className="relative min-h-[80vh] flex flex-col items-center justify-center px-4 pt-24 pb-16 overflow-hidden">
           {/* Background layers */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(190,18,60,0.12),transparent)]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_30%_at_50%_100%,rgba(190,18,60,0.06),transparent)]" />
@@ -169,6 +169,9 @@ export default async function HomePage() {
                 <NewsletterForm source="hero" variant="minimal" className="w-64" />
               </div>
             </div>
+            <p className="text-stone-subtle text-xs mt-3">
+              <span className="text-crimson font-semibold">Free newsletter</span> — 5 podcast picks emailed every Sunday
+            </p>
 
             {/* Social proof */}
             <div className="flex items-center justify-center gap-6 mt-12 text-stone-subtle text-sm">
@@ -187,6 +190,36 @@ export default async function HomePage() {
                 <span className="text-xs">Always</span>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* ═══════════════ NEWSLETTER CTA ═══════════════ */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="relative overflow-hidden rounded-2xl bg-ink-800 border border-white/[0.06] p-8">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(190,18,60,0.1),transparent_60%)]" />
+              <div className="relative z-10">
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  <p className="text-2xs text-crimson font-semibold uppercase tracking-widest">Newsletter</p>
+                  <span className="px-2 py-0.5 rounded-full bg-crimson/10 border border-crimson/20 text-crimson text-2xs font-semibold uppercase tracking-wide">
+                    100% free
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-stone-muted text-2xs font-semibold uppercase tracking-wide">
+                    Every Sunday
+                  </span>
+                </div>
+                <h2 className="heading-section text-2xl sm:text-3xl mb-3">
+                  5 True Crime Podcasts Worth Listening To
+                </h2>
+                <p className="text-stone-muted text-sm mb-6 leading-relaxed">
+                  Every Sunday, we&apos;ll email you five true crime podcasts we&apos;ve discovered and think are
+                  worth your time — from new shows and hidden gems to established favourites.
+                  It&apos;s completely free, lands once a week, and you can unsubscribe any time.
+                </p>
+                <NewsletterForm source="homepage_section" showFirstName />
+              </div>
+            </div>
+            <NewsletterLeadMagnet variant="card" source="homepage_lead_magnet" />
           </div>
         </section>
 
@@ -297,27 +330,6 @@ export default async function HomePage() {
             </div>
           </section>
         )}
-
-        {/* ═══════════════ NEWSLETTER CTA ═══════════════ */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 section-divider">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="relative overflow-hidden rounded-2xl bg-ink-800 border border-white/[0.06] p-8">
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(190,18,60,0.1),transparent_60%)]" />
-              <div className="relative z-10">
-                <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-3">Newsletter</p>
-                <h2 className="heading-section text-2xl sm:text-3xl mb-3">
-                  5 True Crime Podcasts Worth Listening To
-                </h2>
-                <p className="text-stone-muted text-sm mb-6 leading-relaxed">
-                  Every week, we'll send you five true crime podcasts we've discovered and think are
-                  worth your time — from new shows and hidden gems to established favourites.
-                </p>
-                <NewsletterForm source="homepage_section" showFirstName />
-              </div>
-            </div>
-            <NewsletterLeadMagnet variant="card" source="homepage_lead_magnet" />
-          </div>
-        </section>
 
         {/* ═══════════════ RECENT REVIEWS ═══════════════ */}
         {recentReviews.length > 0 && (
