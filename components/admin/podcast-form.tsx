@@ -73,11 +73,28 @@ export function PodcastForm({ podcast }: PodcastFormProps) {
       ...form,
       binge_factor: form.binge_factor ? parseFloat(form.binge_factor) : null,
       if_you_liked_this: form.if_you_liked_this.split(',').map(s => s.trim()).filter(Boolean),
+      // A hand-entered image is an admin decision — flag it the same way the
+      // manual artwork endpoint does so automated recovery never replaces it.
+      ...(form.image_url.trim() && form.image_url !== (podcast?.image_url ?? '')
+        ? {
+            artwork_source: 'manual',
+            artwork_status: 'verified',
+            artwork_manual_override: true,
+            artwork_verified_at: new Date().toISOString(),
+            artwork_candidate: null,
+          }
+        : {}),
     }
 
     const { error } = podcast
       ? await supabase.from('podcasts').update(payload).eq('id', podcast.id)
       : await supabase.from('podcasts').insert(payload)
+
+    if (!error) {
+      // Bust the ISR cache so the change is visible on the live site now,
+      // not up to an hour later.
+      await fetch('/api/admin/revalidate', { method: 'POST' }).catch(() => {})
+    }
 
     setSaving(false)
     if (error) {
