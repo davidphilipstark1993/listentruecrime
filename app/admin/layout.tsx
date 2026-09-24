@@ -2,6 +2,11 @@ import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { LayoutDashboard, Mic2, MessageSquare, Upload, ArrowLeft, Users, Star, Compass, Mail, CalendarCheck, ImageIcon, Megaphone } from 'lucide-react'
 
+// Admin pages read live data (subscribers, reviews, ratings…). Without this,
+// pages with no dynamic APIs are prerendered at build time and only show data
+// as of the last deploy.
+export const dynamic = 'force-dynamic'
+
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/podcasts', label: 'Podcasts', icon: Mic2 },
