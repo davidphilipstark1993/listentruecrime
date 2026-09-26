@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef, useId } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { X, ArrowRight } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -14,8 +15,12 @@ export function ExitIntent() {
   const [done, setDone] = useState(false)
   const armed = useRef(false)
   const emailId = useId()
+  // The /subscribe landing page is already one big signup form.
+  const onSubscribePage = usePathname() === '/subscribe'
 
   useEffect(() => {
+    if (onSubscribePage) return
+
     // Don't show if already dismissed
     try {
       if (localStorage.getItem(STORAGE_KEY)) return
@@ -41,7 +46,7 @@ export function ExitIntent() {
       clearTimeout(arm)
       document.removeEventListener('mouseleave', handleMouseLeave)
     }
-  }, [])
+  }, [onSubscribePage])
 
   const dismiss = () => {
     setVisible(false)
