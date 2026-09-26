@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { RetrySyncButton } from '@/components/admin/retry-sync-button'
+import { DeleteSubscriberButton } from '@/components/admin/delete-subscriber-button'
 import type { NewsletterSubscriberStatus } from '@/lib/types/database'
 
 const STATUS_COLOR: Record<NewsletterSubscriberStatus, string> = {
@@ -46,6 +47,7 @@ export default async function AdminNewsletterPage() {
                 <th className="text-left px-4 py-3 text-stone-subtle text-xs font-medium">SendGrid</th>
               )}
               <th className="text-left px-4 py-3 text-stone-subtle text-xs font-medium">Subscribed</th>
+              <th className="px-4 py-3"><span className="sr-only">Actions</span></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/[0.04]">
@@ -77,11 +79,14 @@ export default async function AdminNewsletterPage() {
                 <td className="px-4 py-3 text-stone-subtle text-xs">
                   {new Date(s.created_at).toLocaleDateString('en-GB')}
                 </td>
+                <td className="px-4 py-3 text-right">
+                  <DeleteSubscriberButton id={s.id} email={s.email} />
+                </td>
               </tr>
             ))}
             {subscribers.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-stone-subtle text-sm">
+                <td colSpan={provider === 'sendgrid' ? 6 : 5} className="px-4 py-8 text-center text-stone-subtle text-sm">
                   No subscribers yet.
                 </td>
               </tr>
