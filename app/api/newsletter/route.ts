@@ -60,10 +60,15 @@ export async function POST(req: Request) {
   }
 
   if (provider === 'sendgrid' && process.env.SENDGRID_API_KEY) {
-    // Fire-and-forget — don't fail the subscription if the email errors
-    sendSendGridWelcomeEmail(email, first_name)
-      .then(() => supabase.from('newsletter_subscribers').update({ welcome_sent: true }).eq('email', email))
-      .catch(err => console.error('SendGrid welcome email error:', err))
+    // Awaited, not fire-and-forget: on serverless the function is frozen as
+    // soon as the response is sent, so an un-awaited send never goes out.
+    // Errors are still caught — a failed email never fails the subscription.
+    try {
+      await sendSendGridWelcomeEmail(email, first_name)
+      await supabase.from('newsletter_subscribers').update({ welcome_sent: true }).eq('email', email)
+    } catch (err) {
+      console.error('SendGrid welcome email error:', err)
+    }
   } else if (process.env.RESEND_API_KEY) {
     const { data: podcasts } = await supabase
       .from('podcasts')
@@ -73,10 +78,12 @@ export async function POST(req: Request) {
       .limit(10)
 
     if (podcasts?.length) {
-      // Fire-and-forget — don't fail the subscription if the email errors
-      sendLeadMagnetEmail(email, podcasts).catch(err =>
+      // Awaited for the same reason as above; errors never fail the subscription.
+      try {
+        await sendLeadMagnetEmail(email, podcasts)
+      } catch (err) {
         console.error('Lead magnet email error:', err)
-      )
+      }
     }
   }
 
