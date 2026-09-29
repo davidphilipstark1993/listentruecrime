@@ -19,7 +19,7 @@ const FOOTER_LINKS = {
     { href: '/country/AU', label: 'Australian True Crime' },
     { href: '/country/CA', label: 'Canadian True Crime' },
     { href: '/platform/Spotify', label: 'True Crime on Spotify' },
-    { href: '/platform/Apple%20Podcasts', label: 'True Crime on Apple Podcasts' },
+    { href: '/platform/apple-podcasts', label: 'True Crime on Apple Podcasts' },
     { href: '/platform/Audible', label: 'True Crime on Audible' },
   ],
   site: [
@@ -109,8 +109,8 @@ export function Footer() {
             <ul className="space-y-2.5">
               {[
                 { href: '/podcasts-like/serial', label: 'Podcasts Like Serial' },
-                { href: '/podcasts-like/casefile', label: 'Podcasts Like Casefile' },
-                { href: '/podcasts-like/teachers-pet', label: 'Podcasts Like Teacher\'s Pet' },
+                { href: '/podcasts-like/casefile-true-crime', label: 'Podcasts Like Casefile' },
+                { href: '/podcasts-like/the-teachers-pet', label: 'Podcasts Like Teacher\'s Pet' },
                 { href: '/podcasts-like/crime-junkie', label: 'Podcasts Like Crime Junkie' },
                 { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
               ].map(link => (
