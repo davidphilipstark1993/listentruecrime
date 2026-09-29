@@ -81,11 +81,29 @@ export default function TermsPage() {
               </p>
             </section>
 
-            <section>
+            <section id="affiliate-links" className="scroll-mt-24">
               <h2 className="heading-section text-xl text-stone mb-3">6. Affiliate links and advertising</h2>
               <p>
-                We don't currently run any affiliate links or paid placements on the site. If that changes, this
-                section will be updated and any sponsored or affiliate content will be clearly labelled.
+                Some links on ListenTrueCrime are affiliate links. If you buy something after clicking one of these
+                links, we may receive a commission at no additional cost to you. Not every link on the site is an
+                affiliate link — links to podcasts, podcast apps and news sources are ordinary links unless marked
+                otherwise.
+              </p>
+              <p className="mt-3">
+                Pages that contain affiliate links say so, and affiliate recommendations are labelled where they
+                appear. Commissions never decide which podcasts we review or how we rate them. Where we recommend a
+                book, audiobook or service, we describe it factually and don&apos;t claim to have reviewed it unless
+                we have.
+              </p>
+              <p className="mt-3">
+                ListenTrueCrime is a participant in the Amazon EU Associates Programme, an affiliate advertising
+                programme designed to provide a means for sites to earn advertising fees by advertising and linking
+                to Amazon.co.uk. As an Amazon Associate, ListenTrueCrime earns from qualifying purchases. Amazon and
+                Audible do not endorse ListenTrueCrime. Prices and availability are set by the retailer and may
+                change; we don&apos;t display prices on this site.
+              </p>
+              <p className="mt-3">
+                Paid podcast promotions are handled separately and are always labelled as promoted or sponsored.
               </p>
             </section>
 

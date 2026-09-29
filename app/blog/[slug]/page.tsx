@@ -21,6 +21,11 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { BASE } from '@/lib/seo/config'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { autolinkPodcasts } from '@/lib/podcast-autolink'
+import { getAffiliateProductsBySlugs, getAffiliateProductsForPage, type PublicAffiliateProduct } from '@/lib/affiliates/queries'
+import { extractAffiliateSlugs } from '@/lib/affiliates/mdx'
+import { AffiliateRecommendation, AffiliateRecommendations } from '@/components/affiliates/affiliate-recommendation'
+import { AffiliateLink } from '@/components/affiliates/affiliate-link'
+import { AffiliateDisclosure } from '@/components/affiliates/affiliate-disclosure'
 
 function slugifyText(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -49,6 +54,24 @@ const MDX_COMPONENTS = {
     }
     return <a href={href} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>
   },
+}
+
+// <AffiliateProduct slug="..." /> in MDX renders a managed product from
+// /admin/affiliates (card by default, or variant="link" for an inline text
+// link). Unknown, inactive or URL-less products render nothing.
+function makeAffiliateProduct(products: Map<string, PublicAffiliateProduct>) {
+  return function AffiliateProduct({ slug, variant = 'card', label, children }: { slug: string; variant?: 'card' | 'link'; label?: string; children?: ReactNode }) {
+    const product = products.get(slug)
+    if (!product) return null
+    if (variant === 'link') {
+      return (
+        <AffiliateLink provider={product.provider} href={product.affiliate_url} product={product.slug} placement="article-inline-link" variant="text" className="text-[length:inherit]">
+          {children ?? product.link_text ?? undefined}
+        </AffiliateLink>
+      )
+    }
+    return <AffiliateRecommendation product={product} placement="article-inline" label={label} />
+  }
 }
 
 export async function generateStaticParams() {
@@ -106,7 +129,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   // Fetch related podcasts and all podcast titles for auto-linking
   const supabase = createAdminClient()
-  const [relatedPodcastsRes, allPodcastTitlesRes] = await Promise.all([
+  const [relatedPodcastsRes, allPodcastTitlesRes, inlineAffiliates, pageAffiliates] = await Promise.all([
     post.relatedPodcasts?.length
       ? supabase
           .from('podcasts')
@@ -115,7 +138,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           .eq('is_published', true)
       : Promise.resolve({ data: [] }),
     supabase.from('podcasts').select('slug, title').eq('is_published', true),
+    getAffiliateProductsBySlugs(extractAffiliateSlugs(post.content)),
+    getAffiliateProductsForPage('blog', slug),
   ])
+
+  // Products placed inline in the MDX aren't repeated in the end-of-article section
+  const sectionAffiliates = pageAffiliates.filter(p => !inlineAffiliates.has(p.slug))
+  const disclosedProviders = [...Array.from(inlineAffiliates.values()), ...sectionAffiliates]
+    .filter(p => p.disclosure_required)
+    .map(p => p.provider)
 
   const relatedPodcastData = relatedPodcastsRes.data ?? []
   const allTitles = (allPodcastTitlesRes.data ?? []) as Array<{ slug: string; title: string }>
@@ -197,6 +228,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   readingTime={post.readingTime}
                   authorSlug={post.author}
                 />
+                {disclosedProviders.length > 0 && (
+                  <AffiliateDisclosure providers={disclosedProviders} className="mt-4" />
+                )}
               </header>
 
               {/* Tags */}
@@ -243,9 +277,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                       remarkPlugins: [remarkGfm],
                     },
                   }}
-                  components={MDX_COMPONENTS}
+                  components={{ ...MDX_COMPONENTS, AffiliateProduct: makeAffiliateProduct(inlineAffiliates) }}
                 />
               </div>
+
+              {sectionAffiliates.length > 0 && (
+                <AffiliateRecommendations products={sectionAffiliates} placement="article-end" className="mt-10" />
+              )}
 
               <ShareButtons title={post.title} url={postUrl} />
 

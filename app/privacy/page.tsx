@@ -72,8 +72,15 @@ export default function PrivacyPage() {
                 </li>
               </ul>
               <p className="mt-3">
-                We do not run any affiliate or advertising tracking on the site today. We do not collect payment
-                information — the site has no paid features.
+                <strong className="text-stone">Affiliate link clicks</strong> — when you click an affiliate link (see
+                our <Link href="/terms#affiliate-links" className="text-crimson hover:underline">affiliate disclosure</Link>),
+                we record which link was clicked, on which page, and when. We don&apos;t record your IP address, device
+                details or account, so this record can&apos;t identify you. The click is also counted in Google
+                Analytics. Once you arrive on the retailer&apos;s site (for example Amazon), its own privacy and cookie
+                policies apply, and it may use cookies to attribute your purchase to us.
+              </p>
+              <p className="mt-3">
+                We do not collect payment information — you never buy anything on this site itself.
               </p>
             </section>
 

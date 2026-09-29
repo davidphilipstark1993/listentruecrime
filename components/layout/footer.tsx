@@ -35,6 +35,7 @@ const FOOTER_LINKS = {
   legal: [
     { href: '/privacy', label: 'Privacy Policy' },
     { href: '/terms', label: 'Terms of Use' },
+    { href: '/terms#affiliate-links', label: 'Affiliate Disclosure' },
   ],
 }
 
