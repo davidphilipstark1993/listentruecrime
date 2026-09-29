@@ -39,7 +39,7 @@ Our methodology is fully explained at: ${BASE}/how-we-review
 - US true crime: ${BASE}/country/US
 - Canadian true crime: ${BASE}/country/CA
 - True crime on Spotify: ${BASE}/platform/Spotify
-- True crime on Apple Podcasts: ${BASE}/platform/Apple%20Podcasts
+- True crime on Apple Podcasts: ${BASE}/platform/apple-podcasts
 
 ## Case deep-dive articles and blog
 

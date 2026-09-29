@@ -16,7 +16,7 @@ import { getPros, getCons, getHostDescription, getPodcastPersonSchema } from '@/
 import { getAuthor } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
 import { countryFlag, formatRelativeDate, scoreBg, cn, stripHtml } from '@/lib/utils'
-import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/database'
+import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES, platformHref } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
@@ -702,7 +702,7 @@ export default async function PodcastPage({ params }: Props) {
                     {podcast.platforms.map((p: string) => (
                       <Link
                         key={p}
-                        href={`/platform/${encodeURIComponent(p)}`}
+                        href={platformHref(p)}
                         className="tag hover:border-white/20 transition-colors"
                       >
                         {p}

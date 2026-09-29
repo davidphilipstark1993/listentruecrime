@@ -360,10 +360,20 @@ export const PLATFORMS = [
 ]
 
 // Platform display names that get a clean kebab-case URL (/platform/bbc-sounds)
-// instead of the default space-encoded one (/platform/BBC%20Sounds) that the
-// rest of PLATFORMS still uses — see app/platform/[platform]/page.tsx.
+// instead of the default encoded one — see app/platform/[platform]/page.tsx.
+// Every multi-word platform needs an entry: space-encoded paths such as
+// /platform/Apple%20Podcasts 404 in production, so they only survive as
+// legacy URLs that redirect to the slug.
 export const PLATFORM_SLUGS: Record<string, string> = {
+  'Apple Podcasts': 'apple-podcasts',
+  'Amazon Music': 'amazon-music',
+  'Pocket Casts': 'pocket-casts',
   'BBC Sounds': 'bbc-sounds',
+}
+
+/** Canonical path for a platform page — use this rather than building /platform/ URLs by hand. */
+export function platformHref(name: string): string {
+  return PLATFORM_SLUGS[name] ? `/platform/${PLATFORM_SLUGS[name]}` : `/platform/${encodeURIComponent(name)}`
 }
 
 export const COUNTRIES: Record<string, string> = {

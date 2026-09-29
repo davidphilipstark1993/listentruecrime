@@ -835,7 +835,7 @@ export const PLATFORM_SEO: Record<string, PageSeoContent> = {
       },
     ],
     relatedLinks: [
-      { href: '/platform/Apple%20Podcasts', label: 'Apple Podcasts True Crime' },
+      { href: '/platform/apple-podcasts', label: 'Apple Podcasts True Crime' },
       { href: '/platform/Audible', label: 'Audible True Crime Podcasts' },
       { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
     ],
@@ -906,7 +906,7 @@ export const PLATFORM_SEO: Record<string, PageSeoContent> = {
     ],
     relatedLinks: [
       { href: '/platform/Spotify', label: 'Spotify True Crime Podcasts' },
-      { href: '/platform/Apple%20Podcasts', label: 'Apple Podcasts True Crime' },
+      { href: '/platform/apple-podcasts', label: 'Apple Podcasts True Crime' },
       { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
     ],
   },

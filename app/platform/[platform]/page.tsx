@@ -7,7 +7,7 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
-import { PLATFORMS, PLATFORM_SLUGS } from '@/lib/types/database'
+import { PLATFORMS, PLATFORM_SLUGS, platformHref } from '@/lib/types/database'
 import { PLATFORM_SEO, buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
 import { BASE } from '@/lib/seo/config'
 import type { Podcast, RatingStats } from '@/lib/types/database'
@@ -23,11 +23,8 @@ const SLUG_TO_NAME: Record<string, string> = Object.fromEntries(
 )
 
 // A platform with a dedicated slug (e.g. "bbc-sounds") must resolve to its
-// canonical path everywhere — this is also what a stray /platform/BBC%20Sounds
-// visit permanently redirects to below.
-function platformHref(name: string): string {
-  return PLATFORM_SLUGS[name] ? `/platform/${PLATFORM_SLUGS[name]}` : `/platform/${encodeURIComponent(name)}`
-}
+// canonical path everywhere (platformHref) — this is also what a stray
+// /platform/BBC%20Sounds visit permanently redirects to below.
 
 // Resolves a route param that may be either a kebab-case slug ("bbc-sounds")
 // or a legacy encoded display name ("BBC%20Sounds") to the display name.
