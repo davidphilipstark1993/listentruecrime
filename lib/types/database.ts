@@ -3,6 +3,7 @@
 // ============================================================
 
 import type { PromotionInterest, PromotionEnquiryStatus } from '@/lib/promotion/packages'
+import type { AffiliatePageType } from '@/lib/affiliates/providers'
 
 export type Json = string | number | boolean | null | { [key: string]: Json } | Json[]
 
@@ -128,6 +129,45 @@ export interface PodcastPromotionEnquiry {
   newsletter_opt_in: boolean
   status: PromotionEnquiryStatus
   admin_notes: string | null
+}
+
+// ============================================================
+// Affiliate products (see lib/affiliates/providers.ts)
+// ============================================================
+
+export interface AffiliateProduct {
+  id: string
+  created_at: string
+  updated_at: string
+  slug: string
+  provider: string
+  title: string
+  creator: string | null
+  description: string | null
+  destination_url: string | null
+  affiliate_url: string | null
+  link_text: string | null
+  image_url: string | null
+  category: string | null
+  active: boolean
+  disclosure_required: boolean
+  admin_notes: string | null
+}
+
+export interface AffiliatePlacement {
+  id: string
+  created_at: string
+  product_id: string
+  page_type: AffiliatePageType
+  page_key: string
+  position: number
+}
+
+export interface AffiliateProductClickStats {
+  product_id: string
+  total_clicks: number
+  clicks_30d: number
+  last_click_at: string | null
 }
 
 // ============================================================

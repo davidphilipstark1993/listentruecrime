@@ -19,6 +19,8 @@ import { countryFlag, formatRelativeDate, scoreBg, cn, stripHtml } from '@/lib/u
 import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
+import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
+import { AffiliateSidebarCard } from '@/components/affiliates/affiliate-recommendation'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -185,9 +187,10 @@ export default async function PodcastPage({ params }: Props) {
   const podcast = await getPodcast(slug)
   if (!podcast) notFound()
 
-  const [reviews, similar] = await Promise.all([
+  const [reviews, similar, affiliateProducts] = await Promise.all([
     getReviews(podcast.id),
     getSimilarPodcasts(podcast),
+    getAffiliateProductsForPage('podcast', slug),
   ])
   const podcastCategories = getPodcastCategories(podcast)
   const whoIsItFor = getWhoIsItFor(podcast)
@@ -708,6 +711,9 @@ export default async function PodcastPage({ params }: Props) {
                   </div>
                 </div>
               )}
+
+              {/* Editorially chosen affiliate products — only when added in /admin/affiliates */}
+              <AffiliateSidebarCard products={affiliateProducts} placement="podcast-sidebar" />
 
               {/* Categories this podcast belongs to */}
               {podcastCategories.length > 0 && (

@@ -4,6 +4,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, MapPin, Calendar, Headphones, ExternalLink } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
+import { AffiliateSidebarCard } from '@/components/affiliates/affiliate-recommendation'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { getAllCaseSlugs, getCaseBySlug, getRelatedCases } from '@/lib/cases'
@@ -76,7 +78,10 @@ export default async function CasePage({ params }: Props) {
   if (!c) notFound()
 
   const podcastSlugs = c.podcasts.map(p => p.slug)
-  const podcastData = await getPodcastsForCase(podcastSlugs)
+  const [podcastData, affiliateProducts] = await Promise.all([
+    getPodcastsForCase(podcastSlugs),
+    getAffiliateProductsForPage('case', slug),
+  ])
 
   // Merge case ordering/notes with DB data
   const podcasts = c.podcasts
@@ -344,6 +349,8 @@ export default async function CasePage({ params }: Props) {
                   </ul>
                 </div>
               )}
+
+              <AffiliateSidebarCard products={affiliateProducts} placement="case-sidebar" />
 
               {seriesTag && (
                 <div className="card p-5 border-crimson/25 bg-crimson/5">
