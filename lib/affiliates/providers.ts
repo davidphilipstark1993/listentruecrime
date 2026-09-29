@@ -74,12 +74,26 @@ export const AFFILIATE_PAGE_TYPES = [
   { value: 'blog', label: 'Article', pathPrefix: '/blog/' },
   { value: 'podcast', label: 'Podcast page', pathPrefix: '/podcasts/' },
   { value: 'case', label: 'Case page', pathPrefix: '/cases/' },
+  // Fixed routes wired up in code, e.g. /best-true-crime-podcasts
+  { value: 'page', label: 'Other page', pathPrefix: '/' },
 ] as const
 
 export type AffiliatePageType = (typeof AFFILIATE_PAGE_TYPES)[number]['value']
 export const AFFILIATE_PAGE_TYPE_VALUES = AFFILIATE_PAGE_TYPES.map(t => t.value) as [AffiliatePageType, ...AffiliatePageType[]]
 
 export const AFFILIATE_DISCLOSURE_PATH = '/terms#affiliate-links'
+
+/**
+ * An audiobook edition is linked to its book by slug: the audiobook of
+ * `in-cold-blood` is `in-cold-blood-audiobook`. When both are live, the
+ * book's card shows a "Prefer to listen?" line for the audiobook. The
+ * line only appears once a real audiobook URL has been added, so the site
+ * never claims an audiobook edition exists before that's confirmed.
+ */
+export const AUDIOBOOK_SLUG_SUFFIX = '-audiobook'
+
+/** Shown in admin in place of an affiliate URL that hasn't been supplied yet. */
+export const AFFILIATE_URL_PLACEHOLDER = 'AMAZON_AFFILIATE_URL_TO_BE_SUPPLIED'
 
 /**
  * Checks an affiliate URL is https and points at one of the provider's

@@ -50,6 +50,11 @@ describe('extractAffiliateSlugs', () => {
     const mdx = 'Intro\n\n<AffiliateProduct slug="helter-skelter" />\n\nText <AffiliateProduct variant="link" slug=\'in-cold-blood\'>x</AffiliateProduct>'
     expect(extractAffiliateSlugs(mdx)).toEqual(['helter-skelter', 'in-cold-blood'])
   })
+
+  it('finds slugs listed in <FurtherReading>', () => {
+    const mdx = '<FurtherReading slugs="the-five, people-who-eat-darkness,the-jigsaw-man" note="x" />\n<AffiliateProduct slug="the-five" />'
+    expect(extractAffiliateSlugs(mdx)).toEqual(['the-five', 'people-who-eat-darkness', 'the-jigsaw-man'])
+  })
 })
 
 describe('affiliateProductSchema', () => {

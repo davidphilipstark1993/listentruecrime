@@ -10,6 +10,12 @@ export interface BlogFAQ {
   a: string
 }
 
+/** A book discussed in a reading-list article — emitted as ItemList/Book structured data. */
+export interface BlogBook {
+  title: string
+  author: string
+}
+
 export interface BlogPost {
   slug: string
   title: string
@@ -23,6 +29,7 @@ export interface BlogPost {
   author?: string          // author slug — defaults to 'david-stark'
   relatedPodcasts?: string[]
   faqs?: BlogFAQ[]
+  books?: BlogBook[]
   content: string
   readingTime: string
   wordCount: number
@@ -54,6 +61,7 @@ export function getAllPosts(): BlogPost[] {
         author: data.author ?? 'david-stark',
         relatedPodcasts: data.relatedPodcasts ?? [],
         faqs: data.faqs ?? [],
+        books: data.books ?? [],
         content,
         readingTime: rt.text,
         wordCount: rt.words,
@@ -87,6 +95,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
     author: data.author ?? 'david-stark',
     relatedPodcasts: data.relatedPodcasts ?? [],
     faqs: data.faqs ?? [],
+    books: data.books ?? [],
     content,
     readingTime: rt.text,
     wordCount: rt.words,

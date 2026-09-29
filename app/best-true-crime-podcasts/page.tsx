@@ -10,6 +10,8 @@ import { NewsletterLeadMagnet } from '@/components/newsletter/newsletter-lead-ma
 import { CATEGORIES, COUNTRIES } from '@/lib/types/database'
 import { buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
 import { BASE } from '@/lib/seo/config'
+import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
+import { FurtherReading } from '@/components/affiliates/further-reading'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 const YEAR = new Date().getFullYear()
 
@@ -66,7 +68,7 @@ export const revalidate = 3600
 export default async function BestTrueCrimePodcastsPage() {
   const supabase = createAdminClient()
 
-  const [{ data: topRated }, { data: newest }, { data: featured }] = await Promise.all([
+  const [{ data: topRated }, { data: newest }, { data: featured }, reading] = await Promise.all([
     supabase
       .from('podcasts')
       .select(`*, rating_stats:podcast_rating_stats(*)`)
@@ -85,6 +87,8 @@ export default async function BestTrueCrimePodcastsPage() {
       .eq('is_published', true)
       .eq('quick_verdict', 'Must listen')
       .limit(6),
+    // Books placed on this page in /admin/affiliates (page type "Other page")
+    getAffiliateProductsForPage('page', 'best-true-crime-podcasts'),
   ])
 
   type PodcastWithStats = Podcast & { rating_stats: RatingStats | null }
@@ -233,6 +237,19 @@ export default async function BestTrueCrimePodcastsPage() {
         <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
           <NewsletterLeadMagnet variant="banner" source="best_page_lead_magnet" />
         </section>
+
+        {/* Related reading — only shown once products placed here are live */}
+        {reading.products.length > 0 && (
+          <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+            <FurtherReading
+              products={reading.products}
+              placement="best-podcasts-reading"
+              heading="More true crime to read"
+              headingAs="h2"
+              note={reading.note}
+            />
+          </section>
+        )}
 
         {/* FAQ */}
         <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">

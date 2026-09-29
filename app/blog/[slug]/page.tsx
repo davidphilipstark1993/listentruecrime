@@ -21,9 +21,10 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { BASE } from '@/lib/seo/config'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { autolinkPodcasts } from '@/lib/podcast-autolink'
-import { getAffiliateProductsBySlugs, getAffiliateProductsForPage, type PublicAffiliateProduct } from '@/lib/affiliates/queries'
-import { extractAffiliateSlugs } from '@/lib/affiliates/mdx'
-import { AffiliateRecommendation, AffiliateRecommendations } from '@/components/affiliates/affiliate-recommendation'
+import { disclosedProviders, getAffiliateProductsBySlugs, getAffiliateProductsForPage, type PublicAffiliateProduct } from '@/lib/affiliates/queries'
+import { extractAffiliateSlugs, parseSlugList } from '@/lib/affiliates/mdx'
+import { AffiliateProductCard } from '@/components/affiliates/affiliate-product-card'
+import { FurtherReading } from '@/components/affiliates/further-reading'
 import { AffiliateLink } from '@/components/affiliates/affiliate-link'
 import { AffiliateDisclosure } from '@/components/affiliates/affiliate-disclosure'
 
@@ -56,9 +57,19 @@ const MDX_COMPONENTS = {
   },
 }
 
-// <AffiliateProduct slug="..." /> in MDX renders a managed product from
-// /admin/affiliates (card by default, or variant="link" for an inline text
-// link). Unknown, inactive or URL-less products render nothing.
+// Affiliate components available in MDX, bound to the live products this
+// article references. Unknown, inactive or URL-less products render nothing.
+//   <AffiliateProduct slug="..." />            a single product card
+//   <AffiliateProduct slug="..." variant="link">text</AffiliateProduct>
+//   <FurtherReading slugs="a, b" note="..." />  a short related-reading list
+function makeAffiliateMdxComponents(products: Map<string, PublicAffiliateProduct>) {
+  function FurtherReadingMdx({ slugs, heading, note }: { slugs: string; heading?: string; note?: string }) {
+    const items = parseSlugList(slugs).map(s => products.get(s)).filter((p): p is PublicAffiliateProduct => Boolean(p))
+    return <FurtherReading products={items} placement="article-further-reading" heading={heading} note={note} />
+  }
+  return { AffiliateProduct: makeAffiliateProduct(products), FurtherReading: FurtherReadingMdx }
+}
+
 function makeAffiliateProduct(products: Map<string, PublicAffiliateProduct>) {
   return function AffiliateProduct({ slug, variant = 'card', label, children }: { slug: string; variant?: 'card' | 'link'; label?: string; children?: ReactNode }) {
     const product = products.get(slug)
@@ -70,7 +81,7 @@ function makeAffiliateProduct(products: Map<string, PublicAffiliateProduct>) {
         </AffiliateLink>
       )
     }
-    return <AffiliateRecommendation product={product} placement="article-inline" label={label} />
+    return <AffiliateProductCard product={product} placement="article-inline" label={label} />
   }
 }
 
@@ -143,10 +154,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   ])
 
   // Products placed inline in the MDX aren't repeated in the end-of-article section
-  const sectionAffiliates = pageAffiliates.filter(p => !inlineAffiliates.has(p.slug))
-  const disclosedProviders = [...Array.from(inlineAffiliates.values()), ...sectionAffiliates]
-    .filter(p => p.disclosure_required)
-    .map(p => p.provider)
+  const sectionAffiliates = pageAffiliates.products.filter(p => !inlineAffiliates.has(p.slug))
+  const affiliateProviders = disclosedProviders([...Array.from(inlineAffiliates.values()), ...sectionAffiliates])
 
   const relatedPodcastData = relatedPodcastsRes.data ?? []
   const allTitles = (allPodcastTitlesRes.data ?? []) as Array<{ slug: string; title: string }>
@@ -186,12 +195,33 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     wordCount: post.wordCount,
   }
 
+  // Reading-list articles (frontmatter `books`) also describe their books
+  const booksSchema = post.books?.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: post.title,
+        url: postUrl,
+        itemListElement: post.books.map((b, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          item: { '@type': 'Book', name: b.title, author: { '@type': 'Person', name: b.author } },
+        })),
+      }
+    : null
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
+      {booksSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(booksSchema) }}
+        />
+      )}
       <Header />
       <main id="main-content" className="min-h-screen bg-ink-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
@@ -228,8 +258,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   readingTime={post.readingTime}
                   authorSlug={post.author}
                 />
-                {disclosedProviders.length > 0 && (
-                  <AffiliateDisclosure providers={disclosedProviders} className="mt-4" />
+                {affiliateProviders.length > 0 && (
+                  <AffiliateDisclosure providers={affiliateProviders} className="mt-4" />
                 )}
               </header>
 
@@ -277,13 +307,17 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                       remarkPlugins: [remarkGfm],
                     },
                   }}
-                  components={{ ...MDX_COMPONENTS, AffiliateProduct: makeAffiliateProduct(inlineAffiliates) }}
+                  components={{ ...MDX_COMPONENTS, ...makeAffiliateMdxComponents(inlineAffiliates) }}
                 />
               </div>
 
-              {sectionAffiliates.length > 0 && (
-                <AffiliateRecommendations products={sectionAffiliates} placement="article-end" className="mt-10" />
-              )}
+              <FurtherReading
+                products={sectionAffiliates}
+                placement="article-end"
+                note={pageAffiliates.note}
+                headingAs="h2"
+                className="mt-10"
+              />
 
               <ShareButtons title={post.title} url={postUrl} />
 

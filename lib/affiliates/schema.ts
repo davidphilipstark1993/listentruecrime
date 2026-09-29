@@ -53,4 +53,5 @@ export const affiliatePlacementSchema = z.object({
   page_type: z.enum(AFFILIATE_PAGE_TYPE_VALUES),
   page_key: z.string().trim().toLowerCase().min(1, 'Enter the page slug').max(200).regex(/^[a-z0-9-]+$/, 'Enter just the slug, e.g. helter-skelter'),
   position: z.number().int().min(0).max(100).default(0),
+  note: optionalText(300),
 })

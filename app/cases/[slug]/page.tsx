@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { ArrowRight, MapPin, Calendar, Headphones, ExternalLink } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
-import { AffiliateSidebarCard } from '@/components/affiliates/affiliate-recommendation'
+import { FurtherReading } from '@/components/affiliates/further-reading'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { getAllCaseSlugs, getCaseBySlug, getRelatedCases } from '@/lib/cases'
@@ -350,7 +350,7 @@ export default async function CasePage({ params }: Props) {
                 </div>
               )}
 
-              <AffiliateSidebarCard products={affiliateProducts} placement="case-sidebar" />
+              <FurtherReading products={affiliateProducts.products} note={affiliateProducts.note} placement="case-sidebar" variant="sidebar" headingAs="h3" />
 
               {seriesTag && (
                 <div className="card p-5 border-crimson/25 bg-crimson/5">
