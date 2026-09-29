@@ -20,7 +20,7 @@ import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/datab
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
-import { AffiliateSidebarCard } from '@/components/affiliates/affiliate-recommendation'
+import { FurtherReading } from '@/components/affiliates/further-reading'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -713,7 +713,7 @@ export default async function PodcastPage({ params }: Props) {
               )}
 
               {/* Editorially chosen affiliate products — only when added in /admin/affiliates */}
-              <AffiliateSidebarCard products={affiliateProducts} placement="podcast-sidebar" />
+              <FurtherReading products={affiliateProducts.products} note={affiliateProducts.note} placement="podcast-sidebar" variant="sidebar" headingAs="h3" />
 
               {/* Categories this podcast belongs to */}
               {podcastCategories.length > 0 && (

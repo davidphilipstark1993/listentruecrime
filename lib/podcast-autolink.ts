@@ -14,6 +14,8 @@ export function autolinkPodcasts(
     .filter(pod => !AUTOLINK_STOPWORDS.has(pod.title.trim().toLowerCase()))
     .sort((a, b) => b.title.length - a.title.length)
 
+  const titles = new Set(sorted.map(pod => pod.title))
+
   let inCodeBlock = false
   const lines = content.split('\n')
 
@@ -33,11 +35,20 @@ export function autolinkPodcasts(
 
       // Protect existing markdown links and inline code from replacement
       const placeholders: string[] = []
-      let result = line.replace(/`[^`]*`|\[[^\]]+\]\([^)]+\)/g, match => {
+      const protect = (match: string) => {
         const idx = placeholders.length
         placeholders.push(match)
         return `\x00P${idx}\x00`
-      })
+      }
+      let result = line.replace(/`[^`]*`|\[[^\]]+\]\([^)]+\)/g, protect)
+
+      // Protect *italicised* titles of other works (books, films) so a podcast
+      // title can't be linked from inside one — e.g. "Cold" in *In Cold Blood*.
+      // An italic span that is exactly a podcast title (*Serial*) still links.
+      // Single asterisks only, so **bold** text is unaffected.
+      result = result.replace(/(?<!\*)\*(?![*\s])([^*\n]+?)(?<![*\s])\*(?!\*)/g, (match, inner: string) =>
+        titles.has(inner.trim()) ? match : protect(match)
+      )
 
       // Replace podcast titles in remaining plain text. Case-sensitive: many
       // podcast titles are ordinary words or phrases ("Cold", "Proof", "The

@@ -161,6 +161,7 @@ export interface AffiliatePlacement {
   page_type: AffiliatePageType
   page_key: string
   position: number
+  note: string | null
 }
 
 export interface AffiliateProductClickStats {

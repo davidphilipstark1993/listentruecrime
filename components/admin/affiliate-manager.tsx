@@ -8,6 +8,8 @@ import {
   AFFILIATE_PAGE_TYPES,
   AFFILIATE_PROVIDER_IDS,
   AFFILIATE_PROVIDERS,
+  AFFILIATE_URL_PLACEHOLDER,
+  AUDIOBOOK_SLUG_SUFFIX,
   affiliateUrlWarning,
   getAffiliateProvider,
   validateAffiliateUrl,
@@ -59,9 +61,11 @@ interface Props {
   products: AffiliateProduct[]
   placements: AffiliatePlacement[]
   stats: AffiliateProductClickStats[]
+  /** Product slug → article slugs that reference it inline in their MDX. */
+  inlineUsage: Record<string, string[]>
 }
 
-export function AffiliateManager({ products, placements, stats }: Props) {
+export function AffiliateManager({ products, placements, stats, inlineUsage }: Props) {
   const [editing, setEditing] = useState<string | 'new' | null>(null)
   const statsById = new Map(stats.map(s => [s.product_id, s]))
 
@@ -101,6 +105,7 @@ export function AffiliateManager({ products, placements, stats }: Props) {
                   key={p.id}
                   product={p}
                   placements={productPlacements}
+                  inlineArticles={inlineUsage[p.slug] ?? []}
                   live={live}
                   clicks30={s?.clicks_30d ?? 0}
                   clicksAll={s?.total_clicks ?? 0}
@@ -123,17 +128,19 @@ export function AffiliateManager({ products, placements, stats }: Props) {
   )
 }
 
-function ProductRow({ product, placements, live, clicks30, clicksAll, open, onToggle }: {
+function ProductRow({ product, placements, inlineArticles, live, clicks30, clicksAll, open, onToggle }: {
   product: AffiliateProduct
   placements: AffiliatePlacement[]
+  inlineArticles: string[]
   live: boolean
   clicks30: number
   clicksAll: number
   open: boolean
   onToggle: () => void
 }) {
-  const status = live ? 'Live' : product.active ? 'On — no URL' : 'Off'
-  const statusClass = live ? 'bg-emerald-900/40 text-emerald-400' : product.active ? 'bg-amber-900/40 text-amber-400' : 'bg-white/5 text-stone-subtle'
+  const status = live ? 'Live' : !product.affiliate_url ? 'Awaiting URL' : 'Off'
+  const statusClass = live ? 'bg-emerald-900/40 text-emerald-400' : !product.affiliate_url ? 'bg-amber-900/40 text-amber-400' : 'bg-white/5 text-stone-subtle'
+  const nothingPlaced = placements.length === 0 && inlineArticles.length === 0
 
   return (
     <>
@@ -145,9 +152,15 @@ function ProductRow({ product, placements, live, clicks30, clicksAll, open, onTo
         <td className="px-4 py-3 text-stone-muted text-xs">{getAffiliateProvider(product.provider)?.name ?? product.provider}</td>
         <td className="px-4 py-3"><span className={`text-xs px-2 py-0.5 rounded-full whitespace-nowrap ${statusClass}`}>{status}</span></td>
         <td className="px-4 py-3 text-xs text-stone-muted">
-          {placements.length === 0 ? <span className="text-stone-subtle">None</span> : placements.map(pl => (
+          {nothingPlaced && <span className="text-stone-subtle">None</span>}
+          {placements.map(pl => (
             <a key={pl.id} href={pageHref(pl.page_type, pl.page_key)} target="_blank" rel="noopener noreferrer" className="block hover:text-stone">
               {pageHref(pl.page_type, pl.page_key)}
+            </a>
+          ))}
+          {inlineArticles.map(a => (
+            <a key={a} href={`/blog/${a}`} target="_blank" rel="noopener noreferrer" className="block hover:text-stone">
+              /blog/{a} <span className="text-stone-subtle">(in text)</span>
             </a>
           ))}
         </td>
@@ -160,7 +173,7 @@ function ProductRow({ product, placements, live, clicks30, clicksAll, open, onTo
         <tr>
           <td colSpan={6} className="px-4 pb-6 pt-2 bg-white/[0.01]">
             <ProductForm product={product} onDone={onToggle} />
-            <PlacementsEditor productId={product.id} placements={placements} />
+            <PlacementsEditor productId={product.id} placements={placements} inlineArticles={inlineArticles} />
           </td>
         </tr>
       )}
@@ -258,7 +271,7 @@ function ProductForm({ product, onDone }: { product?: AffiliateProduct; onDone: 
         hint="Paste the link from your Associates account exactly as given. It is used unchanged."
         error={errors.affiliate_url ?? urlError ?? undefined}
       >
-        <input className="input-base font-mono text-xs" value={form.affiliate_url} onChange={e => set('affiliate_url', e.target.value)} placeholder="https://" spellCheck={false} />
+        <input className="input-base font-mono text-xs" value={form.affiliate_url} onChange={e => set('affiliate_url', e.target.value)} placeholder={AFFILIATE_URL_PLACEHOLDER} spellCheck={false} />
       </Field>
       {urlWarning && <p className="text-2xs text-amber-400 -mt-2">{urlWarning}</p>}
 
@@ -266,7 +279,7 @@ function ProductForm({ product, onDone }: { product?: AffiliateProduct; onDone: 
         <Field label="Link text (optional)" hint={`Defaults to “${provider?.defaultLinkText ?? ''}”`} error={errors.link_text}>
           <input className="input-base" value={form.link_text} onChange={e => set('link_text', e.target.value)} />
         </Field>
-        <Field label="Slug" hint="Used in articles: <AffiliateProduct slug=&quot;…&quot; />" error={errors.slug}>
+        <Field label="Slug" hint={`Used in articles: <AffiliateProduct slug="…" />. An audiobook edition uses the book's slug + "${AUDIOBOOK_SLUG_SUFFIX}" and then appears under the book as "Prefer to listen?".`} error={errors.slug}>
           <input className="input-base font-mono text-xs" value={form.slug} onChange={e => { setSlugTouched(true); set('slug', e.target.value) }} />
         </Field>
       </div>
@@ -309,10 +322,11 @@ function ProductForm({ product, onDone }: { product?: AffiliateProduct; onDone: 
   )
 }
 
-function PlacementsEditor({ productId, placements }: { productId: string; placements: AffiliatePlacement[] }) {
+function PlacementsEditor({ productId, placements, inlineArticles }: { productId: string; placements: AffiliatePlacement[]; inlineArticles: string[] }) {
   const router = useRouter()
   const [pageType, setPageType] = useState<AffiliatePageType>('blog')
   const [pageKey, setPageKey] = useState('')
+  const [note, setNote] = useState('')
   const [busy, setBusy] = useState(false)
 
   async function add(e: React.FormEvent) {
@@ -324,11 +338,12 @@ function PlacementsEditor({ productId, placements }: { productId: string; placem
       const res = await fetch(`/api/admin/affiliates/${productId}/placements`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ page_type: pageType, page_key: key, position: placements.length }),
+        body: JSON.stringify({ page_type: pageType, page_key: key, position: placements.length, note: note || null }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.fieldErrors?.page_key?.[0] ?? data.error ?? 'Could not add page')
       setPageKey('')
+      setNote('')
       toast.success('Added to page')
       router.refresh()
     } catch (err) {
@@ -349,8 +364,9 @@ function PlacementsEditor({ productId, placements }: { productId: string; placem
     <div className="mt-8 pt-6 border-t border-white/[0.06]">
       <h3 className="text-sm font-medium text-stone mb-1">Pages showing this product</h3>
       <p className="text-2xs text-stone-subtle mb-3">
-        Articles show it in a “Further reading and listening” section after the article; podcast and case pages show
-        it in the sidebar. To place it within an article&apos;s text instead, add{' '}
+        Articles show it in a “Further reading” section after the article; podcast and case pages show it in the
+        sidebar; “Other page” is for fixed pages such as <code>best-true-crime-podcasts</code>. To place it within an
+        article&apos;s text instead, add <code className="text-crimson">&lt;FurtherReading slugs=&quot;…&quot; /&gt;</code> or{' '}
         <code className="text-crimson">&lt;AffiliateProduct slug=&quot;…&quot; /&gt;</code> to the MDX.
       </p>
       <ul className="space-y-1.5 mb-4">
@@ -359,12 +375,18 @@ function PlacementsEditor({ productId, placements }: { productId: string; placem
             <a href={pageHref(pl.page_type, pl.page_key)} target="_blank" rel="noopener noreferrer" className="hover:text-stone">
               {pageHref(pl.page_type, pl.page_key)}
             </a>
+            {pl.note && <span className="text-stone-subtle italic truncate max-w-[40ch]" title={pl.note}>“{pl.note}”</span>}
             <button type="button" onClick={() => removePlacement(pl.id)} aria-label={`Remove from ${pl.page_key}`} className="text-stone-subtle hover:text-crimson">
               <X size={13} />
             </button>
           </li>
         ))}
-        {placements.length === 0 && <li className="text-xs text-stone-subtle">Not on any pages yet.</li>}
+        {inlineArticles.map(a => (
+          <li key={a} className="text-xs text-stone-muted">
+            /blog/{a} <span className="text-stone-subtle">— placed in the article text (edit the MDX to move or remove)</span>
+          </li>
+        ))}
+        {placements.length === 0 && inlineArticles.length === 0 && <li className="text-xs text-stone-subtle">Not on any pages yet.</li>}
       </ul>
       <form onSubmit={add} className="flex flex-wrap gap-2 items-end">
         <label className="block">
@@ -376,6 +398,10 @@ function PlacementsEditor({ productId, placements }: { productId: string; placem
         <label className="block flex-1 min-w-[220px]">
           <span className="sr-only">Page slug</span>
           <input className="input-base font-mono text-xs" value={pageKey} onChange={e => setPageKey(e.target.value)} placeholder="slug or URL, e.g. madeleine-mccann-timeline" required />
+        </label>
+        <label className="block basis-full">
+          <span className="sr-only">Note (optional)</span>
+          <input className="input-base text-xs" value={note} onChange={e => setNote(e.target.value)} maxLength={300} placeholder="Optional note shown with it, e.g. “These books cover other cases.”" />
         </label>
         <button type="submit" disabled={busy} className="btn-outline">Add to page</button>
       </form>
