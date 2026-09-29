@@ -65,6 +65,13 @@ const PRODUCTS = [
     'The Vidocq Society, a Philadelphia group of detectives and forensic specialists who meet to review cold cases.'),
   book('the-good-nurse', 'The Good Nurse', 'Charles Graeber',
     'The US case of Charles Cullen, a nurse who admitted killing patients in hospitals in New Jersey and Pennsylvania.'),
+  // Products 18–20, approved by the site owner on 29 Sept 2026
+  book('the-man-from-the-train', 'The Man from the Train', 'Bill James and Rachel McCarthy James',
+    'An attempt to connect the 1912 Villisca axe murders in Iowa to a series of similar family killings across the US, and to name a single suspect.'),
+  book('beyond-belief', 'Beyond Belief', 'Emlyn Williams',
+    'An early account of the Moors murders, written soon after the 1966 trial of Ian Brady and Myra Hindley.'),
+  book('bad-blood', 'Bad Blood', 'John Carreyrou',
+    'The Wall Street Journal reporter who exposed Theranos on the fraud at the company and the efforts to stop his reporting.'),
 
   audiobook('ill-be-gone-in-the-dark', 'I’ll Be Gone in the Dark', 'Michelle McNamara'),
   audiobook('in-cold-blood', 'In Cold Blood', 'Truman Capote'),
@@ -79,6 +86,8 @@ const PLACEMENTS = [
   { slug: 'in-cold-blood', page_type: 'page', page_key: 'best-true-crime-podcasts', position: 0 },
   { slug: 'mindhunter', page_type: 'page', page_key: 'best-true-crime-podcasts', position: 1 },
   { slug: 'ill-be-gone-in-the-dark', page_type: 'page', page_key: 'best-true-crime-podcasts', position: 2 },
+  // Theranos case page sidebar
+  { slug: 'bad-blood', page_type: 'case', page_key: 'theranos-elizabeth-holmes', position: 0 },
   // Placement E — Your Own Backyard sidebar. None of these books is about Kristin Smart.
   ...['ill-be-gone-in-the-dark', 'the-cases-that-haunt-us', 'people-who-eat-darkness'].map((slug, position) => ({
     slug, page_type: 'podcast', page_key: 'your-own-backyard', position,
