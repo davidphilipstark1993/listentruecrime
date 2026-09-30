@@ -72,6 +72,11 @@ const PRODUCTS = [
     'An early account of the Moors murders, written soon after the 1966 trial of Ian Brady and Myra Hindley.'),
   book('bad-blood', 'Bad Blood', 'John Carreyrou',
     'The Wall Street Journal reporter who exposed Theranos on the fraud at the company and the efforts to stop his reporting.'),
+  // Added 30 Sept 2026 at the site owner's request
+  book('american-predator', 'American Predator', 'Maureen Callahan',
+    'Maureen Callahan’s account of Israel Keyes, the serial killer caught in 2012 after the murder of Samantha Koenig in Anchorage, and of the investigation that followed.'),
+  book('unmasked', 'Unmasked', 'Paul Holes',
+    'Paul Holes’s memoir of his career as a cold case investigator, including his work on the Golden State Killer case.'),
 
   audiobook('ill-be-gone-in-the-dark', 'I’ll Be Gone in the Dark', 'Michelle McNamara'),
   audiobook('in-cold-blood', 'In Cold Blood', 'Truman Capote'),
@@ -86,6 +91,15 @@ const PLACEMENTS = [
   { slug: 'in-cold-blood', page_type: 'page', page_key: 'best-true-crime-podcasts', position: 0 },
   { slug: 'mindhunter', page_type: 'page', page_key: 'best-true-crime-podcasts', position: 1 },
   { slug: 'ill-be-gone-in-the-dark', page_type: 'page', page_key: 'best-true-crime-podcasts', position: 2 },
+  // American Predator — the podcast page and the serial killer article (end section)
+  { slug: 'american-predator', page_type: 'podcast', page_key: 'american-predator', position: 0,
+    note: 'Maureen Callahan’s book covers the same case in depth.' },
+  { slug: 'american-predator', page_type: 'blog', page_key: 'best-serial-killer-podcasts', position: 0,
+    note: 'Maureen Callahan’s book on the Israel Keyes case, covered by American Predator above.' },
+  // Unmasked — Paul Holes's memoir, on his podcast and the Golden State Killer case page
+  { slug: 'unmasked', page_type: 'podcast', page_key: 'the-bg-files', position: 0,
+    note: 'Paul Holes’s own account of his career, including the Golden State Killer investigation.' },
+  { slug: 'unmasked', page_type: 'case', page_key: 'golden-state-killer', position: 0 },
   // Theranos case page sidebar
   { slug: 'bad-blood', page_type: 'case', page_key: 'theranos-elizabeth-holmes', position: 0 },
   // Placement E — Your Own Backyard sidebar. None of these books is about Kristin Smart.

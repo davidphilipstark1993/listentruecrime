@@ -10,12 +10,14 @@ describe('validateAffiliateUrl', () => {
   it('accepts Amazon UK and short links', () => {
     expect(validateAffiliateUrl('amazon', 'https://www.amazon.co.uk/dp/0000000000?tag=example-21')).toBeNull()
     expect(validateAffiliateUrl('amazon', 'https://amzn.to/abc123')).toBeNull()
+    expect(validateAffiliateUrl('amazon', 'https://link.amazon/B0example')).toBeNull()
   })
 
   it('rejects other hosts, lookalikes and http', () => {
     expect(validateAffiliateUrl('amazon', 'https://example.com/dp/1')).toMatch(/Amazon link/)
     expect(validateAffiliateUrl('amazon', 'https://amazon.co.uk.evil.com/dp/1')).toMatch(/Amazon link/)
     expect(validateAffiliateUrl('amazon', 'https://notamazon.co.uk/dp/1')).toMatch(/Amazon link/)
+    expect(validateAffiliateUrl('amazon', 'https://link.amazon.evil.com/x')).toMatch(/Amazon link/)
     expect(validateAffiliateUrl('amazon', 'http://www.amazon.co.uk/dp/1')).toMatch(/https/)
     expect(validateAffiliateUrl('amazon', 'not a url')).toMatch(/full URL/)
   })
@@ -35,6 +37,7 @@ describe('affiliateUrlWarning', () => {
     expect(affiliateUrlWarning('amazon', 'https://www.amazon.co.uk/dp/0000000000')).toMatch(/ordinary Amazon link/)
     expect(affiliateUrlWarning('amazon', 'https://www.amazon.co.uk/dp/0000000000?tag=example-21')).toBeNull()
     expect(affiliateUrlWarning('amazon', 'https://amzn.to/abc123')).toBeNull()
+    expect(affiliateUrlWarning('amazon', 'https://link.amazon/B0example')).toBeNull()
   })
 })
 
