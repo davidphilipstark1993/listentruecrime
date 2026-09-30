@@ -100,12 +100,21 @@ export function AffiliateManager({ products, placements, stats, inlineUsage }: P
               const s = statsById.get(p.id)
               const productPlacements = placements.filter(pl => pl.product_id === p.id)
               const live = p.active && Boolean(p.affiliate_url)
+              // Audiobooks aren't placed on pages themselves — they show under
+              // their book wherever the book appears (see AUDIOBOOK_SLUG_SUFFIX).
+              const isAudiobook = p.slug.endsWith(AUDIOBOOK_SLUG_SUFFIX)
+              const book = isAudiobook ? products.find(b => b.slug === p.slug.slice(0, -AUDIOBOOK_SLUG_SUFFIX.length)) : undefined
               return (
                 <ProductRow
                   key={p.id}
                   product={p}
                   placements={productPlacements}
                   inlineArticles={inlineUsage[p.slug] ?? []}
+                  audiobookOf={isAudiobook ? {
+                    book: book ?? null,
+                    placements: book ? placements.filter(pl => pl.product_id === book.id) : [],
+                    inlineArticles: book ? inlineUsage[book.slug] ?? [] : [],
+                  } : null}
                   live={live}
                   clicks30={s?.clicks_30d ?? 0}
                   clicksAll={s?.total_clicks ?? 0}
@@ -128,10 +137,18 @@ export function AffiliateManager({ products, placements, stats, inlineUsage }: P
   )
 }
 
-function ProductRow({ product, placements, inlineArticles, live, clicks30, clicksAll, open, onToggle }: {
+interface AudiobookOf {
+  /** The book this audiobook belongs to, or null if no product has the matching slug. */
+  book: AffiliateProduct | null
+  placements: AffiliatePlacement[]
+  inlineArticles: string[]
+}
+
+function ProductRow({ product, placements, inlineArticles, audiobookOf, live, clicks30, clicksAll, open, onToggle }: {
   product: AffiliateProduct
   placements: AffiliatePlacement[]
   inlineArticles: string[]
+  audiobookOf: AudiobookOf | null
   live: boolean
   clicks30: number
   clicksAll: number
@@ -140,7 +157,7 @@ function ProductRow({ product, placements, inlineArticles, live, clicks30, click
 }) {
   const status = live ? 'Live' : !product.affiliate_url ? 'Awaiting URL' : 'Off'
   const statusClass = live ? 'bg-emerald-900/40 text-emerald-400' : !product.affiliate_url ? 'bg-amber-900/40 text-amber-400' : 'bg-white/5 text-stone-subtle'
-  const nothingPlaced = placements.length === 0 && inlineArticles.length === 0
+  const nothingPlaced = placements.length === 0 && inlineArticles.length === 0 && !audiobookOf
 
   return (
     <>
@@ -153,6 +170,7 @@ function ProductRow({ product, placements, inlineArticles, live, clicks30, click
         <td className="px-4 py-3"><span className={`text-xs px-2 py-0.5 rounded-full whitespace-nowrap ${statusClass}`}>{status}</span></td>
         <td className="px-4 py-3 text-xs text-stone-muted">
           {nothingPlaced && <span className="text-stone-subtle">None</span>}
+          {audiobookOf && <AudiobookPages audiobook={product} live={live} of={audiobookOf} />}
           {placements.map(pl => (
             <a key={pl.id} href={pageHref(pl.page_type, pl.page_key)} target="_blank" rel="noopener noreferrer" className="block hover:text-stone">
               {pageHref(pl.page_type, pl.page_key)}
@@ -173,10 +191,43 @@ function ProductRow({ product, placements, inlineArticles, live, clicks30, click
         <tr>
           <td colSpan={6} className="px-4 pb-6 pt-2 bg-white/[0.01]">
             <ProductForm product={product} onDone={onToggle} />
-            <PlacementsEditor productId={product.id} placements={placements} inlineArticles={inlineArticles} />
+            {audiobookOf ? (
+              <p className="mt-8 pt-6 border-t border-white/[0.06] text-2xs text-stone-subtle max-w-2xl">
+                This is an audiobook edition, so it isn&apos;t placed on pages itself: it appears as “Prefer to listen?
+                Check the audiobook” under {audiobookOf.book ? <>“{audiobookOf.book.title}”</> : 'its book'} wherever that
+                book appears. To change where it shows, change the book&apos;s pages.
+              </p>
+            ) : (
+              <PlacementsEditor productId={product.id} placements={placements} inlineArticles={inlineArticles} />
+            )}
           </td>
         </tr>
       )}
+    </>
+  )
+}
+
+/** Pages column for an audiobook: the book it sits under, and that book's pages. */
+function AudiobookPages({ audiobook, live, of }: { audiobook: AffiliateProduct; live: boolean; of: AudiobookOf }) {
+  const { book } = of
+  if (!book) {
+    return <span className="text-amber-400">No book with slug “{audiobook.slug.slice(0, -AUDIOBOOK_SLUG_SUFFIX.length)}” — won&apos;t appear</span>
+  }
+  const bookLive = book.active && Boolean(book.affiliate_url)
+  const bookPages = [
+    ...of.placements.map(pl => ({ href: pageHref(pl.page_type, pl.page_key), label: pageHref(pl.page_type, pl.page_key) })),
+    ...of.inlineArticles.map(a => ({ href: `/blog/${a}`, label: `/blog/${a}` })),
+  ]
+  return (
+    <>
+      <span className="block text-stone-subtle">
+        Shown under <span className="text-stone-muted">{book.title}</span>
+        {!live && ' — not shown until this audiobook is live'}
+        {live && !bookLive && <span className="text-amber-400"> — book isn&apos;t live, so not shown</span>}
+      </span>
+      {live && bookLive && bookPages.map(p => (
+        <a key={p.href} href={p.href} target="_blank" rel="noopener noreferrer" className="block hover:text-stone">{p.label}</a>
+      ))}
     </>
   )
 }
