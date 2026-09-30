@@ -29,17 +29,18 @@ export interface AffiliateProvider {
 
 const AMAZON_STATEMENT = 'As an Amazon Associate, ListenTrueCrime earns from qualifying purchases.'
 
-// Associates links carry a tag= parameter; short links (amzn.to / amzn.eu)
-// resolve to one, so they can't be checked here.
+// Associates links carry a tag= parameter; SiteStripe short links
+// (link.amazon, and the older amzn.to / amzn.eu) resolve to one, so they
+// can't be checked here.
 const amazonLooksLikeAffiliate = (url: URL) =>
-  url.searchParams.has('tag') || /(^|\.)amzn\.(to|eu)$/.test(url.hostname)
+  url.searchParams.has('tag') || /(^|\.)amzn\.(to|eu)$/.test(url.hostname) || url.hostname === 'link.amazon'
 
 export const AFFILIATE_PROVIDERS = {
   amazon: {
     id: 'amazon',
     name: 'Amazon',
     defaultLinkText: 'Check the latest price on Amazon',
-    hostnames: ['amazon.co.uk', 'amazon.com', 'amazon.ie', 'amazon.ca', 'amazon.com.au', 'amzn.to', 'amzn.eu'],
+    hostnames: ['amazon.co.uk', 'amazon.com', 'amazon.ie', 'amazon.ca', 'amazon.com.au', 'link.amazon', 'amzn.to', 'amzn.eu'],
     requiredStatement: AMAZON_STATEMENT,
     looksLikeAffiliateUrl: amazonLooksLikeAffiliate,
   },
@@ -49,7 +50,7 @@ export const AFFILIATE_PROVIDERS = {
     id: 'audible',
     name: 'Audible',
     defaultLinkText: 'Listen on Audible',
-    hostnames: ['audible.co.uk', 'audible.com', 'amazon.co.uk', 'amazon.com', 'amzn.to', 'amzn.eu'],
+    hostnames: ['audible.co.uk', 'audible.com', 'amazon.co.uk', 'amazon.com', 'link.amazon', 'amzn.to', 'amzn.eu'],
     requiredStatement: AMAZON_STATEMENT,
     looksLikeAffiliateUrl: amazonLooksLikeAffiliate,
   },
