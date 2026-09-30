@@ -83,6 +83,8 @@ const PRODUCTS = [
   audiobook('mindhunter', 'Mindhunter', 'John E. Douglas and Mark Olshaker'),
   audiobook('the-cases-that-haunt-us', 'The Cases That Haunt Us', 'John E. Douglas and Mark Olshaker'),
   audiobook('people-who-eat-darkness', 'People Who Eat Darkness', 'Richard Lloyd Parry'),
+  audiobook('american-predator', 'American Predator', 'Maureen Callahan'),
+  audiobook('unmasked', 'Unmasked', 'Paul Holes'),
 ];
 
 // Placements managed in the database. (Articles carry theirs in the MDX.)
