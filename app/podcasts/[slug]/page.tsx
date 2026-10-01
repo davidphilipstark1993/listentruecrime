@@ -606,8 +606,8 @@ export default async function PodcastPage({ params }: Props) {
                 </div>
               )}
 
-              {/* Rate this */}
-              <div>
+              {/* Rate this — #rate is linked directly from newsletter emails */}
+              <div id="rate" className="scroll-mt-24">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="font-serif text-xl text-stone">Rate this podcast</h2>
                   <HelpfulWidget podcastSlug={podcast.slug} />
