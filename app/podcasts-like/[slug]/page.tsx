@@ -222,7 +222,7 @@ export default async function PodcastsLikePage({ params }: Props) {
                     <span className={cn('score-badge text-xs', scoreBg(stats.avg_overall))}>
                       {stats.avg_overall.toFixed(1)}
                     </span>
-                    <span className="text-stone-subtle text-xs">{stats.rating_count} community ratings</span>
+                    <span className="text-stone-subtle text-xs">{stats.rating_count} community rating{stats.rating_count === 1 ? '' : 's'}</span>
                   </div>
                 )}
                 {podcast.short_description && (

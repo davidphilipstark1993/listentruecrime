@@ -410,7 +410,7 @@ export default async function PodcastPage({ params }: Props) {
                         ))}
                       </div>
                       <span className="text-stone-subtle text-xs">
-                        ({stats?.rating_count} ratings)
+                        ({stats?.rating_count} rating{stats?.rating_count === 1 ? '' : 's'})
                       </span>
                     </div>
                   )}
@@ -595,7 +595,7 @@ export default async function PodcastPage({ params }: Props) {
                 <div className="card p-6">
                   <div className="flex items-center justify-between mb-5">
                     <h2 className="font-serif text-lg text-stone">Community ratings</h2>
-                    <span className="text-stone-subtle text-xs">{stats.rating_count} ratings</span>
+                    <span className="text-stone-subtle text-xs">{stats.rating_count} rating{stats.rating_count === 1 ? '' : 's'}</span>
                   </div>
                   <div className="space-y-3">
                     <RatingBar label="Storytelling" value={stats.avg_storytelling} />
@@ -623,7 +623,7 @@ export default async function PodcastPage({ params }: Props) {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="font-serif text-xl text-stone">Community reviews</h2>
-                  <span className="text-stone-subtle text-xs">{reviews.length} reviews</span>
+                  <span className="text-stone-subtle text-xs">{reviews.length} review{reviews.length === 1 ? '' : 's'}</span>
                 </div>
 
                 <ReviewForm podcastId={podcast.id} podcastTitle={podcast.title} />
