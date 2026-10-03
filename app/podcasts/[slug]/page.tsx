@@ -21,6 +21,7 @@ import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
+import { ratingStatsOf } from '@/lib/rating-stats'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -198,7 +199,7 @@ export default async function PodcastPage({ params }: Props) {
   const podcastCategories = getPodcastCategories(podcast)
   const whoIsItFor = getWhoIsItFor(podcast)
   const relatedCases = getCasesForPodcast(slug)
-  const stats = podcast.rating_stats
+  const stats = ratingStatsOf(podcast.rating_stats)
   const overallScore = stats?.avg_overall
   const year = new Date().getFullYear()
   const pros = getPros(podcast, stats)

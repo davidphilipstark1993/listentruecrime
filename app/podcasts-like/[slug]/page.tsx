@@ -15,6 +15,7 @@ import { BASE } from '@/lib/seo/config'
 import { countryFlag, cn, scoreBg, stripHtml } from '@/lib/utils'
 import { COUNTRIES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
+import { ratingStatsOf } from '@/lib/rating-stats'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -121,7 +122,7 @@ export default async function PodcastsLikePage({ params }: Props) {
 
   const recommendations = await getRecommendations(podcast)
   const year = new Date().getFullYear()
-  const stats = podcast.rating_stats
+  const stats = ratingStatsOf(podcast.rating_stats)
 
   // Only ask a question when this podcast's data actually gives a distinct
   // answer — a generic fallback repeated across 160 pages is filler, not FAQ content.

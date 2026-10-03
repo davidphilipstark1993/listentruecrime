@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Headphones, Star } from 'lucide-react'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { cn, countryFlag, scoreBg, stripHtml, truncate } from '@/lib/utils'
+import { ratingStatsOf } from '@/lib/rating-stats'
 
 interface PodcastCardProps {
   podcast: Podcast & { rating_stats?: RatingStats | null; review_count?: number }
@@ -11,8 +12,9 @@ interface PodcastCardProps {
 }
 
 export function PodcastCard({ podcast, priority = false, className }: PodcastCardProps) {
-  const score = podcast.rating_stats?.avg_overall
-  const ratingCount = podcast.rating_stats?.rating_count ?? 0
+  const stats = ratingStatsOf(podcast.rating_stats)
+  const score = stats?.avg_overall
+  const ratingCount = stats?.rating_count ?? 0
   const shortDescription = podcast.short_description ? stripHtml(podcast.short_description) : null
 
   return (
