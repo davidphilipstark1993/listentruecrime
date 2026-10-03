@@ -30,12 +30,15 @@ type PodcastWithStats = Podcast & { rating_stats: RatingStats | null }
 
 async function getPodcast(slug: string) {
   const supabase = createAdminClient()
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('podcasts')
     .select(`*, rating_stats:podcast_rating_stats(*), review_count:podcast_review_counts(review_count)`)
     .eq('slug', slug)
     .eq('is_published', true)
     .single()
+  // A failed query (e.g. a broken view embed) would otherwise surface only as
+  // a silent 404. PGRST116 is "no rows" — a genuinely unknown slug.
+  if (error && error.code !== 'PGRST116') console.error(`getPodcast(${slug}) failed:`, error.message)
   if (!data) return data
   // Imported feed copy sometimes carries raw markup (<p>, &nbsp;) that must
   // never reach a reader — clean it once here rather than at every call site
