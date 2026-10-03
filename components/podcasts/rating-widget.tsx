@@ -7,7 +7,7 @@ import toast from 'react-hot-toast'
 import type { Rating } from '@/lib/types/database'
 import { cn } from '@/lib/utils'
 
-const RATING_FIELDS: { key: keyof Omit<Rating, 'id' | 'user_id' | 'podcast_id' | 'created_at'>; label: string }[] = [
+const RATING_FIELDS: { key: keyof Omit<Rating, 'id' | 'user_id' | 'anonymous_rating_id' | 'podcast_id' | 'created_at'>; label: string }[] = [
   { key: 'storytelling_score', label: 'Storytelling' },
   { key: 'research_score', label: 'Research Quality' },
   { key: 'host_quality_score', label: 'Host Quality' },

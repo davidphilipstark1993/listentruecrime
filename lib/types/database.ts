@@ -52,7 +52,8 @@ export interface PodcastWithStats extends Podcast {
 
 export interface Rating {
   id: string
-  user_id: string
+  user_id: string | null // null for anonymous ratings mirrored from anonymous_ratings
+  anonymous_rating_id: string | null
   podcast_id: string
   storytelling_score: number | null
   research_score: number | null

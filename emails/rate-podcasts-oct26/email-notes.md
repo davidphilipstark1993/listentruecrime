@@ -17,11 +17,8 @@ Paste this into the Single Send's preview text field too. The HTML version alrea
 
 ## Do not send until
 
-1. **The anonymous-ratings fix is live.** Without it, ratings from anyone who isn't signed in are saved only in their own browser and never reach the site. Most subscribers wouldn't be signed in. Before sending:
-   - Run `supabase/migrations/015_anonymous_ratings.sql` in Supabase (SQL editor). Do this **before** the code deploys. Otherwise every anonymous rating fails with "Could not save rating".
-   - Merge and deploy the code changes.
-   - Test it. Open a podcast page in a private or incognito window, rate it without signing in, and refresh after a few seconds. "Community ratings" should show one more rating.
-2. **The `#rate` anchor is on podcast pages.** Every link in the email ends in `#rate`, which should jump straight to the "Rate this podcast" box. Until the anchor is added, the links still work but open at the top of the page, and people have to scroll down to the rating box.
+1. **Anonymous ratings count.** Run `supabase/migrations/016_count_anonymous_ratings.sql` in the Supabase SQL editor, after the code that handles anonymous rows is deployed. Then check it: open a podcast page in a private or incognito window, rate it without signing in, and refresh after a few seconds. The "Community ratings" count on that page should go up by one.
+2. **The `#rate` anchor is live.** It's already deployed: every link in the email ends in `#rate` and jumps straight to the "Rate this podcast" box.
 3. **Subscribers are in sync with SendGrid.** A Single Send goes to your SendGrid list, not the Supabase table. In `/admin/newsletter`, click **Retry SendGrid sync** if any subscribers show as "Pending".
 
 ## SendGrid Single Send setup
@@ -62,5 +59,5 @@ There's a mix of UK, US and Australian shows, with two UK shows near the top. Th
 ## After sending
 
 - Ratings appear on a podcast's page within a few seconds once the fix is live.
-- To measure the campaign, filter Google Analytics on `utm_campaign=rate-podcasts-oct26`. To count ratings, run `select count(*) from anonymous_ratings where created_at > '<send time>'` in Supabase. Signed-in ratings are in the `ratings` table.
+- To measure the campaign, filter Google Analytics on `utm_campaign=rate-podcasts-oct26`. To count ratings, run `select count(*) from ratings where created_at > '<send time>'` in Supabase. Anonymous ratings are the rows with an empty `user_id`.
 - Each connection is limited to 40 anonymous ratings an hour. A household sharing broadband won't reach that, but very large shared networks such as a university could. If anyone reports a "Too many ratings" message, that's the cause.
