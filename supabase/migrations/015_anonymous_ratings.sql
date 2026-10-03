@@ -32,27 +32,8 @@ alter table public.anonymous_ratings enable row level security;
 create index if not exists anonymous_ratings_podcast_idx on public.anonymous_ratings (podcast_id);
 create index if not exists anonymous_ratings_ip_recent_idx on public.anonymous_ratings (ip_hash, updated_at);
 
--- Community averages now include anonymous ratings alongside signed-in ones.
--- Same columns as before, so every existing reader keeps working.
-create or replace view public.podcast_rating_stats as
-with all_ratings as (
-  select podcast_id, storytelling_score, research_score, host_quality_score,
-         production_score, binge_factor_score, factual_accuracy_score, overall_score
-  from public.ratings
-  union all
-  select podcast_id, storytelling_score, research_score, host_quality_score,
-         production_score, binge_factor_score, factual_accuracy_score, overall_score
-  from public.anonymous_ratings
-)
-select
-  podcast_id,
-  count(*)::integer                              as rating_count,
-  round(avg(storytelling_score)::numeric, 1)     as avg_storytelling,
-  round(avg(research_score)::numeric, 1)         as avg_research,
-  round(avg(host_quality_score)::numeric, 1)     as avg_host_quality,
-  round(avg(production_score)::numeric, 1)       as avg_production,
-  round(avg(binge_factor_score)::numeric, 1)     as avg_binge_factor,
-  round(avg(factual_accuracy_score)::numeric, 1) as avg_factual_accuracy,
-  round(avg(overall_score)::numeric, 1)          as avg_overall
-from all_ratings
-group by podcast_id;
+-- This migration originally also rebuilt podcast_rating_stats as a UNION
+-- over ratings and anonymous_ratings. That broke PostgREST's
+-- podcasts -> podcast_rating_stats embed and took every podcast page down,
+-- so it was removed. Anonymous ratings are counted by 016 instead, which
+-- mirrors them into public.ratings and leaves the view untouched.

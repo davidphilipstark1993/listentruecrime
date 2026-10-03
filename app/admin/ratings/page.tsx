@@ -17,14 +17,15 @@ async function getRatings() {
 
   // ratings.user_id has no FK relationship registered for PostgREST to embed
   // profiles directly, so look usernames up separately and merge in JS.
-  const userIds = Array.from(new Set(ratings.map(r => r.user_id)))
+  // Anonymous ratings (mirrored by migration 016) have no user_id.
+  const userIds = Array.from(new Set(ratings.map(r => r.user_id).filter((id): id is string => !!id)))
   const { data: profiles } = await admin
     .from('profiles')
     .select('id, username')
     .in('id', userIds)
   const usernameById = new Map((profiles ?? []).map(p => [p.id, p.username]))
 
-  return ratings.map(r => ({ ...r, username: usernameById.get(r.user_id) ?? null }))
+  return ratings.map(r => ({ ...r, username: r.user_id ? usernameById.get(r.user_id) ?? null : null }))
 }
 
 export default async function AdminRatingsPage() {
@@ -59,7 +60,7 @@ export default async function AdminRatingsPage() {
                     r.podcast?.title ?? 'Unknown podcast'
                   )}
                 </td>
-                <td className="px-4 py-3 text-stone-subtle text-sm">{r.username ?? 'Unknown user'}</td>
+                <td className="px-4 py-3 text-stone-subtle text-sm">{r.user_id ? (r.username ?? 'Unknown user') : 'Anonymous'}</td>
                 <td className="px-4 py-3 text-gold-light text-sm font-medium">{r.overall_score}/10</td>
                 <td className="px-4 py-3 text-stone-subtle text-xs">
                   {new Date(r.created_at).toLocaleDateString('en-GB')}
