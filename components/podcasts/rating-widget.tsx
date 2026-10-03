@@ -28,6 +28,39 @@ function localKey(podcastId: string) {
   return `ltc_rating_${podcastId}`
 }
 
+// Set once the browser's rating has been saved to the server. Ratings made
+// before anonymous ratings were stored server-side only have localKey, so a
+// missing flag means "not counted yet" and the rating is re-sent on load.
+function syncedKey(podcastId: string) {
+  return `ltc_rating_synced_${podcastId}`
+}
+
+const VISITOR_KEY = 'ltc_visitor_id'
+
+function getVisitorId(create: boolean): string | null {
+  try {
+    const existing = localStorage.getItem(VISITOR_KEY)
+    if (existing || !create) return existing
+    const id = crypto.randomUUID()
+    localStorage.setItem(VISITOR_KEY, id)
+    return id
+  } catch { return null }
+}
+
+async function saveAnonymous(podcastId: string, scores: ScoreMap): Promise<void> {
+  const visitorId = getVisitorId(true)
+  if (!visitorId) throw new Error('Could not save rating — please enable cookies/storage for this site')
+  const res = await fetch('/api/ratings/anonymous', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ podcast_id: podcastId, visitor_id: visitorId, scores }),
+  })
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    throw new Error(data.error ?? 'Could not save rating')
+  }
+}
+
 export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
   const [user, setUser] = useState<{ id: string } | null>(null)
   const [scores, setScores] = useState<ScoreMap>({})
@@ -35,7 +68,6 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
   const [authOpen, setAuthOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const [loaded, setLoaded] = useState(false)
-  const [savedLocally, setSavedLocally] = useState(false)
 
   const supabase = createClient()
 
@@ -43,18 +75,43 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       setUser(user)
       if (user) {
-        await fetchExisting(user.id)
-        // Flush any pending anonymous rating to Supabase
+        // Move this browser's anonymous rating onto the account, then drop
+        // the anonymous copy so it isn't counted twice.
         const pending = readLocal()
         if (pending && Object.keys(pending).length > 0) {
-          await supabase
+          const { error } = await supabase
             .from('ratings')
             .upsert({ user_id: user.id, podcast_id: podcastId, ...pending }, { onConflict: 'user_id,podcast_id' })
-          localStorage.removeItem(localKey(podcastId))
+          if (!error) {
+            const visitorId = getVisitorId(false)
+            if (visitorId) {
+              await fetch('/api/ratings/anonymous', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ podcast_id: podcastId, visitor_id: visitorId }),
+              }).catch(() => {})
+            }
+            try {
+              localStorage.removeItem(localKey(podcastId))
+              localStorage.removeItem(syncedKey(podcastId))
+            } catch {}
+          }
         }
+        await fetchExisting(user.id)
       } else {
         const local = readLocal()
-        if (local) { setScores(local); setExisting(local); setSavedLocally(true) }
+        if (local) {
+          setScores(local)
+          setExisting(local)
+          // Rated before anonymous ratings were stored server-side — send it now.
+          let synced = false
+          try { synced = !!localStorage.getItem(syncedKey(podcastId)) } catch {}
+          if (!synced) {
+            saveAnonymous(podcastId, local)
+              .then(() => { try { localStorage.setItem(syncedKey(podcastId), '1') } catch {} })
+              .catch(() => {})
+          }
+        }
         setLoaded(true)
       }
     })
@@ -88,14 +145,19 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
     if (Object.keys(scores).length === 0) { toast.error('Please rate at least one dimension'); return }
 
     if (!user) {
-      // Anonymous: save to localStorage
+      setSaving(true)
       try {
-        localStorage.setItem(localKey(podcastId), JSON.stringify(scores))
+        await saveAnonymous(podcastId, scores)
+        try {
+          localStorage.setItem(localKey(podcastId), JSON.stringify(scores))
+          localStorage.setItem(syncedKey(podcastId), '1')
+        } catch {}
         setExisting(scores)
-        setSavedLocally(true)
-        toast.success('Rating saved locally!')
-      } catch {
-        toast.error('Could not save rating')
+        toast.success('Rating saved — thank you!')
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : 'Could not save rating')
+      } finally {
+        setSaving(false)
       }
       return
     }
@@ -112,7 +174,6 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
     } else {
       toast.success('Rating saved!')
       setExisting(scores)
-      setSavedLocally(false)
     }
   }
 
@@ -164,15 +225,7 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
           <button onClick={handleSave} disabled={saving} className="btn-primary">
             {saving ? 'Saving…' : (Object.keys(existing).length > 0 ? 'Update rating' : 'Submit rating')}
           </button>
-          {!user && savedLocally && (
-            <button
-              onClick={() => setAuthOpen(true)}
-              className="text-xs text-stone-subtle hover:text-stone underline"
-            >
-              Sign in to save permanently
-            </button>
-          )}
-          {!user && !savedLocally && (
+          {!user && (
             <button
               onClick={() => setAuthOpen(true)}
               className="text-xs text-stone-subtle hover:text-stone underline"
