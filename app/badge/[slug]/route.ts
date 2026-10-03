@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { ratingStatsOf } from '@/lib/rating-stats'
 
 export const revalidate = 3600
 
@@ -73,7 +74,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
 
   const tier = TIER_COLOURS[data.quick_verdict ?? ''] ?? TIER_COLOURS['Worth a go']
   const title = escapeXml(truncate(data.title ?? slug, 32))
-  const score = (data.rating_stats as any)?.avg_overall
+  const score = ratingStatsOf(data.rating_stats as { avg_overall: number | null }[] | null)?.avg_overall
   const scoreText = score ? escapeXml(`${Number(score).toFixed(1)}/10`) : ''
 
   const svg = compact

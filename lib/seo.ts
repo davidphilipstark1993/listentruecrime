@@ -1,3 +1,7 @@
+import { ratingStatsOf } from '@/lib/rating-stats'
+
+type RatingStatsLike = { avg_overall: number | null; rating_count: number }
+
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://listentruecrime.com'
 
 export { BASE }
@@ -60,9 +64,10 @@ export function podcastSchema(podcast: {
   case_types: string[] | null
   episode_count: string | null
   platforms: string[] | null
-  rating_stats?: { avg_overall: number | null; rating_count: number } | null
+  rating_stats?: RatingStatsLike | RatingStatsLike[] | null
 }) {
   const url = `${BASE}/podcasts/${podcast.slug}`
+  const stats = ratingStatsOf(podcast.rating_stats)
   return {
     '@context': 'https://schema.org',
     '@type': 'PodcastSeries',
@@ -74,14 +79,14 @@ export function podcastSchema(podcast: {
     publisher: organizationSchema,
     numberOfEpisodes: podcast.episode_count ? parseInt(podcast.episode_count) || undefined : undefined,
     keywords: podcast.case_types?.join(', '),
-    ...(podcast.rating_stats?.avg_overall
+    ...(stats?.avg_overall
       ? {
           aggregateRating: {
             '@type': 'AggregateRating',
-            ratingValue: podcast.rating_stats.avg_overall.toFixed(1),
+            ratingValue: stats.avg_overall.toFixed(1),
             bestRating: '10',
             worstRating: '1',
-            ratingCount: podcast.rating_stats.rating_count,
+            ratingCount: stats.rating_count,
           },
         }
       : {}),

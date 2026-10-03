@@ -1,6 +1,7 @@
 export const revalidate = 3600
 
 import { notFound } from 'next/navigation'
+import { ratingStatsOf } from '@/lib/rating-stats'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Star, ChevronRight } from 'lucide-react'
@@ -80,26 +81,29 @@ export default async function BestOfPage({ params }: Props) {
     description: page.description,
     url: `${BASE}/best/${slug}`,
     numberOfItems: podcasts.length,
-    itemListElement: podcasts.map((p, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      name: p.title,
-      url: `${BASE}/podcasts/${p.slug}`,
-      ...(p.rating_stats?.avg_overall ? {
-        item: {
-          '@type': 'PodcastSeries',
-          name: p.title,
-          url: `${BASE}/podcasts/${p.slug}`,
-          image: p.image_url,
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: p.rating_stats.avg_overall.toFixed(1),
-            bestRating: '10',
-            ratingCount: p.rating_stats.rating_count,
+    itemListElement: podcasts.map((p, i) => {
+      const stats = ratingStatsOf(p.rating_stats)
+      return {
+        '@type': 'ListItem',
+        position: i + 1,
+        name: p.title,
+        url: `${BASE}/podcasts/${p.slug}`,
+        ...(stats?.avg_overall ? {
+          item: {
+            '@type': 'PodcastSeries',
+            name: p.title,
+            url: `${BASE}/podcasts/${p.slug}`,
+            image: p.image_url,
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: stats.avg_overall.toFixed(1),
+              bestRating: '10',
+              ratingCount: stats.rating_count,
+            },
           },
-        },
-      } : {}),
-    })),
+        } : {}),
+      }
+    }),
   }
 
   return (

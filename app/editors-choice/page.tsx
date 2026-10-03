@@ -11,6 +11,7 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { BASE, breadcrumbSchema } from '@/lib/seo'
 import { cn, countryFlag, scoreBg } from '@/lib/utils'
 import type { Podcast, RatingStats } from '@/lib/types/database'
+import { ratingStatsOf } from '@/lib/rating-stats'
 
 // ── Editor's picks — order = rank ─────────────────────────────────────────────
 const PICKS = [
@@ -123,7 +124,7 @@ export default async function EditorsChoicePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           {picks.map(({ slug, blurb, podcast }, index) => {
             const rank = index + 1
-            const stats = podcast.rating_stats
+            const stats = ratingStatsOf(podcast.rating_stats)
             const score = stats?.avg_overall
 
             const ratingItems = stats ? [
