@@ -7,7 +7,7 @@ async function getIssues() {
   const admin = createAdminClient()
   const { data } = await admin
     .from('newsletters')
-    .select('title, slug, intro, publication_date, sent_at')
+    .select('title, slug, intro, body, editors_note, publication_date, sent_at')
     .in('status', ['sent', 'archived'])
     .order('issue_number', { ascending: false })
     .limit(20)
@@ -24,7 +24,7 @@ export async function GET() {
       <title><![CDATA[${issue.title}]]></title>
       <link>${BASE}/newsletter/${issue.slug}</link>
       <guid isPermaLink="true">${BASE}/newsletter/${issue.slug}</guid>
-      <description><![CDATA[${issue.intro ?? ''}]]></description>
+      <description><![CDATA[${issue.editors_note ?? issue.body ?? issue.intro ?? ''}]]></description>
       <pubDate>${new Date(issue.sent_at ?? issue.publication_date).toUTCString()}</pubDate>
     </item>`
     )

@@ -44,7 +44,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const issue = await getIssue(slug)
   if (!issue) return {}
 
-  const description = issue.intro ?? `Five true crime podcasts worth listening to — issue #${issue.issue_number} of the ListenTrueCrime newsletter.`
+  const lead = (issue.editors_note ?? issue.body ?? issue.intro)?.replace(/\s+/g, ' ').trim()
+  const description = (lead && lead.length > 160 ? `${lead.slice(0, 157)}…` : lead) || `Five true crime podcasts worth listening to — issue #${issue.issue_number} of the ListenTrueCrime newsletter.`
 
   return {
     title: issue.title,
@@ -97,7 +98,13 @@ export default async function NewsletterIssuePage({ params }: Props) {
             Issue #{issue.issue_number} · {new Date(issue.publication_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
           <h1 className="heading-display text-3xl sm:text-4xl mb-4">{issue.title}</h1>
-          {issue.intro && <p className="text-stone-muted text-base leading-relaxed">{issue.intro}</p>}
+          {issue.editors_note && (
+            <div className="border-l-2 border-crimson pl-4 mb-5">
+              <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-2">Editor&rsquo;s note</p>
+              <p className="text-stone-muted text-base leading-relaxed whitespace-pre-line">{issue.editors_note}</p>
+            </div>
+          )}
+          {(issue.body ?? issue.intro) && <p className="text-stone-muted text-base leading-relaxed whitespace-pre-line">{issue.body ?? issue.intro}</p>}
         </div>
 
         <div className="space-y-8 mb-12">
@@ -149,6 +156,13 @@ export default async function NewsletterIssuePage({ params }: Props) {
             )
           })}
         </div>
+
+        {issue.conclusion && (
+          <div className="mb-12">
+            <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-2">Wrapping up</p>
+            <p className="text-stone-muted text-base leading-relaxed whitespace-pre-line">{issue.conclusion}</p>
+          </div>
+        )}
 
         <div className="card p-6">
           <p className="text-stone font-semibold text-sm mb-3">Get the next issue</p>

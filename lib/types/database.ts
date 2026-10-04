@@ -238,6 +238,9 @@ export interface Newsletter {
   issue_number: number
   publication_date: string
   intro: string | null
+  editors_note: string | null
+  body: string | null
+  conclusion: string | null
   status: NewsletterStatus
   html_content: string | null
   plain_text_content: string | null

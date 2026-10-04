@@ -8,6 +8,18 @@ You add podcasts yourself, at any point during the week, in `/admin/weekly-newsl
 
 This path never calls Anthropic. It only uses Supabase, SendGrid, and the fields you type in.
 
+### Editor's note, body and conclusion
+
+Above the podcast cards, the **Newsletter text** box has three optional free-text fields (up to 5,000 characters each; blank line = new paragraph):
+
+| Field | Where it appears |
+|---|---|
+| **Editor's note** | First thing under the title banner, with a red accent bar |
+| **Body** | Main text, directly before the five podcasts |
+| **Conclusion / preview** | After the five podcasts, headed "Wrapping up" — use it to close the issue and tease the next one |
+
+An empty field is simply left out. Click **Save text** (use **Preview** afterwards to check the email). Like editing a podcast, saving text after you've approved the newsletter for sending drops it back to draft, so you re-click **Approve for Sunday Sending**. The same sections appear in the plain-text version, on the public archive page `/newsletter/<issue>`, and (editor's note first) in the RSS feed description. Needs migration `015_newsletter_sections.sql`.
+
 ### Adding a podcast during the week
 
 1. Go to `/admin/weekly-newsletter`. The page always shows "this week's" newsletter — whichever upcoming Sunday hasn't sent yet.
