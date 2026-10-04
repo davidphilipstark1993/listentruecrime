@@ -1,0 +1,4642 @@
+{
+ "products": [
+  {
+   "slug": "helter-skelter",
+   "provider": "amazon",
+   "title": "Helter Skelter",
+   "creator": "Vincent Bugliosi and Curt Gentry",
+   "description": "Vincent Bugliosi, who prosecuted the Manson Family trial, on the 1969 Tate–LaBianca murders, the investigation and the trial.",
+   "category": "book",
+   "affiliate_url": "https://www.amazon.co.uk/dp/1787461181?&linkCode=ll2&tag=stark03a-21&linkId=8cea704e9bbf2ea10a1dbfcfb092f56b&ref_=as_li_ss_tl",
+   "link_text": null,
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "lost-girls",
+   "provider": "amazon",
+   "title": "Lost Girls: An American Mystery",
+   "creator": "Robert Kolker",
+   "description": "The women whose bodies were found near Gilgo Beach, Long Island, and the families who pushed for answers.",
+   "category": "book",
+   "affiliate_url": "https://www.amazon.co.uk/dp/0063392550?&linkCode=ll2&tag=stark03a-21&linkId=18b8f82850b626b1ae89c42c1822c15d&ref_=as_li_ss_tl",
+   "link_text": null,
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "bind-torture-kill",
+   "provider": "amazon",
+   "title": "Bind, Torture, Kill",
+   "creator": "Roy Wenzl, Tim Potter, L. Kelly and Hurst Laviana",
+   "description": "The BTK case, by the Wichita Eagle journalists who covered it.",
+   "category": "book",
+   "affiliate_url": "https://www.amazon.co.uk/dp/0061373958?&linkCode=ll2&tag=stark03a-21&linkId=6300bd26dfb8e674a4cb9e1e98718a31&ref_=as_li_ss_tl",
+   "link_text": null,
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "shattered-silence",
+   "provider": "amazon",
+   "title": "Shattered Silence",
+   "creator": "Melissa G. Moore",
+   "description": "Melissa Moore’s memoir of growing up as the daughter of Keith Hunter Jesperson, the Happy Face Killer.",
+   "category": "book",
+   "affiliate_url": "https://www.amazon.co.uk/dp/1462117759?&linkCode=ll2&tag=stark03a-21&linkId=0aaa11ea10933cf2f1edfb0ef083fe3c&ref_=as_li_ss_tl",
+   "link_text": null,
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "the-night-stalker",
+   "provider": "amazon",
+   "title": "The Night Stalker",
+   "creator": "Philip Carlo",
+   "description": "A biography of Richard Ramirez, who terrorised Los Angeles in 1984–85.",
+   "category": "book",
+   "affiliate_url": "https://www.amazon.co.uk/dp/0806538414?&linkCode=ll2&tag=stark03a-21&linkId=3c112be120d2026718e3b1826bebd74c&ref_=as_li_ss_tl",
+   "link_text": null,
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "just-mercy",
+   "provider": "amazon",
+   "title": "Just Mercy",
+   "creator": "Bryan Stevenson",
+   "description": "A civil rights lawyer on representing death-row prisoners and people wrongly convicted, centred on the case of Walter McMillian.",
+   "category": "book",
+   "affiliate_url": "https://www.amazon.co.uk/dp/1912854791?&linkCode=ll2&tag=stark03a-21&linkId=57a7b3b0ed03b9dfd5696227f8556159&ref_=as_li_ss_tl",
+   "link_text": null,
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "working-stiff",
+   "provider": "amazon",
+   "title": "Working Stiff",
+   "creator": "Judy Melinek and T. J. Mitchell",
+   "description": "A forensic pathologist’s first two years as a New York City medical examiner, including the aftermath of 9/11.",
+   "category": "book",
+   "affiliate_url": "https://www.amazon.co.uk/dp/1476727260?&linkCode=ll2&tag=stark03a-21&linkId=6e9f4700a8dc8a7ef484fb5282823340&ref_=as_li_ss_tl",
+   "link_text": null,
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "wiseguy",
+   "provider": "amazon",
+   "title": "Wiseguy",
+   "creator": "Nicholas Pileggi",
+   "description": "The life of mob associate Henry Hill, the basis for the film Goodfellas.",
+   "category": "book",
+   "affiliate_url": "https://www.amazon.co.uk/dp/1982129905?&linkCode=ll2&tag=stark03a-21&linkId=b133dc588362af72ea45fd357f9aff35&ref_=as_li_ss_tl",
+   "link_text": null,
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "catch-and-kill",
+   "provider": "amazon",
+   "title": "Catch and Kill",
+   "creator": "Ronan Farrow",
+   "description": "Ronan Farrow’s reporting on Harvey Weinstein and the efforts to suppress the story.",
+   "category": "book",
+   "affiliate_url": "https://www.amazon.co.uk/dp/0708899285?&linkCode=ll2&tag=stark03a-21&linkId=c6daa5196f31de7cab8e18780fe5b8ea&ref_=as_li_ss_tl",
+   "link_text": null,
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "perversion-of-justice",
+   "provider": "amazon",
+   "title": "Perversion of Justice",
+   "creator": "Julie K. Brown",
+   "description": "The Miami Herald reporter whose investigation reopened the Jeffrey Epstein case.",
+   "category": "book",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B08NWWNYN9?&linkCode=ll2&tag=stark03a-21&linkId=70cdcffcb7f5d501c4bb02369e6c2e25&ref_=as_li_ss_tl",
+   "link_text": null,
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "the-missing-cryptoqueen",
+   "provider": "amazon",
+   "title": "The Missing Cryptoqueen",
+   "creator": "Jamie Bartlett",
+   "description": "The OneCoin cryptocurrency fraud and the disappearance of its founder, Ruja Ignatova.",
+   "category": "book",
+   "affiliate_url": "https://www.amazon.co.uk/dp/0753559595?&linkCode=ll2&tag=stark03a-21&linkId=4835bd31bdca0961138975f15cfbf1e0&ref_=as_li_ss_tl",
+   "link_text": null,
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "cold-case-christianity",
+   "provider": "amazon",
+   "title": "Cold-Case Christianity",
+   "creator": "J. Warner Wallace",
+   "description": "A cold-case homicide detective applies investigative methods to the claims of the Gospels.",
+   "category": "book",
+   "affiliate_url": "https://www.amazon.co.uk/dp/0830785302?&linkCode=ll2&tag=stark03a-21&linkId=cf2d176713c3febae6715423f5323eae&ref_=as_li_ss_tl",
+   "link_text": null,
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "stay-sexy-and-dont-get-murdered",
+   "provider": "amazon",
+   "title": "Stay Sexy & Don’t Get Murdered",
+   "creator": "Karen Kilgariff and Georgia Hardstark",
+   "description": "The My Favorite Murder hosts’ own book.",
+   "category": "book",
+   "affiliate_url": "https://www.amazon.co.uk/dp/1398700339?&linkCode=ll2&tag=stark03a-21&linkId=03c2899ab40e35bd68483f67ffd94eda&ref_=as_li_ss_tl",
+   "link_text": null,
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "sniper",
+   "provider": "amazon",
+   "title": "Sniper",
+   "creator": "Sari Horwitz and Michael Ruane",
+   "description": "Washington Post reporters on the 2002 Beltway sniper attacks and the manhunt.",
+   "category": "book",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B000FBJAUK?&linkCode=ll2&tag=stark03a-21&linkId=2f3bdd26bba3bc37da1157c893575e5c&ref_=as_li_ss_tl",
+   "link_text": null,
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "helter-skelter-audiobook",
+   "provider": "amazon",
+   "title": "Helter Skelter (audiobook)",
+   "creator": "Vincent Bugliosi and Curt Gentry",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/Helter-Skelter-Story-Manson-Murders/dp/B005MR3QES?&linkCode=ll2&tag=stark03a-21&linkId=00202d638b16df8975fd924041a52116&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "lost-girls-audiobook",
+   "provider": "amazon",
+   "title": "Lost Girls: An American Mystery (audiobook)",
+   "creator": "Robert Kolker",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/Lost-Girls-Unsolved-American-Mystery/dp/B079G3XMMY?&linkCode=ll2&tag=stark03a-21&linkId=27ec9fda7868747dc6a32745fc28033a&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "shattered-silence-audiobook",
+   "provider": "amazon",
+   "title": "Shattered Silence (audiobook)",
+   "creator": "Melissa G. Moore",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B0F55KTNML?&linkCode=ll2&tag=stark03a-21&linkId=dbb0a2bf67e7e7b024678b4084b8d15a&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "catch-and-kill-audiobook",
+   "provider": "amazon",
+   "title": "Catch and Kill (audiobook)",
+   "creator": "Ronan Farrow",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B07WW7LRZC?&linkCode=ll2&tag=stark03a-21&linkId=94ce8c5f57fac77ef06fc1d68b86e993&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "the-missing-cryptoqueen-audiobook",
+   "provider": "amazon",
+   "title": "The Missing Cryptoqueen (audiobook)",
+   "creator": "Jamie Bartlett",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B09VCN218F?&linkCode=ll2&tag=stark03a-21&linkId=4b54ba668cdd82a54743baf4ea891d55&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "cold-case-christianity-audiobook",
+   "provider": "amazon",
+   "title": "Cold-Case Christianity (audiobook)",
+   "creator": "J. Warner Wallace",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B0CCW8JRBN?&linkCode=ll2&tag=stark03a-21&linkId=c878941bf792dbfbb85d906bb96f6c0e&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "stay-sexy-and-dont-get-murdered-audiobook",
+   "provider": "amazon",
+   "title": "Stay Sexy & Don’t Get Murdered (audiobook)",
+   "creator": "Karen Kilgariff and Georgia Hardstark",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B07MZ8MZ77?&linkCode=ll2&tag=stark03a-21&linkId=ba4c80f19fbbf800aed30191c684b5e9&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "killers-of-the-flower-moon-audiobook",
+   "provider": "amazon",
+   "title": "Killers of the Flower Moon (audiobook)",
+   "creator": "David Grann",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B06Y6JG7LN?&linkCode=ll2&tag=stark03a-21&linkId=e96d2aee1de0d19631b1873815307f2b&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "the-devil-in-the-white-city-audiobook",
+   "provider": "amazon",
+   "title": "The Devil in the White City (audiobook)",
+   "creator": "Erik Larson",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B0CYQJSFS7?&linkCode=ll2&tag=stark03a-21&linkId=e306f23dce3bd82051708e3b2103784c&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "no-one-would-listen-audiobook",
+   "provider": "amazon",
+   "title": "No One Would Listen (audiobook)",
+   "creator": "Harry Markopolos",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B08BW714T1?&linkCode=ll2&tag=stark03a-21&linkId=a115adb97060ba35f43aaf33b426efbe&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "the-stranger-beside-me-audiobook",
+   "provider": "amazon",
+   "title": "The Stranger Beside Me (audiobook)",
+   "creator": "Ann Rule",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B079B68ZFC?&linkCode=ll2&tag=stark03a-21&linkId=7f6cbd1723ddb93e836a34e956ec7da3&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "the-five-audiobook",
+   "provider": "amazon",
+   "title": "The Five (audiobook)",
+   "creator": "Hallie Rubenhold",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B07LGB21F8?&linkCode=ll2&tag=stark03a-21&linkId=bf8393b949fc15c4040001d47e68ccb5&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "the-good-nurse-audiobook",
+   "provider": "amazon",
+   "title": "The Good Nurse (audiobook)",
+   "creator": "Charles Graeber",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B00FFTU8SK?&linkCode=ll2&tag=stark03a-21&linkId=1f69a75e0248274fac8950a2a56e2f7a&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "bad-blood-audiobook",
+   "provider": "amazon",
+   "title": "Bad Blood (audiobook)",
+   "creator": "John Carreyrou",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B07CXVNVQZ?&linkCode=ll2&tag=stark03a-21&linkId=913a247b04ba96af217d0fa99a4d436d&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  },
+  {
+   "slug": "stakeknife-audiobook",
+   "provider": "amazon",
+   "title": "Stakeknife: Britain’s Secret Agents in Ireland (audiobook)",
+   "creator": "Martin Ingram and Greg Harkin",
+   "description": null,
+   "category": "audiobook",
+   "affiliate_url": "https://www.amazon.co.uk/dp/B0DJG48MKP?&linkCode=ll2&tag=stark03a-21&linkId=3bdaac3a0ce130b0514068415a8692f1&ref_=as_li_ss_tl",
+   "link_text": "Check the audiobook",
+   "active": true,
+   "disclosure_required": true
+  }
+ ],
+ "placements": {
+  "murder-mile-uk-true-crime": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "death-at-the-farmhouse": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-trial-of-erin-patterson": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "out-from-the-cold-searching-for-elaine": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "scam-factory": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "bear-brook-nhpr": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-pitcairn-trials": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "dark-poutine-true-crime-and-dark-history": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-philippines": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "nighttime-true-crime": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "crime-next-door-beast-of-birkenhead": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "canadian-crimecast-coast-to-coast-true-crime": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "writing-wrongs": [
+   {
+    "product": "working-stiff",
+    "note": "A medical examiner’s account of the forensic work behind death investigations."
+   }
+  ],
+  "trace-evidence": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "casually-explained-true-crime": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "culpable-season-3": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "betrayal": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "trace-of-suspicion-dateline": [
+   {
+    "product": "working-stiff",
+    "note": "A medical examiner’s account of the forensic work behind death investigations."
+   }
+  ],
+  "welsh-crime-files": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "accused-cincinnati-enquirer": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "midwest-murder": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "bed-of-lies-telegraph": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "obsessed-with-true-crime": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "this-is-robert-irish-sun": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-swindler": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-france": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "stranglers": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-hawaii": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-opportunist": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "charlene-somebody-knows-something": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-all-the-time": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "the-vanishing-act": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "the-big-lie": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "blood-sport": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-tonight": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "the-lads-done-bad": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "dark-histories": [
+   {
+    "product": "the-devil-in-the-white-city",
+    "note": "Historical true crime. Not about this podcast’s case."
+   }
+  ],
+  "blood-and-water-abc-news": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "murder-in-apartment-12": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "real-dictators": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "unidentified": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-creep": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "killer-countdown": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "murder-she-chose": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-frankston-murders": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "the-cold-blooded": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "dirty-john": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "sins-of-the-father": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "my-mum-your-dad-a-true-crime-podcast": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "weird-true-crime": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "suspiria-true-crime": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "cult-true-crime": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "broken-badge": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "counterfeit": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "dark-arenas": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "sounds-like-true-crime": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "man-in-the-window-golden-state-killer": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "Michelle McNamara’s investigation into the Golden State Killer."
+   },
+   {
+    "product": "unmasked",
+    "note": "Paul Holes, who worked the case, on his career as a cold case investigator."
+   }
+  ],
+  "without-a-body": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "foul-play-a-historical-true-crime-podcast": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-girlfriends": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "southern-shadows": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "s-town": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "youre-wrong-about": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "beyond-the-gates": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "and-thats-why-we-drink": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "casefile-presents-the-easey-street-murders": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "mafia-queens": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-beat": [
+   {
+    "product": "wiseguy",
+    "note": "For listeners interested in organised crime. Not about this podcast’s case."
+   }
+  ],
+  "dateline-nbc-the-real-crimes-of-true-crime": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-detail": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "trust-me": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "hide-and-seek": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "extreme-danger-inside-the-mind-of-a-killer": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "serial": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "love-trapped": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "wrongful-conviction-with-jason-flom": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-south-africa": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "the-informant": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "murder-on-tap": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "gangland-wire": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "generation-why-solved": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "bone-valley": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "australian-crime-stories": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "blood-river": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "a-crime-most-queer": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "snapped-women-who-murder": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "blood-ties": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-interrogation-room": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "street-justice": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "lies-crime-and-punishment": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "ozarks-true-crime": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "manhunt-finding-kevin-parle": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "hunting-the-whisky-bandits": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-historian": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "over-the-limit": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "anatomy-of-murder": [
+   {
+    "product": "working-stiff",
+    "note": "A medical examiner’s account of the forensic work behind death investigations."
+   }
+  ],
+  "devil-in-the-desert-abc-news": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "trace-murder-in-the-rainforest": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "wisecrack": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "untested-usa-today": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "sweet-bobby": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "i-am-not-nicholas": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-russia": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-stories-with-nancy-grace": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "shadow-world-stolen-years": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "hard-crime": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-ireland": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "Cold-case investigation, for listeners who like long-form cases. Not about this podcast’s case."
+   }
+  ],
+  "kinahans-downfall": [
+   {
+    "product": "wiseguy",
+    "note": "For listeners interested in organised crime. Not about this podcast’s case."
+   }
+  ],
+  "the-murder-squad": [
+   {
+    "product": "unmasked",
+    "note": "Co-host Paul Holes’s memoir of his career as a cold case investigator."
+   }
+  ],
+  "crimetown": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "pretend": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "murdaugh-murders-podcast": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "smoke-screen-fake-priest": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "anatomy-of-murder-season-2": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "bag-man": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "secrets-we-keep-killer-charm": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-fan-club-podcast": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "to-die-for": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "oxygen-true-crime": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "liberty-lost": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "michigan-crime-stories": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "all-killa-no-filla": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "new-zealand-true-crime": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "morbid": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "the-black-widow-murders": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "intrigue-to-catch-a-king": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "vanished-in-virginia": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "missing-niamh": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "gangster-capitalism": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "believed": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "american-scandal": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "killer-royale": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "unravel-what-became-of-jack": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "the-apology-line": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime about a closed community and the crimes committed against it. Not about this podcast’s case."
+   }
+  ],
+  "monster-btk": [
+   {
+    "product": "bind-torture-kill",
+    "note": "The inside story of the BTK case, by the Wichita Eagle journalists who covered it."
+   }
+  ],
+  "true-crime-couple": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "untold-daniel-morgan-murder": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "forever-my-boys-kathleen-chada": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "13th-juror": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "american-justice": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "id-kill-for-that": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "small-town-murder": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "Cold-case investigation, for listeners who like long-form cases. Not about this podcast’s case."
+   }
+  ],
+  "australian-true-crime": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "birmingham-crime-files": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "beyond-reasonable-doubt": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "death-in-the-dirt": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "so-supernatural": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "sword-and-scale": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "spiral-murder-in-detroit": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "crime-and-comedy": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "wind-of-change": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "wild-boys": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "night-stalker-the-hunt-for-a-serial-killer": [
+   {
+    "product": "the-night-stalker",
+    "note": "Philip Carlo’s account of Richard Ramirez and the 1985 manhunt."
+   }
+  ],
+  "crime-in-spanish": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-big-swindle": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "chameleon-hollywood-con-queen": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "dark-history": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "murder-she-told": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "casanova-killer": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "crime-story": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "australian-true-crime-meshel-laurie": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "over-my-dead-body-goldie": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "inside-scoop-true-crime": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "criminalidad": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "case-closed": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-poisoners-cabinet": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "scamfluencers": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "big-city-small-crime": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "five-miles-from-home": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "the-blackout": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-new-england": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "brief-recess": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "last-seen-alive": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "casos-criminales": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "georgia-true-crime": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-house-24-7": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime about a closed community and the crimes committed against it. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-weekly-roundup": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "lisk-long-island-serial-killer": [
+   {
+    "product": "lost-girls",
+    "note": "Robert Kolker’s account of the Long Island victims and their families."
+   }
+  ],
+  "the-untold-story": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "killed": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "where-the-bodies-are-buried": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "unraveled": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "south-of-the-line": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-crimson-wave": [
+   {
+    "product": "the-devil-in-the-white-city",
+    "note": "Historical true crime. Not about this podcast’s case."
+   }
+  ],
+  "binge-crimes-cut-color-kill": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "missing-maura-murray": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "miami-mystery-the-disappearance-of-olavi-hendrickson": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "radio-rental": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "scam-alert": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-and-punishment-south-africa": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-with-kendall-rae": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-campfire": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-clown-and-the-candyman": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "hidden-killers": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "danish-crime-podcast": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "dr-death-miracle-man": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "park-predators": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "hell-and-gone": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "ladies-of-true-crime": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "still-out-there": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "cold-case-files": [
+   {
+    "product": "working-stiff",
+    "note": "A medical examiner’s account of the forensic work behind death investigations."
+   }
+  ],
+  "true-crime-new-zealand": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "strangeland": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "crimes-of-passion-uk": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "who-killed-daphne": [
+   {
+    "product": "wiseguy",
+    "note": "For listeners interested in organised crime. Not about this podcast’s case."
+   }
+  ],
+  "ridiculous-crime": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "to-live-and-die-in-la": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "stolen-surviving-st-michaels": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "breakdown-ajc": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "escaping-twin-flames": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "mob-museum-podcast": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "death-lies-and-cyanide": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "buried-bones": [
+   {
+    "product": "working-stiff",
+    "note": "A medical examiner’s account of the forensic work behind death investigations."
+   }
+  ],
+  "the-ballad-of-billy-balls": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crook-county": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "the-teachers-pet": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-shrink-next-door": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "casefile-presents-crime-interrupted": [
+   {
+    "product": "wiseguy",
+    "note": "For listeners interested in organised crime. Not about this podcast’s case."
+   }
+  ],
+  "camp-swamp-road": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "the-coming-storm": [
+   {
+    "product": "wiseguy",
+    "note": "For listeners interested in organised crime. Not about this podcast’s case."
+   }
+  ],
+  "bad-people-bbc": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "matched-with-a-predator": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-long-island-serial-killer": [
+   {
+    "product": "lost-girls",
+    "note": "Robert Kolker’s account of the Long Island victims and their families."
+   }
+  ],
+  "you-didnt-see-nothin": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "on-the-case-with-paula-zahn": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "pakistan-crime-files": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "cannibal-cop": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "fake-psychic-bbc": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "the-surgeon-of-st-helena": [
+   {
+    "product": "the-good-nurse",
+    "note": "A medical-crime case from the US. Not about this podcast’s case."
+   }
+  ],
+  "jamaican-crime-files": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-conspiracy-cults-and-murder": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime about a closed community and the crimes committed against it. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-whispers": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "forgotten-victims": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "bloodline-detectives": [
+   {
+    "product": "working-stiff",
+    "note": "A medical examiner’s account of the forensic work behind death investigations."
+   }
+  ],
+  "assume-nothing-murder-at-the-stables": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "killer-psyche": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "finnish-crime-files": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "real-crime-profile": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "killer-queens": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "oj-simpson-the-greatest-crime-story-of-our-time": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "american-injustice": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "hidden-victim": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "icelandic-true-crimes": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "broken-harts": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "evil-lives-here": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "dark-downeast": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "going-west-true-crime": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "murder-and-magnolias": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "night-court": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "last-seen": [
+   {
+    "product": "wiseguy",
+    "note": "For listeners interested in organised crime. Not about this podcast’s case."
+   }
+  ],
+  "just-creepy": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "suspect-npr": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "lords-of-death": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "pretty-lies-and-alibis": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "high-strange": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "lore": [
+   {
+    "product": "the-devil-in-the-white-city",
+    "note": "Historical true crime. Not about this podcast’s case."
+   }
+  ],
+  "serial-killers": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "dezi-freeman-the-hunt": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "something-was-wrong": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "essex-girls-murdered": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "sports-strangest-crimes": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "con-artists": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "we-call-her-emma": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-binge-cases-what-she-buried": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "japanese-crime-files": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "small-town-dicks": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-australia": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "dark-side-of-the-ring-podcast": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "stolen": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-wire-tap": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "criminal": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "the-piketon-murders": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "conviction": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "love-bombed-wife-hunter": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-fan-club": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "conspiracy-theories": [
+   {
+    "product": "wiseguy",
+    "note": "For listeners interested in organised crime. Not about this podcast’s case."
+   }
+  ],
+  "they-walk-among-us": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "unraveled-the-long-island-serial-killer": [
+   {
+    "product": "lost-girls",
+    "note": "Robert Kolker’s account of the Long Island victims and their families."
+   }
+  ],
+  "what-happened-in-nashville": [
+   {
+    "product": "the-good-nurse",
+    "note": "A medical-crime case from the US. Not about this podcast’s case."
+   }
+  ],
+  "southern-fried-true-crime": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "death-in-ice-valley": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "ladies-and-gentlemen-the-bronx-is-burning": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "embedded": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "murder-true-crime-stories": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "wrongful-conviction": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "gone-cold": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-bundy-tapes": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "Ann Rule worked alongside Ted Bundy before he was identified as a suspect, and wrote the definitive account of the case."
+   }
+  ],
+  "the-deck": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "spilled-blood": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "casefile-true-crime": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "root-of-evil": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "Cold-case investigation, for listeners who like long-form cases. Not about this podcast’s case."
+   }
+  ],
+  "over-my-dead-body": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "the-line": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "pirate-predator-rte": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-twisted-mind": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-crime-uk-podcast": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "i-could-murder-a-podcast": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "nobody-should-believe-me": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "two-faced-john-of-god": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "in-the-red-clay": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "48-hours": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-with-elli-mac": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "root-of-evil-the-true-story-of-the-hodel-family-and-the-black-dahlia": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "unsolved-murders-true-crime-stories": [
+   {
+    "product": "the-devil-in-the-white-city",
+    "note": "Historical true crime. Not about this podcast’s case."
+   }
+  ],
+  "suburban-nightmare-true-crime": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "law-and-crime-on-the-case": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "the-dropout": [
+   {
+    "product": "bad-blood",
+    "note": "John Carreyrou’s reporting on Theranos, the company behind this story."
+   }
+  ],
+  "american-nightmare": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "manchester-crime": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "sea-of-lies-uncover": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "murder-in-the-family": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "fraudacious": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "chinese-crime-files": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-clearing": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime about a closed community and the crimes committed against it. Not about this podcast’s case."
+   }
+  ],
+  "indian-true-crime": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "dateline-the-trayvon-martin-story": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "this-podcast-will-kill-you": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "fatal-voyage-natalie-wood": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "our-true-crime-podcast": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "20-20": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "the-dark-turn": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "searching-for-sarah-macdiarmid": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "world-of-secrets-searching-for-soldier-dad": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "who-killed-jane-doe": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "generation-why": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "missing-in-hush-town-bethany-markowski": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "scamanda": [
+   {
+    "product": "the-good-nurse",
+    "note": "A medical-crime case from the US. Not about this podcast’s case."
+   }
+  ],
+  "murder-in-the-maasai-mara": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "the-improvement-association": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "crime-crime-again": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "school-of-lies": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "accused": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "my-favorite-serial-killer": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "northern-ireland-true-crime": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "undisclosed-the-state-v-adnan-syed": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "uk-true-crime-podcast-always": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "reveal": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "lagim-filipino-true-crime": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "love-after-lockup-true-crime": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crimes-of-the-centuries": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "bear-brook": [
+   {
+    "product": "working-stiff",
+    "note": "A medical examiner’s account of the forensic work behind death investigations."
+   }
+  ],
+  "true-crime-finland": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "bloodbath-and-beyond": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "cold-season-2-shelby-american": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "madoff-the-monster-of-wall-street": [
+   {
+    "product": "no-one-would-listen-audiobook",
+    "note": "Harry Markopolos, who warned the SEC about Madoff for years, tells his side."
+   }
+  ],
+  "the-killing-season": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "dead-ends": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "delve-diagnosis-of-a-crime-the-trial": [
+   {
+    "product": "the-good-nurse",
+    "note": "A medical-crime case from the US. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-and-cocktails": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-red-room": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "heart-starts-pounding": [
+   {
+    "product": "the-devil-in-the-white-city",
+    "note": "Historical true crime. Not about this podcast’s case."
+   }
+  ],
+  "season-of-the-slasher": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-prosecutors": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "lets-talk-about-true-crime": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "crime-time": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "thats-messed-up-an-svu-podcast": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "german-true-crime": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "bridge-of-lies": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "murder-with-my-husband": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "aftermath-the-stories-of-survivors": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "redhanded": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "cracker-county": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "forensic-files": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "final-thoughts-jerry-springer": [
+   {
+    "product": "the-devil-in-the-white-city",
+    "note": "Historical true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-daily-the-podcast": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-piketon-massacre": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "deadly-decisions": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-last-days-of-august": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "lady-justice-true-crime": [
+   {
+    "product": "the-devil-in-the-white-city",
+    "note": "Historical true crime. Not about this podcast’s case."
+   }
+  ],
+  "death-of-an-artist": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "suspect": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "too-dangerous-for-daylight": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "my-crime-of-passion": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "against-the-odds": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-fifth-estate-podcast": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "your-crime-my-story": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "blood-will-tell-audible-campside": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-delphi-murders": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "case-file-nation": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "fraudulent": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-stories-australia": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "bloody-hell-true-crime": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "method-and-madness": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "up-and-vanished-season-2": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-london": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "casefile-presents-julies-gone": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "last-podcast-on-the-left": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "south-african-crime-files": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "dark-investigations": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "tortured-path": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-girl-in-the-closet": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "california-crime-files": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "missing-in-alaska": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "jean-the-real-lady-justice": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "crime-by-the-slice": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "devil-in-the-dorm": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "kent-crime-files": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "the-guilty-party": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crimelines": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "where-is-george-gibney": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "inside-forensic-science-stolen-identity": [
+   {
+    "product": "working-stiff",
+    "note": "A medical examiner’s account of the forensic work behind death investigations."
+   }
+  ],
+  "the-lost-girls": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "ghosted": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "crime-world-nicola-tallant": [
+   {
+    "product": "wiseguy",
+    "note": "For listeners interested in organised crime. Not about this podcast’s case."
+   }
+  ],
+  "public-defender": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "european-true-crime": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "uncover-cbc": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-turkey": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "behind-the-crime-line": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "border-crimes": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "serialously": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "murder-unscripted": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "missing-the-laci-peterson-story": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "we-were-three": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "wine-and-crime": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "court-junkie": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "lines-of-enquiry": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "criminal-broads": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-prosecutor": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "indian-true-crime-podcast": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "happy-face": [
+   {
+    "product": "shattered-silence",
+    "note": "Melissa Moore, the podcast’s host, is the daughter of the Happy Face Killer and wrote this memoir."
+   }
+  ],
+  "true-crime-obsessed": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-confession-tapes": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-analyst-laura-richards": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-coldest-case-in-laramie": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "dead-certain-martha-moxley-murder": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "real-criminals": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "proof": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "nigerian-crime-files": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "death-row-stories": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "slow-burn": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "unsolved-gina-barton": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "canadian-true-crime": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "kiss-and-kill": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "canadian-unsolved": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "american-vice": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "monster-dc-sniper": [
+   {
+    "product": "sniper",
+    "note": "The hunt for the 2002 DC-area snipers, by the Washington Post reporters who covered it."
+   }
+  ],
+  "crime-junkie": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "up-and-vanished": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "profiling-evil": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "undisclosed": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "once-upon-a-crime": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "singapore-true-crime": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "intrigue-lockerbie": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "murder-at-the-u": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "counter-clock": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "the-night-driver": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "yorkshire-crime-files": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "stakeknife": [
+   {
+    "product": "stakeknife-audiobook",
+    "note": "Martin Ingram and Greg Harkin’s account of the army agent known as Stakeknife."
+   }
+  ],
+  "swindled": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "deep-cover": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "crime-junkie-presents-red-ball": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "hell-in-heaven": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "dateline-true-crime-weekly": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "white-lies-npr": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "heavens-gate": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime about a closed community and the crimes committed against it. Not about this podcast’s case."
+   }
+  ],
+  "the-boston-strangler": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "moms-and-mysteries": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "casefile-presents-searching-for-sarah-macdiarmid": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "culpable": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "pacific-true-crime": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-interrupted": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "british-scandal": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-daily-podcast": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "the-vanished": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "no-such-thing-as-a-fish-true-crime-special": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "running-from-cops": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "inhuman-podcast": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "Cold-case investigation, for listeners who like long-form cases. Not about this podcast’s case."
+   }
+  ],
+  "uncover": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-mysterious-mr-epstein": [
+   {
+    "product": "perversion-of-justice",
+    "note": "Julie K. Brown’s Miami Herald investigation into Epstein and the 2008 plea deal."
+   }
+  ],
+  "midwest-true-crime": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "real-presents-grave-concerns": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "the-cruelty-stolen-generations": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-defense": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-hit": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-true-crime-files": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "rattledshook": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "payne-lindsey-presents-status-untraced": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "fairy-meadow-bbc": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "cold": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "murder-in-the-news": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "campus-crimes": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "in-the-dark": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "the-thing-about-pam": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "suave": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "bronwyn": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "white-devil": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "missing-in-america": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "the-trail-went-cold": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "jonbenet": [
+   {
+    "product": "the-cases-that-haunt-us",
+    "note": "Includes a chapter revisiting the JonBenét Ramsey case."
+   }
+  ],
+  "drunk-women-solving-crime": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "the-lazarus-heist": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "manson": [
+   {
+    "product": "helter-skelter",
+    "note": "Vincent Bugliosi prosecuted the Manson Family and wrote the standard account of the case."
+   }
+  ],
+  "italian-true-crime": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "forensic-talk": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-first-48": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "unsolved-thailand": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-criminals-audio-bleach": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "the-shocking-truth": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "today-in-true-crime": [
+   {
+    "product": "the-devil-in-the-white-city",
+    "note": "Historical true crime. Not about this podcast’s case."
+   }
+  ],
+  "valley-of-shadows": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "killing-richard-glossip": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "missing-murdered-finding-cleo": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "unresolved": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "felonious-florida": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "black-girl-gone": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "case-unsolved": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "international-infamy": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "the-slow-newscast-the-god-complex": [
+   {
+    "product": "the-good-nurse",
+    "note": "A medical-crime case from the US. Not about this podcast’s case."
+   }
+  ],
+  "hong-kong-crime": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "expanse-the-nannup-four": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "cold-blooded-clutter-family": [
+   {
+    "product": "in-cold-blood",
+    "note": "Truman Capote’s account of the 1959 Clutter family murders."
+   }
+  ],
+  "the-disappearance-of-nefertiti-austin": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-binge-watching-you": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-nobody-zone": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "unmarked": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "terrible-people": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "full-body-chills": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "leila": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "nri-crime-files": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "red-collar": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-interrupted-carlie-holt": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "dirty-hands": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-chequered-flag": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "crime-stoppers-podcast": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "scam-ranger": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-deck-investigates": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "breakdown-three-days-in-may": [
+   {
+    "product": "the-good-nurse",
+    "note": "A medical-crime case from the US. Not about this podcast’s case."
+   }
+  ],
+  "new-england-true-crime": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-rant": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "body-cam": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "the-cotton-club-murder": [
+   {
+    "product": "wiseguy",
+    "note": "For listeners interested in organised crime. Not about this podcast’s case."
+   }
+  ],
+  "hidden-true-crime": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "murder-in-the-middle": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "criminally-listed": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "new-orleans-unsolved": [
+   {
+    "product": "wiseguy",
+    "note": "For listeners interested in organised crime. Not about this podcast’s case."
+   }
+  ],
+  "the-lady-vanishes": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "inside-murder-trial-girl-in-the-river": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "the-violent-hour": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "kenyan-crime-stories": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "a-killing-on-the-cape": [
+   {
+    "product": "working-stiff",
+    "note": "A medical examiner’s account of the forensic work behind death investigations."
+   }
+  ],
+  "atlanta-monster": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "the-organized-crime-files": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-true-crime-box": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-at-the-top": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-chicks": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "truer-crime": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-uk": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "criminology": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "someone-knows-something": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "fbi-retired-case-file-review": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "everything-they-missed": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "by-the-grace-of-god": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "mob-talk-sitdown": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "inside-the-killing": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "royal-swindle": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "strange-but-true-crime-bbc": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "crime-pays-but-botany-doesnt": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-greece": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "british-true-crime-podcast": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "cults": [
+   {
+    "product": "the-devil-in-the-white-city",
+    "note": "Historical true crime. Not about this podcast’s case."
+   }
+  ],
+  "wrongful-conviction-false-confessions": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "blood-lines": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "trinidad-and-tobago-crime": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "natalie-mcnally-murder-youtuber-on-trial": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-and-punishment": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "affaires-sensibles": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "ae-real-crime": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "scam-goddess": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "the-bakersfield-three": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "death-by-design": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "bad-influence": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "coining-it": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "someones-hunting-us": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "the-cold-case-christianity-podcast": [
+   {
+    "product": "cold-case-christianity",
+    "note": "Host J. Warner Wallace, a retired cold-case detective, wrote the book of the same name."
+   }
+  ],
+  "this-feels-criminal-a-true-crime-podcast-formerly-killer-queens": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "criminally-listed-weekly": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "spotlight-snitch-city": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "sinister-suburbs": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-espaa": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-butterfly-king": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "tragedy-true-crime-podcast": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "australian-cold-cases": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "three": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "the-gilgo-beach-murders": [
+   {
+    "product": "lost-girls",
+    "note": "Robert Kolker’s account of the Gilgo Beach victims and their families."
+   }
+  ],
+  "se-busca": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "im-not-a-monster-bbc": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "obscura": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "the-lululemon-murder": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "on-the-run": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "snap-judgment-presents-spooked": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "occult-crimes": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-next-door-cop-kidnap-killer": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "bite-sized-crime": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "verbrechen-von-nebenan": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "lost-in-larrimah": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "zeit-verbrechen": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "injustice": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "american-history-tellers": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "black-hands": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-missing": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "blood-memory": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-dark-descent": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "catch-and-kill": [
+   {
+    "product": "catch-and-kill",
+    "note": "Ronan Farrow’s book is the investigation this podcast is built on."
+   }
+  ],
+  "rysarpodden": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "le-monstre": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "rotten-mango": [
+   {
+    "product": "wiseguy",
+    "note": "For listeners interested in organised crime. Not about this podcast’s case."
+   }
+  ],
+  "hunting-warhead": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "cocaine-rhinestones": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "scottish-true-crime": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "over-the-cliff": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "untold-uk": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "australias-most-wanted": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-knife-a-true-crime-podcast": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "the-docket": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "crime-city-podcast": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "american-nightmare-netflix": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-disappearance-of-crystal-rogers": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "jonestown-the-life-and-death-of-peoples-temple": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-bites": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "stolen-youth-inside-the-cult-at-sarah-lawrence": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "korean-crime-stories": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "cold-justice": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "american-monster": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "vietnam-war-crimes": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "courthouse-stories": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "who-killed-harper": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "historically-black-crimes": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "wicked-words": [
+   {
+    "product": "the-devil-in-the-white-city",
+    "note": "Historical true crime. Not about this podcast’s case."
+   }
+  ],
+  "dateline-secrets-uncovered": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-brazil": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "justice-undone": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-disappearance": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "teachers-dirty-secret": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "desi-crime-podcast": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "norco-80": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "ohio-crime-and-courts": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "dutch-crime-stories": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "prison-break-uk": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "stalked": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "canadaland-true-crime": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "over-the-fence": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-prince-of-malibu": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "in-the-midnight-sun-the-alaska-native-experience": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "deadly-deception": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "murdaugh-murders": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-cold-case-investigator": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-nursing-home-murders": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "no-mercy-in-mexico": [
+   {
+    "product": "wiseguy",
+    "note": "For listeners interested in organised crime. Not about this podcast’s case."
+   }
+  ],
+  "police-brutality-files": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "stolen-time": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "dead-and-gone": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-wentworth-murders": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "street-crime-australia": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "dark-history-with-bailey-sarian-episodes": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-social": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "sincerely-alexis": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "murder-made-in-the-uk": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "smoke-screen-the-jamie-murdoch-story": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "irish-murders": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-international": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-librarian": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "ladies-who-crime": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "georgia-crime": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "norwegian-crime": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "black-and-missing": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "frozen-in-time": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "homicide-squad": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "your-own-backyard-season-2": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "dark-side-of-wikipedia": [
+   {
+    "product": "the-devil-in-the-white-city",
+    "note": "Historical true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-alaska": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-fall-the-crimes-of-robert-cummins": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "conspiracy-to-murder": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "proof-a-true-crime-podcast": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-junkie-the-vault": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "counterclock": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "crimen-real": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "my-favorite-murder": [
+   {
+    "product": "stay-sexy-and-dont-get-murdered",
+    "note": "The hosts’ own bestselling book."
+   }
+  ],
+  "the-retrievals": [
+   {
+    "product": "the-good-nurse",
+    "note": "A medical-crime case from the US. Not about this podcast’s case."
+   }
+  ],
+  "dear-alana": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "polish-crime-files": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "no-body-no-crime": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "crime-weekly": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "minds-of-madness": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "finding-tammy-jo": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-lighthouse-murder": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "Cold-case investigation, for listeners who like long-form cases. Not about this podcast’s case."
+   }
+  ],
+  "pipeline-left-to-die": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "crooked-city": [
+   {
+    "product": "wiseguy",
+    "note": "For listeners interested in organised crime. Not about this podcast’s case."
+   }
+  ],
+  "mrballen-podcast": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "dr-death": [
+   {
+    "product": "the-good-nurse",
+    "note": "A medical-crime case from the US. Not about this podcast’s case."
+   }
+  ],
+  "amanda-knox-hosts-doubt-lucy-letby": [
+   {
+    "product": "the-good-nurse",
+    "note": "A medical-crime case from the US. Not about this podcast’s case."
+   }
+  ],
+  "nz-true-crime": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "texas-crime-stories": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "killer-stories-with-harvey-guillen": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "dear-rachelle": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ],
+  "dark-poutine": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "conspiracy-theories-cults-and-crimes": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime about a closed community and the crimes committed against it. Not about this podcast’s case."
+   }
+  ],
+  "cousins-by-blood": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "true-crime-garage": [
+   {
+    "product": "mindhunter",
+    "note": "Covers the FBI’s early work on serial offenders. Not about this podcast’s case."
+   }
+  ],
+  "crime-writers-on": [
+   {
+    "product": "the-five",
+    "note": "The women behind the Whitechapel murders, for British true crime listeners. Not about this podcast’s case."
+   }
+  ],
+  "crime-junkie-audiochuck-feed": [
+   {
+    "product": "in-cold-blood",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-laci-peterson-podcast": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-missing-cryptoqueen": [
+   {
+    "product": "the-missing-cryptoqueen",
+    "note": "Jamie Bartlett, the podcast’s host, wrote this book on the OneCoin story."
+   }
+  ],
+  "who-killed-little-grace": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "the-fall-line": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "tenfold-more-wicked": [
+   {
+    "product": "bad-blood",
+    "note": "For listeners who like fraud and scam stories. Not about this podcast’s case."
+   }
+  ],
+  "pacific-northwest-crime": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "naturalqueen77-true-crime-tv": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "dateline-nbc": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "breakdown": [
+   {
+    "product": "just-mercy",
+    "note": "For listeners interested in wrongful convictions and the justice system. Not about this podcast’s case."
+   }
+  ],
+  "west-cork": [
+   {
+    "product": "ill-be-gone-in-the-dark",
+    "note": "Cold-case investigation, for listeners who like long-form cases. Not about this podcast’s case."
+   }
+  ],
+  "solved": [
+   {
+    "product": "the-stranger-beside-me",
+    "note": "A classic of the genre, for listeners who like long-form true crime. Not about this podcast’s case."
+   }
+  ],
+  "british-murders-stuart-blues": [
+   {
+    "product": "killers-of-the-flower-moon",
+    "note": "Investigative true crime in the same spirit. Not about this podcast’s case."
+   }
+  ],
+  "troubled-waters": [
+   {
+    "product": "people-who-eat-darkness",
+    "note": "A missing-person investigation, for listeners who like these cases. Not about this podcast’s case."
+   }
+  ]
+ }
+}

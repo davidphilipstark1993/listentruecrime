@@ -26,6 +26,8 @@ export function WeeklyNewsletterManager() {
   const [saving, setSaving] = useState(false)
   const [approving, setApproving] = useState(false)
   const [sending, setSending] = useState(false)
+  const [sections, setSections] = useState({ editors_note: '', body: '', conclusion: '' })
+  const [savingSections, setSavingSections] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -34,6 +36,11 @@ export function WeeklyNewsletterManager() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
       setNewsletter(data.newsletter)
+      setSections({
+        editors_note: data.newsletter.editors_note ?? '',
+        body: data.newsletter.body ?? '',
+        conclusion: data.newsletter.conclusion ?? '',
+      })
       setSubmissions(data.submissions)
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to load')
@@ -114,6 +121,28 @@ export function WeeklyNewsletterManager() {
     }
   }
 
+  const sectionsChanged =
+    !!newsletter &&
+    (sections.editors_note !== (newsletter.editors_note ?? '') ||
+      sections.body !== (newsletter.body ?? '') ||
+      sections.conclusion !== (newsletter.conclusion ?? ''))
+
+  const saveSections = async () => {
+    if (!newsletter) return
+    setSavingSections(true)
+    try {
+      const res = await fetch(`/api/newsletters/${newsletter.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sections) })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error)
+      toast.success(newsletter.status === 'approved' ? 'Saved — re-approve for Sunday sending' : 'Saved')
+      load()
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Save failed')
+    } finally {
+      setSavingSections(false)
+    }
+  }
+
   const approveForSending = async () => {
     if (!newsletter) return
     if (!confirm('Approve this newsletter for Sunday sending? You can still edit podcasts until then, but any change will require re-approval.')) return
@@ -190,6 +219,26 @@ export function WeeklyNewsletterManager() {
         )}
       </div>
 
+      <div className="card p-4 mb-6">
+        <h2 className="font-serif text-base text-stone mb-1">Newsletter text</h2>
+        <p className="text-stone-subtle text-xs mb-4">
+          All optional. Leave a box empty and that section is left out. Blank line = new paragraph. Saving after approval means re-approving.
+        </p>
+        <div className="space-y-3">
+          <SectionField label="Editor's note (top of the email)" value={sections.editors_note} onChange={v => setSections(x => ({ ...x, editors_note: v }))} rows={4} disabled={newsletter.status === 'sent'} />
+          <SectionField label="Body (before the five podcasts)" value={sections.body} onChange={v => setSections(x => ({ ...x, body: v }))} rows={8} disabled={newsletter.status === 'sent'} />
+          <SectionField label="Conclusion / preview of next issue (after the five podcasts)" value={sections.conclusion} onChange={v => setSections(x => ({ ...x, conclusion: v }))} rows={4} disabled={newsletter.status === 'sent'} />
+        </div>
+        {newsletter.status !== 'sent' && (
+          <div className="flex items-center gap-3 mt-4">
+            <button onClick={saveSections} disabled={savingSections || !sectionsChanged} className="btn-primary text-sm">
+              {savingSections ? 'Saving…' : 'Save text'}
+            </button>
+            {sectionsChanged && <span className="text-2xs text-amber-400">Unsaved changes — save before previewing or approving</span>}
+          </div>
+        )}
+      </div>
+
       <div className="space-y-3 mb-8">
         {submissions.map(s => (
           <div key={s.id} className="card p-4 flex items-start gap-4">
@@ -259,6 +308,18 @@ export function WeeklyNewsletterManager() {
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+function SectionField({ label, value, onChange, rows, disabled }: { label: string; value: string; onChange: (v: string) => void; rows: number; disabled?: boolean }) {
+  return (
+    <div>
+      <label className="text-xs text-stone-subtle mb-1 flex items-center justify-between">
+        <span>{label}</span>
+        <span className="text-2xs">{value.length} / 5000</span>
+      </label>
+      <textarea value={value} onChange={e => onChange(e.target.value)} rows={rows} maxLength={5000} disabled={disabled} className="input-base w-full text-sm" />
     </div>
   )
 }

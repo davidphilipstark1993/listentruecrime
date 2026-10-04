@@ -43,6 +43,10 @@ async function buildRenderItems(supabase: SupabaseClient, approved: NewsletterSu
   }))
 }
 
+function newsletterRenderInput(n: Newsletter, items: NewsletterRenderItem[]): NewsletterRenderInput {
+  return { title: n.title, intro: n.intro, editorsNote: n.editors_note, body: n.body, conclusion: n.conclusion, items }
+}
+
 async function loadApprovedSubmissions(supabase: SupabaseClient, newsletterId: string): Promise<NewsletterSubmission[]> {
   const { data: submissions } = await supabase
     .from('newsletter_submissions')
@@ -64,7 +68,7 @@ export async function previewManualNewsletter(supabase: SupabaseClient, newslett
 
   const approved = await loadApprovedSubmissions(supabase, newsletterId)
   const items = await buildRenderItems(supabase, approved)
-  const input: NewsletterRenderInput = { title: newsletter.title, intro: newsletter.intro, items }
+  const input: NewsletterRenderInput = newsletterRenderInput(newsletter, items)
   return { newsletter, html: renderNewsletterHtml(input) }
 }
 
@@ -107,7 +111,7 @@ export async function sendApprovedManualNewsletter(supabase: SupabaseClient, new
     }))
   )
 
-  const input: NewsletterRenderInput = { title: newsletter.title, intro: newsletter.intro, items }
+  const input: NewsletterRenderInput = newsletterRenderInput(newsletter, items)
   const html_content = renderNewsletterHtml(input)
   const plain_text_content = renderNewsletterPlainText(input)
   await supabase.from('newsletters').update({ html_content, plain_text_content }).eq('id', newsletterId)

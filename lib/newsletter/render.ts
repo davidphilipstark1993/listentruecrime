@@ -19,8 +19,39 @@ export interface NewsletterRenderItem {
 
 export interface NewsletterRenderInput {
   title: string
-  intro: string | null
+  /** Legacy single intro paragraph; only used when `body` is empty. */
+  intro?: string | null
+  /** Short personal note from the editor, shown first under the title. */
+  editorsNote?: string | null
+  /** Main text shown before the five podcasts. */
+  body?: string | null
+  /** Wrap-up / preview of the next issue, shown after the five podcasts. */
+  conclusion?: string | null
   items: NewsletterRenderItem[]
+}
+
+/** Blank line = new paragraph, single newline = line break. */
+function paragraphsHtml(text: string, style: string): string {
+  return text
+    .split(/\n{2,}/)
+    .map(p => p.trim())
+    .filter(Boolean)
+    .map(p => `<p style="${style}">${escHtml(p).replace(/\n/g, '<br />')}</p>`)
+    .join('')
+}
+
+const TEXT_STYLE = 'color:#e5e5e5;font-size:15px;line-height:1.6;margin:0 0 14px;'
+const KICKER_STYLE = 'color:#be123c;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin:0 0 8px;'
+
+function textBlockRow(kicker: string | null, text: string | null | undefined, opts: { accent?: boolean; top: number; bottom: number }): string {
+  if (!text?.trim()) return ''
+  const inner = `${kicker ? `<p style="${KICKER_STYLE}">${kicker}</p>` : ''}${paragraphsHtml(text, TEXT_STYLE)}`
+  return `
+      <tr>
+        <td style="padding:${opts.top}px 32px ${opts.bottom}px;">
+          ${opts.accent ? `<div style="border-left:3px solid #be123c;padding:2px 0 2px 16px;">${inner}</div>` : inner}
+        </td>
+      </tr>`
 }
 
 function listenLink(label: string, url: string | null): string {
@@ -100,13 +131,10 @@ export function renderNewsletterHtml(input: NewsletterRenderInput): string {
           </h1>
         </td>
       </tr>
-      ${input.intro ? `
-      <tr>
-        <td style="padding:24px 32px 0;">
-          <p style="color:#e5e5e5;font-size:15px;line-height:1.6;margin:0;">${escHtml(input.intro)}</p>
-        </td>
-      </tr>` : ''}
+      ${textBlockRow("Editor's note", input.editorsNote, { accent: true, top: 28, bottom: 4 })}
+      ${textBlockRow(null, input.body ?? input.intro, { top: 24, bottom: 4 })}
       <tr><td><table width="100%" cellpadding="0" cellspacing="0" border="0">${rows}</table></td></tr>
+      ${textBlockRow('Wrapping up', input.conclusion, { top: 28, bottom: 8 })}
       <tr>
         <td style="padding:20px 32px;text-align:center;">
           <p style="color:#999;font-size:12px;margin:0 0 6px;">
@@ -128,7 +156,10 @@ export function renderNewsletterHtml(input: NewsletterRenderInput): string {
 }
 
 export function renderNewsletterPlainText(input: NewsletterRenderInput): string {
-  const parts = [input.title, '', input.intro ?? '', ''].filter(Boolean)
+  const parts = [input.title, '']
+  if (input.editorsNote?.trim()) parts.push("EDITOR'S NOTE", input.editorsNote.trim(), '')
+  const body = (input.body ?? input.intro)?.trim()
+  if (body) parts.push(body, '')
 
   for (const item of input.items.sort((a, b) => a.position - b.position)) {
     const podcastUrl = item.slug ? `${BASE}/podcasts/${item.slug}` : item.websiteUrl ?? ''
@@ -142,6 +173,7 @@ export function renderNewsletterPlainText(input: NewsletterRenderInput): string 
     parts.push('')
   }
 
+  if (input.conclusion?.trim()) parts.push('WRAPPING UP', input.conclusion.trim(), '')
   parts.push(`— ListenTrueCrime (${BASE})`)
   return parts.join('\n')
 }
