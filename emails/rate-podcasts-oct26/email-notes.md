@@ -18,7 +18,7 @@ Paste this into the Single Send's preview text field too. The HTML version alrea
 ## Do not send until
 
 1. **Anonymous ratings count.** Run `supabase/migrations/016_count_anonymous_ratings.sql` in the Supabase SQL editor, after the code that handles anonymous rows is deployed. Then check it: open a podcast page in a private or incognito window, rate it without signing in, and refresh after a few seconds. The "Community ratings" count on that page should go up by one.
-2. **The `#rate` anchor is live.** It's already deployed: every link in the email ends in `#rate` and jumps straight to the "Rate this podcast" box.
+2. **`/rate` is deployed.** The page is new and not live until it's merged and deployed. Open listentruecrime.com/rate, search for a show, tap Rate and check it jumps to the rating box.
 3. **Subscribers are in sync with SendGrid.** A Single Send goes to your SendGrid list, not the Supabase table. In `/admin/newsletter`, click **Retry SendGrid sync** if any subscribers show as "Pending".
 
 ## SendGrid Single Send setup
@@ -32,29 +32,15 @@ Paste this into the Single Send's preview text field too. The HTML version alrea
 
 ## Before you press send
 
-- [ ] Send a test to yourself. Check it in Gmail on your phone and on desktop. Check every **Rate it →** link and the main button.
-- [ ] Check the 10 one-line descriptions read the way you'd describe each show. I wrote them from general knowledge of the shows, not from your site's reviews.
+- [ ] Send a test to yourself. Check it in Gmail on your phone and on desktop. Check the main button (it should open `/rate`), the logo link and the privacy link.
 - [ ] Check the plain-text version in the test as well.
 - [ ] Check the unsubscribe link works on the test.
 
-## Why these 10 shows
+## Why no show list
 
-There are **717 published podcasts** (from the live sitemap). That's far too many to list, so the email names 10 widely heard shows. People are more likely to rate what they recognise. All 10 pages were checked as live:
+There are **718 published podcasts**, so the email doesn't list any. The single button goes to a purpose-built page, `/rate` (`app/rate/`): an A–Z list of every published show with search, a country filter and a "Rate →" link to each show's rating box (`/podcasts/<slug>#rate`). Shows this browser has already rated show "Rated". The page is `noindex` and not in the sitemap, and refreshes hourly, so new shows appear within an hour.
 
-| Show | Page |
-|---|---|
-| Serial | /podcasts/serial |
-| Casefile True Crime | /podcasts/casefile-true-crime |
-| RedHanded | /podcasts/redhanded |
-| Murder Mile UK True Crime | /podcasts/murder-mile-uk-true-crime |
-| The Teacher's Pet | /podcasts/the-teachers-pet |
-| Crime Junkie | /podcasts/crime-junkie |
-| My Favorite Murder | /podcasts/my-favorite-murder |
-| S-Town | /podcasts/s-town |
-| Dr. Death | /podcasts/dr-death |
-| In the Dark | /podcasts/in-the-dark |
-
-There's a mix of UK, US and Australian shows, with two UK shows near the top. The main button sends everyone else to `/browse` to find any show they've heard.
+Tracking: Google Analytics shows the campaign landing on `/rate` (filter on `utm_campaign=rate-podcasts-oct26`). Per-show ratings are counted in Supabase (see below). The logo and privacy links also carry the UTM parameters.
 
 ## After sending
 
