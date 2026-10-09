@@ -3,7 +3,6 @@ import { Search, ArrowRight, TrendingUp, Star, Zap, BookOpen } from 'lucide-reac
 import { createAdminClient } from '@/lib/supabase/admin'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
-import { NewsletterLeadMagnet } from '@/components/newsletter/newsletter-lead-magnet'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { CATEGORIES } from '@/lib/types/database'
@@ -26,6 +25,12 @@ function isCompleteRecord(p: Podcast): boolean {
   return hasVerdict && hasHost && hasDescription
 }
 
+const TRENDING_COUNT = 5
+
+// Trending shows exactly TRENDING_COUNT featured podcasts. Fully complete
+// records come first; if there aren't enough (many featured shows have no
+// host_name yet), it tops up from the remaining featured podcasts that still
+// have a binge score and a description — never from unfeatured or thin ones.
 async function getFeaturedPodcasts() {
   const supabase = createAdminClient()
   const { data } = await supabase
@@ -37,10 +42,13 @@ async function getFeaturedPodcasts() {
     .eq('is_featured', true)
     .eq('is_published', true)
     .not('binge_factor', 'is', null)
-    .not('host_name', 'is', null)
-    .limit(12)
+    .order('binge_factor', { ascending: false })
+    .limit(50)
 
-  return (data ?? []).filter(isCompleteRecord).slice(0, 6)
+  const candidates = (data ?? []).filter(p => stripHtml(p.short_description ?? p.description).length > 0)
+  const complete = candidates.filter(isCompleteRecord)
+  const topUp = candidates.filter(p => !isCompleteRecord(p))
+  return [...complete, ...topUp].slice(0, TRENDING_COUNT)
 }
 
 async function getTopRated() {
@@ -195,10 +203,10 @@ export default async function HomePage() {
 
         {/* ═══════════════ NEWSLETTER CTA ═══════════════ */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="relative overflow-hidden rounded-2xl bg-ink-800 border border-white/[0.06] p-8">
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(190,18,60,0.1),transparent_60%)]" />
-              <div className="relative z-10">
+          <div className="relative overflow-hidden rounded-2xl bg-ink-800 border border-white/[0.06] p-8 lg:p-10">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(190,18,60,0.1),transparent_60%)]" />
+            <div className="relative z-10 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+              <div>
                 <div className="flex flex-wrap items-center gap-2 mb-3">
                   <p className="text-2xs text-crimson font-semibold uppercase tracking-widest">Newsletter</p>
                   <span className="px-2 py-0.5 rounded-full bg-crimson/10 border border-crimson/20 text-crimson text-2xs font-semibold uppercase tracking-wide">
@@ -211,15 +219,14 @@ export default async function HomePage() {
                 <h2 className="heading-section text-2xl sm:text-3xl mb-3">
                   5 True Crime Podcasts Worth Listening To
                 </h2>
-                <p className="text-stone-muted text-sm mb-6 leading-relaxed">
+                <p className="text-stone-muted text-sm leading-relaxed">
                   Every Sunday, we&apos;ll email you five true crime podcasts we&apos;ve discovered and think are
                   worth your time — from new shows and hidden gems to established favourites.
                   It&apos;s completely free, lands once a week, and you can unsubscribe any time.
                 </p>
-                <NewsletterForm source="homepage_section" showFirstName />
               </div>
+              <NewsletterForm source="homepage_section" showFirstName />
             </div>
-            <NewsletterLeadMagnet variant="card" source="homepage_lead_magnet" />
           </div>
         </section>
 
@@ -238,7 +245,7 @@ export default async function HomePage() {
                 View all <ArrowRight size={14} />
               </Link>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
               {(featured as (Podcast & { rating_stats: RatingStats | null })[]).map((p, i) => (
                 <PodcastCard key={p.id} podcast={p} priority={i < 3} />
               ))}
