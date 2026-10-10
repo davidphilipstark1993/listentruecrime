@@ -44,3 +44,16 @@ describe('newsletter sections', () => {
     expect(text.indexOf('5. Pod 5')).toBeLessThan(text.indexOf('CONC'))
   })
 })
+
+describe('preview text', () => {
+  it('puts hidden, escaped preview text before the header', () => {
+    const html = renderNewsletterHtml({ ...base(), previewText: 'This week: Serial & <more>' })
+    expect(html).toContain('This week: Serial &amp; &lt;more&gt;')
+    expect(html.indexOf('This week: Serial')).toBeLessThan(html.indexOf('The true crime podcast database'))
+    expect(html).toMatch(/<div style="display:none;[^"]*">This week/)
+  })
+
+  it('adds nothing when there is no preview text', () => {
+    expect(renderNewsletterHtml({ ...base(), previewText: '  ' })).not.toContain('display:none')
+  })
+})

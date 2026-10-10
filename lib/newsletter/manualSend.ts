@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { renderNewsletterHtml, renderNewsletterPlainText, type NewsletterRenderItem, type NewsletterRenderInput } from './render'
 import { sendNewsletterCampaign } from '@/lib/email/newsletter-campaign'
+import { resolvePreviewText, resolveSubject } from './subject'
 import type { Newsletter, NewsletterSubmission } from '@/lib/types/database'
 
 /**
@@ -44,7 +45,10 @@ async function buildRenderItems(supabase: SupabaseClient, approved: NewsletterSu
 }
 
 function newsletterRenderInput(n: Newsletter, items: NewsletterRenderItem[]): NewsletterRenderInput {
-  return { title: n.title, intro: n.intro, editorsNote: n.editors_note, body: n.body, conclusion: n.conclusion, items }
+  return {
+    title: n.title, intro: n.intro, editorsNote: n.editors_note, body: n.body, conclusion: n.conclusion, items,
+    previewText: resolvePreviewText(n.preview_text, items.map(i => i.title)),
+  }
 }
 
 async function loadApprovedSubmissions(supabase: SupabaseClient, newsletterId: string): Promise<NewsletterSubmission[]> {
@@ -119,7 +123,8 @@ export async function sendApprovedManualNewsletter(supabase: SupabaseClient, new
   const { data: subscribers } = await supabase.from('newsletter_subscribers').select('email').eq('status', 'active')
   if (!subscribers?.length) return { ok: false, reason: 'no_subscribers' }
 
-  const { campaignId, sentCount } = await sendNewsletterCampaign({ ...newsletter, html_content, plain_text_content }, subscribers)
+  const subject = resolveSubject(newsletter.subject, items.map(i => i.title))
+  const { campaignId, sentCount } = await sendNewsletterCampaign({ ...newsletter, subject, html_content, plain_text_content }, subscribers)
 
   await supabase
     .from('newsletters')
