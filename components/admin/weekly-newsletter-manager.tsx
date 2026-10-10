@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Plus, Pencil, Trash2, AlertTriangle, CheckCircle2, BookPlus, Eye } from 'lucide-react'
 import toast from 'react-hot-toast'
 import type { Newsletter, NewsletterSubmission } from '@/lib/types/database'
+import { autoPreviewText, autoSubject, MAX_PREVIEW_TEXT_LENGTH, MAX_SUBJECT_LENGTH } from '@/lib/newsletter/subject'
 
 type AnnotatedSubmission = NewsletterSubmission & {
   possibleDbMatch: { name: string | null; id: string | null; reason: string } | null
@@ -26,7 +27,7 @@ export function WeeklyNewsletterManager() {
   const [saving, setSaving] = useState(false)
   const [approving, setApproving] = useState(false)
   const [sending, setSending] = useState(false)
-  const [sections, setSections] = useState({ editors_note: '', body: '', conclusion: '' })
+  const [sections, setSections] = useState({ subject: '', preview_text: '', editors_note: '', body: '', conclusion: '' })
   const [savingSections, setSavingSections] = useState(false)
 
   const load = useCallback(async () => {
@@ -37,6 +38,8 @@ export function WeeklyNewsletterManager() {
       if (!res.ok) throw new Error(data.error)
       setNewsletter(data.newsletter)
       setSections({
+        subject: data.newsletter.subject ?? '',
+        preview_text: data.newsletter.preview_text ?? '',
         editors_note: data.newsletter.editors_note ?? '',
         body: data.newsletter.body ?? '',
         conclusion: data.newsletter.conclusion ?? '',
@@ -52,6 +55,10 @@ export function WeeklyNewsletterManager() {
   useEffect(() => { load() }, [load])
 
   const approvedCount = submissions.filter(s => s.status === 'approved').length
+  // What gets used when the subject / preview text boxes are left blank.
+  const approvedNames = submissions.filter(s => s.status === 'approved').map(s => s.podcast_name)
+  const subjectFallback = autoSubject(approvedNames)
+  const previewFallback = autoPreviewText(approvedNames) ?? 'Generated from this week’s podcasts once they’re approved'
   const ready = approvedCount === 5
 
   const openAdd = () => { setForm(EMPTY_FORM); setEditingId(null); setFormOpen(true) }
@@ -123,7 +130,9 @@ export function WeeklyNewsletterManager() {
 
   const sectionsChanged =
     !!newsletter &&
-    (sections.editors_note !== (newsletter.editors_note ?? '') ||
+    (sections.subject !== (newsletter.subject ?? '') ||
+      sections.preview_text !== (newsletter.preview_text ?? '') ||
+      sections.editors_note !== (newsletter.editors_note ?? '') ||
       sections.body !== (newsletter.body ?? '') ||
       sections.conclusion !== (newsletter.conclusion ?? ''))
 
@@ -222,9 +231,27 @@ export function WeeklyNewsletterManager() {
       <div className="card p-4 mb-6">
         <h2 className="font-serif text-base text-stone mb-1">Newsletter text</h2>
         <p className="text-stone-subtle text-xs mb-4">
-          All optional. Leave a box empty and that section is left out. Blank line = new paragraph. Saving after approval means re-approving.
+          All optional. A blank subject or preview text is generated from this week’s podcasts; any other empty box is left out of the email. Blank line = new paragraph. Saving after approval means re-approving.
         </p>
         <div className="space-y-3">
+          <LineField
+            label="Email subject line"
+            hint="Leave blank to use"
+            value={sections.subject}
+            placeholder={subjectFallback}
+            maxLength={MAX_SUBJECT_LENGTH}
+            onChange={v => setSections(x => ({ ...x, subject: v }))}
+            disabled={newsletter.status === 'sent'}
+          />
+          <LineField
+            label="Preview text (the grey line inboxes show after the subject)"
+            hint="Leave blank to use"
+            value={sections.preview_text}
+            placeholder={previewFallback}
+            maxLength={MAX_PREVIEW_TEXT_LENGTH}
+            onChange={v => setSections(x => ({ ...x, preview_text: v }))}
+            disabled={newsletter.status === 'sent'}
+          />
           <SectionField label="Editor's note (top of the email)" value={sections.editors_note} onChange={v => setSections(x => ({ ...x, editors_note: v }))} rows={4} disabled={newsletter.status === 'sent'} />
           <SectionField label="Body (before the five podcasts)" value={sections.body} onChange={v => setSections(x => ({ ...x, body: v }))} rows={8} disabled={newsletter.status === 'sent'} />
           <SectionField label="Conclusion / preview of next issue (after the five podcasts)" value={sections.conclusion} onChange={v => setSections(x => ({ ...x, conclusion: v }))} rows={4} disabled={newsletter.status === 'sent'} />
@@ -308,6 +335,21 @@ export function WeeklyNewsletterManager() {
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+function LineField({ label, hint, value, placeholder, maxLength, onChange, disabled }: {
+  label: string; hint: string; value: string; placeholder: string; maxLength: number; onChange: (v: string) => void; disabled?: boolean
+}) {
+  return (
+    <div>
+      <label className="text-xs text-stone-subtle mb-1 flex items-center justify-between">
+        <span>{label}</span>
+        <span className="text-2xs">{value.length} / {maxLength}</span>
+      </label>
+      <input value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} maxLength={maxLength} disabled={disabled} className="input-base w-full text-sm" />
+      {!value.trim() && <p className="text-2xs text-stone-subtle mt-1">{hint}: <span className="text-stone-muted">{placeholder}</span></p>}
     </div>
   )
 }

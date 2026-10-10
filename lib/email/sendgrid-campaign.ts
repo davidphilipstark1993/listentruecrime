@@ -14,7 +14,7 @@ interface Recipient {
  * campaign reference, stored on newsletters.sendgrid_campaign_id.
  */
 export async function sendNewsletterCampaignViaSendGrid(
-  newsletter: Pick<Newsletter, 'id' | 'title' | 'html_content' | 'plain_text_content'>,
+  newsletter: Pick<Newsletter, 'id' | 'title' | 'html_content' | 'plain_text_content'> & { subject?: string | null },
   recipients: Recipient[]
 ): Promise<{ campaignId: string; sentCount: number }> {
   const apiKey = process.env.SENDGRID_API_KEY ? sanitizeEnv(process.env.SENDGRID_API_KEY) : undefined
@@ -41,7 +41,7 @@ export async function sendNewsletterCampaignViaSendGrid(
       body: JSON.stringify({
         personalizations: batch.map(r => ({ to: [{ email: r.email }] })),
         from: { email: fromEmail, name: fromName },
-        subject: newsletter.title,
+        subject: newsletter.subject?.trim() || newsletter.title,
         content: [
           ...(newsletter.plain_text_content ? [{ type: 'text/plain', value: newsletter.plain_text_content }] : []),
           { type: 'text/html', value: newsletter.html_content },

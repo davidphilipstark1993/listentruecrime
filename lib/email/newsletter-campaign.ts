@@ -13,7 +13,8 @@ interface Recipient {
  * doesn't silently require a provider that isn't set up.
  */
 export async function sendNewsletterCampaign(
-  newsletter: Pick<Newsletter, 'id' | 'title' | 'html_content' | 'plain_text_content'>,
+  // subject: the email subject line; falls back to the issue title.
+  newsletter: Pick<Newsletter, 'id' | 'title' | 'html_content' | 'plain_text_content'> & { subject?: string | null },
   recipients: Recipient[]
 ): Promise<{ campaignId: string; sentCount: number }> {
   if (process.env.SENDGRID_API_KEY) return sendNewsletterCampaignViaSendGrid(newsletter, recipients)
