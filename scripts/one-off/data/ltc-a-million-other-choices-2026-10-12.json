@@ -1,0 +1,26 @@
+{
+  "podcast": {
+    "title": "A Million Other Choices",
+    "slug": "a-million-other-choices",
+    "short_description": "A Canadian-hosted, victim-centred true crime podcast covering murder and other criminal cases from around the world, with a particular interest in the Canadian justice system.",
+    "description": "A Million Other Choices is an independent, Canadian-hosted true crime podcast that explores murder and other compelling criminal cases from around the world, with a particular interest in Canadian cases and the Canadian justice system.\n\nHosted by Kim Toller, the show combines detailed research with engaging, conversational storytelling that goes beyond the headlines. Episodes explore the people involved, the circumstances surrounding the crime, the investigation and the legal proceedings that follow, while examining the evidence, unanswered questions and decisions that shape each case.\n\nAlongside individual cases, the podcast features topical episodes on criminal behaviour, investigative techniques, legal concepts and broader issues within the world of true crime. Kim approaches these stories with empathy for victims and their families, curiosity, and a willingness to question assumptions. The goal isn't simply to tell you what happened, but to help you understand how and why.",
+    "newsletter_worthy_summary": "A Million Other Choices is a Canadian-hosted, victim-centred true crime podcast from Kim Toller — thoroughly researched murder cases from Canada, the US, the UK and beyond, with a particular eye on Canadian criminal law.",
+    "country": "CA",
+    "case_types": ["Murder", "Cold Case", "Missing Person", "Serial Killer", "Wrongful Conviction", "Courtroom"],
+    "format_type": "Episodic",
+    "host_name": "Kim Toller",
+    "host_style": "Single Host",
+    "host_bio": "Kim Toller is a Calgary, Alberta-based podcaster and the creator, researcher, writer, host and producer of A Million Other Choices, launched in 2021. Her background is in finance and accounting, and her approach to true crime is shaped by the murder of her niece, Taylor Toller, in 2017, which gave her a first-hand understanding of what homicide does to the families left behind.",
+    "factual_style": "Mixed",
+    "episode_length": "30-60 min",
+    "episode_count": "321 episodes",
+    "best_episode_to_start": "Taylor Toller, Shawn Boschuk and Alan Pennylegion (Parts One and Two)",
+    "platforms": ["Apple Podcasts", "Spotify"],
+    "website_url": "https://redcircle.com/shows/892ec828-10b8-4f8a-8da4-12654c4f5040",
+    "apple_collection_id": 1579267886,
+    "is_published": true,
+    "is_featured": false
+  },
+  "similar_slug_candidates": ["casefile", "canadian-true-crime", "true-crime-garage", "the-prosecutors"],
+  "artwork_file": "a-million-other-choices.webp"
+}
