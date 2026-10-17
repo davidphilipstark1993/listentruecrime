@@ -102,6 +102,27 @@ async function getSimilarPodcasts(podcast: any): Promise<PodcastWithStats[]> {
     }
   }
 
+  // Still short (no case types, or a thin niche): top up with same-country
+  // shows, then the highest-scoring shows overall, so every podcast page
+  // carries a full Similar podcasts block.
+  if (results.length < 6) {
+    const fill = async (country: string | null) => {
+      let q = supabase
+        .from('podcasts')
+        .select(`*, rating_stats:podcast_rating_stats(*)`)
+        .eq('is_published', true)
+        .neq('slug', podcast.slug)
+      if (country) q = q.eq('country', country)
+      const { data } = await q.order('binge_factor', { ascending: false, nullsFirst: false }).limit(12)
+      for (const p of (data ?? []) as PodcastWithStats[]) {
+        if (!seen.has(p.slug)) { results.push(p); seen.add(p.slug) }
+        if (results.length >= 6) break
+      }
+    }
+    if (podcast.country) await fill(podcast.country)
+    if (results.length < 6) await fill(null)
+  }
+
   return results.slice(0, 6)
 }
 
@@ -847,7 +868,7 @@ export default async function PodcastPage({ params }: Props) {
             <div className="mt-12 pt-12 border-t border-white/[0.06]">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="heading-section text-2xl">
-                  If you liked this, try…
+                  Similar podcasts to {podcast.title}
                 </h2>
                 <Link
                   href={`/podcasts-like/${slug}`}
@@ -864,29 +885,35 @@ export default async function PodcastPage({ params }: Props) {
             </div>
           )}
 
-          {/* Category cross-links */}
-          {podcastCategories.length > 0 && (
-            <div className="mt-12 pt-12 border-t border-white/[0.06]">
-              <p className="text-stone-subtle text-sm mb-4">Explore more in these categories:</p>
-              <div className="flex flex-wrap gap-3">
-                {podcastCategories.map(cat => (
-                  <Link
-                    key={cat.slug}
-                    href={`/category/${cat.slug}`}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-ink-800 border border-white/[0.08] text-stone-muted hover:text-stone hover:border-white/20 text-sm transition-colors"
-                  >
-                    {cat.emoji} {cat.label} <ArrowRight size={13} />
-                  </Link>
-                ))}
+          {/* Category, country and list cross-links */}
+          <div className="mt-12 pt-12 border-t border-white/[0.06]">
+            <p className="text-stone-subtle text-sm mb-4">Explore more:</p>
+            <div className="flex flex-wrap gap-3">
+              {podcastCategories.map(cat => (
                 <Link
-                  href="/best-true-crime-podcasts"
+                  key={cat.slug}
+                  href={`/category/${cat.slug}`}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-ink-800 border border-white/[0.08] text-stone-muted hover:text-stone hover:border-white/20 text-sm transition-colors"
                 >
-                  ⭐ Best True Crime Podcasts <ArrowRight size={13} />
+                  {cat.emoji} {cat.label} <ArrowRight size={13} />
                 </Link>
-              </div>
+              ))}
+              {podcast.country && COUNTRIES[podcast.country] && (
+                <Link
+                  href={countryHref(podcast.country)}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-ink-800 border border-white/[0.08] text-stone-muted hover:text-stone hover:border-white/20 text-sm transition-colors"
+                >
+                  {countryFlag(podcast.country)} {COUNTRIES[podcast.country]} True Crime <ArrowRight size={13} />
+                </Link>
+              )}
+              <Link
+                href="/best-true-crime-podcasts"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-ink-800 border border-white/[0.08] text-stone-muted hover:text-stone hover:border-white/20 text-sm transition-colors"
+              >
+                ⭐ Best True Crime Podcasts <ArrowRight size={13} />
+              </Link>
             </div>
-          )}
+          </div>
         </div>
       </main>
 

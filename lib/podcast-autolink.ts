@@ -3,11 +3,20 @@
 // misleading links to an unrelated podcast. Exact-match, case-insensitive.
 const AUTOLINK_STOPWORDS = new Set(['suspect', 'believed', 'unsolved'])
 
+/**
+ * Links the FIRST mention of each podcast that has a page on the site.
+ * Repeating the same link through a whole article reads as spam and dilutes
+ * the signal, so later mentions stay plain text. A podcast the author has
+ * already linked by hand (`](/podcasts/<slug>)`) is left alone entirely.
+ */
 export function autolinkPodcasts(
   content: string,
   podcasts: Array<{ slug: string; title: string }>
 ): string {
   if (!podcasts.length) return content
+
+  const linked = new Set<string>()
+  for (const m of Array.from(content.matchAll(/\]\(\/podcasts\/([a-z0-9-]+)\/?\)/g))) linked.add(m[1])
 
   // Longest titles first to prefer longer matches over partial ones
   const sorted = [...podcasts]
@@ -57,9 +66,14 @@ export function autolinkPodcasts(
       // genuine name references (typically capitalized) while leaving normal
       // sentences alone.
       for (const pod of sorted) {
+        if (linked.has(pod.slug)) continue
         const escaped = pod.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-        const re = new RegExp(`\\b${escaped}\\b`, 'g')
-        result = result.replace(re, match => `[${match}](/podcasts/${pod.slug})`)
+        const re = new RegExp(`\\b${escaped}\\b`)
+        // Protect the new link so a later, shorter title can't match inside it
+        result = result.replace(re, match => {
+          linked.add(pod.slug)
+          return protect(`[${match}](/podcasts/${pod.slug})`)
+        })
       }
 
       // Restore protected segments
