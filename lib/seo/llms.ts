@@ -42,7 +42,7 @@ export function buildLlmsTxt(base: string, guides: LlmsGuide[]): string {
     '',
     '## By country and platform',
     '',
-    ...FEATURED_COUNTRIES.filter(code => COUNTRIES[code]).map(code => `- [True crime podcasts from ${COUNTRIES[code]}](${base}${countryHref(code)})`),
+    ...FEATURED_COUNTRIES.filter(code => COUNTRIES[code]).map(code => `- [${COUNTRIES[code]} true crime podcasts](${base}${countryHref(code)})`),
     ...FEATURED_PLATFORMS.filter(name => PLATFORMS.includes(name)).map(name => `- [True crime podcasts on ${name}](${base}${platformHref(name)})`),
     '',
     '## Top guides',
