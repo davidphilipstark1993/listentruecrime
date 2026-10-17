@@ -1,7 +1,7 @@
 export const revalidate = 3600
 
 import { notFound } from 'next/navigation'
-import { ratingStatsOf } from '@/lib/rating-stats'
+import { ratingStatsOf, MIN_RATINGS_FOR_SCHEMA } from '@/lib/rating-stats'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Star, ChevronRight } from 'lucide-react'
@@ -88,7 +88,7 @@ export default async function BestOfPage({ params }: Props) {
         position: i + 1,
         name: p.title,
         url: `${BASE}/podcasts/${p.slug}`,
-        ...(stats?.avg_overall ? {
+        ...(stats?.avg_overall && stats.rating_count >= MIN_RATINGS_FOR_SCHEMA ? {
           item: {
             '@type': 'PodcastSeries',
             name: p.title,

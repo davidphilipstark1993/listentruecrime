@@ -1,4 +1,4 @@
-import { ratingStatsOf } from '@/lib/rating-stats'
+import { ratingStatsOf, MIN_RATINGS_FOR_SCHEMA } from '@/lib/rating-stats'
 
 type RatingStatsLike = { avg_overall: number | null; rating_count: number }
 
@@ -79,7 +79,7 @@ export function podcastSchema(podcast: {
     publisher: organizationSchema,
     numberOfEpisodes: podcast.episode_count ? parseInt(podcast.episode_count) || undefined : undefined,
     keywords: podcast.case_types?.join(', '),
-    ...(stats?.avg_overall
+    ...(stats?.avg_overall && stats.rating_count >= MIN_RATINGS_FOR_SCHEMA
       ? {
           aggregateRating: {
             '@type': 'AggregateRating',

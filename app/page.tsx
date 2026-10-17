@@ -181,8 +181,8 @@ export default async function HomePage() {
               </div>
               <div className="w-px h-8 bg-white/[0.06]" />
               <div className="flex flex-col items-center">
-                <span className="text-stone font-semibold text-2xl font-serif">10</span>
-                <span className="text-xs">Rating dimensions</span>
+                <span className="text-stone font-semibold text-2xl font-serif">6</span>
+                <span className="text-xs">Community rating dimensions</span>
               </div>
               <div className="w-px h-8 bg-white/[0.06]" />
               <div className="flex flex-col items-center">

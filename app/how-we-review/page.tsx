@@ -7,12 +7,12 @@ import { BASE } from '@/lib/seo/config'
 
 export const metadata: Metadata = {
   title: 'How We Review True Crime Podcasts',
-  description: 'Every podcast on ListenTrueCrime is reviewed across 6 dimensions. Learn how our editorial team scores storytelling, research, host quality, production, binge factor, and factual accuracy.',
+  description: 'How ListenTrueCrime rates true crime podcasts: an editorial verdict and Binge Factor score for every show, plus community ratings across six dimensions.',
   alternates: { canonical: `${BASE}/how-we-review` },
   openGraph: {
     type: 'website',
     title: 'How We Review True Crime Podcasts | ListenTrueCrime',
-    description: 'Our editorial methodology: 6 dimensions, 1–10 scoring, and what earns a "Must Listen" verdict.',
+    description: 'Our methodology: editorial verdicts, the Binge Factor score, and six-dimension community ratings.',
     url: `${BASE}/how-we-review`,
     images: [{
       url: `${BASE}/og?${new URLSearchParams({ title: 'How We Review', sub: 'Our Editorial Methodology' }).toString()}`,
@@ -27,15 +27,15 @@ const dimensions = [
     icon: Star,
     name: 'Storytelling',
     score: '1–10',
-    description: 'How well the case is structured and narrated. We assess pacing, tension, clarity, and whether the story holds together across episodes. A 10 is a show that makes you forget you\'re listening to a podcast.',
-    what_high: 'Cinematic pacing, well-signposted structure, no filler episodes, clear timeline management',
+    description: 'How well the case is structured and told: pacing, tension, clarity, and whether the story holds together across episodes.',
+    what_high: 'Well-signposted structure, no filler episodes, clear timeline management',
     what_low: 'Rambling episodes, unclear case structure, excessive tangents, repetition between episodes',
   },
   {
     icon: Search,
     name: 'Research Quality',
     score: '1–10',
-    description: 'Depth and rigour of sourcing. We consider use of primary documents (court records, police files, FOIA requests), original interviews with key figures, and whether the show goes beyond news reports.',
+    description: 'Depth and rigour of sourcing: primary documents, original interviews, and whether the show goes beyond news reports.',
     what_high: 'Court documents, original interviews, FOIA requests, on-the-ground reporting',
     what_low: 'Reliance on Wikipedia and news articles, no original sourcing, unverified claims',
   },
@@ -43,54 +43,54 @@ const dimensions = [
     icon: Mic,
     name: 'Host Quality',
     score: '1–10',
-    description: 'The presenter\'s authority, warmth, and trustworthiness. We assess whether the host clearly understands the case, maintains appropriate tone, and builds a genuine connection with the listener.',
-    what_high: 'Expert command of case details, appropriate emotional register, natural delivery',
+    description: 'The presenter\'s authority, warmth, and trustworthiness, and whether the tone suits the subject.',
+    what_high: 'Command of case details, appropriate emotional register, natural delivery',
     what_low: 'Mispronounced names, cavalier treatment of victims, stilted or over-scripted delivery',
   },
   {
     icon: Volume2,
     name: 'Production / Audio',
     score: '1–10',
-    description: 'Sound quality, editing, and professional finish. Clean audio is the baseline; high scores go to shows with thoughtful sound design, consistent levels, and seamless editing.',
-    what_high: 'Studio-quality audio, professional editing, subtle sound design that enhances atmosphere',
+    description: 'Sound quality, editing, and professional finish.',
+    what_high: 'Clean audio, professional editing, sound design that supports the story',
     what_low: 'Background noise, inconsistent levels, excessive ad breaks, jarring cuts',
   },
   {
     icon: Zap,
     name: 'Binge Factor',
     score: '1–10',
-    description: 'How compulsively listenable the show is — the metric we weight most heavily in recommendations. A 10 means you will automatically hit "next episode" every time. This captures something the other dimensions miss: the overall pull of the show.',
-    what_high: '9–10: You lose track of time. 7–8: Strong "one more episode" pull. 5–6: Enjoyable but easy to pause.',
-    what_low: '1–4: Easy to stop mid-series without feeling compelled to finish',
+    description: 'How compulsively listenable the show is. This is the one dimension we also score editorially for every podcast, and it drives our "binge-worthy" listings.',
+    what_high: '9–10: you lose track of time. 7–8: strong "one more episode" pull.',
+    what_low: '1–4: easy to stop mid-series without feeling compelled to finish',
   },
   {
     icon: Shield,
     name: 'Factual Accuracy',
     score: '1–10',
-    description: 'Accuracy of claims and responsible use of evidence. We note errors we can verify, speculation presented as fact, and how the show handles contested evidence. High-binge shows with factual issues are flagged clearly.',
-    what_high: 'Corrects errors publicly, clearly labels speculation, distinguishes confirmed facts from theories',
+    description: 'Accuracy of claims and responsible use of evidence, including how a show handles contested evidence and speculation.',
+    what_high: 'Corrects errors publicly, labels speculation, separates confirmed facts from theories',
     what_low: 'Presents speculation as confirmed, known errors uncorrected, conflates different cases',
   },
 ]
 
 const verdicts = [
   {
-    label: 'Must Listen',
+    label: 'Must listen',
     color: 'text-crimson',
     bg: 'bg-crimson/10 border-crimson/20',
-    description: 'Reserved for podcasts that score exceptionally across all six dimensions AND have a binge factor of 8 or above. Less than 10% of podcasts in our database earn this rating.',
+    description: 'Our strongest recommendation. Reserved for shows we would recommend to almost any true crime listener.',
   },
   {
-    label: 'Worth a Listen',
+    label: 'Worth a listen',
     color: 'text-gold-light',
     bg: 'bg-gold-DEFAULT/10 border-gold-DEFAULT/20',
-    description: 'Solid shows with meaningful strengths in most dimensions. These are recommended to listeners whose interests align with the show\'s case types and format.',
+    description: 'A solid show with clear strengths, recommended to listeners whose interests match its format and cases.',
   },
   {
-    label: 'Approach with Caution',
+    label: 'Audience-fit verdicts',
     color: 'text-stone-muted',
     bg: 'bg-ink-700 border-white/10',
-    description: 'Shows with notable weaknesses in factual accuracy, host quality, or production that listeners should be aware of before committing to a series.',
+    description: 'Many shows get a verdict that says who they suit, for example "Good if UK true crime interests you". These are not warnings; they tell you whether the show\'s focus matches yours.',
   },
 ]
 
@@ -99,7 +99,7 @@ export default function HowWeReviewPage() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'How We Review True Crime Podcasts — Our Editorial Methodology',
-    description: 'A full explanation of the ListenTrueCrime editorial scoring system, covering all six review dimensions and how verdicts are assigned.',
+    description: 'A full explanation of the ListenTrueCrime editorial scoring system, covering editorial verdicts, the Binge Factor score and the six community rating dimensions.',
     author: {
       '@type': 'Organization',
       name: 'ListenTrueCrime',
@@ -135,8 +135,8 @@ export default function HowWeReviewPage() {
           </div>
           <h1 className="heading-display text-4xl sm:text-5xl mb-4">How we review true crime podcasts</h1>
           <p className="text-stone-muted text-lg max-w-2xl mx-auto leading-relaxed">
-            Every podcast in our database is scored across six dimensions on a 1–10 scale.
-            Here's exactly what each dimension measures and how we arrive at a final verdict.
+            Every podcast carries two kinds of rating, kept separate: our editorial verdict and Binge Factor score,
+            and community ratings on six dimensions. Here is what each one means.
           </p>
         </section>
 
@@ -146,8 +146,8 @@ export default function HowWeReviewPage() {
             <h2 className="font-serif text-xl text-stone mb-4">Our editorial principles</h2>
             <ul className="space-y-3">
               {[
-                'We score every podcast ourselves — we do not rely on listener submissions for editorial scores',
-                'We listen to a minimum of three full episodes (or two full seasons for serialised shows) before publishing a score',
+                'Editorial verdicts and Binge Factor scores are our own opinion, set by the editor and informed by what listeners and critics say about each show in public reviews',
+                'We do not claim to have listened to every episode of every show in the directory',
                 'We separate our editorial verdict from community ratings — both are shown, neither replaces the other',
                 'We update scores when shows improve, decline, or if we receive compelling evidence of errors in our assessment',
                 'Victim sensitivity is always a factor — shows that exploit grief or trauma will have that noted explicitly',
@@ -164,11 +164,11 @@ export default function HowWeReviewPage() {
         {/* The six dimensions */}
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
           <div className="mb-8">
-            <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-2">The six dimensions</p>
+            <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-2">The six community dimensions</p>
             <h2 className="heading-section text-2xl sm:text-3xl">What we score and why</h2>
             <p className="text-stone-muted text-sm mt-2 max-w-2xl">
-              Each dimension is scored independently on a 1–10 scale. These scores are also open to community rating
-              from registered listeners.
+              Registered listeners score each dimension independently on a 1–10 scale. Binge Factor is the only
+              dimension that also has an editorial score.
             </p>
           </div>
           <div className="space-y-5">
@@ -221,13 +221,14 @@ export default function HowWeReviewPage() {
           <h2 className="heading-section text-2xl sm:text-3xl mb-4">Community ratings</h2>
           <div className="card p-6 space-y-4 text-stone-muted text-sm leading-relaxed">
             <p>
-              Registered listeners can rate any podcast across the same six dimensions. These community scores are
-              averaged and displayed separately from our editorial scores.
+              Any listener can rate a podcast across these six dimensions plus an overall score, signed in or not
+              (one rating per browser per podcast). Community scores are averaged and displayed separately from our
+              editorial verdict.
             </p>
             <p>
-              Community ratings appear on podcast pages once there is at least one verified submission.
-              We do not emit aggregated community scores in search engine structured data until there
-              is a meaningful sample (minimum: 1 verified rating).
+              Community ratings appear on podcast pages as soon as a podcast has one. Submissions are not identity-verified,
+              so we only include aggregated community scores in search engine structured data once a podcast has at
+              least three ratings.
             </p>
             <p>
               Reviews are moderated before appearing publicly. We remove reviews that are off-topic, contain

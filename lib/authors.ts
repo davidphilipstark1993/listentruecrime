@@ -14,7 +14,7 @@ export const AUTHORS: Record<string, Author> = {
     name: 'David Stark',
     role: 'Founder & Editor',
     initials: 'DS',
-    bio: 'David Stark founded ListenTrueCrime after years of working through the true crime genre one feed at a time — from the early serialized hits to the current wave of daily-drop shows. He personally listens to and scores every podcast in the database across six dimensions (storytelling, research, host quality, production, binge factor, and factual accuracy), aiming to give listeners a straight signal instead of algorithm-driven hype.',
+    bio: 'David Stark founded ListenTrueCrime after years of working through the true crime genre one feed at a time — from the early serialized hits to the current wave of daily-drop shows. He sets the editorial verdicts and Binge Factor scores across the directory, aiming to give listeners a straight signal instead of algorithm-driven hype.',
   },
 }
 
