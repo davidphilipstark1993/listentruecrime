@@ -383,6 +383,11 @@ export function platformHref(name: string): string {
   return PLATFORM_SLUGS[name] ? `/platform/${PLATFORM_SLUGS[name]}` : `/platform/${encodeURIComponent(name)}`
 }
 
+/** Canonical path for a country page — use this rather than building /country/ URLs by hand. */
+export function countryHref(code: string): string {
+  return `/country/${code}`
+}
+
 export const COUNTRIES: Record<string, string> = {
   US: 'United States',
   UK: 'United Kingdom',

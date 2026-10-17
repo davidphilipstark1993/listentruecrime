@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
@@ -11,6 +11,9 @@ import { NewsletterLeadMagnet } from '@/components/newsletter/newsletter-lead-ma
 import { CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/database'
 import { CATEGORY_SEO, buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
 import { BASE } from '@/lib/seo/config'
+import { HubIntro } from '@/components/seo/hub-intro'
+import { FaqList } from '@/components/seo/faq-list'
+import { buildHubContent, mergeFaqs, type HubShow } from '@/lib/seo/hub-content'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
 interface Props {
@@ -58,32 +61,36 @@ export default async function CategoryPage({ params }: Props) {
   const year = new Date().getFullYear()
 
   const supabase = createAdminClient()
-  let q = supabase
-    .from('podcasts')
-    .select(`*, rating_stats:podcast_rating_stats(*)`, { count: 'exact' })
-    .eq('is_published', true)
-
-  if (slug === 'uk-crime') {
-    q = q.eq('country', 'UK')
-  } else if (slug === 'australian-crime') {
-    q = q.eq('country', 'AU')
-  } else if (slug === 'binge-worthy') {
-    q = q.gte('binge_factor', 8)
-  } else if (caseTypes.length > 0) {
-    q = q.overlaps('case_types', caseTypes)
+  // Same filter for the card grid and the lightweight full-category fetch
+  // that feeds the generated intro/FAQ facts.
+  const filterCategory = <Q extends { eq: any; gte: any; overlaps: any }>(query: Q): Q => {
+    if (slug === 'uk-crime') return query.eq('country', 'UK')
+    if (slug === 'australian-crime') return query.eq('country', 'AU')
+    if (slug === 'binge-worthy') return query.gte('binge_factor', 8)
+    if (caseTypes.length > 0) return query.overlaps('case_types', caseTypes)
+    return query
   }
 
   // Curated "Top" slice, not the full catalogue — the page already links to
   // /browse for the rest, so trimming this keeps the page's HTML weight down
   // (was rendering all 48 at once with no pagination). `count: 'exact'` above
   // still returns the true total for the copy below.
-  const { data, count } = await q.order('binge_factor', { ascending: false }).limit(24)
+  const [{ data, count }, { data: hubRows }] = await Promise.all([
+    filterCategory(
+      supabase.from('podcasts').select(`*, rating_stats:podcast_rating_stats(*)`, { count: 'exact' }).eq('is_published', true)
+    ).order('binge_factor', { ascending: false }).limit(24),
+    filterCategory(
+      supabase.from('podcasts').select('title, slug, binge_factor, case_types, country, platforms, format_type, episode_length').eq('is_published', true)
+    ),
+  ])
   const podcasts = (data ?? []) as (Podcast & { rating_stats: RatingStats | null })[]
   const totalCount = count ?? podcasts.length
+  const hub = buildHubContent({ kind: 'category', key: slug, shows: (hubRows ?? []) as HubShow[] })
 
   const h1 = seo?.h1 ?? `Best ${cat.label} Podcasts`
 
-  const faqSchema = seo?.faqs ? buildFAQSchema(seo.faqs) : null
+  const faqs = mergeFaqs(hub?.faqs ?? [], seo?.faqs ?? [])
+  const faqSchema = faqs.length > 0 ? buildFAQSchema(faqs) : null
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', url: BASE },
     { name: 'Browse', url: `${BASE}/browse` },
@@ -121,7 +128,9 @@ export default async function CategoryPage({ params }: Props) {
               {h1} <span className="text-stone-subtle text-2xl font-sans font-normal">({year})</span>
             </h1>
 
-            {seo?.intro ? (
+            {hub ? (
+              <HubIntro paragraphs={hub.intro} />
+            ) : seo?.intro ? (
               <div className="space-y-3 max-w-2xl">
                 {seo.intro.map((para, i) => (
                   <p key={i} className="text-stone-muted text-sm sm:text-base leading-relaxed">{para}</p>
@@ -178,6 +187,18 @@ export default async function CategoryPage({ params }: Props) {
           )}
         </section>
 
+        {/* ── Longer write-up (kept from the original hub copy) ── */}
+        {hub && seo?.intro && (
+          <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <h2 className="heading-section text-xl mb-4">About these podcasts</h2>
+            <div className="space-y-3">
+              {seo.intro.map((para, i) => (
+                <p key={i} className="text-stone-muted text-sm leading-relaxed">{para}</p>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* ── Newsletter CTA ── */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="relative overflow-hidden rounded-2xl bg-ink-800 border border-white/[0.06] p-8">
@@ -196,23 +217,10 @@ export default async function CategoryPage({ params }: Props) {
         </section>
 
         {/* ── FAQ ── */}
-        {seo?.faqs && (
+        {faqs.length > 0 && (
           <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <h2 className="heading-section text-2xl mb-8">Frequently Asked Questions</h2>
-            <div className="space-y-4">
-              {seo.faqs.map((faq, i) => (
-                <details key={i} className="card p-5 group">
-                  <summary className="flex items-center justify-between cursor-pointer list-none gap-4">
-                    <span className="text-stone font-medium text-sm">{faq.q}</span>
-                    <ChevronDown size={16} className="text-stone-subtle shrink-0 group-open:hidden" />
-                    <ChevronUp size={16} className="text-stone-subtle shrink-0 hidden group-open:block" />
-                  </summary>
-                  <p className="text-stone-muted text-sm leading-relaxed mt-3 pt-3 border-t border-white/[0.06]">
-                    {faq.a}
-                  </p>
-                </details>
-              ))}
-            </div>
+            <FaqList items={faqs} />
           </section>
         )}
 

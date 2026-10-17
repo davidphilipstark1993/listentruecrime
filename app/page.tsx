@@ -6,6 +6,10 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { CATEGORIES } from '@/lib/types/database'
+import { LinkedText } from '@/components/seo/linked-text'
+import { FaqList } from '@/components/seo/faq-list'
+import { buildHomeAnswer, buildHomeFaqs, type ShowRef } from '@/lib/seo/home-content'
+import { buildFAQSchema } from '@/lib/seo/content'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getPodcastCount, roundedPodcastCount } from '@/lib/podcast-count'
 import { getPostBySlug } from '@/lib/blog'
@@ -85,6 +89,18 @@ async function getNewest() {
   return (data ?? []).filter(isCompleteRecord).slice(0, 4)
 }
 
+// Top three shows for a filtered slice of the catalogue, by editor score —
+// feeds the answer-first FAQ on the homepage.
+async function getTopShows(filter: 'beginners' | 'uk' | 'spotify'): Promise<ShowRef[]> {
+  const supabase = createAdminClient()
+  let q = supabase.from('podcasts').select('title, slug').eq('is_published', true).not('binge_factor', 'is', null)
+  if (filter === 'beginners') q = q.eq('format_type', 'Episodic').gte('binge_factor', 7)
+  if (filter === 'uk') q = q.eq('country', 'UK')
+  if (filter === 'spotify') q = q.contains('platforms', ['Spotify'])
+  const { data } = await q.order('binge_factor', { ascending: false }).limit(3)
+  return (data ?? []) as ShowRef[]
+}
+
 async function getRecentReviews() {
   const supabase = createAdminClient()
   const { data } = await supabase
@@ -102,14 +118,19 @@ async function getRecentReviews() {
 }
 
 export default async function HomePage() {
-  const [featured, topRated, newest, recentReviews, podcastCount] = await Promise.all([
+  const [featured, topRated, newest, recentReviews, podcastCount, beginners, ukShows, spotifyShows] = await Promise.all([
     getFeaturedPodcasts(),
     getTopRated(),
     getNewest(),
     getRecentReviews(),
     getPodcastCount(),
+    getTopShows('beginners'),
+    getTopShows('uk'),
+    getTopShows('spotify'),
   ])
   const podcastCountLabel = roundedPodcastCount(podcastCount)
+  const answer = buildHomeAnswer(topRated.map(p => ({ title: p.title, slug: p.slug })), podcastCount)
+  const faqs = buildHomeFaqs({ beginners, uk: ukShows, spotify: spotifyShows })
 
   // Optional guides that don't exist yet (still with the editorial team) —
   // this list picks them up automatically once they're published, with no
@@ -130,6 +151,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFAQSchema(faqs)) }} />
       <Header />
 
       <main id="main-content">
@@ -200,6 +222,16 @@ export default async function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* ═══════════════ ANSWER-FIRST SUMMARY ═══════════════ */}
+        {answer && (
+          <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2">
+            <h2 className="heading-section text-xl sm:text-2xl mb-3">What are the best true crime podcasts?</h2>
+            <p className="text-stone-muted text-base leading-relaxed">
+              <LinkedText segments={answer} />
+            </p>
+          </section>
+        )}
 
         {/* ═══════════════ NEWSLETTER CTA ═══════════════ */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -368,6 +400,12 @@ export default async function HomePage() {
             </div>
           </section>
         )}
+
+        {/* ═══════════════ FAQ ═══════════════ */}
+        <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 section-divider">
+          <h2 className="heading-section text-2xl sm:text-3xl mb-8">Frequently asked questions</h2>
+          <FaqList items={faqs} />
+        </section>
       </main>
 
       <Footer />

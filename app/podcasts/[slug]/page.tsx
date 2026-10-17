@@ -12,6 +12,7 @@ import { ReviewForm } from '@/components/podcasts/review-form'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
+import { buildQuickVerdict } from '@/lib/seo/quick-verdict'
 import { getPros, getCons, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
 import { formatReviewDate, getReviewMeta } from '@/lib/reviews'
 import { BASE } from '@/lib/seo/config'
@@ -198,6 +199,7 @@ export default async function PodcastPage({ params }: Props) {
   ])
   const podcastCategories = getPodcastCategories(podcast)
   const whoIsItFor = getWhoIsItFor(podcast)
+  const quickVerdictText = buildQuickVerdict(podcast, whoIsItFor)
   const relatedCases = getCasesForPodcast(slug)
   const stats = ratingStatsOf(podcast.rating_stats)
   // Community figures are only surfaced once enough listeners have rated;
@@ -303,7 +305,8 @@ export default async function PodcastPage({ params }: Props) {
       worstRating: 1,
       ...(podcast.quick_verdict && { description: podcast.quick_verdict }),
     },
-    ...(podcast.newsletter_worthy_summary && { reviewBody: podcast.newsletter_worthy_summary }),
+    // Must match the visible Quick verdict
+    ...(quickVerdictText && { reviewBody: quickVerdictText }),
     datePublished: review.reviewedAt.split('T')[0],
     dateModified: (review.updatedAt ?? review.reviewedAt).split('T')[0],
   } : null
@@ -454,7 +457,7 @@ export default async function PodcastPage({ params }: Props) {
             <div className="lg:col-span-2 space-y-8">
 
               {/* Editorial Quick Verdict */}
-              {(podcast.newsletter_worthy_summary || podcast.quick_verdict) && (
+              {(quickVerdictText || podcast.quick_verdict) && (
                 <div className="card p-6 border-crimson/20 bg-crimson/5">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-2xs text-crimson font-semibold uppercase tracking-widest">Quick Verdict</span>
@@ -469,10 +472,10 @@ export default async function PodcastPage({ params }: Props) {
                       </span>
                     )}
                   </div>
-                  {podcast.newsletter_worthy_summary && (
-                    <blockquote className="text-stone text-sm sm:text-base leading-relaxed font-medium italic">
-                      "{podcast.newsletter_worthy_summary}"
-                    </blockquote>
+                  {quickVerdictText && (
+                    <p className="text-stone text-sm sm:text-base leading-relaxed font-medium">
+                      {quickVerdictText}
+                    </p>
                   )}
                   <div className="mt-3 pt-3 border-t border-white/[0.06] flex items-center justify-between">
                     <span className="text-stone-subtle text-xs">
