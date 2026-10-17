@@ -821,9 +821,11 @@ export const PLATFORM_SEO: Record<string, PageSeoContent> = {
         q: 'Does Spotify have exclusive true crime podcasts?',
         a: 'Yes — Spotify has signed exclusive deals with several podcast producers and studios. Some true crime content is available only on Spotify, either permanently or for a limited window. Check the platform section on each podcast\'s page on ListenTrueCrime to see where it\'s available.',
       },
+      // TODO(owner): the £12.99 UK price below was checked on spotify.com/uk in
+      // October 2026 — prices change, so re-check it periodically.
       {
         q: 'Is Spotify free for true crime podcasts?',
-        a: 'Most podcast content on Spotify is free, including major shows like Serial, Crime Junkie, and Casefile. Some premium or exclusive content requires a Spotify Premium subscription. Audiobook content and certain exclusive shows are behind the paywall.',
+        a: 'Most podcast content on Spotify is free, including major shows like Serial, Crime Junkie, and Casefile. Some premium or exclusive content requires a Spotify Premium subscription. Audiobook content and certain exclusive shows are behind the paywall. As of October 2026, Premium Individual costs £12.99 per month in the UK, per spotify.com/uk.',
       },
       {
         q: 'How does Spotify recommend true crime podcasts?',
