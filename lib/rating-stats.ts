@@ -11,3 +11,6 @@ export function ratingStatsOf<T extends Partial<RatingStats>>(value: T | T[] | n
   if (Array.isArray(value)) return value[0] ?? null
   return value ?? null
 }
+
+/** Minimum community ratings before a podcast emits aggregateRating structured data. */
+export const MIN_RATINGS_FOR_SCHEMA = 3
