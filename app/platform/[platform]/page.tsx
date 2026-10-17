@@ -96,7 +96,7 @@ export default async function PlatformPage({ params }: Props) {
   const itemListSchema = podcasts.length > 0 ? buildItemListSchema(
     h1,
     seo?.intro[0] ?? `Best true crime podcasts on ${name}`,
-    podcasts.slice(0, 20).map(p => ({ name: p.title, url: `${BASE}/podcasts/${p.slug}` }))
+    podcasts.map(p => ({ name: p.title, url: `${BASE}/podcasts/${p.slug}` }))
   ) : null
 
   return (

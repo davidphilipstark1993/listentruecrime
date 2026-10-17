@@ -188,7 +188,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       '@type': 'Organization',
       name: 'ListenTrueCrime',
       url: BASE,
-      logo: { '@type': 'ImageObject', url: `${BASE}/og` },
+      logo: { '@type': 'ImageObject', url: `${BASE}/icon.png` },
     },
     keywords: post.tags.join(', '),
     articleSection: post.category,
