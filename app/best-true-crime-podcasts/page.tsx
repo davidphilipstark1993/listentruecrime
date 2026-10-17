@@ -7,7 +7,7 @@ import { Footer } from '@/components/layout/footer'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { NewsletterLeadMagnet } from '@/components/newsletter/newsletter-lead-magnet'
-import { CATEGORIES, COUNTRIES } from '@/lib/types/database'
+import { CATEGORIES, COUNTRIES, countryHref } from '@/lib/types/database'
 import { buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
 import { BASE } from '@/lib/seo/config'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
@@ -196,7 +196,7 @@ export default async function BestTrueCrimePodcastsPage() {
             {Object.entries(COUNTRIES).map(([code, name]) => (
               <Link
                 key={code}
-                href={`/country/${code}`}
+                href={countryHref(code)}
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-ink-800 border border-white/[0.08] text-stone-muted hover:text-stone hover:border-white/20 text-sm transition-colors"
               >
                 {name} True Crime <ArrowRight size={13} />

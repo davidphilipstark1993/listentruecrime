@@ -7,7 +7,7 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
-import { PLATFORMS, PLATFORM_SLUGS, platformHref } from '@/lib/types/database'
+import { PLATFORMS, platformFromSlug, platformHref, platformSlug } from '@/lib/types/database'
 import { PLATFORM_SEO, buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
 import { BASE } from '@/lib/seo/config'
 import { HubIntro } from '@/components/seo/hub-intro'
@@ -21,20 +21,11 @@ interface Props {
 
 export const revalidate = 3600
 
-const SLUG_TO_NAME: Record<string, string> = Object.fromEntries(
-  Object.entries(PLATFORM_SLUGS).map(([name, slug]) => [slug, name])
-)
-
-// A platform with a dedicated slug (e.g. "bbc-sounds") must resolve to its
-// canonical path everywhere (platformHref) — this is also what a stray
-// /platform/BBC%20Sounds visit permanently redirects to below.
-
-// Resolves a route param that may be either a kebab-case slug ("bbc-sounds")
-// or a legacy encoded display name ("BBC%20Sounds") to the display name.
+// Resolves a route param — the lowercase slug ("bbc-sounds", "spotify") or a
+// legacy mixed-case / space-encoded name ("BBC%20Sounds", "Spotify") — to the
+// platform's display name. Legacy forms are 301'd to the slug by middleware.ts.
 function resolvePlatform(param: string): string | null {
-  if (SLUG_TO_NAME[param]) return SLUG_TO_NAME[param]
-  const decoded = decodeURIComponent(param)
-  return PLATFORMS.includes(decoded) ? decoded : null
+  return platformFromSlug(decodeURIComponent(param))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -66,9 +57,9 @@ export default async function PlatformPage({ params }: Props) {
 
   if (!name) notFound()
 
-  // Landed on the legacy space-encoded URL for a platform that now has its
-  // own clean slug — send crawlers and visitors to the canonical one.
-  if (PLATFORM_SLUGS[name] && platform !== PLATFORM_SLUGS[name]) {
+  // Backstop for the middleware 301: any non-canonical form of the URL goes
+  // to the lowercase slug.
+  if (platform !== platformSlug(name)) {
     permanentRedirect(platformHref(name))
   }
 
@@ -240,5 +231,5 @@ export default async function PlatformPage({ params }: Props) {
 }
 
 export async function generateStaticParams() {
-  return PLATFORMS.map(p => ({ platform: PLATFORM_SLUGS[p] ?? encodeURIComponent(p) }))
+  return PLATFORMS.map(p => ({ platform: platformSlug(p) }))
 }

@@ -227,8 +227,8 @@ export default async function BlogIndexPage({ searchParams }: Props) {
                     { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
                     { href: '/category/cold-cases', label: 'Cold Case Podcasts' },
                     { href: '/category/investigative', label: 'Investigative Podcasts' },
-                    { href: '/country/UK', label: 'British True Crime' },
-                    { href: '/country/AU', label: 'Australian True Crime' },
+                    { href: '/country/uk', label: 'British True Crime' },
+                    { href: '/country/au', label: 'Australian True Crime' },
                     { href: '/category/fraud-scams', label: 'Fraud & Scam Podcasts' },
                   ].map(link => (
                     <li key={link.href}>

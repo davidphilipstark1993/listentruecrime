@@ -1,8 +1,19 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { sanitizeEnv } from '@/lib/utils'
+import { canonicalHubPath } from '@/lib/seo/hub-paths'
 
 export async function middleware(request: NextRequest) {
+  // Hub URLs are lowercase (/country/us, /platform/spotify). Send legacy
+  // mixed-case and space-encoded versions to the canonical path with a 301
+  // before doing any auth work.
+  const canonicalPath = canonicalHubPath(request.nextUrl.pathname)
+  if (canonicalPath) {
+    const target = request.nextUrl.clone()
+    target.pathname = canonicalPath
+    return NextResponse.redirect(target, 301)
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(

@@ -33,8 +33,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // For geography-overlap categories, differentiate from country pages explicitly
   const geoNote: Record<string, string> = {
-    'uk-crime': ' Editorial picks for quality — for the full list by country see /country/UK.',
-    'australian-crime': ' Editorial picks for quality — for the full list by country see /country/AU.',
+    'uk-crime': ' Editorial picks for quality — for the full list by country see /country/uk.',
+    'australian-crime': ' Editorial picks for quality — for the full list by country see /country/au.',
   }
   const descriptionSuffix = geoNote[slug] ?? ' Expert-reviewed and community-rated.'
   const baseDescription = seo?.intro[0] ?? `Discover the best ${cat.label.toLowerCase()} true crime podcasts. ${cat.description}`
@@ -151,7 +151,7 @@ export default async function CategoryPage({ params }: Props) {
                   This is our <strong className="text-stone">editorial picks</strong> list — curated for quality and binge factor.
                 </span>
                 <Link
-                  href={slug === 'uk-crime' ? '/country/UK' : '/country/AU'}
+                  href={slug === 'uk-crime' ? '/country/uk' : '/country/au'}
                   className="text-crimson hover:underline shrink-0"
                 >
                   See all {slug === 'uk-crime' ? 'UK' : 'Australian'} podcasts →

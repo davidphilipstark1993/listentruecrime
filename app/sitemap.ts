@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { CATEGORIES, COUNTRIES, PLATFORMS, PLATFORM_SLUGS } from '@/lib/types/database'
+import { CATEGORIES, COUNTRIES, PLATFORMS, countryHref, platformHref } from '@/lib/types/database'
 import { getAllPosts, getAllCategories, getAllTags } from '@/lib/blog'
 import { getAllCases } from '@/lib/cases'
 import { getAllAuthors } from '@/lib/authors'
@@ -36,14 +36,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   const countryUrls: MetadataRoute.Sitemap = Object.keys(COUNTRIES).map(code => ({
-    url: `${BASE}/country/${code}`,
+    url: `${BASE}${countryHref(code)}`,
     lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.6,
   }))
 
   const platformUrls: MetadataRoute.Sitemap = PLATFORMS.map(p => ({
-    url: `${BASE}/platform/${PLATFORM_SLUGS[p] ?? encodeURIComponent(p)}`,
+    url: `${BASE}${platformHref(p)}`,
     lastModified: now,
     changeFrequency: 'monthly',
     priority: 0.5,

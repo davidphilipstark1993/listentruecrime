@@ -17,7 +17,7 @@ import { getPros, getCons, getHostDescription, getPodcastPersonSchema } from '@/
 import { formatReviewDate, getReviewMeta } from '@/lib/reviews'
 import { BASE } from '@/lib/seo/config'
 import { countryFlag, formatRelativeDate, scoreBg, cn, stripHtml } from '@/lib/utils'
-import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES, platformHref } from '@/lib/types/database'
+import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES, countryHref, platformHref } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
@@ -773,7 +773,7 @@ export default async function PodcastPage({ params }: Props) {
                 <div className="card p-5">
                   <h3 className="font-serif text-sm text-stone mb-3 uppercase tracking-wide">Region</h3>
                   <Link
-                    href={`/country/${podcast.country}`}
+                    href={countryHref(podcast.country)}
                     className="flex items-center gap-2 text-stone-muted hover:text-stone text-sm transition-colors"
                   >
                     <span>{countryFlag(podcast.country)}</span>

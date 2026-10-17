@@ -366,11 +366,11 @@ export const PLATFORMS = [
   'BBC Sounds',
 ]
 
-// Platform display names that get a clean kebab-case URL (/platform/bbc-sounds)
-// instead of the default encoded one — see app/platform/[platform]/page.tsx.
-// Every multi-word platform needs an entry: space-encoded paths such as
-// /platform/Apple%20Podcasts 404 in production, so they only survive as
-// legacy URLs that redirect to the slug.
+// Multi-word platform display names and their clean kebab-case URL slug
+// (/platform/bbc-sounds). Single-word platforms need no entry: their slug is
+// just the lowercased name (/platform/spotify). Legacy mixed-case and
+// space-encoded URLs (/platform/Spotify, /platform/Apple%20Podcasts) are
+// 301-redirected to the slug by middleware.ts — see lib/seo/hub-paths.ts.
 export const PLATFORM_SLUGS: Record<string, string> = {
   'Apple Podcasts': 'apple-podcasts',
   'Amazon Music': 'amazon-music',
@@ -378,14 +378,31 @@ export const PLATFORM_SLUGS: Record<string, string> = {
   'BBC Sounds': 'bbc-sounds',
 }
 
-/** Canonical path for a platform page — use this rather than building /platform/ URLs by hand. */
-export function platformHref(name: string): string {
-  return PLATFORM_SLUGS[name] ? `/platform/${PLATFORM_SLUGS[name]}` : `/platform/${encodeURIComponent(name)}`
+/** Lowercase URL slug for a platform display name ("Apple Podcasts" → "apple-podcasts"). */
+export function platformSlug(name: string): string {
+  return PLATFORM_SLUGS[name] ?? name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 }
 
-/** Canonical path for a country page — use this rather than building /country/ URLs by hand. */
+/** Resolves a /platform/[param] value — slug, legacy mixed-case or decoded display name — to the display name. */
+export function platformFromSlug(param: string): string | null {
+  const wanted = param.trim().toLowerCase()
+  return PLATFORMS.find(p => platformSlug(p) === wanted || p.toLowerCase() === wanted) ?? null
+}
+
+/** Canonical path for a platform page — use this rather than building /platform/ URLs by hand. */
+export function platformHref(name: string): string {
+  return `/platform/${platformSlug(name)}`
+}
+
+/** Canonical (lowercase) path for a country page — use this rather than building /country/ URLs by hand. */
 export function countryHref(code: string): string {
-  return `/country/${code}`
+  return `/country/${code.toLowerCase()}`
+}
+
+/** Resolves a /country/[param] value ("uk", "UK") to its COUNTRIES key, or null. */
+export function countryFromSlug(param: string): string | null {
+  const code = param.trim().toUpperCase()
+  return COUNTRIES[code] ? code : null
 }
 
 export const COUNTRIES: Record<string, string> = {

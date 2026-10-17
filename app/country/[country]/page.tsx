@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
@@ -7,7 +7,7 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
-import { COUNTRIES } from '@/lib/types/database'
+import { COUNTRIES, countryFromSlug, countryHref } from '@/lib/types/database'
 import { COUNTRY_SEO, buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
 import { BASE } from '@/lib/seo/config'
 import { HubIntro } from '@/components/seo/hub-intro'
@@ -24,9 +24,10 @@ interface Props {
 export const revalidate = 3600
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { country } = await params
-  const name = COUNTRIES[country]
-  if (!name) return {}
+  const { country: param } = await params
+  const country = countryFromSlug(param)
+  const name = country ? COUNTRIES[country] : undefined
+  if (!country || !name) return {}
 
   const seo = COUNTRY_SEO[country]
   const h1 = seo?.h1 ?? `Best ${name} True Crime Podcasts`
@@ -39,16 +40,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `${h1} (${year}) | ListenTrueCrime`,
       description,
-      url: `${BASE}/country/${country}`,
+      url: `${BASE}${countryHref(country)}`,
     },
-    alternates: { canonical: `${BASE}/country/${country}` },
+    alternates: { canonical: `${BASE}${countryHref(country)}` },
   }
 }
 
 export default async function CountryPage({ params }: Props) {
-  const { country } = await params
-  const name = COUNTRIES[country]
-  if (!name) notFound()
+  const { country: param } = await params
+  const country = countryFromSlug(param)
+  const name = country ? COUNTRIES[country] : undefined
+  if (!country || !name) notFound()
+  // Backstop for the middleware 301: /country/UK → /country/uk
+  if (param !== country.toLowerCase()) permanentRedirect(countryHref(country))
 
   const seo = COUNTRY_SEO[country]
   const h1 = seo?.h1 ?? `Best ${name} True Crime Podcasts`
@@ -79,7 +83,7 @@ export default async function CountryPage({ params }: Props) {
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', url: BASE },
     { name: 'Browse', url: `${BASE}/browse` },
-    { name: h1, url: `${BASE}/country/${country}` },
+    { name: h1, url: `${BASE}${countryHref(country)}` },
   ])
   const itemListSchema = podcasts.length > 0 ? buildItemListSchema(
     h1,
@@ -219,5 +223,5 @@ export default async function CountryPage({ params }: Props) {
 }
 
 export async function generateStaticParams() {
-  return Object.keys(COUNTRIES).map(code => ({ country: code }))
+  return Object.keys(COUNTRIES).map(code => ({ country: code.toLowerCase() }))
 }

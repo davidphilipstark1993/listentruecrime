@@ -34,11 +34,11 @@ Our methodology is fully explained at: ${BASE}/how-we-review
 - Investigative podcasts: ${BASE}/category/investigative
 - Serial killer podcasts: ${BASE}/category/serial-killers
 - Binge-worthy podcasts: ${BASE}/category/binge-worthy
-- UK true crime: ${BASE}/country/UK
-- Australian true crime: ${BASE}/country/AU
-- US true crime: ${BASE}/country/US
-- Canadian true crime: ${BASE}/country/CA
-- True crime on Spotify: ${BASE}/platform/Spotify
+- UK true crime: ${BASE}/country/uk
+- Australian true crime: ${BASE}/country/au
+- US true crime: ${BASE}/country/us
+- Canadian true crime: ${BASE}/country/ca
+- True crime on Spotify: ${BASE}/platform/spotify
 - True crime on Apple Podcasts: ${BASE}/platform/apple-podcasts
 
 ## Case deep-dive articles and blog
