@@ -1,23 +1,29 @@
 import type { MetadataRoute } from 'next'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { CATEGORIES, COUNTRIES, PLATFORMS, countryHref, platformHref } from '@/lib/types/database'
-import { getAllPosts, getAllCategories, getAllTags } from '@/lib/blog'
+import { getAllPosts, getAllCategories, getAllTags, getPostsByCategory, getPostsByTag } from '@/lib/blog'
 import { getAllCases } from '@/lib/cases'
 import { getAllAuthors } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
+import { BEST_OF_PAGES } from '@/lib/best-of'
+import {
+  bestOfPodcasts, caseLastModified, categoryPodcasts, countryPodcasts, hubLastModified,
+  latestDate, platformPodcasts, type SitemapPodcast,
+} from '@/lib/seo/sitemap-dates'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createAdminClient()
-  // Shared freshness stamp for collections with no per-item updated_at of
-  // their own (categories/countries/platforms are static lists; podcasts,
-  // blog posts, cases, and newsletters each carry their own real date below).
+  // Freshness stamp for the handful of static pages with no data behind
+  // them. Hubs, cases and blog taxonomies get a real lastmod derived from the
+  // content on them (lib/seo/sitemap-dates.ts).
   const now = new Date()
   const { data: podcasts } = await supabase
     .from('podcasts')
-    .select('slug, updated_at')
+    .select('slug, updated_at, case_types, country, platforms, binge_factor, format_type')
     .eq('is_published', true)
+  const allPodcasts = (podcasts ?? []) as SitemapPodcast[]
 
-  const podcastUrls: MetadataRoute.Sitemap = (podcasts ?? []).map(p => ({
+  const podcastUrls: MetadataRoute.Sitemap = allPodcasts.map(p => ({
     url: `${BASE}/podcasts/${p.slug}`,
     lastModified: p.updated_at ?? new Date(),
     changeFrequency: 'weekly',
@@ -30,29 +36,38 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const categoryUrls: MetadataRoute.Sitemap = CATEGORIES.map(c => ({
     url: `${BASE}/category/${c.slug}`,
-    lastModified: now,
+    lastModified: hubLastModified(categoryPodcasts(c.slug, allPodcasts), allPodcasts),
     changeFrequency: 'weekly',
     priority: 0.7,
   }))
 
   const countryUrls: MetadataRoute.Sitemap = Object.keys(COUNTRIES).map(code => ({
     url: `${BASE}${countryHref(code)}`,
-    lastModified: now,
+    lastModified: hubLastModified(countryPodcasts(code, allPodcasts), allPodcasts),
     changeFrequency: 'weekly',
     priority: 0.6,
   }))
 
   const platformUrls: MetadataRoute.Sitemap = PLATFORMS.map(p => ({
     url: `${BASE}${platformHref(p)}`,
-    lastModified: now,
+    lastModified: hubLastModified(platformPodcasts(p, allPodcasts), allPodcasts),
     changeFrequency: 'monthly',
     priority: 0.5,
+  }))
+
+  // /best/* lists. Pages that canonicalise to a category hub (canonicalOverride)
+  // are left out — only the canonical URL belongs in the sitemap.
+  const bestOfUrls: MetadataRoute.Sitemap = BEST_OF_PAGES.filter(b => !b.canonicalOverride).map(b => ({
+    url: `${BASE}/best/${b.slug}`,
+    lastModified: hubLastModified(bestOfPodcasts(b, allPodcasts), allPodcasts),
+    changeFrequency: 'weekly',
+    priority: 0.7,
   }))
 
   const cases = getAllCases()
   const caseUrls: MetadataRoute.Sitemap = cases.map(c => ({
     url: `${BASE}/cases/${c.slug}`,
-    lastModified: now,
+    lastModified: caseLastModified(c, allPodcasts),
     changeFrequency: 'monthly',
     priority: 0.7,
   }))
@@ -70,14 +85,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const blogCategoryUrls: MetadataRoute.Sitemap = blogCategories.map(c => ({
     url: `${BASE}/blog/category/${c.slug}`,
-    lastModified: now,
+    lastModified: latestDate(getPostsByCategory(c.name).map(post => post.updated ?? post.date)),
     changeFrequency: 'weekly',
     priority: 0.6,
   }))
 
   const blogTagUrls: MetadataRoute.Sitemap = blogTags.map(t => ({
     url: `${BASE}/blog/tag/${t.slug}`,
-    lastModified: now,
+    lastModified: latestDate(getPostsByTag(t.name).map(post => post.updated ?? post.date)),
     changeFrequency: 'weekly',
     priority: 0.5,
   }))
@@ -85,7 +100,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const authors = getAllAuthors()
   const authorUrls: MetadataRoute.Sitemap = authors.map(a => ({
     url: `${BASE}/authors/${a.slug}`,
-    lastModified: now,
+    lastModified: latestDate(blogPosts.filter(post => (post.author ?? 'david-stark') === a.slug).map(post => post.updated ?? post.date)),
     changeFrequency: 'monthly' as const,
     priority: 0.5,
   }))
@@ -124,6 +139,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...categoryUrls,
     ...countryUrls,
     ...platformUrls,
+    ...bestOfUrls,
     ...blogPostUrls,
     ...blogCategoryUrls,
     ...blogTagUrls,
