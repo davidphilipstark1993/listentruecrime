@@ -8,6 +8,10 @@ export interface Author {
   twitter?: string
 }
 
+// TODO(owner): add credentials / professional background to each author's
+// `bio` (what qualifies them to review podcasts) — none are stored in the repo,
+// so none are claimed here.
+
 export const AUTHORS: Record<string, Author> = {
   'david-stark': {
     slug: 'david-stark',

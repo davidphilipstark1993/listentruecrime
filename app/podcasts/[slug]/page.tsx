@@ -13,7 +13,7 @@ import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
 import { getPros, getCons, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
-import { getAuthor } from '@/lib/authors'
+import { formatReviewDate, getReviewMeta } from '@/lib/reviews'
 import { BASE } from '@/lib/seo/config'
 import { countryFlag, formatRelativeDate, scoreBg, cn, stripHtml } from '@/lib/utils'
 import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES, platformHref } from '@/lib/types/database'
@@ -205,6 +205,7 @@ export default async function PodcastPage({ params }: Props) {
   const community = communityRatingOf(stats)
   const editorScore = editorScoreOf(podcast)
   const ratingCount = stats?.rating_count ?? 0
+  const review = getReviewMeta(podcast)
   const year = new Date().getFullYear()
   const pros = getPros(podcast, stats)
   const cons = getCons(podcast, stats)
@@ -292,8 +293,8 @@ export default async function PodcastPage({ params }: Props) {
     },
     author: {
       '@type': 'Person',
-      name: getAuthor('david-stark').name,
-      url: `${BASE}/authors/david-stark`,
+      name: review.author.name,
+      url: `${BASE}/authors/${review.author.slug}`,
     },
     reviewRating: {
       '@type': 'Rating',
@@ -303,8 +304,8 @@ export default async function PodcastPage({ params }: Props) {
       ...(podcast.quick_verdict && { description: podcast.quick_verdict }),
     },
     ...(podcast.newsletter_worthy_summary && { reviewBody: podcast.newsletter_worthy_summary }),
-    datePublished: podcast.created_at?.split('T')[0],
-    dateModified: podcast.updated_at?.split('T')[0],
+    datePublished: review.reviewedAt.split('T')[0],
+    dateModified: (review.updatedAt ?? review.reviewedAt).split('T')[0],
   } : null
 
   const breadcrumbSchema = buildBreadcrumbSchema([
@@ -382,16 +383,16 @@ export default async function PodcastPage({ params }: Props) {
                   True crime podcast review — {year}
                 </p>
                 <p className="text-stone-subtle text-xs mb-3">
-                  Reviewed{' '}
-                  <time dateTime={podcast.created_at?.split('T')[0]}>
-                    {new Date(podcast.created_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
-                  </time>
-                  {podcast.updated_at !== podcast.created_at && (
+                  Reviewed by{' '}
+                  <Link href={`/authors/${review.author.slug}`} className="text-stone-muted hover:text-crimson transition-colors">
+                    {review.author.name}
+                  </Link>{' '}
+                  on{' '}
+                  <time dateTime={review.reviewedAt.split('T')[0]}>{formatReviewDate(review.reviewedAt)}</time>
+                  {review.updatedAt && (
                     <>
-                      {' · Updated '}
-                      <time dateTime={podcast.updated_at?.split('T')[0]}>
-                        {new Date(podcast.updated_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
-                      </time>
+                      {' · Last updated '}
+                      <time dateTime={review.updatedAt.split('T')[0]}>{formatReviewDate(review.updatedAt)}</time>
                     </>
                   )}
                 </p>
@@ -475,7 +476,7 @@ export default async function PodcastPage({ params }: Props) {
                   )}
                   <div className="mt-3 pt-3 border-t border-white/[0.06] flex items-center justify-between">
                     <span className="text-stone-subtle text-xs">
-                      By <Link href="/authors/david-stark" className="text-stone-muted hover:text-crimson transition-colors">David Stark</Link>
+                      By <Link href={`/authors/${review.author.slug}`} className="text-stone-muted hover:text-crimson transition-colors">{review.author.name}</Link>
                     </span>
                     <Link href="/how-we-review" className="text-xs text-stone-subtle hover:text-crimson transition-colors">
                       How we review →

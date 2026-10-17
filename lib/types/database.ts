@@ -41,6 +41,9 @@ export interface Podcast {
   host_name: string | null
   host_bio: string | null
   website_url: string | null
+  // Optional until migration 017 is applied; see lib/reviews.ts for fallbacks
+  reviewed_by?: string | null
+  reviewed_at?: string | null
   created_at: string
   updated_at: string
 }
