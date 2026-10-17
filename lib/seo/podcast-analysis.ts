@@ -4,6 +4,7 @@
 // ============================================================
 
 import type { Podcast, RatingStats } from '@/lib/types/database'
+import { MIN_COMMUNITY_RATINGS } from '@/lib/rating-stats'
 
 export function getPros(podcast: Podcast, stats: RatingStats | null): string[] {
   const pros: string[] = []
@@ -14,7 +15,7 @@ export function getPros(podcast: Podcast, stats: RatingStats | null): string[] {
   }
 
   // Community rating highlights (only when we have meaningful data)
-  if (stats && stats.rating_count >= 3) {
+  if (stats && stats.rating_count >= MIN_COMMUNITY_RATINGS) {
     if ((stats.avg_storytelling ?? 0) >= 8.5) pros.push('Community-rated outstanding for storytelling — one of the best narrative true crime shows')
     else if ((stats.avg_storytelling ?? 0) >= 7.5) pros.push('Consistently praised for strong narrative storytelling')
 
@@ -61,7 +62,7 @@ export function getCons(podcast: Podcast, stats: RatingStats | null): string[] {
   const cons: string[] = []
 
   // Community rating weaknesses (only flag when meaningful sample)
-  if (stats && stats.rating_count >= 5) {
+  if (stats && stats.rating_count >= MIN_COMMUNITY_RATINGS) {
     if ((stats.avg_production ?? 10) < 6) cons.push('Some listeners note inconsistent audio or production quality')
     else if ((stats.avg_production ?? 10) < 7) cons.push('Production quality is functional but not polished — audio varies between episodes')
 
@@ -203,7 +204,7 @@ export function getPodcastNarrative(podcast: Podcast, stats: RatingStats | null)
   }
 
   // Community signal
-  if (stats && stats.rating_count >= 3 && stats.avg_overall) {
+  if (stats && stats.rating_count >= MIN_COMMUNITY_RATINGS && stats.avg_overall) {
     parts.push(
       `Our community has rated it ${stats.avg_overall.toFixed(1)}/10 across ${stats.rating_count} listener ratings${verdictNote ? '' : verdictNote}.`
     )

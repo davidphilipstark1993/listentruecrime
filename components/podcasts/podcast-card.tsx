@@ -2,8 +2,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Headphones, Star } from 'lucide-react'
 import type { Podcast, RatingStats } from '@/lib/types/database'
-import { cn, countryFlag, scoreBg, stripHtml, truncate } from '@/lib/utils'
-import { ratingStatsOf } from '@/lib/rating-stats'
+import { cn, countryFlag, stripHtml } from '@/lib/utils'
+import { communityRatingOf, editorScoreOf, formatScore, NOT_ENOUGH_RATINGS_LABEL } from '@/lib/rating-stats'
 
 interface PodcastCardProps {
   podcast: Podcast & { rating_stats?: RatingStats | null; review_count?: number }
@@ -12,9 +12,8 @@ interface PodcastCardProps {
 }
 
 export function PodcastCard({ podcast, priority = false, className }: PodcastCardProps) {
-  const stats = ratingStatsOf(podcast.rating_stats)
-  const score = stats?.avg_overall
-  const ratingCount = stats?.rating_count ?? 0
+  const community = communityRatingOf(podcast.rating_stats)
+  const editorScore = editorScoreOf(podcast)
   const shortDescription = podcast.short_description ? stripHtml(podcast.short_description) : null
 
   return (
@@ -36,13 +35,6 @@ export function PodcastCard({ podcast, priority = false, className }: PodcastCar
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-ink-700 to-ink-800">
             <Headphones size={32} className="text-ink-500" />
-          </div>
-        )}
-
-        {/* Score badge */}
-        {score && (
-          <div className={cn('absolute top-2 right-2 score-badge text-xs', scoreBg(score))}>
-            {score.toFixed(1)}
           </div>
         )}
 
@@ -79,20 +71,26 @@ export function PodcastCard({ podcast, priority = false, className }: PodcastCar
           </p>
         )}
 
-        {/* Footer */}
-        <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.05]">
-          <div className="flex items-center gap-1 text-stone-subtle text-2xs">
-            <Star size={10} className="text-gold-light" fill="currentColor" />
-            {score ? score.toFixed(1) : '—'}
-            {ratingCount > 0 && (
-              <span className="text-stone-faint">({ratingCount})</span>
+        {/* Footer: editorial score and community rating are shown separately */}
+        <div className="mt-auto pt-2 border-t border-white/[0.05] space-y-1 text-2xs">
+          <div className="flex items-center justify-between text-stone-subtle">
+            <span>Editor score</span>
+            <span className="text-stone-muted font-medium">
+              {editorScore != null ? `${formatScore(editorScore)}/10` : '—'}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-stone-subtle">
+            <span>Community</span>
+            {community ? (
+              <span className="flex items-center gap-1 text-stone-muted">
+                <Star size={10} className="text-gold-light" fill="currentColor" />
+                {community.average.toFixed(1)}
+                <span className="text-stone-faint">({community.count})</span>
+              </span>
+            ) : (
+              <span className="text-stone-faint">{NOT_ENOUGH_RATINGS_LABEL}</span>
             )}
           </div>
-          {podcast.binge_factor && (
-            <span className="text-stone-subtle text-2xs">
-              Binge: <span className="text-stone-muted">{podcast.binge_factor}/10</span>
-            </span>
-          )}
         </div>
       </div>
     </Link>

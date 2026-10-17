@@ -158,7 +158,7 @@ export default async function BestTrueCrimePodcastsPage() {
             <div>
               <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Rankings</p>
               <h2 className="heading-section text-2xl sm:text-3xl">Highest binge factor</h2>
-              <p className="text-stone-muted text-sm mt-1">Ranked by our community's compulsive listenability score</p>
+              <p className="text-stone-muted text-sm mt-1">Ranked by our editor score for compulsive listenability</p>
             </div>
             <Link href="/browse?sort=binge_desc" className="text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
               Full list <ArrowRight size={14} />

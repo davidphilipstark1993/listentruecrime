@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { Star, Headphones, ArrowRight, ChevronDown, ChevronUp, Users, Mic, Play, ThumbsUp, ThumbsDown } from 'lucide-react'
+import { Headphones, ArrowRight, ChevronDown, ChevronUp, Users, Mic, Play, ThumbsUp, ThumbsDown } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
@@ -21,7 +21,7 @@ import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
-import { ratingStatsOf } from '@/lib/rating-stats'
+import { communityRatingOf, editorScoreOf, formatScore, MIN_COMMUNITY_RATINGS, NOT_ENOUGH_RATINGS_LABEL, ratingStatsOf } from '@/lib/rating-stats'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -200,7 +200,11 @@ export default async function PodcastPage({ params }: Props) {
   const whoIsItFor = getWhoIsItFor(podcast)
   const relatedCases = getCasesForPodcast(slug)
   const stats = ratingStatsOf(podcast.rating_stats)
-  const overallScore = stats?.avg_overall
+  // Community figures are only surfaced once enough listeners have rated;
+  // the editorial score is shown separately and always labelled as such.
+  const community = communityRatingOf(stats)
+  const editorScore = editorScoreOf(podcast)
+  const ratingCount = stats?.rating_count ?? 0
   const year = new Date().getFullYear()
   const pros = getPros(podcast, stats)
   const cons = getCons(podcast, stats)
@@ -214,7 +218,7 @@ export default async function PodcastPage({ params }: Props) {
     },
     {
       q: `Is ${podcast.title} worth listening to?`,
-      a: `${podcast.quick_verdict ? `Our editorial verdict is "${podcast.quick_verdict}". ` : ''}${overallScore ? `The community has rated it ${overallScore.toFixed(1)}/10 overall. ` : ''}${podcast.binge_factor ? `It scores ${podcast.binge_factor}/10 on binge factor. ` : ''}${podcast.short_description ?? ''}`,
+      a: `${podcast.quick_verdict ? `Our editorial verdict is "${podcast.quick_verdict}". ` : ''}${editorScore != null ? `Our editor score is ${formatScore(editorScore)}/10. ` : ''}${community ? `The community has rated it ${community.average.toFixed(1)}/10 across ${community.count} ratings. ` : ''}${podcast.short_description ?? ''}`,
     },
     {
       q: `Who is ${podcast.title} for?`,
@@ -242,8 +246,6 @@ export default async function PodcastPage({ params }: Props) {
     },
   ]
 
-  const ratingCount = stats?.rating_count ?? 0
-
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'PodcastSeries',
@@ -265,20 +267,22 @@ export default async function PodcastPage({ params }: Props) {
         target: { '@type': 'EntryPoint', url: podcast.website_url, actionPlatform: ['http://schema.org/DesktopWebPlatform', 'http://schema.org/MobileWebPlatform'] },
       },
     }),
-    // Only emit aggregateRating when there are real community ratings
-    ...(ratingCount >= 1 && overallScore != null && {
+    // AggregateRating describes user ratings only, and only once there are
+    // enough of them. The editorial score lives in the Review schema below.
+    ...(community && {
       aggregateRating: {
         '@type': 'AggregateRating',
-        ratingValue: overallScore,
+        ratingValue: Number(community.average.toFixed(1)),
         bestRating: 10,
         worstRating: 1,
-        ratingCount,
+        ratingCount: community.count,
       },
     }),
   }
 
-  // Editorial review schema — only when we have editorial content
-  const reviewSchema = (podcast.binge_factor != null || podcast.quick_verdict || podcast.newsletter_worthy_summary) ? {
+  // Editorial review schema — only when there is a real editorial score to
+  // report (a verdict alone has no numeric rating to fabricate one from).
+  const reviewSchema = editorScore != null ? {
     '@context': 'https://schema.org',
     '@type': 'Review',
     itemReviewed: {
@@ -293,7 +297,7 @@ export default async function PodcastPage({ params }: Props) {
     },
     reviewRating: {
       '@type': 'Rating',
-      ratingValue: podcast.binge_factor ?? 5,
+      ratingValue: editorScore,
       bestRating: 10,
       worstRating: 1,
       ...(podcast.quick_verdict && { description: podcast.quick_verdict }),
@@ -392,28 +396,39 @@ export default async function PodcastPage({ params }: Props) {
                   )}
                 </p>
 
-                {/* Score row */}
-                <div className="flex items-center gap-4 flex-wrap">
-                  {overallScore && (
+                {/* Score row: editorial score and community rating are separate things */}
+                <div className="flex items-center gap-x-6 gap-y-3 flex-wrap">
+                  {editorScore != null && (
                     <div className="flex items-center gap-2">
-                      <span className={cn('score-badge text-sm', scoreBg(overallScore))}>
-                        {overallScore.toFixed(1)}
+                      <span className={cn('score-badge text-sm', scoreBg(editorScore))}>
+                        {formatScore(editorScore)}
                       </span>
-                      <div className="flex">
-                        {[...Array(10)].map((_, i) => (
-                          <Star
-                            key={i}
-                            size={12}
-                            className={i < Math.round(overallScore) ? 'text-gold-light' : 'text-ink-500'}
-                            fill={i < Math.round(overallScore) ? 'currentColor' : 'none'}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-stone-subtle text-xs">
-                        ({stats?.rating_count} rating{stats?.rating_count === 1 ? '' : 's'})
+                      <span className="text-xs">
+                        <span className="block text-stone-muted font-medium">Editor score</span>
+                        <span className="block text-stone-subtle">out of 10</span>
                       </span>
                     </div>
                   )}
+                  <div className="flex items-center gap-2">
+                    {community ? (
+                      <>
+                        <span className={cn('score-badge text-sm', scoreBg(community.average))}>
+                          {community.average.toFixed(1)}
+                        </span>
+                        <span className="text-xs">
+                          <span className="block text-stone-muted font-medium">Community rating</span>
+                          <span className="block text-stone-subtle">
+                            {community.count} rating{community.count === 1 ? '' : 's'}
+                          </span>
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-xs">
+                        <span className="block text-stone-muted font-medium">Community rating</span>
+                        <span className="block text-stone-subtle">{NOT_ENOUGH_RATINGS_LABEL}</span>
+                      </span>
+                    )}
+                  </div>
                   {podcast.quick_verdict && (
                     <span className={cn(
                       'text-xs font-medium px-2.5 py-1 rounded-full',
@@ -590,23 +605,33 @@ export default async function PodcastPage({ params }: Props) {
                 </div>
               )}
 
-              {/* Community ratings breakdown */}
-              {stats && stats.rating_count > 0 && (
+              {/* Community ratings breakdown — only once there are enough ratings */}
+              {community ? (
                 <div className="card p-6">
                   <div className="flex items-center justify-between mb-5">
                     <h2 className="font-serif text-lg text-stone">Community ratings</h2>
-                    <span className="text-stone-subtle text-xs">{stats.rating_count} rating{stats.rating_count === 1 ? '' : 's'}</span>
+                    <span className="text-stone-subtle text-xs">{community.count} rating{community.count === 1 ? '' : 's'}</span>
                   </div>
                   <div className="space-y-3">
-                    <RatingBar label="Storytelling" value={stats.avg_storytelling} />
-                    <RatingBar label="Research Quality" value={stats.avg_research} />
-                    <RatingBar label="Host Quality" value={stats.avg_host_quality} />
-                    <RatingBar label="Production / Audio" value={stats.avg_production} />
-                    <RatingBar label="Binge Factor" value={stats.avg_binge_factor} />
-                    <RatingBar label="Factual Accuracy" value={stats.avg_factual_accuracy} />
+                    <RatingBar label="Storytelling" value={community.stats.avg_storytelling ?? null} />
+                    <RatingBar label="Research Quality" value={community.stats.avg_research ?? null} />
+                    <RatingBar label="Host Quality" value={community.stats.avg_host_quality ?? null} />
+                    <RatingBar label="Production / Audio" value={community.stats.avg_production ?? null} />
+                    <RatingBar label="Binge Factor" value={community.stats.avg_binge_factor ?? null} />
+                    <RatingBar label="Factual Accuracy" value={community.stats.avg_factual_accuracy ?? null} />
                     <div className="h-px bg-white/[0.06] my-2" />
-                    <RatingBar label="Overall Score" value={stats.avg_overall} />
+                    <RatingBar label="Overall Score" value={community.average} />
                   </div>
+                </div>
+              ) : (
+                <div className="card p-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <h2 className="font-serif text-lg text-stone">Community ratings</h2>
+                    <span className="text-stone-subtle text-xs">{ratingCount} of {MIN_COMMUNITY_RATINGS} needed</span>
+                  </div>
+                  <p className="text-stone-subtle text-sm">
+                    {NOT_ENOUGH_RATINGS_LABEL}. The community average appears once {MIN_COMMUNITY_RATINGS} listeners have rated this podcast.
+                  </p>
                 </div>
               )}
 
@@ -687,7 +712,7 @@ export default async function PodcastPage({ params }: Props) {
                     { label: 'Style', value: podcast.factual_style },
                     { label: 'Episode length', value: podcast.episode_length },
                     { label: 'Episodes', value: podcast.episode_count },
-                    { label: 'Binge factor', value: podcast.binge_factor ? `${podcast.binge_factor}/10` : null },
+                    { label: 'Editor score', value: editorScore != null ? `${formatScore(editorScore)}/10` : null },
                     { label: 'Country', value: podcast.country ? (COUNTRIES[podcast.country] ?? podcast.country) : null },
                   ].filter(i => i.value).map(item => (
                     <div key={item.label} className="flex justify-between gap-3">

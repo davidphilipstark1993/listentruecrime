@@ -15,7 +15,7 @@ import { BASE } from '@/lib/seo/config'
 import { countryFlag, cn, scoreBg, stripHtml } from '@/lib/utils'
 import { COUNTRIES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
-import { ratingStatsOf } from '@/lib/rating-stats'
+import { communityRatingOf, editorScoreOf, formatScore, ratingStatsOf } from '@/lib/rating-stats'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -122,7 +122,8 @@ export default async function PodcastsLikePage({ params }: Props) {
 
   const recommendations = await getRecommendations(podcast)
   const year = new Date().getFullYear()
-  const stats = ratingStatsOf(podcast.rating_stats)
+  const community = communityRatingOf(podcast.rating_stats)
+  const editorScore = editorScoreOf(podcast)
 
   // Only ask a question when this podcast's data actually gives a distinct
   // answer — a generic fallback repeated across 160 pages is filler, not FAQ content.
@@ -217,12 +218,20 @@ export default async function PodcastsLikePage({ params }: Props) {
                 <Link href={`/podcasts/${slug}`} className="hover:text-white transition-colors">
                   <h2 className="font-serif text-lg text-stone font-semibold">{podcast.title}</h2>
                 </Link>
-                {stats?.avg_overall && (
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className={cn('score-badge text-xs', scoreBg(stats.avg_overall))}>
-                      {stats.avg_overall.toFixed(1)}
-                    </span>
-                    <span className="text-stone-subtle text-xs">{stats.rating_count} community rating{stats.rating_count === 1 ? '' : 's'}</span>
+                {(editorScore != null || community) && (
+                  <div className="flex items-center gap-x-4 gap-y-1 mt-1 flex-wrap text-xs text-stone-subtle">
+                    {editorScore != null && (
+                      <span className="flex items-center gap-2">
+                        <span className={cn('score-badge text-xs', scoreBg(editorScore))}>{formatScore(editorScore)}</span>
+                        Editor score
+                      </span>
+                    )}
+                    {community && (
+                      <span className="flex items-center gap-2">
+                        <span className={cn('score-badge text-xs', scoreBg(community.average))}>{community.average.toFixed(1)}</span>
+                        {community.count} community ratings
+                      </span>
+                    )}
                   </div>
                 )}
                 {podcast.short_description && (
@@ -247,7 +256,7 @@ export default async function PodcastsLikePage({ params }: Props) {
 
           {/* Narrative paragraph */}
           {(() => {
-            const narrative = getPodcastNarrative(podcast, stats)
+            const narrative = getPodcastNarrative(podcast, ratingStatsOf(podcast.rating_stats))
             return narrative ? (
               <p className="text-stone-muted text-sm sm:text-base leading-relaxed mb-6 max-w-2xl">
                 {narrative}
@@ -258,9 +267,9 @@ export default async function PodcastsLikePage({ params }: Props) {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {podcast.binge_factor && (
               <div className="card p-4">
-                <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Binge Factor</p>
+                <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Editor score</p>
                 <p className="text-stone font-semibold text-2xl font-serif">{podcast.binge_factor}/10</p>
-                <p className="text-stone-muted text-xs mt-1">Community-rated compulsive listenability</p>
+                <p className="text-stone-muted text-xs mt-1">Our editorial score for compulsive listenability</p>
               </div>
             )}
             {podcast.format_type && (
@@ -348,7 +357,7 @@ export default async function PodcastsLikePage({ params }: Props) {
                     <th className="text-left py-3 pr-4 text-stone-subtle font-medium text-xs uppercase tracking-wider">Podcast</th>
                     <th className="text-left py-3 px-4 text-stone-subtle font-medium text-xs uppercase tracking-wider">Format</th>
                     <th className="text-left py-3 px-4 text-stone-subtle font-medium text-xs uppercase tracking-wider">Country</th>
-                    <th className="text-right py-3 pl-4 text-stone-subtle font-medium text-xs uppercase tracking-wider">Binge</th>
+                    <th className="text-right py-3 pl-4 text-stone-subtle font-medium text-xs uppercase tracking-wider">Editor score</th>
                   </tr>
                 </thead>
                 <tbody>

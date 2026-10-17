@@ -11,7 +11,7 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { BASE, breadcrumbSchema } from '@/lib/seo'
 import { cn, countryFlag, scoreBg } from '@/lib/utils'
 import type { Podcast, RatingStats } from '@/lib/types/database'
-import { ratingStatsOf } from '@/lib/rating-stats'
+import { communityRatingOf, editorScoreOf, formatScore } from '@/lib/rating-stats'
 
 // ── Editor's picks — order = rank ─────────────────────────────────────────────
 const PICKS = [
@@ -124,14 +124,15 @@ export default async function EditorsChoicePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           {picks.map(({ slug, blurb, podcast }, index) => {
             const rank = index + 1
-            const stats = ratingStatsOf(podcast.rating_stats)
-            const score = stats?.avg_overall
+            const community = communityRatingOf(podcast.rating_stats)
+            const score = editorScoreOf(podcast)
 
-            const ratingItems = stats ? [
-              { label: 'Research',    value: stats.avg_research },
-              { label: 'Host',        value: stats.avg_host_quality },
-              { label: 'Production',  value: stats.avg_production },
-              { label: 'Binge factor',value: stats.avg_binge_factor },
+            // Community dimension averages only appear once there are enough ratings
+            const ratingItems = community ? [
+              { label: 'Research',    value: community.stats.avg_research ?? null },
+              { label: 'Host',        value: community.stats.avg_host_quality ?? null },
+              { label: 'Production',  value: community.stats.avg_production ?? null },
+              { label: 'Binge factor',value: community.stats.avg_binge_factor ?? null },
             ] : []
 
             return (
@@ -196,9 +197,12 @@ export default async function EditorsChoicePage() {
                         {/* Score + verdict */}
                         <div className="flex flex-col items-end gap-2 shrink-0">
                           {score != null && (
-                            <span className={cn('score-badge text-sm', scoreBg(score))}>
-                              {score.toFixed(1)}
-                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-2xs text-stone-subtle">Editor score</span>
+                              <span className={cn('score-badge text-sm', scoreBg(score))}>
+                                {formatScore(score)}
+                              </span>
+                            </div>
                           )}
                           {podcast.quick_verdict && (
                             <span className={cn(
@@ -229,7 +233,7 @@ export default async function EditorsChoicePage() {
 
                       {/* Rating mini-bars */}
                       {ratingItems.some(r => r.value != null) && (
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" aria-label="Community ratings">
                           {ratingItems.map(({ label, value }) => value != null ? (
                             <div key={label} className="bg-ink-700/60 rounded-md p-2.5">
                               <p className="text-stone-subtle text-2xs mb-1.5 uppercase tracking-wide">{label}</p>

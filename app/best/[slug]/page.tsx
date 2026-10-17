@@ -1,7 +1,7 @@
 export const revalidate = 3600
 
 import { notFound } from 'next/navigation'
-import { ratingStatsOf } from '@/lib/rating-stats'
+import { communityRatingOf } from '@/lib/rating-stats'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Star, ChevronRight } from 'lucide-react'
@@ -82,13 +82,14 @@ export default async function BestOfPage({ params }: Props) {
     url: `${BASE}/best/${slug}`,
     numberOfItems: podcasts.length,
     itemListElement: podcasts.map((p, i) => {
-      const stats = ratingStatsOf(p.rating_stats)
+      const community = communityRatingOf(p.rating_stats)
       return {
         '@type': 'ListItem',
         position: i + 1,
         name: p.title,
         url: `${BASE}/podcasts/${p.slug}`,
-        ...(stats?.avg_overall ? {
+        // AggregateRating only for shows with enough genuine user ratings
+        ...(community ? {
           item: {
             '@type': 'PodcastSeries',
             name: p.title,
@@ -96,9 +97,10 @@ export default async function BestOfPage({ params }: Props) {
             image: p.image_url,
             aggregateRating: {
               '@type': 'AggregateRating',
-              ratingValue: stats.avg_overall.toFixed(1),
+              ratingValue: community.average.toFixed(1),
               bestRating: '10',
-              ratingCount: stats.rating_count,
+              worstRating: '1',
+              ratingCount: community.count,
             },
           },
         } : {}),

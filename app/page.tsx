@@ -305,10 +305,10 @@ export default async function HomePage() {
           <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 section-divider">
             <div className="flex items-end justify-between mb-8">
               <div>
-                <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Community</p>
+                <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Editorial</p>
                 <h2 className="heading-section text-2xl sm:text-3xl">
                   <Star size={18} className="inline mr-2 text-gold-light mb-0.5" fill="currentColor" />
-                  Highest binge factor
+                  Highest editor scores
                 </h2>
               </div>
               <Link href="/browse?sort=highest_rated" className="text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">

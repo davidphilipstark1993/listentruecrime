@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { ratingStatsOf } from '@/lib/rating-stats'
+import { editorScoreOf, formatScore } from '@/lib/rating-stats'
 
 export const revalidate = 3600
 
@@ -63,7 +63,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
   const supabase = createAdminClient()
   const { data } = await supabase
     .from('podcasts')
-    .select('title, quick_verdict, rating_stats:podcast_rating_stats(avg_overall)')
+    .select('title, quick_verdict, binge_factor')
     .eq('slug', slug)
     .eq('is_published', true)
     .single()
@@ -74,12 +74,15 @@ export async function GET(req: Request, { params }: { params: Promise<{ slug: st
 
   const tier = TIER_COLOURS[data.quick_verdict ?? ''] ?? TIER_COLOURS['Worth a go']
   const title = escapeXml(truncate(data.title ?? slug, 32))
-  const score = ratingStatsOf(data.rating_stats as { avg_overall: number | null }[] | null)?.avg_overall
-  const scoreText = score ? escapeXml(`${Number(score).toFixed(1)}/10`) : ''
+  // The badge carries the editorial score only; a community average built
+  // from a handful of votes shouldn't be embedded on third-party sites.
+  const score = editorScoreOf(data)
+  const scoreText = score != null ? escapeXml(`${formatScore(score)}/10`) : ''
+  const fullScoreText = score != null ? escapeXml(`Editor score ${formatScore(score)}/10`) : ''
 
   const svg = compact
     ? renderCompactBadge(theme, tier, scoreText)
-    : renderFullBadge(theme, tier, title, scoreText)
+    : renderFullBadge(theme, tier, title, fullScoreText)
 
   return new NextResponse(svg, {
     headers: {
