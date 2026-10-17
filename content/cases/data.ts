@@ -28,6 +28,8 @@ export interface CaseData {
   relatedCaseSlugs?: string[]       // optional manual override, in display order;
                                     // omit to fall back to automatic matching
                                     // (shared podcasts, then country/status) in lib/cases.ts
+  // TODO(owner): no case sets publishedDate/updatedDate yet, so sitemap lastmod
+  // falls back to the newest linked podcast's updated_at. Add real dates.
   publishedDate?: string            // ISO date this case page was written — optional;
                                     // enables full Article rich-result eligibility when set
   updatedDate?: string              // ISO date last substantively edited; defaults to publishedDate

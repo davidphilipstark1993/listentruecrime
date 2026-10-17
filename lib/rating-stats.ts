@@ -41,6 +41,10 @@ export function communityRatingOf<T extends Partial<RatingStats>>(
  * The editorial score: the reviewer's own 1–10 score. `binge_factor` is the
  * only numeric editorial score stored on a podcast today (it is also what
  * the Review schema has always used as its ratingValue).
+ *
+ * TODO(owner): binge_factor is one scoring dimension, not an overall score.
+ * Decide whether "Editor score" should stay mapped to it or whether to store
+ * a separate overall editorial score and point this helper at that.
  */
 export function editorScoreOf(podcast: { binge_factor: number | null | undefined }): number | null {
   const score = podcast.binge_factor
