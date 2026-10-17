@@ -96,7 +96,7 @@ export interface Favourite {
   created_at: string
 }
 
-export type NewsletterSubscriberStatus = 'active' | 'unsubscribed' | 'bounced' | 'suppressed'
+export type NewsletterSubscriberStatus = 'pending' | 'active' | 'unsubscribed' | 'bounced' | 'suppressed'
 
 export interface NewsletterSubscriber {
   id: string
