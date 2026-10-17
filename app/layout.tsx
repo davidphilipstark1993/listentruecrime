@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ListenTrueCrime',
+    title: 'ListenTrueCrime — Discover Your Next True Crime Podcast',
     description: 'Discover your next true crime podcast.',
     images: ['/og'],
   },

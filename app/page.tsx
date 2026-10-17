@@ -195,13 +195,7 @@ export default async function HomePage() {
                 Browse Podcasts
                 <ArrowRight size={15} />
               </Link>
-              <div className="flex flex-col sm:flex-row items-center gap-2">
-                <NewsletterForm source="hero" variant="minimal" className="w-64" />
-              </div>
             </div>
-            <p className="text-stone-subtle text-xs mt-3">
-              <span className="text-crimson font-semibold">Free newsletter</span> — 5 podcast picks emailed every Sunday
-            </p>
 
             {/* Social proof */}
             <div className="flex items-center justify-center gap-6 mt-12 text-stone-subtle text-sm">
