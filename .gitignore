@@ -36,3 +36,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# podcast import: source data holds outreach contact details; reports are regenerated
+/scripts/import/data/
+/scripts/import/reports/
