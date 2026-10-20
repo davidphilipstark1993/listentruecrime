@@ -14,12 +14,14 @@ import { PolicyShell } from '@/components/shop/policy-shell'
 //    cancellation right applies. If personalised products (customer-chosen
 //    names/text) are ever added, those items — and only those — fall under the
 //    exemption and the page must say so.
-//  • Owner's instruction: returns go to the supplier and Listen True Crime pays
-//    return postage. Printify itself does not take change-of-mind returns at
-//    its production facilities, so before launch confirm with the chosen print
-//    provider that it will accept them — otherwise the refund (and the unsold
-//    item) falls on Listen True Crime. The address is therefore issued per
-//    request instead of being published here.
+//  • A blanket "no returns" policy is NOT lawful for non-personalised goods sold
+//    online in the UK: the 14-day right to cancel and the Consumer Rights Act
+//    faulty-goods rights cannot be excluded. The lawful way to limit cost is to
+//    make the customer pay return postage for change-of-mind returns (allowed
+//    if stated before purchase — it is on product pages, the basket and here)
+//    and to refund only once the goods are received back.
+//  • Printify does not take change-of-mind returns, so the returns address is
+//    issued per request (it may be the owner's) rather than published here.
 //  • Faulty goods are governed by the Consumer Rights Act 2015 regardless of this page.
 
 export const metadata: Metadata = {
@@ -38,7 +40,7 @@ export default function ReturnsPage() {
         <p className="mt-3">To cancel, tell us clearly — email <a href={`mailto:${email}`}>{email}</a> with your order number. You can also use the model cancellation form, but you do not have to. You then have 14 days to send the goods back.</p>
         <ul className="mt-3">
           <li><strong>Returns address:</strong> contact us first and we will email you the returns address for your order. Items are made and shipped by our UK print supplier, so the address may be theirs rather than ours — please do not post anything back before you have it.</li>
-          <li><strong>Return postage:</strong> we pay it. We will either send you a prepaid label or refund the postage you spend (keep your receipt).</li>
+          <li><strong>Return postage:</strong> if you change your mind, you pay the cost of posting the goods back. We recommend a tracked service, as you are responsible for the goods until they reach us. If the item is faulty, damaged or misprinted, we pay for the return (see below).</li>
           <li>Please return items unworn and unwashed, with any tags, and take reasonable care of them until we receive them. We may reduce a refund if you have handled the goods more than was needed to check them.</li>
         </ul>
       </section>

@@ -71,23 +71,22 @@ Set the first one on Vercel **Preview** only to review the shop without publishi
 
 | Topic | Decision | Where it's applied |
 |---|---|---|
-| Prices | I suggested: **T-shirts £24.99, hoodies £44.99, mug £13.99** (VAT-inclusive; delivery is extra at Printify's real rate) | Seeded in `017_shop.sql`; shown as "coming soon" until a Printify variant is linked; edit per variant in the admin |
+| Prices | I suggested: **T-shirts £24.99, hoodies £44.99, mug £13.99** (no VAT; delivery is extra at Printify's real rate) | Seeded in `017_shop.sql`; shown as "coming soon" until a Printify variant is linked; edit per variant in the admin |
 | Printify currency | **GBP** — no exchange rate needed | Default setting in migration + code |
-| Returns | Go to the supplier; **Listen True Crime pays return postage**. Customers contact us first and we email the returns address (so a wrong supplier address is never published) | `app/shop/returns-and-refunds`, `lib/shop/copy.ts` |
-| Trading status | UK law, **sole trader** (not a Ltd company). Governing law: England and Wales (Scotland/NI customers keep local court rights) | `components/shop/terms-shop-section.tsx` |
-| VAT | Prices are **VAT-inclusive at 20%** and profit figures deduct it | `PRICES_INCLUDE_VAT` in `lib/shop/copy.ts`, `vat_percent` setting |
+| Returns | A blanket "no returns" is not lawful for these goods in the UK (14-day cancellation right; faulty-goods rights can't be excluded). Instead: **customer pays return postage for change-of-mind returns**; we pay for faulty/damaged/misprinted items. Customers contact us first and we email the returns address | `app/shop/returns-and-refunds`, `lib/shop/copy.ts` |
+| Trading status | UK law, **sole trader** trading as Listen True Crime, Station Road, Hessle, HU13 0BG. Governing law: England and Wales (Scotland/NI customers keep local court rights) | `components/shop/terms-shop-section.tsx`, `lib/shop/copy.ts` |
+| VAT | **Not VAT registered**: no VAT is charged or mentioned; VAT % is 0 | `PRICES_INCLUDE_VAT = false` in `lib/shop/copy.ts`, `vat_percent` = 0 |
 | Delivery wording | "**3–5 working days** from dispatch"; production is stated separately | `DELIVERY_ESTIMATE` in `lib/shop/copy.ts` |
 | Mug | **Black, with the company logo.** I renamed it "Listen True Crime Mug" (slug `listen-true-crime-mug`) because the logo, not the Armchair Detective lettering, is the artwork — tell me if you want the old name back | migration seed |
 | Logo | Found `public/logo.png` (1254×1254, opaque black background). I made a **transparent print version**: `assets/shop-artwork/listen-true-crime-logo-transparent.png` | repo |
 
 **Still open / please check**
-- **VAT:** a sole trader may only charge VAT if registered with HMRC (compulsory above £90,000 taxable turnover, or voluntary). If you are **not** registered, set `PRICES_INCLUDE_VAT = false` and VAT % to 0, otherwise you would be charging VAT you can't legally collect. If registered, a **VAT number** must go in the terms (marked `[CONFIRM]`). Please confirm with HMRC/your accountant.
-- **Your name and address** are legally required for a sole trader trading under a business name — placeholders remain in the terms page.
-- **Return postage on change-of-mind returns:** Printify itself does not accept these. Confirm the chosen print provider will take them back; otherwise each such refund is a cost to you.
-- **3–5 days:** Printify production time is separate and, per provider, can be longer than a few days; check the provider's handling time in Printify and adjust the wording if needed.
-- **Print provider and blueprint** per product: I can't pick these without your Printify account. In the Printify catalogue, filter for UK production, then compare price/production time. Likely candidates: a Gildan 5000 or Softstyle tee (black), Gildan 18500 hoodie (black), and an 11oz ceramic black mug. Printify's catalogue "from" prices are roughly €7.66 (tee), €18.77 (hoodie) and €4.29 (mug) before UK-provider differences, so the suggested prices leave a margin after VAT and Stripe fees — but **check them against the real GBP costs** and adjust.
-- **Artwork:** the logo is only 1254 px wide. That prints sharply up to about 8 in on apparel and is fine on a mug, but ask whoever made it for the original vector/high-resolution file for a bigger chest print. The Armchair Detective and slogan T-shirt artwork has not been supplied yet.
-- Privacy-policy placeholders (Printify controller status, transfer safeguard, retention period) and the policy "last updated" dates still need your input — have a solicitor read all four policy texts.
+- **Your full legal name** (sole traders trading under a business name must show it) — placeholder in the terms.
+- **Printify account, print provider and blueprint** per product — filter the catalogue for UK production and compare price/production time. Likely candidates: Gildan 5000 or Softstyle tee (black), Gildan 18500 hoodie (black), 11oz black ceramic mug. Check the suggested prices against the real GBP costs.
+- **Logo:** it was AI-generated (ChatGPT) at 1254 px. Before putting it on products: check it contains nothing resembling someone else's trademark, keep a record of how it was made, and ideally have it re-generated larger or vectorised for big chest prints. Printify will ask you to confirm you have the rights to the artwork.
+- **3–5 working days:** check against each provider's handling time in Printify.
+- **Returns:** the supplier won't take change-of-mind returns, so those come to the address we email the customer; the item is then yours (usually of little resale value).
+- Artwork for the T-shirt and hoodie designs (in progress), privacy-policy placeholders (Printify controller status, transfer safeguard, retention period), policy "last updated" dates, and a solicitor's read of the four policy texts.
 
 Not built, by design: creating Printify products (the admin only *reads* a Printify product you've made), international shipping (one constant in `lib/shop/config.ts`, `SHIPPING_COUNTRIES`, plus a shipping check), subscriber discount codes / referral rewards (the newsletter `source` tag and order table are the hooks).
 

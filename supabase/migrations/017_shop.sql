@@ -94,14 +94,14 @@ create table public.shop_settings (
 
 -- Printify bills this shop in GBP, so no exchange rate is needed
 -- (printify_to_gbp_rate stays NULL; it is only used for non-GBP accounts).
--- vat_percent: prices are VAT-inclusive; 20 is the standard UK rate. Only keep
--- it if you are VAT registered — set it to 0 otherwise (Admin > Shop > Settings).
+-- vat_percent is 0: Listen True Crime is not VAT registered. If that changes,
+-- set it to 20 in Admin > Shop > Settings.
 insert into public.shop_settings (key, value) values
   ('printify_cost_currency', 'GBP'),
   ('printify_to_gbp_rate', null),
   ('stripe_fee_percent', '1.5'),
   ('stripe_fee_fixed_pence', '20'),
-  ('vat_percent', '20');
+  ('vat_percent', '0');
 
 -- ------------------------------------------------------------
 -- Orders
@@ -372,7 +372,7 @@ from public.shop_products p
 cross join (values ('Black', '#0a0a0f', 1)) as c(colour, hex, ord)
 where p.category = 'mugs';
 
--- Suggested selling prices (pence, VAT-inclusive). Delivery is charged on top at
+-- Suggested selling prices (pence; no VAT is charged). Delivery is charged on top at
 -- Printify's real rate. Check each against the actual Printify production cost
 -- for the provider you choose, then adjust in the admin.
 update public.shop_variants v set price_pence = 2499 from public.shop_products p where p.id = v.product_id and p.category = 't-shirts';

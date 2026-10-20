@@ -12,11 +12,14 @@ export const DELIVERY_ESTIMATE: string | null =
   'Estimated delivery: 3–5 working days from dispatch. Items are printed to order, so production happens first and is not included in that estimate.'
 
 /**
- * Prices are shown and charged VAT-inclusive (the UK rule for consumer prices).
- * Flip to false if you are not VAT registered: every "includes VAT" mention
- * disappears. Keep it in step with Admin > Shop > Settings > VAT %.
+ * Listen True Crime is not VAT registered, so no VAT is charged or mentioned in
+ * prices. If you ever register, set this to true, add your VAT number to the
+ * terms, and set Admin > Shop > Settings > VAT % to 20.
  */
-export const PRICES_INCLUDE_VAT = true
+export const PRICES_INCLUDE_VAT = false
+
+export const BUSINESS_NAME = 'Listen True Crime'
+export const BUSINESS_ADDRESS = 'Station Road, Hessle, HU13 0BG'
 
 export const DELIVERY_SUMMARY = [
   'Every item is printed to order, so there are two stages: production, then delivery.',
@@ -25,7 +28,7 @@ export const DELIVERY_SUMMARY = [
 ]
 
 export const RETURNS_SUMMARY = [
-  'Changed your mind? You can cancel within 14 days of receiving your order under the Consumer Contracts Regulations. Contact us first and we will send you the returns address — and we pay the return postage.',
+  'Changed your mind? You can cancel within 14 days of receiving your order. Contact us first and we will send you the returns address. You pay the cost of posting it back.',
   'Faulty, damaged or misprinted items: contact us and we will replace or refund them.',
   'Full details are in our Returns and Refunds Policy.',
 ]
