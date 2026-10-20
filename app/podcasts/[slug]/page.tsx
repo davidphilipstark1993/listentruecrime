@@ -21,7 +21,7 @@ import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
-import { ratingStatsOf } from '@/lib/rating-stats'
+import { ratingStatsOf, MIN_RATINGS_FOR_SCHEMA } from '@/lib/rating-stats'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -265,8 +265,8 @@ export default async function PodcastPage({ params }: Props) {
         target: { '@type': 'EntryPoint', url: podcast.website_url, actionPlatform: ['http://schema.org/DesktopWebPlatform', 'http://schema.org/MobileWebPlatform'] },
       },
     }),
-    // Only emit aggregateRating when there are real community ratings
-    ...(ratingCount >= 1 && overallScore != null && {
+    // Only emit aggregateRating once there is a meaningful number of community ratings
+    ...(ratingCount >= MIN_RATINGS_FOR_SCHEMA && overallScore != null && {
       aggregateRating: {
         '@type': 'AggregateRating',
         ratingValue: overallScore,
@@ -278,7 +278,8 @@ export default async function PodcastPage({ params }: Props) {
   }
 
   // Editorial review schema — only when we have editorial content
-  const reviewSchema = (podcast.binge_factor != null || podcast.quick_verdict || podcast.newsletter_worthy_summary) ? {
+  // A Review needs a real rating, so it is omitted when binge_factor is unset.
+  const reviewSchema = podcast.binge_factor != null ? {
     '@context': 'https://schema.org',
     '@type': 'Review',
     itemReviewed: {
@@ -293,9 +294,10 @@ export default async function PodcastPage({ params }: Props) {
     },
     reviewRating: {
       '@type': 'Rating',
-      ratingValue: podcast.binge_factor ?? 5,
+      ratingValue: podcast.binge_factor,
       bestRating: 10,
       worstRating: 1,
+      name: 'Binge Factor',
       ...(podcast.quick_verdict && { description: podcast.quick_verdict }),
     },
     ...(podcast.newsletter_worthy_summary && { reviewBody: podcast.newsletter_worthy_summary }),

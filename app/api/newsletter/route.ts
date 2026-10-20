@@ -17,6 +17,18 @@ export async function POST(req: Request) {
 
   const supabase = createAdminClient()
 
+  // An address we already hold is never re-processed. Re-running the upsert
+  // below would flip unsubscribed/bounced/suppressed rows back to 'active'
+  // (anyone can type any address into this form), overwrite the original
+  // signup source, and re-send the welcome email each time. The response is
+  // identical either way so the form can't be used to probe the list.
+  const { data: existing } = await supabase
+    .from('newsletter_subscribers')
+    .select('id')
+    .eq('email', email)
+    .maybeSingle()
+  if (existing) return NextResponse.json({ ok: true })
+
   // Save the subscriber first, regardless of provider outcome — a provider
   // sync failure below must never lose the subscriber's own record.
   const { error: upsertError } = await supabase
