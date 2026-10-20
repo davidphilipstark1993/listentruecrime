@@ -22,7 +22,7 @@ The shop is a print-on-demand store at `/shop`: **Stripe Checkout** takes paymen
 ### Complications found (please read)
 
 1. **Printify auto-approves API orders by default.** Their docs say new stores have automatic approval (24 h): an order created through the API is sent to production by itself unless the store's *Order approval* is set to **Manual**. This is the biggest safety issue for "don't spend money during testing". See §4.
-2. **Printify currency.** Printify returns costs in minor units of *its* billing currency (the docs show USD). I did not assume GBP: delivery is converted using an exchange rate you set in **Admin → Shop → Settings**; until it's set (or the currency is GBP) delivery can't be priced and checkout **refuses** rather than guess.
+2. **Printify currency.** Printify returns costs in minor units of *its* billing currency. You confirmed **GBP**, so no conversion is applied (the exchange-rate setting only matters for non-GBP accounts; delivery pricing refuses rather than guess if a non-GBP account has no rate).
 3. **Change-of-mind returns.** Printify does not take these at its production sites. Under UK law you still owe the 14-day right to cancel for non-personalised goods, so you need your **own returns address** and a decision on who pays return postage. The policy drafts contain `[CONFIRM]` markers for this.
 4. **Printify's API can only cancel *unpaid* orders.** A refund in Stripe does not stop a paid Printify order; the admin gets an alert to check Printify.
 5. `npm ci` already fails on this repo (lockfile out of sync with a platform-specific optional dependency; the existing workflows use `npm install` for this reason). Adding `stripe` rewrote `package-lock.json` — expect that diff.
@@ -67,24 +67,36 @@ Set the first one on Vercel **Preview** only to review the shop without publishi
 
 ---
 
-## 3. Decisions I need from you
+## 3. Decisions (answered 20 Oct) and what's still open
 
-1. **Prices** — placeholder products have none (I won't invent them). Set them per variant in the admin.
-2. **Printify billing currency** (and the GBP rate if not GBP).
-3. **Returns address** and who pays return postage; trading name/address, VAT status, governing law → fill the `[CONFIRM]` markers in `app/shop/shipping-policy`, `app/shop/returns-and-refunds`, `components/shop/privacy-shop-section.tsx`, `components/shop/terms-shop-section.tsx`. Please have these reviewed before launch.
-4. **Delivery estimate** wording (`lib/shop/copy.ts → DELIVERY_ESTIMATE`) — left blank so no timing is promised until it is backed by Printify's handling time + carrier transit.
-5. **Mug colour** (black/white/both), **hoodie/tee artwork**, final **logo file**, and the **Printify blueprint/print provider** for each product (UK-based where possible; delivery cost differs by provider).
-6. **Support email** (`SHOP_SUPPORT_EMAIL`, defaults to the SendGrid from-address).
-7. Whether to add **shipping markup** or a free-delivery threshold (currently delivery is passed through at Printify's rate, rounded up to the penny).
+| Topic | Decision | Where it's applied |
+|---|---|---|
+| Prices | I suggested: **T-shirts £24.99, hoodies £44.99, mug £13.99** (VAT-inclusive; delivery is extra at Printify's real rate) | Seeded in `017_shop.sql`; shown as "coming soon" until a Printify variant is linked; edit per variant in the admin |
+| Printify currency | **GBP** — no exchange rate needed | Default setting in migration + code |
+| Returns | Go to the supplier; **Listen True Crime pays return postage**. Customers contact us first and we email the returns address (so a wrong supplier address is never published) | `app/shop/returns-and-refunds`, `lib/shop/copy.ts` |
+| Trading status | UK law, **sole trader** (not a Ltd company). Governing law: England and Wales (Scotland/NI customers keep local court rights) | `components/shop/terms-shop-section.tsx` |
+| VAT | Prices are **VAT-inclusive at 20%** and profit figures deduct it | `PRICES_INCLUDE_VAT` in `lib/shop/copy.ts`, `vat_percent` setting |
+| Delivery wording | "**3–5 working days** from dispatch"; production is stated separately | `DELIVERY_ESTIMATE` in `lib/shop/copy.ts` |
+| Mug | **Black, with the company logo.** I renamed it "Listen True Crime Mug" (slug `listen-true-crime-mug`) because the logo, not the Armchair Detective lettering, is the artwork — tell me if you want the old name back | migration seed |
+| Logo | Found `public/logo.png` (1254×1254, opaque black background). I made a **transparent print version**: `assets/shop-artwork/listen-true-crime-logo-transparent.png` | repo |
 
-Not built, by design: creating Printify products (you asked for approval first — the admin only *reads* a Printify product you've made), international shipping (one constant in `lib/shop/config.ts`, `SHIPPING_COUNTRIES`, plus a shipping check), subscriber discount codes / referral rewards (the newsletter `source` tag and order table are the hooks).
+**Still open / please check**
+- **VAT:** a sole trader may only charge VAT if registered with HMRC (compulsory above £90,000 taxable turnover, or voluntary). If you are **not** registered, set `PRICES_INCLUDE_VAT = false` and VAT % to 0, otherwise you would be charging VAT you can't legally collect. If registered, a **VAT number** must go in the terms (marked `[CONFIRM]`). Please confirm with HMRC/your accountant.
+- **Your name and address** are legally required for a sole trader trading under a business name — placeholders remain in the terms page.
+- **Return postage on change-of-mind returns:** Printify itself does not accept these. Confirm the chosen print provider will take them back; otherwise each such refund is a cost to you.
+- **3–5 days:** Printify production time is separate and, per provider, can be longer than a few days; check the provider's handling time in Printify and adjust the wording if needed.
+- **Print provider and blueprint** per product: I can't pick these without your Printify account. In the Printify catalogue, filter for UK production, then compare price/production time. Likely candidates: a Gildan 5000 or Softstyle tee (black), Gildan 18500 hoodie (black), and an 11oz ceramic black mug. Printify's catalogue "from" prices are roughly €7.66 (tee), €18.77 (hoodie) and €4.29 (mug) before UK-provider differences, so the suggested prices leave a margin after VAT and Stripe fees — but **check them against the real GBP costs** and adjust.
+- **Artwork:** the logo is only 1254 px wide. That prints sharply up to about 8 in on apparel and is fine on a mug, but ask whoever made it for the original vector/high-resolution file for a bigger chest print. The Armchair Detective and slogan T-shirt artwork has not been supplied yet.
+- Privacy-policy placeholders (Printify controller status, transfer safeguard, retention period) and the policy "last updated" dates still need your input — have a solicitor read all four policy texts.
+
+Not built, by design: creating Printify products (the admin only *reads* a Printify product you've made), international shipping (one constant in `lib/shop/config.ts`, `SHIPPING_COUNTRIES`, plus a shipping check), subscriber discount codes / referral rewards (the newsletter `source` tag and order table are the hooks).
 
 ---
 
 ## 4. Launch checklist
 
 ### A. Database
-- [ ] Run `supabase/migrations/017_shop.sql` in the Supabase SQL editor (creates tables + RLS + the 7 placeholder products, all unbuyable).
+- [ ] Run `supabase/migrations/017_shop.sql` in the Supabase SQL editor (creates tables + RLS + the 7 placeholder products with suggested prices, all unbuyable until linked to Printify).
 
 ### B. Printify
 - [ ] Create a Printify account/shop (a **Manual order approval** store — *Settings → Order approval → Manual*). Use a separate empty shop for testing if you can.
@@ -104,7 +116,7 @@ Not built, by design: creating Printify products (you asked for approval first �
 
 ### E. Webhooks & shipping config
 - [ ] After deploying: `PRINTIFY_API_TOKEN=… PRINTIFY_SHOP_ID=… PRINTIFY_WEBHOOK_SECRET=… NEXT_PUBLIC_SITE_URL=… npx tsx scripts/shop/register-printify-webhooks.ts` (once; `--list` shows existing).
-- [ ] Admin → Shop → Settings: Printify currency, GBP rate, Stripe fee, VAT %.
+- [ ] Admin → Shop → Settings: confirm currency GBP, Stripe fee, VAT % (20 only if VAT registered).
 
 ### F. Products
 - [ ] Admin → Shop → Products → open a product → paste its **Printify product id** → *Pull variants from Printify*. Then set each variant's **price**, check images/alt text, size guide (from the supplier chart), tick *not a placeholder*, set visible/featured.

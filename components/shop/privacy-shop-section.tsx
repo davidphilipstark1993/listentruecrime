@@ -7,7 +7,7 @@ export function PrivacyShopSection() {
   return (
     <section id="shop">
       <h2 className="heading-section text-xl text-stone mb-3">Shop orders</h2>
-      <p>If you buy from our shop, we collect and use:</p>
+      <p>If you buy from our shop, we (Listen True Crime, a trading name of a sole trader) collect and use:</p>
       <ul className="space-y-2 list-disc pl-5 mt-3">
         <li><strong className="text-stone">Order details</strong> — your name, email address, phone number (optional), delivery address, what you ordered, and the amount and status of your payment.</li>
         <li><strong className="text-stone">Payment</strong> — handled entirely by Stripe on its own secure page. We never see or store your card number. Stripe tells us whether payment succeeded.</li>

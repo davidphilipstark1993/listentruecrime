@@ -77,7 +77,7 @@ export interface PublicProduct {
   seoTitle: string | null
   seoDescription: string | null
   variants: PublicVariant[]
-  /** Lowest purchasable price, null when nothing is purchasable yet. */
+  /** Lowest listed price (may be a suggested price on a not-yet-buyable product); null when no price is set. */
   fromPricePence: number | null
   purchasable: boolean
   colours: { name: string; hex: string | null }[]

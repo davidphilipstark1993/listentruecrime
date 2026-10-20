@@ -26,7 +26,8 @@ export function toPublicProduct(p: ShopProductRow, variants: ShopVariantRow[]): 
       pricePence: v.price_pence,
       purchasable: isVariantPurchasable(p, v),
     }))
-  const prices = pub.filter(v => v.purchasable && v.pricePence != null).map(v => v.pricePence as number)
+  const prices = pub.filter(v => v.pricePence != null).map(v => v.pricePence as number)
+  const buyable = pub.some(v => v.purchasable)
   const colours: PublicProduct['colours'] = []
   for (const v of pub) if (!colours.some(c => c.name === v.colour)) colours.push({ name: v.colour, hex: v.colourHex })
   const sizes: string[] = []
@@ -50,7 +51,7 @@ export function toPublicProduct(p: ShopProductRow, variants: ShopVariantRow[]): 
     seoDescription: p.seo_description,
     variants: pub,
     fromPricePence: prices.length ? Math.min(...prices) : null,
-    purchasable: prices.length > 0,
+    purchasable: buyable,
     colours,
     sizes,
   }

@@ -26,7 +26,7 @@ const num = (v: string | null | undefined): number | null => {
 export function parseSettings(rows: { key: string; value: string | null }[]): ShopSettings {
   const m = new Map(rows.map(r => [r.key, r.value]))
   return {
-    printifyCostCurrency: (m.get('printify_cost_currency') || 'USD').toUpperCase(),
+    printifyCostCurrency: (m.get('printify_cost_currency') || 'GBP').toUpperCase(),
     printifyToGbpRate: num(m.get('printify_to_gbp_rate')),
     stripeFeePercent: num(m.get('stripe_fee_percent')) ?? 1.5,
     stripeFeeFixedPence: num(m.get('stripe_fee_fixed_pence')) ?? 20,

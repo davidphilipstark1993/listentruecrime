@@ -5,6 +5,7 @@ import { Check, Minus, Plus, ShoppingBag } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { cn } from '@/lib/utils'
 import { MAX_LINE_QUANTITY } from '@/lib/shop/config'
+import { PRICES_INCLUDE_VAT } from '@/lib/shop/copy'
 import { formatGBP } from '@/lib/shop/money'
 import type { PublicProduct } from '@/lib/shop/types'
 import { basket } from './basket-store'
@@ -39,13 +40,13 @@ export function PurchasePanel({ product, compact = false }: { product: PublicPro
       <div>
         {price != null ? (
           <p className="font-serif text-3xl text-stone">
-            {!variant && product.variants.some(v => v.purchasable) && <span className="mr-1 text-base text-stone-subtle">From</span>}
+            {!variant && product.variants.length > 1 && <span className="mr-1 text-base text-stone-subtle">From</span>}
             {formatGBP(price)}
           </p>
         ) : (
           <p className="font-serif text-2xl text-stone-muted">Price to be confirmed</p>
         )}
-        <p className="mt-1 text-xs text-stone-subtle">Prices in GBP. Delivery is calculated at the basket.</p>
+        <p className="mt-1 text-xs text-stone-subtle">Prices in GBP{PRICES_INCLUDE_VAT ? ', including VAT' : ''}. Delivery is calculated at the basket.</p>
       </div>
 
       {showColour && (

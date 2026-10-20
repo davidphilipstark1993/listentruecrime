@@ -14,10 +14,12 @@ import { PolicyShell } from '@/components/shop/policy-shell'
 //    cancellation right applies. If personalised products (customer-chosen
 //    names/text) are ever added, those items — and only those — fall under the
 //    exemption and the page must say so.
-//  • Printify does not accept change-of-mind returns at its production
-//    facilities. We must provide our own UK returns address ([CONFIRM]) and
-//    decide who pays return postage (the law lets us require the customer to,
-//    if we tell them before they buy).
+//  • Owner's instruction: returns go to the supplier and Listen True Crime pays
+//    return postage. Printify itself does not take change-of-mind returns at
+//    its production facilities, so before launch confirm with the chosen print
+//    provider that it will accept them — otherwise the refund (and the unsold
+//    item) falls on Listen True Crime. The address is therefore issued per
+//    request instead of being published here.
 //  • Faulty goods are governed by the Consumer Rights Act 2015 regardless of this page.
 
 export const metadata: Metadata = {
@@ -35,8 +37,8 @@ export default function ReturnsPage() {
         <p>Our products are printed to order from our standard designs. They are not personalised to you, so under the Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013 you can cancel your order for any reason within <strong>14 days of the day you receive your goods</strong>.</p>
         <p className="mt-3">To cancel, tell us clearly — email <a href={`mailto:${email}`}>{email}</a> with your order number. You can also use the model cancellation form, but you do not have to. You then have 14 days to send the goods back.</p>
         <ul className="mt-3">
-          <li>Return address: <strong>[CONFIRM: UK returns address — this must be one you control; Printify&apos;s production sites do not accept change-of-mind returns]</strong>.</li>
-          <li>Return postage: <strong>[CONFIRM: customer pays the cost of returning goods, which UK law permits if stated before purchase — or Listen True Crime pays]</strong>.</li>
+          <li><strong>Returns address:</strong> contact us first and we will email you the returns address for your order. Items are made and shipped by our UK print supplier, so the address may be theirs rather than ours — please do not post anything back before you have it.</li>
+          <li><strong>Return postage:</strong> we pay it. We will either send you a prepaid label or refund the postage you spend (keep your receipt).</li>
           <li>Please return items unworn and unwashed, with any tags, and take reasonable care of them until we receive them. We may reduce a refund if you have handled the goods more than was needed to check them.</li>
         </ul>
       </section>

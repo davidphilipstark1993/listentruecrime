@@ -11,8 +11,9 @@
 -- shop_settings.printify_to_gbp_rate — they are never assumed to be GBP.
 --
 -- Nothing in this file creates or implies a real Printify product: placeholder
--- catalogue rows have printify_product_id / printify_variant_id NULL and a NULL
--- price, which makes them impossible to purchase until an admin links them.
+-- catalogue rows have printify_product_id / printify_variant_id NULL, which makes
+-- them impossible to purchase until an admin links them. Prices seeded below are
+-- suggestions only, editable per variant in /admin/shop/products.
 -- ============================================================
 
 -- ------------------------------------------------------------
@@ -91,15 +92,16 @@ create table public.shop_settings (
   updated_at  timestamptz not null default now()
 );
 
--- Deliberately conservative defaults. printify_to_gbp_rate is NULL on purpose:
--- until it is set (or the Printify currency is GBP) live shipping quotes
--- refuse rather than guess an exchange rate.
+-- Printify bills this shop in GBP, so no exchange rate is needed
+-- (printify_to_gbp_rate stays NULL; it is only used for non-GBP accounts).
+-- vat_percent: prices are VAT-inclusive; 20 is the standard UK rate. Only keep
+-- it if you are VAT registered — set it to 0 otherwise (Admin > Shop > Settings).
 insert into public.shop_settings (key, value) values
-  ('printify_cost_currency', 'USD'),
+  ('printify_cost_currency', 'GBP'),
   ('printify_to_gbp_rate', null),
   ('stripe_fee_percent', '1.5'),
   ('stripe_fee_fixed_pence', '20'),
-  ('vat_percent', '0');
+  ('vat_percent', '20');
 
 -- ------------------------------------------------------------
 -- Orders
@@ -285,7 +287,8 @@ create policy "Admins can read shop_webhook_events"
 -- ------------------------------------------------------------
 -- PLACEHOLDER CATALOGUE
 -- The seven launch products, as clearly-labelled placeholders: no Printify
--- ids, no prices, no supplier costs, no images. They display as "coming soon"
+-- ids, no supplier costs, no images, and only SUGGESTED selling prices (shown
+-- as "coming soon", still unbuyable until a Printify variant is linked). They display as "coming soon"
 -- and cannot be bought. Replace via /admin/shop/products once the Printify
 -- products exist and you have approved them.
 -- ============================================================
@@ -346,15 +349,15 @@ values
    'Listen True Crime Hoodie | True Crime Hoodies UK',
    'The official Listen True Crime logo hoodie in black. Printed to order and delivered across the UK.',
    'PLACEHOLDER — needs the final logo artwork file.'),
-  ('professional-armchair-detective-mug',
-   'Professional Armchair Detective Mug',
+  ('listen-true-crime-mug',
+   'Listen True Crime Mug',
    'mugs',
-   'Ceramic mug for the serious investigator''s brew.',
-   E'Every investigation needs a brew. This mug holds enough tea for a full two-part episode.\n\nCeramic, with the Professional Armchair Detective lettering. Colour (black or white) to be confirmed.',
+   'Black ceramic mug with the Listen True Crime logo.',
+   E'Every investigation needs a brew. This is the one you reach for when the episode is two hours long and the plot has just taken a turn.\n\nA black ceramic mug carrying the Listen True Crime logo: white headphones, red lettering, nothing cheerful about it.',
    true, false, false, true, 70,
-   'Armchair Detective Mug | True Crime Gifts UK',
-   'A ceramic armchair detective mug for true crime fans. Printed to order and delivered across the UK.',
-   'PLACEHOLDER — choose black or white (or both), then link the Printify product.');
+   'Listen True Crime Mug | True Crime Gifts UK',
+   'A black ceramic mug with the Listen True Crime logo. A gift for true crime lovers, printed to order and delivered across the UK.',
+   'PLACEHOLDER — black mug with the company logo (assets/shop-artwork/listen-true-crime-logo-transparent.png). Renamed from "Professional Armchair Detective Mug"; link the Printify product, then set the title back if you prefer.');
 
 -- Placeholder variants: sizes/colours only. No Printify ids, prices or costs.
 insert into public.shop_variants (product_id, colour, colour_hex, size, sort_order)
@@ -366,5 +369,12 @@ where p.category in ('t-shirts', 'hoodies');
 insert into public.shop_variants (product_id, colour, colour_hex, size, sort_order)
 select p.id, c.colour, c.hex, 'One size', c.ord
 from public.shop_products p
-cross join (values ('White', '#f2f2f5', 1), ('Black', '#0a0a0f', 2)) as c(colour, hex, ord)
+cross join (values ('Black', '#0a0a0f', 1)) as c(colour, hex, ord)
 where p.category = 'mugs';
+
+-- Suggested selling prices (pence, VAT-inclusive). Delivery is charged on top at
+-- Printify's real rate. Check each against the actual Printify production cost
+-- for the provider you choose, then adjust in the admin.
+update public.shop_variants v set price_pence = 2499 from public.shop_products p where p.id = v.product_id and p.category = 't-shirts';
+update public.shop_variants v set price_pence = 4499 from public.shop_products p where p.id = v.product_id and p.category = 'hoodies';
+update public.shop_variants v set price_pence = 1399 from public.shop_products p where p.id = v.product_id and p.category = 'mugs';

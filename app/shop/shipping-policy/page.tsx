@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BASE } from '@/lib/seo/config'
 import { supportEmail } from '@/lib/shop/config'
-import { DELIVERY_ESTIMATE } from '@/lib/shop/copy'
+import { DELIVERY_ESTIMATE, PRICES_INCLUDE_VAT } from '@/lib/shop/copy'
 import { PolicyShell } from '@/components/shop/policy-shell'
 
 // DRAFT — for owner / legal review before launch. [CONFIRM: …] markers stand in
@@ -21,19 +21,19 @@ export default function ShippingPolicyPage() {
     <PolicyShell title="Shipping Policy" updated="[CONFIRM: date this policy goes live]">
       <section>
         <h2>Where we deliver</h2>
-        <p>We currently deliver to addresses in the United Kingdom. [CONFIRM: whether Northern Ireland, the Channel Islands, the Isle of Man and the Scottish Highlands and Islands are included — the supplier may exclude some of these.] We plan to add international delivery later.</p>
+        <p>We currently deliver to addresses in the United Kingdom. Some remote destinations (for example the Channel Islands or the Isle of Man) may not be available from our supplier; if your address cannot be served we will say so before you pay. We plan to add international delivery later.</p>
       </section>
       <section>
         <h2>Made to order</h2>
         <p>Everything in the shop is printed to order by our fulfilment partner, Printify, and its network of print providers. Nothing is held in stock, so every order has two stages: production, then delivery.</p>
         {DELIVERY_ESTIMATE
-          ? <p className="mt-3"><strong>Estimated time:</strong> {DELIVERY_ESTIMATE}</p>
+          ? <p className="mt-3"><strong>{DELIVERY_ESTIMATE}</strong></p>
           : <p className="mt-3"><strong>Estimated time:</strong> [CONFIRM: production time plus delivery time, taken from the print provider&apos;s published handling time and carrier service. We will not publish a timing we cannot support.]</p>}
         <p className="mt-3">Estimates are not guarantees. Unless we agree otherwise, we will deliver your order within 30 days of the day you place it, as the law requires.</p>
       </section>
       <section>
         <h2>What delivery costs</h2>
-        <p>Delivery is charged at the actual rate our supplier quotes for the items in your basket, and you will see the exact amount before you pay. It can vary with the products you choose and the number of items. We do not add a handling charge. [CONFIRM: this is the intended policy.]</p>
+        <p>Delivery is charged at the actual rate our supplier quotes for the items in your basket, and you will see the exact amount before you pay. It can vary with the products you choose and the number of items. We do not add a handling charge.</p>
       </section>
       <section>
         <h2>Several parcels</h2>
@@ -45,7 +45,7 @@ export default function ShippingPolicyPage() {
       </section>
       <section>
         <h2>Customs and taxes</h2>
-        <p>Delivery within the UK has no customs charges. [CONFIRM: VAT status and whether prices include VAT.]</p>
+        <p>Delivery within the UK has no customs charges. {PRICES_INCLUDE_VAT ? 'Prices include VAT.' : ''}</p>
       </section>
       <section>
         <h2>Incorrect addresses</h2>

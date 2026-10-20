@@ -63,10 +63,17 @@ describe('toPublicProduct', () => {
     expect(pub.fromPricePence).toBeNull()
     expect(JSON.stringify(pub)).not.toMatch(/printify|cost/i)
   })
-  it('computes the from-price over purchasable variants only', () => {
+  it('shows the lowest listed price, but only buyable variants make the product purchasable', () => {
     const pub = toPublicProduct(product(), [variant({ id: 'a', price_pence: 3000 }), variant({ id: 'b', size: 'L', price_pence: 2500 }), variant({ id: 'c', size: 'S', price_pence: 1000, printify_variant_id: null })])
-    expect(pub.fromPricePence).toBe(2500)
+    expect(pub.fromPricePence).toBe(1000)
+    expect(pub.purchasable).toBe(true)
+    expect(pub.variants.find(v => v.id === 'c')?.purchasable).toBe(false)
     expect(pub.sizes).toEqual(['M', 'L', 'S'])
+  })
+  it('a suggested price on a placeholder is displayed but cannot be bought', () => {
+    const pub = toPublicProduct(product({ printify_product_id: null }), [variant({ printify_variant_id: null, price_pence: 2499 })])
+    expect(pub.fromPricePence).toBe(2499)
+    expect(pub.purchasable).toBe(false)
   })
 })
 

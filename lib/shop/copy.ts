@@ -2,12 +2,21 @@
 // confirm. Nothing here is a promise until the [CONFIRM] values are filled in.
 
 /**
- * Delivery estimate shown on product pages and the basket. Leave null until it
- * is backed by Printify's handling_time for the chosen print provider plus the
- * carrier's transit time (e.g. "3–5 working days to dispatch, then 2–3 working
- * days delivery"). While null, the UI makes no timing promise.
+ * Delivery estimate shown on product pages, the basket and the shipping policy.
+ * Set to 3–5 working days by the owner. It is worded as delivery time FROM
+ * DISPATCH, with production called out separately, so it never promises more
+ * than the supplier can support. Check it against the print provider's handling
+ * time in Printify before launch, and update it if a provider is slower.
  */
-export const DELIVERY_ESTIMATE: string | null = null
+export const DELIVERY_ESTIMATE: string | null =
+  'Estimated delivery: 3–5 working days from dispatch. Items are printed to order, so production happens first and is not included in that estimate.'
+
+/**
+ * Prices are shown and charged VAT-inclusive (the UK rule for consumer prices).
+ * Flip to false if you are not VAT registered: every "includes VAT" mention
+ * disappears. Keep it in step with Admin > Shop > Settings > VAT %.
+ */
+export const PRICES_INCLUDE_VAT = true
 
 export const DELIVERY_SUMMARY = [
   'Every item is printed to order, so there are two stages: production, then delivery.',
@@ -16,7 +25,7 @@ export const DELIVERY_SUMMARY = [
 ]
 
 export const RETURNS_SUMMARY = [
-  'Made-to-order items printed with a standard design are covered by your normal 14-day cancellation right under the Consumer Contracts Regulations. [CONFIRM: returns address and process]',
+  'Changed your mind? You can cancel within 14 days of receiving your order under the Consumer Contracts Regulations. Contact us first and we will send you the returns address — and we pay the return postage.',
   'Faulty, damaged or misprinted items: contact us and we will replace or refund them.',
   'Full details are in our Returns and Refunds Policy.',
 ]
