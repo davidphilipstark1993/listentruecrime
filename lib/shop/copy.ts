@@ -3,13 +3,13 @@
 
 /**
  * Delivery estimate shown on product pages, the basket and the shipping policy.
- * Set to 3–5 working days by the owner. It is worded as delivery time FROM
- * DISPATCH, with production called out separately, so it never promises more
- * than the supplier can support. Check it against the print provider's handling
- * time in Printify before launch, and update it if a provider is slower.
+ * 3–5 working days is the owner's delivery figure; Printify's catalogue lists a
+ * 10-day handling (production) time for the UK print providers checked on
+ * 20 Oct 2026, so production is stated separately rather than hidden. Re-check
+ * the handling time for whichever provider you choose and update this line.
  */
 export const DELIVERY_ESTIMATE: string | null =
-  'Estimated delivery: 3–5 working days from dispatch. Items are printed to order, so production happens first and is not included in that estimate.'
+  'Printed to order: allow up to 10 days for production, then an estimated 3–5 working days for delivery once dispatched.'
 
 /**
  * Listen True Crime is not VAT registered, so no VAT is charged or mentioned in

@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/supabase/admin-auth'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { getProduct, printifyConfigured, PrintifyError } from '@/lib/shop/printify'
+import { getPrintProvider, getProduct, printifyConfigured, PrintifyError } from '@/lib/shop/printify'
 import { importVariants } from '@/lib/shop/printify-import'
 import { logEvent } from '@/lib/shop/orders'
 
@@ -61,7 +61,20 @@ export async function POST(req: Request, { params }: Props) {
     images: [...((prod?.images ?? []) as unknown[]), ...newImages],
   }).eq('id', id)
 
+  // Warn when the chosen print provider is not UK-based: longer delivery, higher
+  // shipping and possible import charges for UK customers.
+  let warning: string | null = null
+  if (remote.print_provider_id) {
+    try {
+      const provider = await getPrintProvider(remote.print_provider_id)
+      const country = provider.location?.country
+      if (country && country !== 'GB') {
+        warning = `This product is made by "${provider.title}" in ${provider.location?.city ?? country} (${country}), not the UK. Delivery will be slower and dearer, and UK customers may face import charges. Consider switching the print provider in Printify to a UK one, then sync again (variant ids change when the provider changes).`
+      }
+    } catch { /* advisory only */ }
+  }
+
   await logEvent(null, 'info', 'admin.printify_sync', `Linked product ${id} to Printify ${remote.id}`, { created, updated })
   revalidatePath('/shop', 'layout')
-  return NextResponse.json({ ok: true, printifyTitle: remote.title, created, updated, images: newImages.length })
+  return NextResponse.json({ ok: true, printifyTitle: remote.title, created, updated, images: newImages.length, warning })
 }

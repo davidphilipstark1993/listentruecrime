@@ -92,13 +92,14 @@ create table public.shop_settings (
   updated_at  timestamptz not null default now()
 );
 
--- Printify bills this shop in GBP, so no exchange rate is needed
--- (printify_to_gbp_rate stays NULL; it is only used for non-GBP accounts).
--- vat_percent is 0: Listen True Crime is not VAT registered. If that changes,
--- set it to 20 in Admin > Shop > Settings.
+-- Printify's API reports every cost and shipping rate in USD (verified against
+-- the live API for this shop), so the shop converts to GBP with this rate. 0.78
+-- is the mid-market rate (~0.75) plus a buffer for card FX fees and drift; adjust
+-- it in Admin > Shop > Settings. Delivery quotes are rounded UP to the penny.
+-- vat_percent is 0: Listen True Crime is not VAT registered.
 insert into public.shop_settings (key, value) values
-  ('printify_cost_currency', 'GBP'),
-  ('printify_to_gbp_rate', null),
+  ('printify_cost_currency', 'USD'),
+  ('printify_to_gbp_rate', '0.78'),
   ('stripe_fee_percent', '1.5'),
   ('stripe_fee_fixed_pence', '20'),
   ('vat_percent', '0');

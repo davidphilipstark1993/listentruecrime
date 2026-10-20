@@ -115,6 +115,7 @@ export function ShopProductForm({ product, variants }: { product: ShopProductRow
       const data = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(data.error ?? 'Sync failed')
       toast.success(`Linked "${data.printifyTitle}": ${data.created} variants added, ${data.updated} updated, ${data.images} images`)
+      if (data.warning) toast(data.warning, { duration: 20000, icon: '⚠️' })
       router.refresh()
     } catch (e) { toast.error(e instanceof Error ? e.message : 'Sync failed') } finally { setSyncing(false) }
   }

@@ -22,13 +22,15 @@ The shop is a print-on-demand store at `/shop`: **Stripe Checkout** takes paymen
 ### Complications found (please read)
 
 1. **Printify auto-approves API orders by default.** Their docs say new stores have automatic approval (24 h): an order created through the API is sent to production by itself unless the store's *Order approval* is set to **Manual**. This is the biggest safety issue for "don't spend money during testing". See §4.
-2. **Printify currency.** Printify returns costs in minor units of *its* billing currency. You confirmed **GBP**, so no conversion is applied (the exchange-rate setting only matters for non-GBP accounts; delivery pricing refuses rather than guess if a non-GBP account has no rate).
+2. **Printify currency (verified on the live API, 20 Oct 2026):** costs and shipping are returned in **USD**, whatever card you pay with, so the shop converts to GBP with a rate in **Admin → Shop → Settings** (seeded at 0.78 = mid-market ~0.75 plus a buffer for card FX fees). Delivery is rounded up to the penny. If a non-GBP rate is missing, delivery can't be priced and checkout refuses.
 3. **Change-of-mind returns.** Printify does not take these at its production sites. Under UK law you still owe the 14-day right to cancel for non-personalised goods, so you need your **own returns address** and a decision on who pays return postage. The policy drafts contain `[CONFIRM]` markers for this.
 4. **Printify's API can only cancel *unpaid* orders.** A refund in Stripe does not stop a paid Printify order; the admin gets an alert to check Printify.
 5. `npm ci` already fails on this repo (lockfile out of sync with a platform-specific optional dependency; the existing workflows use `npm install` for this reason). Adding `stripe` rewrote `package-lock.json` — expect that diff.
 6. `next@14.2.5` triggers npm's "security vulnerability" deprecation notice. Pre-existing, but worth upgrading now the site will take payments.
 7. `adminNotify.ts`'s own comment says SendGrid "silently no-ops in this project's production/CI env". The shop's alerts and customer emails depend on a working provider — verify one (see checklist).
-8. Shipping quote needs a Printify endpoint (`POST /shops/{id}/orders/shipping.json`) whose `address_to` requirements I couldn't confirm from the docs. I send `{country}` only. **If Printify demands more, this is the first thing that will fail in testing** and the quote will show "could not work out delivery" (checkout stays safely closed).
+8. **Shipping quote — verified.** `POST /shops/{id}/orders/shipping.json` works with only `{country: "GB"}` and returns `{standard: <USD cents>}` (tested read-only against your shop).
+9. **Your existing Printify product uses a US provider.** "Listen True Crime Podcast T-Shirt" (Comfort Colors, blueprint 706) is made by *Printify Choice* in **Miami**: UK delivery from there is about $10.39 for one tee, slower, and may attract import charges. The same blueprint is offered by the UK provider **Shirt Monkey** (Winsford) with about $3.59 UK shipping (+$1.99 per extra item); other UK providers: Print Clever (Swindon, Gildan tees/hoodie), T Shirt and Sons (Westbury, tees/hoodie), Harrier (Newton Abbot, black 11oz mug). Printify lists a **10-day handling time** for all of them, so the delivery wording now says production can take up to 10 days. Switching provider in Printify changes the variant ids — do it before linking the product here. The admin sync now warns when a product's provider is outside the UK.
+10. **Printify webhooks are not registered yet** (none exist on the shop) and the shop currently has no orders. Order approval can't be read via the API — set it to Manual in Printify settings.
 
 ---
 
@@ -72,11 +74,11 @@ Set the first one on Vercel **Preview** only to review the shop without publishi
 | Topic | Decision | Where it's applied |
 |---|---|---|
 | Prices | I suggested: **T-shirts £24.99, hoodies £44.99, mug £13.99** (no VAT; delivery is extra at Printify's real rate) | Seeded in `017_shop.sql`; shown as "coming soon" until a Printify variant is linked; edit per variant in the admin |
-| Printify currency | **GBP** — no exchange rate needed | Default setting in migration + code |
+| Printify currency | You said GBP, but the API reports **USD**; converted at 0.78 (editable) | `shop_settings` seeded in migration |
 | Returns | A blanket "no returns" is not lawful for these goods in the UK (14-day cancellation right; faulty-goods rights can't be excluded). Instead: **customer pays return postage for change-of-mind returns**; we pay for faulty/damaged/misprinted items. Customers contact us first and we email the returns address | `app/shop/returns-and-refunds`, `lib/shop/copy.ts` |
 | Trading status | UK law, **sole trader** trading as Listen True Crime, Station Road, Hessle, HU13 0BG. Governing law: England and Wales (Scotland/NI customers keep local court rights) | `components/shop/terms-shop-section.tsx`, `lib/shop/copy.ts` |
 | VAT | **Not VAT registered**: no VAT is charged or mentioned; VAT % is 0 | `PRICES_INCLUDE_VAT = false` in `lib/shop/copy.ts`, `vat_percent` = 0 |
-| Delivery wording | "**3–5 working days** from dispatch"; production is stated separately | `DELIVERY_ESTIMATE` in `lib/shop/copy.ts` |
+| Delivery wording | "**3–5 working days** from dispatch" plus up to 10 days production (Printify's listed handling time) | `DELIVERY_ESTIMATE` in `lib/shop/copy.ts` |
 | Mug | **Black, with the company logo.** I renamed it "Listen True Crime Mug" (slug `listen-true-crime-mug`) because the logo, not the Armchair Detective lettering, is the artwork — tell me if you want the old name back | migration seed |
 | Logo | Found `public/logo.png` (1254×1254, opaque black background). I made a **transparent print version**: `assets/shop-artwork/listen-true-crime-logo-transparent.png` | repo |
 

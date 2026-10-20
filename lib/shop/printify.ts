@@ -175,3 +175,6 @@ export const sendToProduction = (orderId: string) =>
 
 export const createWebhook = (topic: string, url: string, secret: string) =>
   request<{ id: string }>('POST', `/shops/${creds().shopId}/webhooks.json`, { topic, url, secret })
+
+export interface PrintifyProvider { id: number; title: string; location?: { country?: string; city?: string } }
+export const getPrintProvider = (id: number) => request<PrintifyProvider>('GET', `/catalog/print_providers/${id}.json`)
