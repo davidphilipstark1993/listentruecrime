@@ -66,7 +66,7 @@ export function ExitIntent() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Something went wrong')
       setDone(true)
-      toast.success('You\'re subscribed!')
+      toast.success('Check your inbox to confirm!')
       setTimeout(dismiss, 2000)
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Something went wrong')
@@ -101,8 +101,8 @@ export function ExitIntent() {
         {done ? (
           <div className="text-center py-4">
             <div className="text-3xl mb-3">🎧</div>
-            <p className="text-stone font-semibold text-lg mb-1">You're in!</p>
-            <p className="text-stone-muted text-sm">Your weekly true crime briefing starts now.</p>
+            <p className="text-stone font-semibold text-lg mb-1">Check your inbox</p>
+            <p className="text-stone-muted text-sm">Click the confirmation link we just emailed you to start your weekly briefing.</p>
           </div>
         ) : (
           <>

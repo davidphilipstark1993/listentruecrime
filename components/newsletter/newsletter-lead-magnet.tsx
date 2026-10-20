@@ -34,7 +34,7 @@ export function NewsletterLeadMagnet({
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Something went wrong')
       setDone(true)
-      toast.success('Check your inbox!')
+      toast.success('Check your inbox to confirm!')
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Something went wrong')
     } finally {
@@ -49,8 +49,8 @@ export function NewsletterLeadMagnet({
           <Check size={18} className="text-emerald-400" />
         </div>
         <div>
-          <p className="text-emerald-400 font-medium text-sm">You're subscribed — check your inbox.</p>
-          <p className="text-stone-subtle text-xs mt-0.5">Your weekly true crime briefing starts now.</p>
+          <p className="text-emerald-400 font-medium text-sm">Almost there: check your inbox to confirm.</p>
+          <p className="text-stone-subtle text-xs mt-0.5">Click the link we emailed you and your Top 10 list follows.</p>
         </div>
       </div>
     )
