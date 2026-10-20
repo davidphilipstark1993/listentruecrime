@@ -4,6 +4,7 @@ import { Mail } from 'lucide-react'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { BASE } from '@/lib/seo/config'
+import { shopEnabled, supportEmail } from '@/lib/shop/config'
 
 // [CONFIRM: contact email] — no contact-form backend exists in the codebase,
 // so this uses a plain mailto link per the audit brief. If you'd rather have
@@ -50,6 +51,14 @@ export default function ContactPage() {
             >
               Email {CONTACT_EMAIL}
             </a>
+            {shopEnabled() && (
+              <p className="text-stone-muted text-xs max-w-sm">
+                <strong className="text-stone">Shop orders:</strong> include your order number and email{' '}
+                <a href={`mailto:${supportEmail()}`} className="text-crimson hover:underline">{supportEmail()}</a>.
+                See <Link href="/shop/shipping-policy" className="text-crimson hover:underline">shipping</Link> and{' '}
+                <Link href="/shop/returns-and-refunds" className="text-crimson hover:underline">returns</Link>.
+              </p>
+            )}
             <p className="text-stone-subtle text-xs max-w-sm">
               We aim to reply within a few business days. For privacy or data requests, see our{' '}
               <Link href="/privacy" className="text-crimson hover:underline">Privacy Policy</Link> for what to include.

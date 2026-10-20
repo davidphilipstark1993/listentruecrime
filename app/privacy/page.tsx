@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { BASE } from '@/lib/seo/config'
+import { shopEnabled } from '@/lib/shop/config'
+import { PrivacyShopSection } from '@/components/shop/privacy-shop-section'
 
 // DRAFT — pending legal review. Content describes only what the codebase
 // actually does (see the audit that produced this page); [CONFIRM: ...]
@@ -79,9 +81,11 @@ export default function PrivacyPage() {
                 Analytics. Once you arrive on the retailer&apos;s site (for example Amazon), its own privacy and cookie
                 policies apply, and it may use cookies to attribute your purchase to us.
               </p>
-              <p className="mt-3">
-                We do not collect payment information — you never buy anything on this site itself.
-              </p>
+              {!shopEnabled() && (
+                <p className="mt-3">
+                  We do not collect payment information — you never buy anything on this site itself.
+                </p>
+              )}
             </section>
 
             <section>
@@ -127,6 +131,8 @@ export default function PrivacyPage() {
                 legal obligation.
               </p>
             </section>
+
+            {shopEnabled() && <PrivacyShopSection />}
 
             <section>
               <h2 className="heading-section text-xl text-stone mb-3">Your rights</h2>
