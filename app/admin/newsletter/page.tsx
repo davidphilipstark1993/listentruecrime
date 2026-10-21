@@ -4,6 +4,7 @@ import { DeleteSubscriberButton } from '@/components/admin/delete-subscriber-but
 import type { NewsletterSubscriberStatus } from '@/lib/types/database'
 
 const STATUS_COLOR: Record<NewsletterSubscriberStatus, string> = {
+  pending: 'bg-sky-900/40 text-sky-400',
   active: 'bg-emerald-900/40 text-emerald-400',
   unsubscribed: 'bg-white/5 text-stone-subtle',
   bounced: 'bg-amber-900/40 text-amber-400',

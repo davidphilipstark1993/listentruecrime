@@ -19,7 +19,7 @@ const pillars = [
   {
     icon: Star,
     title: 'Community ratings',
-    body: 'Rate podcasts across 7 dimensions. Our aggregate scores reflect thousands of listens from people who actually care about quality.',
+    body: 'Rate podcasts across six dimensions plus an overall score. Community ratings are shown separately from our editorial verdict, so neither replaces the other.',
   },
   {
     icon: Users,
@@ -61,14 +61,13 @@ export default function AboutPage() {
                 Reddit threads, and algorithmic recommendations that prioritise engagement over quality.
               </p>
               <p>
-                ListenTrueCrime cuts through that. Every podcast in our database is reviewed
-                across consistent dimensions — storytelling, research, host quality, production,
-                factual accuracy, and binge-worthiness. We give you a binge factor score,
-                a quick verdict, and enough context to know whether a podcast is right for you.
+                ListenTrueCrime cuts through that. Every podcast in our database gets an editorial verdict and a Binge Factor
+                score, plus enough context to know whether it is right for you.
               </p>
               <p>
-                Community ratings add another layer. When thousands of real listeners rate the
-                same dimensions, patterns emerge that no single reviewer can capture alone.
+                Community ratings add another layer. Registered listeners can rate each podcast on six dimensions
+                (storytelling, research, host quality, production, binge factor and factual accuracy),
+                which adds a second perspective alongside our own.
               </p>
             </div>
           </div>
@@ -94,11 +93,11 @@ export default function AboutPage() {
           <h2 className="heading-section text-2xl sm:text-3xl mb-6">How ratings work</h2>
           <div className="card p-6 sm:p-8 space-y-4 text-stone-muted text-sm leading-relaxed">
             <p>
-              Community members rate podcasts across 7 dimensions on a 1–10 scale.
-              These are averaged to produce the scores you see on each podcast page.
+              Community members rate podcasts across six dimensions on a 1–10 scale, plus an overall score.
+              These are averaged to produce the community scores you see on each podcast page.
             </p>
             <div className="grid sm:grid-cols-2 gap-3">
-              {['Storytelling', 'Research Quality', 'Host Quality', 'Production / Audio', 'Binge Factor', 'Factual Accuracy', 'Overall Score'].map(dim => (
+              {['Storytelling', 'Research Quality', 'Host Quality', 'Production / Audio', 'Binge Factor', 'Factual Accuracy'].map(dim => (
                 <div key={dim} className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-crimson flex-shrink-0" />
                   <span className="text-stone text-xs">{dim}</span>
@@ -107,8 +106,7 @@ export default function AboutPage() {
             </div>
             <p>
               The <strong className="text-stone">Binge Factor</strong> specifically measures how compulsively listenable a podcast is —
-              whether you find yourself hitting "next episode" immediately. It's the metric we weight most heavily
-              in recommendations.
+              whether you find yourself hitting "next episode" immediately. It is also the one score we assign editorially to every podcast.
             </p>
             <p>
               Reviews are moderated before appearing publicly to keep the community constructive and on-topic.
@@ -123,7 +121,7 @@ export default function AboutPage() {
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="heading-section text-2xl sm:text-3xl mb-4">Start exploring</h2>
           <p className="text-stone-muted mb-8">
-            Over 100 reviewed podcasts. Filters for case type, country, platform, and more.
+            Hundreds of podcasts. Filters for case type, country, platform, and more.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
             <Link href="/browse" className="btn-primary px-6 py-3">Browse all podcasts</Link>

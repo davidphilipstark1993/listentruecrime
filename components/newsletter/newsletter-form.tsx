@@ -37,7 +37,7 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Something went wrong')
       setDone(true)
-      toast.success('You\'re subscribed!')
+      toast.success('Check your inbox to confirm!')
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Something went wrong')
     } finally {
@@ -47,7 +47,7 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
 
   const consentNote = (
     <p className="text-2xs text-stone-subtle mt-2 leading-snug">
-      By subscribing you agree to receive the weekly ListenTrueCrime newsletter. See our{' '}
+      By subscribing you agree to receive the weekly ListenTrueCrime newsletter. We will email you a link to confirm. See our{' '}
       <Link href="/privacy" className="underline hover:text-stone">Privacy Policy</Link>. Unsubscribe anytime.
     </p>
   )
@@ -60,7 +60,7 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
             <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </div>
-        You're in! Check your inbox.
+        Almost there: check your inbox and click the confirmation link.
       </div>
     )
   }

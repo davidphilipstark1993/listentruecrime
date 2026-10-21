@@ -1,9 +1,24 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { sendLeadMagnetEmail } from '@/lib/email/lead-magnet'
-import { sendSendGridWelcomeEmail } from '@/lib/email/sendgrid'
-import { subscribeSendGrid } from '@/lib/email/sendgrid-contacts'
+import { sendConfirmationEmail } from '@/lib/email/newsletter-confirm'
+import {
+  CONSENT_TEXT,
+  MAX_SIGNUPS_PER_IP_PER_HOUR,
+  canResendConfirmation,
+  clientIp,
+  confirmUrl,
+  hashIp,
+  newConfirmToken,
+} from '@/lib/newsletter/optin'
 
+// Double opt-in: this endpoint only records a *pending* subscriber and emails a
+// confirmation link. The subscriber becomes 'active' (and is synced to the
+// provider / welcomed) in /api/newsletter/confirm.
+//
+// The response is identical whatever happens to the address (new, pending,
+// already subscribed, unsubscribed, throttled), so the form can't be used to
+// probe the list, and an existing unsubscribed/bounced/suppressed row is never
+// reactivated by someone typing the address into a form.
 export async function POST(req: Request) {
   const { email: rawEmail, first_name, source, consent } = await req.json()
   const email = typeof rawEmail === 'string' ? rawEmail.toLowerCase().trim() : ''
@@ -16,121 +31,71 @@ export async function POST(req: Request) {
   }
 
   const supabase = createAdminClient()
+  const ok = NextResponse.json({ ok: true, confirmation_required: true })
 
-  // Save the subscriber first, regardless of provider outcome — a provider
-  // sync failure below must never lose the subscriber's own record.
-  const { error: upsertError } = await supabase
+  const { data: existing } = await supabase
     .from('newsletter_subscribers')
-    .upsert(
-      {
-        email,
-        first_name: first_name || null,
-        source: source ?? 'unknown',
-        consent: true,
-        status: 'active',
-      },
-      { onConflict: 'email' }
-    )
+    .select('id, status, confirm_sent_at')
+    .eq('email', email)
+    .maybeSingle()
 
-  if (upsertError) {
-    console.error('Newsletter upsert error:', upsertError.message)
-    return NextResponse.json({ error: 'Subscription failed' }, { status: 500 })
+  if (existing) {
+    // A pending subscriber who didn't get / lost the email can ask again, with a cooldown.
+    if (existing.status === 'pending' && canResendConfirmation(existing.confirm_sent_at)) {
+      await issueConfirmation(supabase, email, first_name)
+    }
+    return ok
   }
 
-  const provider = process.env.NEWSLETTER_PROVIDER ?? 'supabase'
+  // Per-IP throttle so the form can't be used to mass-mail confirmation requests.
+  const ipHash = hashIp(clientIp(req.headers))
+  const { count: recent } = await supabase
+    .from('newsletter_subscribers')
+    .select('id', { count: 'exact', head: true })
+    .eq('consent_ip_hash', ipHash)
+    .gte('consent_at', new Date(Date.now() - 60 * 60 * 1000).toISOString())
+  if ((recent ?? 0) >= MAX_SIGNUPS_PER_IP_PER_HOUR) return ok
 
+  const { error: insertError } = await supabase.from('newsletter_subscribers').insert({
+    email,
+    first_name: first_name || null,
+    source: source ?? 'unknown',
+    consent: true,
+    status: 'pending',
+    consent_method: 'double_opt_in',
+    consent_at: new Date().toISOString(),
+    consent_text: CONSENT_TEXT,
+    consent_ip_hash: ipHash,
+  })
+  if (insertError) {
+    // 23505 = lost a race with a concurrent identical signup; nothing more to do.
+    if (insertError.code !== '23505') {
+      console.error('Newsletter insert error:', insertError.message)
+      return NextResponse.json({ error: 'Subscription failed' }, { status: 500 })
+    }
+    return ok
+  }
+
+  await issueConfirmation(supabase, email, first_name)
+  return ok
+}
+
+/** Stores a fresh token hash, then emails the link. A failed send leaves confirm_sent_at null so a retry isn't throttled. */
+async function issueConfirmation(supabase: ReturnType<typeof createAdminClient>, email: string, firstName?: string | null) {
+  const { token, hash } = newConfirmToken()
+  const { error } = await supabase
+    .from('newsletter_subscribers')
+    .update({ confirm_token_hash: hash, confirm_sent_at: null })
+    .eq('email', email)
+  if (error) {
+    console.error('Newsletter token save error:', error.message)
+    return
+  }
   try {
-    if (provider === 'sendgrid') {
-      const jobId = await subscribeSendGrid(email, first_name)
-      await supabase
-        .from('newsletter_subscribers')
-        .update({ sendgrid_synced: true, sendgrid_contact_id: jobId })
-        .eq('email', email)
-    } else if (provider === 'beehiiv') {
-      await subscribeBeehiiv(email)
-    } else if (provider === 'convertkit') {
-      await subscribeConvertKit(email)
-    } else if (provider === 'mailchimp') {
-      await subscribeMailchimp(email)
-    }
+    // Awaited: on serverless the function is frozen once the response is sent.
+    await sendConfirmationEmail(email, confirmUrl(token), firstName)
+    await supabase.from('newsletter_subscribers').update({ confirm_sent_at: new Date().toISOString() }).eq('email', email)
   } catch (err) {
-    // Subscriber row is already saved above — provider sync can be retried
-    // later (see the admin "Retry SendGrid sync" action) and never fails the request.
-    console.error(`Newsletter provider (${provider}) sync error:`, err)
+    console.error('Newsletter confirmation email error:', err)
   }
-
-  if (provider === 'sendgrid' && process.env.SENDGRID_API_KEY) {
-    // Awaited, not fire-and-forget: on serverless the function is frozen as
-    // soon as the response is sent, so an un-awaited send never goes out.
-    // Errors are still caught — a failed email never fails the subscription.
-    try {
-      await sendSendGridWelcomeEmail(email, first_name)
-      await supabase.from('newsletter_subscribers').update({ welcome_sent: true }).eq('email', email)
-    } catch (err) {
-      console.error('SendGrid welcome email error:', err)
-    }
-  } else if (process.env.RESEND_API_KEY) {
-    const { data: podcasts } = await supabase
-      .from('podcasts')
-      .select('title, slug, short_description, quick_verdict, binge_factor, case_types')
-      .eq('is_published', true)
-      .order('binge_factor', { ascending: false })
-      .limit(10)
-
-    if (podcasts?.length) {
-      // Awaited for the same reason as above; errors never fail the subscription.
-      try {
-        await sendLeadMagnetEmail(email, podcasts)
-      } catch (err) {
-        console.error('Lead magnet email error:', err)
-      }
-    }
-  }
-
-  return NextResponse.json({ ok: true })
-}
-
-async function subscribeBeehiiv(email: string) {
-  const res = await fetch(
-    `https://api.beehiiv.com/v2/publications/${process.env.BEEHIIV_PUBLICATION_ID}/subscriptions`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${process.env.BEEHIIV_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, reactivate_existing: true, send_welcome_email: true }),
-    }
-  )
-  if (!res.ok) throw new Error('Beehiiv API error')
-}
-
-async function subscribeConvertKit(email: string) {
-  const res = await fetch(
-    `https://api.convertkit.com/v3/forms/${process.env.CONVERTKIT_FORM_ID}/subscribe`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ api_key: process.env.CONVERTKIT_API_KEY, email }),
-    }
-  )
-  if (!res.ok) throw new Error('ConvertKit API error')
-}
-
-async function subscribeMailchimp(email: string) {
-  const server = process.env.MAILCHIMP_SERVER_PREFIX
-  const listId = process.env.MAILCHIMP_LIST_ID
-  const res = await fetch(
-    `https://${server}.api.mailchimp.com/3.0/lists/${listId}/members`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${Buffer.from(`any:${process.env.MAILCHIMP_API_KEY}`).toString('base64')}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email_address: email, status: 'subscribed' }),
-    }
-  )
-  // 400 with "Member Exists" is not a real error
-  if (!res.ok && res.status !== 400) throw new Error('Mailchimp API error')
 }

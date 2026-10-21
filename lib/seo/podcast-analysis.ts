@@ -10,7 +10,7 @@ export function getPros(podcast: Podcast, stats: RatingStats | null): string[] {
 
   // Editorial verdict
   if (podcast.quick_verdict === 'Must listen') {
-    pros.push('Rated "Must Listen" by our editorial team — exceptional across all dimensions')
+    pros.push('Rated "Must Listen" by our editorial team')
   }
 
   // Community rating highlights (only when we have meaningful data)

@@ -16,12 +16,12 @@ const TIERS = [
   {
     verdict: 'Must listen',
     colour: 'bg-crimson',
-    description: 'Our highest editorial rating. Reserved for podcasts that excel across all six scoring dimensions.',
+    description: 'Our highest editorial verdict, for shows we recommend without reservation.',
   },
   {
     verdict: 'Recommended',
     colour: 'bg-blue-700',
-    description: 'Solid, well-produced shows we actively recommend to listeners. Strong in most dimensions.',
+    description: 'Solid, well-produced shows we actively recommend to listeners.',
   },
   {
     verdict: 'Worth a go',
