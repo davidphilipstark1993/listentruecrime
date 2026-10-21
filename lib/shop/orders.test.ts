@@ -82,6 +82,17 @@ describe('payment → Printify', () => {
     expect(payload.address_to).toMatchObject({ first_name: 'Ada', last_name: 'Lovelace', country: 'GB', zip: 'NW1 6XE', email: 'fan@example.com' })
   })
 
+  it('reads the delivery address from older Stripe API versions too (top-level shipping_details)', async () => {
+    seedOrder()
+    const s = session()
+    const details = s.collected_information.shipping_details
+    delete s.collected_information
+    s.shipping_details = details
+    await handleCheckoutPaid(s)
+    expect(order()).toMatchObject({ payment_status: 'paid', printify_order_id: 'pf_order_1' })
+    expect(printify.createOrder.mock.calls[0][0].address_to).toMatchObject({ address1: '1 Baker St', zip: 'NW1 6XE' })
+  })
+
   it('a replayed paid event creates no second Printify order and no second email', async () => {
     seedOrder()
     await handleCheckoutPaid(session())

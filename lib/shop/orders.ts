@@ -96,7 +96,10 @@ export async function getOrderWithItems(orderId: string) {
 
 // ─── Stripe: payment completed ───────────────────────────────────────────────
 function addressFromSession(session: Stripe.Checkout.Session): ShippingAddress | null {
-  const d = session.collected_information?.shipping_details
+  // Newer Stripe API versions put the address in collected_information; older
+  // ones (a webhook destination pinned to an older version) use shipping_details.
+  const legacy = (session as unknown as { shipping_details?: Stripe.Checkout.Session.CollectedInformation.ShippingDetails | null }).shipping_details
+  const d = session.collected_information?.shipping_details ?? legacy
   if (!d?.address) return null
   return {
     name: d.name ?? null,
