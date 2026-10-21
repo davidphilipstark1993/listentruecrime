@@ -240,6 +240,10 @@ export interface Newsletter {
   publication_date: string
   intro: string | null
   editors_note: string | null
+  /** Email subject line; null = generated from the week's podcasts. */
+  subject: string | null
+  /** Inbox preview text; null = generated from the week's podcasts. */
+  preview_text: string | null
   body: string | null
   conclusion: string | null
   status: NewsletterStatus

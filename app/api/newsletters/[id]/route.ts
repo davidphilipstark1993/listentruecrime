@@ -2,16 +2,25 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { recomputeNewsletterStatus } from '@/lib/newsletter/week'
+import { MAX_PREVIEW_TEXT_LENGTH, MAX_SUBJECT_LENGTH } from '@/lib/newsletter/subject'
 
 interface Props {
   params: Promise<{ id: string }>
 }
 
-const SECTION_FIELDS = ['editors_note', 'body', 'conclusion'] as const
 const MAX_SECTION_LENGTH = 5000
+// Field -> max length. subject/preview_text are the email subject line and
+// inbox preview text; blank means "generate from the week's podcasts".
+const FIELD_LIMITS = {
+  editors_note: MAX_SECTION_LENGTH,
+  body: MAX_SECTION_LENGTH,
+  conclusion: MAX_SECTION_LENGTH,
+  subject: MAX_SUBJECT_LENGTH,
+  preview_text: MAX_PREVIEW_TEXT_LENGTH,
+} as const
 
 // Saves the free-text sections around the five podcasts (editor's note,
-// body, conclusion/preview). Like every other edit to a manual newsletter,
+// body, conclusion/preview) and the email subject / preview text. Like every other edit to a manual newsletter,
 // changing the text after the whole issue was approved for sending drops it
 // back to draft/review, so a last-minute change can't be sent unseen.
 export async function PATCH(req: Request, { params }: Props) {
@@ -25,14 +34,14 @@ export async function PATCH(req: Request, { params }: Props) {
 
   const payload = await req.json()
   const update: Record<string, string | null> = {}
-  for (const field of SECTION_FIELDS) {
+  for (const [field, maxLength] of Object.entries(FIELD_LIMITS)) {
     if (!(field in payload)) continue
     const value = payload[field]
     if (value !== null && typeof value !== 'string') {
       return NextResponse.json({ error: `${field} must be text` }, { status: 400 })
     }
-    if (typeof value === 'string' && value.length > MAX_SECTION_LENGTH) {
-      return NextResponse.json({ error: `${field} is too long (max ${MAX_SECTION_LENGTH} characters)` }, { status: 400 })
+    if (typeof value === 'string' && value.length > maxLength) {
+      return NextResponse.json({ error: `${field} is too long (max ${maxLength} characters)` }, { status: 400 })
     }
     update[field] = value?.trim() ? value.trim() : null
   }

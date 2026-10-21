@@ -27,6 +27,8 @@ export interface NewsletterRenderInput {
   body?: string | null
   /** Wrap-up / preview of the next issue, shown after the five podcasts. */
   conclusion?: string | null
+  /** Inbox preview line shown after the subject; rendered as hidden text. */
+  previewText?: string | null
   items: NewsletterRenderItem[]
 }
 
@@ -99,6 +101,16 @@ function renderItemHtml(item: NewsletterRenderItem): string {
     </tr>`
 }
 
+// Inboxes show the first text in the email after the subject. Without this
+// that was the header ("ListenTrueCrime · The true crime podcast database…").
+// The trailing zero-width spaces stop clients pulling in body text after it.
+function previewTextHtml(text: string | null | undefined): string {
+  if (!text?.trim()) return ''
+  const filler = '&#8204;&nbsp;'.repeat(60)
+  return `<div style="display:none;font-size:1px;color:#000000;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;">${escHtml(text.trim())}${filler}</div>
+`
+}
+
 export function renderNewsletterHtml(input: NewsletterRenderInput): string {
   const rows = input.items.sort((a, b) => a.position - b.position).map(renderItemHtml).join('')
 
@@ -110,7 +122,7 @@ export function renderNewsletterHtml(input: NewsletterRenderInput): string {
 <title>${escHtml(input.title)}</title>
 </head>
 <body style="margin:0;padding:0;background:#000000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#000000;">
+${previewTextHtml(input.previewText)}<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#000000;">
   <tr><td align="center" style="padding:32px 16px;">
     <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#000000;border:1px solid #1a1a1a;border-radius:12px;overflow:hidden;max-width:600px;">
       <tr>

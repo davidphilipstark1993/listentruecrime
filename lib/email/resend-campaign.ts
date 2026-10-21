@@ -13,7 +13,7 @@ interface Recipient {
  * signature/return shape so callers can treat the two providers the same way.
  */
 export async function sendNewsletterCampaignViaResend(
-  newsletter: Pick<Newsletter, 'id' | 'title' | 'html_content' | 'plain_text_content'>,
+  newsletter: Pick<Newsletter, 'id' | 'title' | 'html_content' | 'plain_text_content'> & { subject?: string | null },
   recipients: Recipient[]
 ): Promise<{ campaignId: string; sentCount: number }> {
   const apiKey = process.env.RESEND_API_KEY ? sanitizeEnv(process.env.RESEND_API_KEY) : undefined
@@ -40,7 +40,7 @@ export async function sendNewsletterCampaignViaResend(
         batch.map(r => ({
           from: `${fromName} <${fromEmail}>`,
           to: [r.email],
-          subject: newsletter.title,
+          subject: newsletter.subject?.trim() || newsletter.title,
           html: newsletter.html_content,
           ...(newsletter.plain_text_content ? { text: newsletter.plain_text_content } : {}),
           tags: [{ name: 'newsletter_id', value: newsletter.id }],
