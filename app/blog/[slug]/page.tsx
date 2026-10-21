@@ -53,8 +53,23 @@ const MDX_COMPONENTS = {
     if (href?.startsWith('/')) {
       return <Link href={href} {...props}>{children}</Link>
     }
+    // Amazon/Audible links are affiliate links: mark them as paid. noopener
+    // without noreferrer, matching AffiliateLink, so Amazon sees the referrer.
+    if (isAmazonHref(href)) {
+      return <a {...props} href={href} target="_blank" rel="sponsored nofollow noopener">{children}</a>
+    }
     return <a href={href} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>
   },
+}
+
+function isAmazonHref(href?: string): boolean {
+  if (!href) return false
+  try {
+    const host = new URL(href).hostname
+    return /(^|\.)amazon\.(co\.uk|com|ie|ca|com\.au)$/.test(host) || host === 'link.amazon' || /(^|\.)amzn\.(to|eu)$/.test(host)
+  } catch {
+    return false
+  }
 }
 
 // Affiliate components available in MDX, bound to the live products this
