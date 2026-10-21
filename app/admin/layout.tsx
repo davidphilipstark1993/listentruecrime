@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import Link from 'next/link'
-import { LayoutDashboard, Mic2, MessageSquare, Upload, ArrowLeft, Users, Star, Compass, Mail, CalendarCheck, ImageIcon, Megaphone, Link2 } from 'lucide-react'
+import { LayoutDashboard, Mic2, MessageSquare, Upload, ArrowLeft, Users, Star, Compass, Mail, CalendarCheck, ImageIcon, Megaphone, Link2, Send } from 'lucide-react'
 
 // Admin pages read live data (subscribers, reviews, ratings…). Without this,
 // pages with no dynamic APIs are prerendered at build time and only show data
@@ -12,6 +12,7 @@ const navItems = [
   { href: '/admin/podcasts', label: 'Podcasts', icon: Mic2 },
   { href: '/admin/artwork', label: 'Artwork', icon: ImageIcon },
   { href: '/admin/weekly-newsletter', label: "This Week's Newsletter", icon: CalendarCheck },
+  { href: '/admin/broadcast', label: 'Send an Email', icon: Send },
   { href: '/admin/discoveries', label: 'Discoveries (auto)', icon: Compass },
   { href: '/admin/newsletter-issues', label: 'Newsletter Issues (auto)', icon: Mail },
   { href: '/admin/reviews', label: 'Reviews', icon: MessageSquare },
