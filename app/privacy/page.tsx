@@ -125,7 +125,7 @@ export default function PrivacyPage() {
             <section>
               <h2 className="heading-section text-xl text-stone mb-3">How long we keep your data</h2>
               <p>
-                We keep newsletter subscriber records for as long as you remain subscribed, and account data for as
+                We keep newsletter subscriber records for as long as you remain subscribed. Newsletter signups use double opt-in, and we keep a record of when and how you consented (timestamp, the wording shown, and a hashed copy of your IP address). We keep account data for as
                 long as your account is active. If you unsubscribe or ask us to delete your data, we'll remove or
                 anonymise it within a reasonable time, except where we need to keep limited records to comply with a
                 legal obligation.

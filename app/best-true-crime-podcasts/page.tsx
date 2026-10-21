@@ -47,7 +47,7 @@ const faqs = [
   },
   {
     q: 'How do we rank true crime podcasts?',
-    a: 'Our rankings combine editorial expert reviews across six dimensions (storytelling, research quality, host quality, production, binge factor, and factual accuracy) with community ratings from our registered listener base. Podcasts with a "Must Listen" verdict have scored exceptionally across all dimensions.',
+    a: 'Our rankings draw on our editorial verdict and Binge Factor score for each show, alongside community ratings from registered listeners where they exist. Podcasts with a "Must Listen" verdict are the ones we recommend most strongly. Full details are on our How We Review page.',
   },
   {
     q: 'Are there true crime podcasts specifically about cold cases?',

@@ -11,17 +11,17 @@ ListenTrueCrime is a discovery and review platform for true crime podcasts. We h
 
 ## How ratings work
 
-Each podcast is scored 1–10 across six dimensions by our editorial team and by registered community members:
+Every podcast has an editorial verdict and an editorial Binge Factor score (1–10). Registered community members can also rate each podcast 1–10 on six dimensions, shown separately from the editorial verdict:
 
 - **Storytelling** — narrative structure, pacing, how the case is told
 - **Research Quality** — depth of sourcing, use of primary documents and interviews
 - **Host Quality** — presentation, authority, trustworthiness
 - **Production / Audio** — sound quality, editing, professional finish
-- **Binge Factor** — how compulsively listenable the show is (our most-weighted metric)
+- **Binge Factor** — how compulsively listenable the show is (also scored editorially)
 - **Factual Accuracy** — accuracy of claims, responsible use of evidence
-- **Overall Score** — aggregate community rating
+- **Overall Score** — separate overall community rating
 
-Editorial verdicts: **Must Listen** (exceptional across all dimensions) or **Worth a Listen**.
+Editorial verdicts are short labels such as **Must listen**, **Worth a listen**, or an audience-fit line (e.g. "Good if UK true crime interests you").
 
 Our methodology is fully explained at: ${BASE}/how-we-review
 

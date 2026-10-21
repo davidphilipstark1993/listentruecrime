@@ -50,7 +50,7 @@ export function buildWelcomeEmailHtml(firstName?: string | null): string {
             gems to established favourites.
           </p>
           <p style="color:#333;font-size:15px;line-height:1.6;margin:0 0 16px;">
-            Expect your first issue this coming Monday, and every Monday after that.
+            Expect your first issue this coming Sunday, and every Sunday after that.
           </p>
           <p style="color:#333;font-size:15px;line-height:1.6;margin:0;">
             In the meantime, you can browse our full database of reviewed &amp; rated shows.
