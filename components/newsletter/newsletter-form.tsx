@@ -10,9 +10,11 @@ interface NewsletterFormProps {
   variant?: 'default' | 'hero' | 'minimal'
   showFirstName?: boolean
   className?: string
+  /** Overrides the submit button text (default "Subscribe"). */
+  buttonLabel?: string
 }
 
-export function NewsletterForm({ source = 'unknown', variant = 'default', showFirstName = false, className }: NewsletterFormProps) {
+export function NewsletterForm({ source = 'unknown', variant = 'default', showFirstName = false, className, buttonLabel = 'Subscribe' }: NewsletterFormProps) {
   const [email, setEmail] = useState('')
   const [firstName, setFirstName] = useState('')
   const [loading, setLoading] = useState(false)
@@ -128,7 +130,7 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
             variant === 'hero' && 'px-6'
           )}
         >
-          {loading ? 'Subscribing…' : 'Subscribe'}
+          {loading ? 'Subscribing…' : buttonLabel}
           {!loading && <ArrowRight size={14} />}
         </button>
       </form>

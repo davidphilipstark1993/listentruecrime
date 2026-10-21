@@ -5,6 +5,7 @@ import { getAllPosts, getAllCategories, getAllTags } from '@/lib/blog'
 import { getAllCases } from '@/lib/cases'
 import { getAllAuthors } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
+import { shopEnabled, SHOP_CATEGORIES } from '@/lib/shop/config'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createAdminClient()
@@ -102,7 +103,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.75,
   }))
 
+  // Shop URLs are listed only while the shop is enabled (published products only).
+  let shopUrls: MetadataRoute.Sitemap = []
+  if (shopEnabled()) {
+    const { data: shopProducts } = await supabase.from('shop_products').select('slug, updated_at').eq('is_published', true)
+    shopUrls = [
+      { url: `${BASE}/shop`, changeFrequency: 'weekly', priority: 0.8, lastModified: now },
+      ...SHOP_CATEGORIES.map(c => ({ url: `${BASE}/shop/category/${c.slug}`, changeFrequency: 'weekly' as const, priority: 0.7, lastModified: now })),
+      ...(shopProducts ?? []).map(p => ({ url: `${BASE}/shop/${p.slug}`, changeFrequency: 'weekly' as const, priority: 0.7, lastModified: p.updated_at ?? now })),
+      { url: `${BASE}/shop/shipping-policy`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
+      { url: `${BASE}/shop/returns-and-refunds`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
+    ]
+  }
+
   return [
+    ...shopUrls,
     { url: `${BASE}/cases`, changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
     ...caseUrls,
     { url: `${BASE}/badge`, changeFrequency: 'monthly', priority: 0.4, lastModified: now },

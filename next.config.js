@@ -43,6 +43,10 @@ const nextConfig = {
       { protocol: 'https', hostname: '**.cbc.ca' },
       { protocol: 'https', hostname: '**.imgix.net' },
       { protocol: 'https', hostname: '**.art19.com' },
+      // Printify product mock-ups (shop)
+      { protocol: 'https', hostname: 'images.printify.com' },
+      { protocol: 'https', hostname: 'images-api.printify.com' },
+      { protocol: 'https', hostname: '**.printify.com' },
     ],
   },
   compress: true,

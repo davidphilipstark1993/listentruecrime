@@ -9,6 +9,10 @@ import { AuthModal } from '@/components/auth/auth-modal'
 import { UserMenu } from '@/components/auth/user-menu'
 import { cn } from '@/lib/utils'
 import { trackPromotion } from '@/components/promotion/analytics'
+import { BasketLink } from '@/components/shop/basket-link'
+
+// The shop is hidden everywhere until NEXT_PUBLIC_SHOP_ENABLED=true (see lib/shop/config.ts).
+const SHOP_ENABLED = process.env.NEXT_PUBLIC_SHOP_ENABLED === 'true'
 
 const NAV_LINKS = [
   { href: '/browse', label: 'Browse' },
@@ -17,6 +21,7 @@ const NAV_LINKS = [
   { href: '/blog', label: 'Blog' },
   { href: '/category/cold-cases', label: 'Cold Cases' },
   { href: '/about', label: 'About' },
+  ...(SHOP_ENABLED ? [{ href: '/shop', label: 'Shop' }] : []),
 ]
 
 export function Header() {
@@ -93,6 +98,7 @@ export function Header() {
               <Link href="/browse" className="p-2 text-stone-muted hover:text-stone hover:bg-ink-700 rounded-md transition-colors" aria-label="Search">
                 <Search size={18} />
               </Link>
+              {SHOP_ENABLED && <BasketLink />}
 
               {user ? (
                 <UserMenu user={user} />
