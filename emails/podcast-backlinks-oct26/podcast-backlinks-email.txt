@@ -1,0 +1,32 @@
+Hi {{#if podcast_title}}{{podcast_title}} team{{else}}there{{/if}},
+
+I run ListenTrueCrime (listentruecrime.com), an independent directory where listeners find, rate and review true crime podcasts. {{#if podcast_title}}{{podcast_title}} is listed in it:
+{{podcast_url}}{{else}}Your show is listed in it.{{/if}}
+
+I'd like to ask a small favour: would you be willing to link to us from your website or show notes? Something as simple as "Find more true crime podcasts at www.listentruecrime.com" is perfect. It helps listeners discover the directory, and it helps us grow so we can send more people to shows like yours.
+
+In return, I'd be glad to give you one of these. You choose:
+
+  Option A - Trending feature: your show gets a featured spot in the Trending section on our homepage.
+  Reply or click: mailto:info@listentruecrime.com?subject=Option%20A%20-%20Trending&body=Hi%2C%20we%27ve%20added%20a%20link%20to%20www.listentruecrime.com.%20Our%20show%20is%20{{podcast_title}}.%20Please%20feature%20us%20in%20Trending.
+
+  Option B - Newsletter feature: your show is featured in the ListenTrueCrime newsletter, which goes to our subscribers.
+  Reply or click: mailto:info@listentruecrime.com?subject=Option%20B%20-%20Newsletter&body=Hi%2C%20we%27ve%20added%20a%20link%20to%20www.listentruecrime.com.%20Our%20show%20is%20{{podcast_title}}.%20Please%20feature%20us%20in%20the%20newsletter.
+
+Once the link is live, just reply with the page it's on and which option you'd like, and I'll sort the rest.
+
+If you'd like a ready-made badge to use as the link, there's one here:
+https://www.listentruecrime.com/badge
+
+Thanks for considering it, and keep up the great work.
+
+David
+ListenTrueCrime
+www.listentruecrime.com
+
+
+--
+You're receiving this one-off message because your show is listed on ListenTrueCrime and your contact address is published in your podcast's RSS feed.
+{{Sender_Name}}, {{Sender_Address}}, {{Sender_City}}, {{Sender_State}} {{Sender_Zip}}
+
+Unsubscribe: {{{unsubscribe}}}
