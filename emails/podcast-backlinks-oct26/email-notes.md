@@ -3,6 +3,10 @@
 Campaign: `podcast-backlinks-oct26`
 Files: `podcast-backlinks-email.html`, `podcast-backlinks-email.txt`
 
+## Subject line
+
+Set in the SendGrid Single Send: `{{#if podcast_title}}quick link swap? ({{podcast_title}} x ListenTrueCrime){{else}}quick link swap? (ListenTrueCrime){{/if}}`
+
 ## What it asks / offers
 
 Asks each podcast to link to www.listentruecrime.com from their site or show notes. In return they choose:
@@ -14,7 +18,7 @@ Each option is a button that opens a pre-filled reply to info@listentruecrime.co
 
 ## Check before sending
 
-1. **Trending only has 5 slots.** `app/page.tsx` shows `TRENDING_COUNT = 5` featured podcasts, picked by `is_featured` and `binge_factor`. If many shows say yes to Option A, you can't give them all a slot at once. Either rotate the five (and tell them the feature is time-limited), or reword Option A to "a spot in our Trending rotation". Decide before sending, so the email doesn't promise more than the homepage can show.
+1. **Trending only has 5 slots.** `app/page.tsx` shows `TRENDING_COUNT = 5` featured podcasts. The email says "if it's full, we'll pop you in next month's", so Option A takers go in immediately or are queued for the following month.
 2. **Merge tags.** The template uses `{{podcast_title}}` and `{{podcast_url}}`. These are SendGrid custom fields, created by `scripts/outreach/sendgrid-import.mjs`. Both have fallbacks ("there" / generic wording) for contacts where they're empty.
 3. **Separate list and unsubscribe group.** Use the "Podcast backlink outreach (Oct 2026)" list, not your newsletter list, and pick a different unsubscribe group from the newsletter's. Cold outreach gets more spam complaints than newsletter mail; keeping it apart protects the newsletter's deliverability.
 4. **Send a small batch first** (20-30 addresses), check bounces and replies, then send the rest. Single Sends can target a segment.

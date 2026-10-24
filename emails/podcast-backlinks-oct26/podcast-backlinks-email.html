@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="x-apple-disable-message-reformatting">
 <meta name="color-scheme" content="light only">
-<title>A link swap for your podcast</title>
+<title>Quick link swap?</title>
 <style>
   @media only screen and (max-width: 620px) {
     .container { width: 100% !important; }
@@ -18,7 +18,7 @@
 
 <!-- Preview text (hidden) -->
 <div style="display:none; font-size:1px; color:#f4f1ee; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden;">
-  Link to us and choose a Trending feature or a newsletter feature in return.
+  A quick link swap: link to us and pick a Trending spot or a newsletter shout-out.
   &#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;&#8204;&nbsp;
 </div>
 
@@ -38,10 +38,10 @@
         <!-- Intro -->
         <tr>
           <td class="px" style="padding:32px 40px 8px 40px; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:1.6; color:#292524;">
-            <p style="margin:0 0 16px 0;">Hi {{#if podcast_title}}{{podcast_title}} team{{else}}there{{/if}},</p>
-            <p style="margin:0 0 16px 0;">I run <a href="https://www.listentruecrime.com/?utm_source=outreach&amp;utm_medium=email&amp;utm_campaign=podcast-backlinks-oct26" style="color:#be123c;">ListenTrueCrime</a>, an independent directory where listeners find, rate and review true crime podcasts. {{#if podcast_title}}<a href="{{podcast_url}}?utm_source=outreach&amp;utm_medium=email&amp;utm_campaign=podcast-backlinks-oct26" style="color:#be123c;">{{podcast_title}} is listed in it</a>.{{else}}Your show is listed in it.{{/if}}</p>
-            <p style="margin:0 0 16px 0;">I&rsquo;d like to ask a small favour: would you be willing to link to us from your website or show notes? Something as simple as &ldquo;Find more true crime podcasts at <a href="https://www.listentruecrime.com" style="color:#be123c;">www.listentruecrime.com</a>&rdquo; is perfect. It helps listeners discover the directory, and it helps us grow so we can send more people to shows like yours.</p>
-            <p style="margin:0 0 16px 0;"><strong>In return, you choose one of these:</strong></p>
+            <p style="margin:0 0 16px 0;">Hey {{#if podcast_title}}{{podcast_title}} team{{else}}there{{/if}},</p>
+            <p style="margin:0 0 16px 0;">David here from <a href="https://www.listentruecrime.com/?utm_source=outreach&amp;utm_medium=email&amp;utm_campaign=podcast-backlinks-oct26" style="color:#be123c;">ListenTrueCrime</a>. We&rsquo;re a little independent directory where people find and rate true crime podcasts, and {{#if podcast_title}}<a href="{{podcast_url}}?utm_source=outreach&amp;utm_medium=email&amp;utm_campaign=podcast-backlinks-oct26" style="color:#be123c;">{{podcast_title}}</a> is already on there{{else}}your show is already on there{{/if}}.</p>
+            <p style="margin:0 0 16px 0;">Would you be up for dropping a link back to us (<a href="https://www.listentruecrime.com" style="color:#be123c;">www.listentruecrime.com</a>) on your site or in your show notes? Even a one-liner like &ldquo;more true crime shows at listentruecrime.com&rdquo; is perfect.</p>
+            <p style="margin:0 0 16px 0;"><strong>Happy to say thanks properly, so pick one:</strong></p>
           </td>
         </tr>
 
@@ -51,8 +51,8 @@
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #e7e5e4; border-radius:6px;">
               <tr>
                 <td style="padding:16px 20px;">
-                  <p style="margin:0 0 4px 0; font-weight:bold;">Option A &ndash; Trending feature</p>
-                  <p style="margin:0 0 12px 0;">Your show gets a featured spot in the Trending section on our homepage.</p>
+                  <p style="margin:0 0 4px 0; font-weight:bold;">A) Trending spot</p>
+                  <p style="margin:0 0 12px 0;">We feature you in the Trending section on our homepage. If it&rsquo;s full, we&rsquo;ll pop you in next month&rsquo;s.</p>
                   <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
                     <td align="center" bgcolor="#be123c" style="border-radius:6px;">
                       <a href="mailto:info@listentruecrime.com?subject=Option%20A%20-%20Trending&amp;body=Hi%2C%20we%27ve%20added%20a%20link%20to%20www.listentruecrime.com.%20Our%20show%20is%20{{podcast_title}}.%20Please%20feature%20us%20in%20Trending." style="display:inline-block; padding:12px 24px; font-family:Arial, Helvetica, sans-serif; font-size:15px; font-weight:bold; color:#ffffff; text-decoration:none; border-radius:6px;">I&rsquo;ll take Trending</a>
@@ -70,8 +70,8 @@
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #e7e5e4; border-radius:6px;">
               <tr>
                 <td style="padding:16px 20px;">
-                  <p style="margin:0 0 4px 0; font-weight:bold;">Option B &ndash; Newsletter feature</p>
-                  <p style="margin:0 0 12px 0;">Your show is featured in the ListenTrueCrime newsletter, which goes to our subscribers.</p>
+                  <p style="margin:0 0 4px 0; font-weight:bold;">B) Newsletter shout-out</p>
+                  <p style="margin:0 0 12px 0;">We feature you in our newsletter.</p>
                   <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
                     <td align="center" bgcolor="#be123c" style="border-radius:6px;">
                       <a href="mailto:info@listentruecrime.com?subject=Option%20B%20-%20Newsletter&amp;body=Hi%2C%20we%27ve%20added%20a%20link%20to%20www.listentruecrime.com.%20Our%20show%20is%20{{podcast_title}}.%20Please%20feature%20us%20in%20the%20newsletter." style="display:inline-block; padding:12px 24px; font-family:Arial, Helvetica, sans-serif; font-size:15px; font-weight:bold; color:#ffffff; text-decoration:none; border-radius:6px;">I&rsquo;ll take the newsletter</a>
@@ -86,17 +86,16 @@
         <!-- Close -->
         <tr>
           <td class="px" style="padding:8px 40px 32px 40px; font-family:Arial, Helvetica, sans-serif; font-size:16px; line-height:1.6; color:#292524;">
-            <p style="margin:0 0 16px 0;">Once the link is live, just reply with the page it&rsquo;s on and which option you&rsquo;d like, and I&rsquo;ll sort the rest.</p>
-            <p style="margin:0 0 16px 0;">If you&rsquo;d like a ready-made badge to use as the link, there&rsquo;s one on the <a href="https://www.listentruecrime.com/badge?utm_source=outreach&amp;utm_medium=email&amp;utm_campaign=podcast-backlinks-oct26" style="color:#be123c;">badge page</a>.</p>
-            <p style="margin:0 0 16px 0;">Thanks for considering it, and keep up the great work.</p>
-            <p style="margin:0;">David<br>ListenTrueCrime</p>
+            <p style="margin:0 0 16px 0;">Once the link&rsquo;s up, just reply with the page it&rsquo;s on and A or B, and I&rsquo;ll sort the rest. There&rsquo;s also a ready-made <a href="https://www.listentruecrime.com/badge?utm_source=outreach&amp;utm_medium=email&amp;utm_campaign=podcast-backlinks-oct26" style="color:#be123c;">badge</a> if that&rsquo;s easier.</p>
+            <p style="margin:0 0 16px 0;">Cheers, and keep up the great work!</p>
+            <p style="margin:0;">David<br>ListenTrueCrime &middot; <a href="https://www.listentruecrime.com/?utm_source=outreach&amp;utm_medium=email&amp;utm_campaign=podcast-backlinks-oct26" style="color:#be123c;">www.listentruecrime.com</a></p>
           </td>
         </tr>
 
         <!-- Footer -->
         <tr>
           <td class="px" style="padding:20px 40px; background-color:#fafaf9; border-radius:0 0 8px 8px; font-family:Arial, Helvetica, sans-serif; font-size:12px; line-height:1.5; color:#78716c;">
-            <p style="margin:0 0 8px 0;">You&rsquo;re receiving this one-off message because your show is listed on ListenTrueCrime and your contact address is published in your podcast&rsquo;s RSS feed.</p>
+            <p style="margin:0 0 8px 0;">One-off message because your show is listed on our directory and your contact address is public. Unsubscribe any time below.</p>
             <p style="margin:0 0 8px 0;">{{Sender_Name}}, {{Sender_Address}}, {{Sender_City}}, {{Sender_State}} {{Sender_Zip}}</p>
             <p style="margin:0;"><a href="{{{unsubscribe}}}" style="color:#78716c;">Unsubscribe</a></p>
           </td>
