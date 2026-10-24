@@ -46,6 +46,10 @@ const contacts = [...byEmail.values()].map(c => ({
   custom_fields: { podcast_title: c.titles[0], podcast_url: c.url },
 }))
 console.log(`${contacts.length} unique contacts to load into "${LIST_NAME}"`)
+const domains = new Map()
+for (const c of contacts) { const d = c.email.split('@')[1]; domains.set(d, (domains.get(d) ?? 0) + 1) }
+console.log('Most common domains:')
+for (const [d, n] of [...domains].sort((a, b) => b[1] - a[1]).slice(0, 15)) console.log(`  ${String(n).padStart(4)}  ${d}`)
 if (!apply) { console.log('Dry run. Pass --apply to create the list and upload.'); process.exit(0) }
 
 const key = process.env.SENDGRID_API_KEY?.trim()
@@ -67,8 +71,13 @@ const ids = {}
 for (const name of ['podcast_title', 'podcast_url']) {
   if (!have.has(name)) await api('POST', '/marketing/field_definitions', { name, field_type: 'Text' })
 }
-const fields = await api('GET', '/marketing/field_definitions')
-for (const f of fields.custom_fields ?? []) ids[f.name] = f.id
+// A freshly created field can take a few seconds to show up in the listing.
+for (let attempt = 0; attempt < 10 && !(ids.podcast_title && ids.podcast_url); attempt++) {
+  if (attempt) await new Promise(r => setTimeout(r, 3000))
+  const fields = await api('GET', '/marketing/field_definitions')
+  for (const f of fields.custom_fields ?? []) ids[f.name] = f.id
+}
+if (!(ids.podcast_title && ids.podcast_url)) throw new Error('Custom fields podcast_title / podcast_url not found in SendGrid')
 
 const lists = await api('GET', '/marketing/lists?page_size=1000')
 let list = (lists.result ?? []).find(l => l.name === LIST_NAME)
