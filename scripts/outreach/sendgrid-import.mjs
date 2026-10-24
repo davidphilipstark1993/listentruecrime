@@ -31,9 +31,12 @@ function parseCsv(text) {
 }
 
 // One contact per email address; if an address covers several shows (networks), join titles.
+// Platform relay / metadata mailboxes aren't the show's own team and tend to bounce.
+const RELAY = /@(anchor\.fm|mg-eu\.acast\.com|mg\.acast\.com|audible\.com)$|^podcast_metadata@/
 const byEmail = new Map()
 for (const r of parseCsv(fs.readFileSync(csvPath, 'utf8'))) {
   const e = r.email.trim().toLowerCase()
+  if (RELAY.test(e)) continue
   const cur = byEmail.get(e)
   if (!cur) byEmail.set(e, { email: e, titles: [r.podcast_title], url: r.podcast_page_url })
   else if (!cur.titles.includes(r.podcast_title)) cur.titles.push(r.podcast_title)
