@@ -12,21 +12,23 @@ import { buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/li
 import { BASE } from '@/lib/seo/config'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
+import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 const YEAR = new Date().getFullYear()
 
 export const metadata: Metadata = {
-  title: `Best True Crime Podcasts (${YEAR})`,
+  // Absolute: the site template would append " | ListenTrueCrime" and push this past ~60 characters.
+  title: { absolute: `Best True Crime Podcasts (${YEAR}): Expert-Reviewed, Binge-Scored` },
   description:
-    'The definitive list of the best true crime podcasts, ranked by expert review and community ratings. From Serial to Crime Junkie, Casefile to Teacher\'s Pet — find your next obsession.',
+    `The best true crime podcasts of ${YEAR}, each with an expert verdict, a binge score and community ratings. From Serial to Casefile to Teacher\'s Pet, find what to hear next.`,
   openGraph: {
-    title: `Best True Crime Podcasts (${YEAR}) | ListenTrueCrime`,
-    description: 'Expert-reviewed and community-rated. Find your next true crime obsession.',
+    title: `Best True Crime Podcasts (${YEAR}): Expert-Reviewed, Binge-Scored`,
+    description: 'Expert-reviewed, binge-scored and community-rated. Find your next true crime obsession.',
     url: `${BASE}/best-true-crime-podcasts`,
   },
   twitter: {
     card: 'summary_large_image',
-    title: `Best True Crime Podcasts (${YEAR})`,
+    title: `Best True Crime Podcasts (${YEAR}): Expert-Reviewed, Binge-Scored`,
     description: 'Expert-reviewed and community-rated. From Serial to Crime Junkie, Casefile to Teacher\'s Pet — find your next obsession.',
   },
   alternates: { canonical: `${BASE}/best-true-crime-podcasts` },
@@ -166,6 +168,25 @@ export default async function BestTrueCrimePodcastsPage() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {top.map((p, i) => <PodcastCard key={p.id} podcast={p} priority={i < 6} />)}
+          </div>
+        </section>
+
+        {/* Popular guides */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 section-divider pt-16">
+          <div className="mb-6">
+            <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Guides</p>
+            <h2 className="heading-section text-2xl sm:text-3xl">Popular guides</h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            {POPULAR_GUIDES.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="card-hover p-4 flex items-center text-stone-muted text-sm font-medium hover:text-white transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
         </section>
 

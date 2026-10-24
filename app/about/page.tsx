@@ -4,9 +4,11 @@ import { Star, Search, Users, Shield } from 'lucide-react'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
+import { BASE } from '@/lib/seo/config'
 
 export const metadata: Metadata = {
   title: 'About',
+  alternates: { canonical: `${BASE}/about` },
   description: 'ListenTrueCrime helps you discover the best true crime podcasts through expert reviews, community ratings, and personalised recommendations.',
 }
 

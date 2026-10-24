@@ -1,4 +1,5 @@
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
+import { PODCAST_SLUG_ALIASES } from '@/lib/seo/slug-aliases'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
@@ -16,7 +17,7 @@ import { getPros, getCons, getHostDescription, getPodcastPersonSchema } from '@/
 import { getAuthor } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
 import { countryFlag, formatRelativeDate, scoreBg, cn, stripHtml } from '@/lib/utils'
-import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES, platformHref } from '@/lib/types/database'
+import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES, PLATFORMS, platformHref } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
@@ -189,7 +190,10 @@ const RatingBar = ({ label, value }: { label: string; value: number | null }) =>
 export default async function PodcastPage({ params }: Props) {
   const { slug } = await params
   const podcast = await getPodcast(slug)
-  if (!podcast) notFound()
+  if (!podcast) {
+    if (PODCAST_SLUG_ALIASES[slug]) permanentRedirect(`/podcasts/${PODCAST_SLUG_ALIASES[slug]}`)
+    notFound()
+  }
 
   const [reviews, similar, affiliateProducts] = await Promise.all([
     getReviews(podcast.id),
@@ -705,15 +709,21 @@ export default async function PodcastPage({ params }: Props) {
                 <div className="card p-5">
                   <h3 className="font-serif text-sm text-stone mb-3 uppercase tracking-wide">Listen on</h3>
                   <div className="flex flex-wrap gap-2">
-                    {podcast.platforms.map((p: string) => (
-                      <Link
-                        key={p}
-                        href={platformHref(p)}
-                        className="tag hover:border-white/20 transition-colors"
-                      >
-                        {p}
-                      </Link>
-                    ))}
+                    {podcast.platforms.map((p: string) =>
+                      // Podcasts can list platforms (YouTube, CBC, ...) that have no
+                      // /platform/ page — a link there would 404.
+                      PLATFORMS.includes(p) ? (
+                        <Link
+                          key={p}
+                          href={platformHref(p)}
+                          className="tag hover:border-white/20 transition-colors"
+                        >
+                          {p}
+                        </Link>
+                      ) : (
+                        <span key={p} className="tag">{p}</span>
+                      )
+                    )}
                   </div>
                 </div>
               )}

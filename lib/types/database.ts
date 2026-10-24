@@ -330,6 +330,7 @@ export const CATEGORIES: CategoryMeta[] = [
   { slug: 'missing-persons', label: 'Missing Persons', description: 'Searches that consumed communities', emoji: '🔍' },
   { slug: 'investigative', label: 'Investigative', description: 'Deep journalism that holds power to account', emoji: '📰' },
   { slug: 'serial-killers', label: 'Serial Killers', description: 'The psychology and crimes of history\'s most notorious offenders', emoji: '🔪' },
+  { slug: 'cults', label: 'Cults', description: 'High-control groups, charismatic leaders, and the people who got out', emoji: '🕯️' },
   { slug: 'courtroom', label: 'Courtroom', description: 'Trials, appeals, and the machinery of justice', emoji: '⚖️' },
   { slug: 'fraud-scams', label: 'Fraud & Scams', description: 'Con artists, Ponzi schemes, and white-collar crime', emoji: '💰' },
   { slug: 'uk-crime', label: 'UK Crime', description: 'British cases told with British expertise', emoji: '🇬🇧' },
@@ -338,15 +339,38 @@ export const CATEGORIES: CategoryMeta[] = [
 ]
 
 export const CATEGORY_TO_CASE_TYPES: Record<string, string[]> = {
-  'cold-cases': ['Cold Case'],
-  'missing-persons': ['Missing Person'],
+  // Case types are free text in the database and appear in both
+  // "Cold Case" and "Cold case" forms — overlaps() is case-sensitive.
+  'cold-cases': ['Cold Case', 'Cold case'],
+  'missing-persons': ['Missing Person', 'Missing person'],
   'investigative': ['Investigative'],
-  'serial-killers': ['Serial Killer', 'Murder', 'Organised Crime'],
-  'courtroom': ['Courtroom', 'Wrongful Conviction'],
+  'serial-killers': ['Serial Killer', 'Serial killer', 'Murder', 'Organised Crime'],
+  'cults': ['Cult'], // curated via CATEGORY_CURATED_SLUGS — see below
+  'courtroom': ['Courtroom', 'Wrongful Conviction', 'Wrongful conviction'],
   'fraud-scams': ['Fraud', 'White-Collar Crime', 'Corporate Fraud', 'Financial Crime', 'Scam'],
   'uk-crime': [], // filtered by country = 'UK'
   'australian-crime': [], // filtered by country = 'AU'
   'binge-worthy': [], // filtered by binge_factor >= 8
+}
+
+// Editorial order for categories whose case-type tag is too loose to define
+// the list (many cult shows are tagged only "Murder"). When present, the
+// category page shows exactly these podcasts, in this order.
+export const CATEGORY_CURATED_SLUGS: Record<string, string[]> = {
+  cults: [
+    'cults',
+    'the-clearing',
+    'heavens-gate',
+    'uncover-cbc',
+    'two-faced-john-of-god',
+    'escaping-twin-flames',
+    'stolen-youth-inside-the-cult-at-sarah-lawrence',
+    'manson',
+    'conspiracy-theories-cults-and-crimes',
+    'crime-conspiracy-cults-and-murder',
+    'cult-true-crime',
+    'tortured-path',
+  ],
 }
 
 export const PLATFORMS = [

@@ -112,7 +112,7 @@ export const CASES: CaseData[] = [
       'The podcast directly contributed to charges being laid in 2018. Chris Dawson was tried for murder, convicted in August 2022, and sentenced to 24 years in prison with a non-parole period of 18 years. He was 74 at sentencing. Lynette\'s remains have never been found.',
     ],
     podcasts: [
-      { slug: 'teachers-pet', bestStart: true, note: 'The investigation that led directly to Dawson\'s conviction' },
+      { slug: 'the-teachers-pet', bestStart: true, note: 'The investigation that led directly to Dawson\'s conviction' },
     ],
     faqs: [
       {
@@ -281,7 +281,7 @@ export const CASES: CaseData[] = [
       'He was convicted in January 2000 of 15 murders and sentenced to life in prison. The Shipman Inquiry (2000–2005), chaired by Dame Janet Smith, concluded he had killed at least 215 patients, with a possible upper limit of 250. Shipman was found dead in his cell in January 2004, having hanged himself the day before his 58th birthday.',
     ],
     podcasts: [
-      { slug: 'casefile', bestStart: true, note: 'Casefile\'s Shipman episodes are the best audio account' },
+      { slug: 'casefile-true-crime', bestStart: true, note: 'Casefile\'s Shipman episodes are the best audio account' },
     ],
     faqs: [
       {
@@ -337,7 +337,7 @@ export const CASES: CaseData[] = [
       'Patsy Ramsey died of ovarian cancer in 2006 without being charged. In 2008, DNA testing led Boulder authorities to formally clear both parents. The case remains unsolved. An unknown male DNA profile was found on JonBenét\'s clothing but has never been matched to anyone in national databases. It is among the most extensively discussed unsolved child murder cases in American history.',
     ],
     podcasts: [
-      { slug: 'casefile', note: 'Casefile\'s JonBenét episode is thorough and restrained' },
+      { slug: 'casefile-true-crime', note: 'Casefile\'s JonBenét episode is thorough and restrained' },
     ],
     faqs: [
       {
@@ -393,7 +393,7 @@ export const CASES: CaseData[] = [
       'Despite being one of the most investigated cold cases in American history, the Zodiac Killer was never identified. The case inspired David Fincher\'s 2007 film Zodiac, based on the book by Robert Graysmith, and has generated more amateur investigation than almost any other unsolved case in the world.',
     ],
     podcasts: [
-      { slug: 'casefile', note: 'Casefile covers the Zodiac case across several episodes' },
+      { slug: 'casefile-true-crime', note: 'Casefile covers the Zodiac case across several episodes' },
     ],
     faqs: [
       {

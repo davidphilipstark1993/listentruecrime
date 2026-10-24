@@ -9,6 +9,7 @@ import { CATEGORIES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getPodcastCount, roundedPodcastCount } from '@/lib/podcast-count'
 import { getPostBySlug } from '@/lib/blog'
+import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
 import { stripHtml } from '@/lib/utils'
 
 export const revalidate = 3600
@@ -115,9 +116,9 @@ export default async function HomePage() {
   // this list picks them up automatically once they're published, with no
   // further code change needed.
   const guideLinks = [
+    ...POPULAR_GUIDES,
     { href: '/blog/best-british-true-crime-podcasts', label: 'Best British True Crime Podcasts' },
     { href: '/blog/best-bbc-true-crime-podcasts', label: 'Best BBC True Crime Podcasts' },
-    { href: '/blog/true-crime-podcasts-spotify', label: 'Best True Crime Podcasts on Spotify' },
     ...(getPostBySlug('true-crime-podcasts-with-no-banter')
       ? [{ href: '/blog/true-crime-podcasts-with-no-banter', label: 'True Crime Podcasts With No Banter' }]
       : []),
