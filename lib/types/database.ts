@@ -41,6 +41,18 @@ export interface Podcast {
   host_name: string | null
   host_bio: string | null
   website_url: string | null
+  // Editor-entered; null/empty means "not entered" and pages must show nothing.
+  producer: string | null
+  rating: number | null
+  rating_is_provisional: boolean
+  platform_urls: Record<string, string> | null
+  country_name: string | null
+  seo_title: string | null
+  meta_description: string | null
+  og_title: string | null
+  og_description: string | null
+  canonical_url: string | null
+  noindex: boolean
   created_at: string
   updated_at: string
 }
@@ -385,6 +397,7 @@ export const PLATFORMS = [
   'RSS',
   'NPR',
   'BBC Sounds',
+  'CBC Listen',
 ]
 
 // Platform display names that get a clean kebab-case URL (/platform/bbc-sounds)
@@ -397,6 +410,7 @@ export const PLATFORM_SLUGS: Record<string, string> = {
   'Amazon Music': 'amazon-music',
   'Pocket Casts': 'pocket-casts',
   'BBC Sounds': 'bbc-sounds',
+  'CBC Listen': 'cbc-listen',
 }
 
 /** Canonical path for a platform page — use this rather than building /platform/ URLs by hand. */

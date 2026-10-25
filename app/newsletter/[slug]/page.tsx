@@ -49,23 +49,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // Every issue shares the same editorial title ("5 True Crime Podcasts Worth
   // Listening To"), which Search Console reads as duplicates — make each unique.
-  const title = `${issue.title} — Issue #${issue.issue_number}`
+  const title = issue.seo_title?.trim() ? { absolute: issue.seo_title.trim() } : `${issue.title} — Issue #${issue.issue_number}`
+  const ogTitle = issue.og_title?.trim() || issue.seo_title?.trim() || `${issue.title} — Issue #${issue.issue_number}`
+
+  const metaDescription = issue.meta_description?.trim() || description
+  const ogDescription = issue.og_description?.trim() || metaDescription
+  const canonical = issue.canonical_url?.trim() || `${BASE}/newsletter/${issue.slug}`
 
   return {
     title,
-    description,
-    alternates: { canonical: `${BASE}/newsletter/${issue.slug}` },
+    description: metaDescription,
+    ...(issue.noindex && { robots: { index: false, follow: true } }),
+    alternates: { canonical },
     openGraph: {
-      title,
-      description,
-      url: `${BASE}/newsletter/${issue.slug}`,
+      title: ogTitle,
+      description: ogDescription,
+      url: canonical,
       type: 'article',
       publishedTime: issue.sent_at ?? issue.publication_date,
     },
     twitter: {
       card: 'summary_large_image',
-      title,
-      description,
+      title: ogTitle,
+      description: ogDescription,
     },
   }
 }
