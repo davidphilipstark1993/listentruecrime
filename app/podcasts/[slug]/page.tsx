@@ -13,6 +13,7 @@ import { ReviewForm } from '@/components/podcasts/review-form'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
+import { buildPodcastMeta } from '@/lib/seo/podcast-meta'
 import { getPros, getCons, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
 import { getAuthor } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
@@ -142,33 +143,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const podcast = await getPodcast(slug)
   if (!podcast) return {}
 
-  const description = podcast.short_description ?? podcast.description?.slice(0, 160) ?? ''
+  const meta = buildPodcastMeta(podcast, slug, BASE)
 
+  // No verdict or score in the share image: those are only shown on the page
+  // when an editor has entered them.
   const ogParams = new URLSearchParams({ title: podcast.title })
-  if (podcast.quick_verdict) ogParams.set('verdict', podcast.quick_verdict)
-  if (podcast.binge_factor) ogParams.set('score', String(podcast.binge_factor))
   ogParams.set('sub', podcast.case_types?.slice(0, 2).join(' · ') ?? 'True Crime Podcast')
   const brandedOg = `${BASE}/og?${ogParams.toString()}`
 
   return {
-    title: `${podcast.title} Review`,
-    description,
+    title: meta.title,
+    description: meta.description,
+    ...(meta.robots && { robots: meta.robots }),
     openGraph: {
-      title: `${podcast.title} | ListenTrueCrime`,
-      description,
+      title: meta.ogTitle,
+      description: meta.ogDescription,
       // Use podcast cover art when available, otherwise fall back to branded OG
       images: podcast.image_url
         ? [{ url: podcast.image_url, width: 1400, height: 1400, alt: podcast.title }]
         : [{ url: brandedOg, width: 1200, height: 630, alt: podcast.title }],
-      url: `${BASE}/podcasts/${slug}`,
+      url: meta.canonical,
     },
     twitter: {
       card: 'summary_large_image',
-      title: podcast.title,
-      description,
+      title: meta.ogTitle,
+      description: meta.ogDescription,
       images: podcast.image_url ? [podcast.image_url] : [brandedOg],
     },
-    alternates: { canonical: `${BASE}/podcasts/${slug}` },
+    alternates: { canonical: meta.canonical },
   }
 }
 

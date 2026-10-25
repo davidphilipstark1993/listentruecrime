@@ -114,7 +114,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .select('slug, updated_at')
     .in('status', ['sent', 'archived'])
 
-  const newsletterUrls: MetadataRoute.Sitemap = (newsletters ?? []).map(n => ({
+  const { data: noindexIssueRows } = await supabase.from('newsletters').select('slug').eq('noindex', true)
+  const noindexedIssues = new Set((noindexIssueRows ?? []).map(r => r.slug))
+
+  const newsletterUrls: MetadataRoute.Sitemap = (newsletters ?? []).filter(n => !noindexedIssues.has(n.slug)).map(n => ({
     url: `${BASE}/newsletter/${n.slug}`,
     lastModified: n.updated_at ?? new Date(),
     changeFrequency: 'weekly',
