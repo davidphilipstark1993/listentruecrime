@@ -115,7 +115,7 @@ function getPodcastCategories(podcast: any) {
     const caseTypes = CATEGORY_TO_CASE_TYPES[cat.slug] ?? []
     if (cat.slug === 'uk-crime' && podcast.country === 'UK') cats.push(cat)
     else if (cat.slug === 'australian-crime' && podcast.country === 'AU') cats.push(cat)
-    else if (cat.slug === 'binge-worthy' && (podcast.binge_factor ?? 0) >= 8) cats.push(cat)
+    // 'binge-worthy' membership came from the editorial binge score, so it is not asserted on the page
     else if (caseTypes.length > 0 && podcast.case_types?.some((t: string) => caseTypes.includes(t))) cats.push(cat)
   }
   return cats
