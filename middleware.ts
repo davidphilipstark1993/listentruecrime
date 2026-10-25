@@ -1,8 +1,15 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { sanitizeEnv } from '@/lib/utils'
+import { lookupRedirect } from '@/lib/redirects'
 
 export async function middleware(request: NextRequest) {
+  // Admin-managed 301s (Admin > Redirects)
+  const managedTarget = await lookupRedirect(request.nextUrl.pathname)
+  if (managedTarget) {
+    return NextResponse.redirect(new URL(managedTarget, request.url), 301)
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(

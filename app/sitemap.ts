@@ -5,6 +5,7 @@ import { getAllPosts, getAllCategories, getAllTags, MIN_INDEXABLE_TAG_POSTS } fr
 import { getAllCases } from '@/lib/cases'
 import { getAllAuthors } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
+import { normalisePath } from '@/lib/redirects'
 import { getIndexablePodcastsLike, getListingCounts, MIN_INDEXABLE_COUNTRY_PODCASTS, MIN_INDEXABLE_PLATFORM_PODCASTS } from '@/lib/seo/indexability'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -19,7 +20,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .select('slug, updated_at')
     .eq('is_published', true)
 
-  const podcastUrls: MetadataRoute.Sitemap = (podcasts ?? []).map(p => ({
+  // Redirected and noindexed pages must not be in the sitemap. These columns/tables
+  // arrive with migration 018, so they are read separately and tolerate not existing yet.
+  const { data: redirectRows } = await supabase.from('redirects').select('from_path')
+  const redirected = new Set((redirectRows ?? []).map(r => normalisePath(r.from_path)))
+  const { data: noindexRows } = await supabase.from('podcasts').select('slug').eq('noindex', true)
+  const noindexed = new Set((noindexRows ?? []).map(r => r.slug))
+  const isListed = (path: string) => !redirected.has(path)
+
+  const podcastUrls: MetadataRoute.Sitemap = (podcasts ?? []).filter(p => isListed(`/podcasts/${p.slug}`) && !noindexed.has(p.slug)).map(p => ({
     url: `${BASE}/podcasts/${p.slug}`,
     lastModified: p.updated_at ?? new Date(),
     changeFrequency: 'weekly',
