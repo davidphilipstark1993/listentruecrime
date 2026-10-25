@@ -88,11 +88,6 @@ export function PodcastCard({ podcast, priority = false, className }: PodcastCar
               <span className="text-stone-faint">({ratingCount})</span>
             )}
           </div>
-          {podcast.binge_factor && (
-            <span className="text-stone-subtle text-2xs">
-              Binge: <span className="text-stone-muted">{podcast.binge_factor}/10</span>
-            </span>
-          )}
         </div>
       </div>
     </Link>

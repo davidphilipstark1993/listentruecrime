@@ -3,7 +3,7 @@ import { PODCAST_SLUG_ALIASES } from '@/lib/seo/slug-aliases'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { Star, Headphones, ArrowRight, ChevronDown, ChevronUp, Users, Mic, Play, ThumbsUp, ThumbsDown } from 'lucide-react'
+import { Star, Headphones, ArrowRight, ChevronDown, ChevronUp, Users, Mic, Play, ThumbsUp } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
@@ -13,12 +13,14 @@ import { ReviewForm } from '@/components/podcasts/review-form'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
+import { countryDisplayName } from '@/lib/country-names'
+import { listenLinks } from '@/lib/platform-urls'
 import { buildPodcastMeta } from '@/lib/seo/podcast-meta'
-import { getPros, getCons, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
+import { getPros, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
 import { getAuthor } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
 import { countryFlag, formatRelativeDate, scoreBg, cn, stripHtml } from '@/lib/utils'
-import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES, PLATFORMS, platformHref } from '@/lib/types/database'
+import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
@@ -113,7 +115,7 @@ function getPodcastCategories(podcast: any) {
     const caseTypes = CATEGORY_TO_CASE_TYPES[cat.slug] ?? []
     if (cat.slug === 'uk-crime' && podcast.country === 'UK') cats.push(cat)
     else if (cat.slug === 'australian-crime' && podcast.country === 'AU') cats.push(cat)
-    else if (cat.slug === 'binge-worthy' && (podcast.binge_factor ?? 0) >= 8) cats.push(cat)
+    // 'binge-worthy' membership came from the editorial binge score, so it is not asserted on the page
     else if (caseTypes.length > 0 && podcast.case_types?.some((t: string) => caseTypes.includes(t))) cats.push(cat)
   }
   return cats
@@ -130,7 +132,6 @@ function getWhoIsItFor(podcast: any): string[] {
   if (podcast.case_types?.includes('Courtroom') || podcast.case_types?.includes('Wrongful Conviction')) lines.push('Legal procedure enthusiasts and wrongful conviction advocates')
   if (podcast.case_types?.includes('Serial Killer')) lines.push('Those interested in the psychology of serial offenders')
   if (podcast.case_types?.includes('Fraud') || podcast.case_types?.includes('White-Collar Crime')) lines.push('Fans of financial crime and corporate misconduct stories')
-  if ((podcast.binge_factor ?? 0) >= 8) lines.push('Binge listeners who want something they can\'t stop at one episode')
   if (podcast.host_style === 'Dual Host') lines.push('Listeners who enjoy a conversational, back-and-forth dynamic')
   if (podcast.factual_style === 'Purely Factual') lines.push('Those who prefer straight reporting over host commentary')
   if (podcast.country === 'UK') lines.push('Listeners interested in British cases and the UK criminal justice system')
@@ -209,18 +210,20 @@ export default async function PodcastPage({ params }: Props) {
   const overallScore = stats?.avg_overall
   const year = new Date().getFullYear()
   const pros = getPros(podcast, stats)
-  const cons = getCons(podcast, stats)
   const hostInfo = getHostDescription(podcast)
+  // Only platforms with an editor-entered URL count as available
+  const countryName = countryDisplayName(podcast)
+  const listenOn = listenLinks(podcast.platforms, podcast.platform_urls)
   const personSchema = getPodcastPersonSchema(podcast)
 
-  const faqs = [
+  const allFaqs = [
     {
       q: `What is ${podcast.title} about?`,
       a: podcast.description ?? podcast.short_description ?? `${podcast.title} is a true crime podcast covering ${podcast.case_types?.join(', ') ?? 'real criminal cases'}.`,
     },
     {
       q: `Is ${podcast.title} worth listening to?`,
-      a: `${podcast.quick_verdict ? `Our editorial verdict is "${podcast.quick_verdict}". ` : ''}${overallScore ? `The community has rated it ${overallScore.toFixed(1)}/10 overall. ` : ''}${podcast.binge_factor ? `It scores ${podcast.binge_factor}/10 on binge factor. ` : ''}${podcast.short_description ?? ''}`,
+      a: `${podcast.quick_verdict ? `Our editorial verdict is "${podcast.quick_verdict}". ` : ''}${overallScore ? `The community has rated it ${overallScore.toFixed(1)}/10 overall. ` : ''}${podcast.short_description ?? ''}`,
     },
     {
       q: `Who is ${podcast.title} for?`,
@@ -236,9 +239,8 @@ export default async function PodcastPage({ params }: Props) {
     },
     {
       q: `Where can I listen to ${podcast.title}?`,
-      a: podcast.platforms?.length
-        ? `${podcast.title} is available on ${podcast.platforms.join(', ')}. Search for it by name on any of those apps.`
-        : `${podcast.title} is available on major podcast platforms including Spotify and Apple Podcasts.`,
+      // Empty (so the question is hidden) when no platform URL has been entered
+      a: listenOn.length ? `${podcast.title} is available on ${listenOn.map(l => l.name).join(', ')}.` : '',
     },
     {
       q: `What podcasts are similar to ${podcast.title}?`,
@@ -247,6 +249,8 @@ export default async function PodcastPage({ params }: Props) {
         : `Browse our ${podcast.case_types?.slice(0, 1)[0] ?? 'true crime'} category for similar podcasts.`,
     },
   ]
+  // A question with nothing to say is hidden rather than shown with an empty answer
+  const faqs = allFaqs.filter(f => f.a.trim().length > 0)
 
   const ratingCount = stats?.rating_count ?? 0
 
@@ -261,14 +265,16 @@ export default async function PodcastPage({ params }: Props) {
     datePublished: podcast.created_at?.split('T')[0],
     dateModified: podcast.updated_at?.split('T')[0],
     ...(podcast.case_types?.length && { genre: podcast.case_types }),
-    ...(podcast.country && { countryOfOrigin: { '@type': 'Country', name: COUNTRIES[podcast.country] ?? podcast.country } }),
-    // ListenAction.target needs a real EntryPoint URL — platform names alone
-    // (e.g. "Spotify") aren't valid targets and there's no per-platform URL
-    // in the data, so this only fires when we have the podcast's own site.
-    ...(podcast.website_url && {
+    ...(countryName && { countryOfOrigin: { '@type': 'Country', name: countryName } }),
+    // ListenAction targets are the real, editor-entered listen URLs only
+    ...(listenOn.length > 0 && {
       potentialAction: {
         '@type': 'ListenAction',
-        target: { '@type': 'EntryPoint', url: podcast.website_url, actionPlatform: ['http://schema.org/DesktopWebPlatform', 'http://schema.org/MobileWebPlatform'] },
+        target: listenOn.map(l => ({
+          '@type': 'EntryPoint',
+          url: l.url,
+          actionPlatform: ['http://schema.org/DesktopWebPlatform', 'http://schema.org/MobileWebPlatform'],
+        })),
       },
     }),
     // Only emit aggregateRating once there is a meaningful number of community ratings
@@ -284,8 +290,8 @@ export default async function PodcastPage({ params }: Props) {
   }
 
   // Editorial review schema — only when we have editorial content
-  // A Review needs a real rating, so it is omitted when binge_factor is unset.
-  const reviewSchema = podcast.binge_factor != null ? {
+  // A Review needs a real, final editor rating: omitted when no rating is entered or it is provisional.
+  const reviewSchema = podcast.rating != null && !podcast.rating_is_provisional ? {
     '@context': 'https://schema.org',
     '@type': 'Review',
     itemReviewed: {
@@ -300,10 +306,10 @@ export default async function PodcastPage({ params }: Props) {
     },
     reviewRating: {
       '@type': 'Rating',
-      ratingValue: podcast.binge_factor,
+      ratingValue: podcast.rating,
       bestRating: 10,
-      worstRating: 1,
-      name: 'Binge Factor',
+      worstRating: 0,
+      name: 'Editorial rating',
       ...(podcast.quick_verdict && { description: podcast.quick_verdict }),
     },
     ...(podcast.newsletter_worthy_summary && { reviewBody: podcast.newsletter_worthy_summary }),
@@ -373,9 +379,9 @@ export default async function PodcastPage({ params }: Props) {
               {/* Title block */}
               <div className="flex-1 pt-2">
                 <div className="flex flex-wrap gap-1.5 mb-3">
-                  {podcast.country && (
+                  {podcast.country && countryName && (
                     <span className="tag">
-                      {countryFlag(podcast.country)} {COUNTRIES[podcast.country] ?? podcast.country}
+                      {countryFlag(podcast.country)} {countryName}
                     </span>
                   )}
                   {podcast.case_types?.map((t: string) => <span key={t} className="tag">{t}</span>)}
@@ -385,23 +391,18 @@ export default async function PodcastPage({ params }: Props) {
                 <p className="text-stone-subtle text-sm mb-1">
                   True crime podcast review — {year}
                 </p>
-                <p className="text-stone-subtle text-xs mb-3">
-                  Reviewed{' '}
-                  <time dateTime={podcast.created_at?.split('T')[0]}>
-                    {new Date(podcast.created_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
-                  </time>
-                  {podcast.updated_at !== podcast.created_at && (
-                    <>
-                      {' · Updated '}
-                      <time dateTime={podcast.updated_at?.split('T')[0]}>
-                        {new Date(podcast.updated_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
-                      </time>
-                    </>
-                  )}
-                </p>
-
                 {/* Score row */}
-                <div className="flex items-center gap-4 flex-wrap">
+                <div className="flex items-center gap-4 flex-wrap mt-3">
+                  {podcast.rating != null && (
+                    <div className="flex items-center gap-2">
+                      <span className={cn('score-badge text-sm', scoreBg(podcast.rating))}>
+                        {Number(podcast.rating).toFixed(1)}
+                      </span>
+                      <span className="text-stone-subtle text-xs">
+                        {podcast.rating_is_provisional ? 'Provisional rating' : 'Editorial rating'}
+                      </span>
+                    </div>
+                  )}
                   {overallScore && (
                     <div className="flex items-center gap-2">
                       <span className={cn('score-badge text-sm', scoreBg(overallScore))}>
@@ -504,10 +505,10 @@ export default async function PodcastPage({ params }: Props) {
               )}
 
               {/* Pros & Cons */}
-              {(pros.length > 0 || cons.length > 0) && (
+              {pros.length > 0 && (
                 <div className="card p-6">
-                  <h2 className="font-serif text-lg text-stone mb-5">Pros &amp; cons</h2>
-                  <div className="grid sm:grid-cols-2 gap-5">
+                  <h2 className="font-serif text-lg text-stone mb-5">Pros</h2>
+                  <div className="grid gap-5">
                     {pros.length > 0 && (
                       <div>
                         <div className="flex items-center gap-2 mb-3">
@@ -519,22 +520,6 @@ export default async function PodcastPage({ params }: Props) {
                             <li key={i} className="flex items-start gap-2 text-stone-muted text-sm">
                               <span className="text-emerald-400 mt-0.5 shrink-0 text-xs">+</span>
                               {p}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    {cons.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-2 mb-3">
-                          <ThumbsDown size={14} className="text-stone-subtle" />
-                          <span className="text-xs font-semibold text-stone-subtle uppercase tracking-wider">Cons</span>
-                        </div>
-                        <ul className="space-y-2">
-                          {cons.map((c, i) => (
-                            <li key={i} className="flex items-start gap-2 text-stone-muted text-sm">
-                              <span className="text-stone-subtle mt-0.5 shrink-0 text-xs">−</span>
-                              {c}
                             </li>
                           ))}
                         </ul>
@@ -695,8 +680,7 @@ export default async function PodcastPage({ params }: Props) {
                     { label: 'Style', value: podcast.factual_style },
                     { label: 'Episode length', value: podcast.episode_length },
                     { label: 'Episodes', value: podcast.episode_count },
-                    { label: 'Binge factor', value: podcast.binge_factor ? `${podcast.binge_factor}/10` : null },
-                    { label: 'Country', value: podcast.country ? (COUNTRIES[podcast.country] ?? podcast.country) : null },
+                                    { label: 'Country', value: countryName },
                   ].filter(i => i.value).map(item => (
                     <div key={item.label} className="flex justify-between gap-3">
                       <dt className="text-stone-subtle text-xs">{item.label}</dt>
@@ -706,26 +690,22 @@ export default async function PodcastPage({ params }: Props) {
                 </dl>
               </div>
 
-              {/* Platforms */}
-              {podcast.platforms && podcast.platforms.length > 0 && (
+              {/* Listen links: real anchors, only for platforms with an entered URL */}
+              {listenOn.length > 0 && (
                 <div className="card p-5">
                   <h3 className="font-serif text-sm text-stone mb-3 uppercase tracking-wide">Listen on</h3>
                   <div className="flex flex-wrap gap-2">
-                    {podcast.platforms.map((p: string) =>
-                      // Podcasts can list platforms (YouTube, CBC, ...) that have no
-                      // /platform/ page — a link there would 404.
-                      PLATFORMS.includes(p) ? (
-                        <Link
-                          key={p}
-                          href={platformHref(p)}
-                          className="tag hover:border-white/20 transition-colors"
-                        >
-                          {p}
-                        </Link>
-                      ) : (
-                        <span key={p} className="tag">{p}</span>
-                      )
-                    )}
+                    {listenOn.map(l => (
+                      <a
+                        key={l.name}
+                        href={l.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="tag hover:border-white/20 transition-colors"
+                      >
+                        {l.name}
+                      </a>
+                    ))}
                   </div>
                 </div>
               )}

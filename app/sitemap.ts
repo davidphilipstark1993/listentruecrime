@@ -8,6 +8,10 @@ import { BASE } from '@/lib/seo/config'
 import { normalisePath } from '@/lib/redirects'
 import { getIndexablePodcastsLike, getListingCounts, MIN_INDEXABLE_COUNTRY_PODCASTS, MIN_INDEXABLE_PLATFORM_PODCASTS } from '@/lib/seo/indexability'
 
+// Regenerate hourly (and on admin saves) so unpublished, redirected and noindexed
+// pages leave the sitemap without waiting for the next deploy.
+export const revalidate = 3600
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createAdminClient()
   // Shared freshness stamp for collections with no per-item updated_at of
