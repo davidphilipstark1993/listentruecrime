@@ -3,7 +3,7 @@ import { PODCAST_SLUG_ALIASES } from '@/lib/seo/slug-aliases'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { Star, Headphones, ArrowRight, ChevronDown, ChevronUp, Users, Mic, Play, ThumbsUp, ThumbsDown } from 'lucide-react'
+import { Star, Headphones, ArrowRight, ChevronDown, ChevronUp, Users, Mic, Play, ThumbsUp } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
@@ -14,7 +14,7 @@ import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
 import { buildPodcastMeta } from '@/lib/seo/podcast-meta'
-import { getPros, getCons, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
+import { getPros, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
 import { getAuthor } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
 import { countryFlag, formatRelativeDate, scoreBg, cn, stripHtml } from '@/lib/utils'
@@ -130,7 +130,6 @@ function getWhoIsItFor(podcast: any): string[] {
   if (podcast.case_types?.includes('Courtroom') || podcast.case_types?.includes('Wrongful Conviction')) lines.push('Legal procedure enthusiasts and wrongful conviction advocates')
   if (podcast.case_types?.includes('Serial Killer')) lines.push('Those interested in the psychology of serial offenders')
   if (podcast.case_types?.includes('Fraud') || podcast.case_types?.includes('White-Collar Crime')) lines.push('Fans of financial crime and corporate misconduct stories')
-  if ((podcast.binge_factor ?? 0) >= 8) lines.push('Binge listeners who want something they can\'t stop at one episode')
   if (podcast.host_style === 'Dual Host') lines.push('Listeners who enjoy a conversational, back-and-forth dynamic')
   if (podcast.factual_style === 'Purely Factual') lines.push('Those who prefer straight reporting over host commentary')
   if (podcast.country === 'UK') lines.push('Listeners interested in British cases and the UK criminal justice system')
@@ -209,18 +208,17 @@ export default async function PodcastPage({ params }: Props) {
   const overallScore = stats?.avg_overall
   const year = new Date().getFullYear()
   const pros = getPros(podcast, stats)
-  const cons = getCons(podcast, stats)
   const hostInfo = getHostDescription(podcast)
   const personSchema = getPodcastPersonSchema(podcast)
 
-  const faqs = [
+  const allFaqs = [
     {
       q: `What is ${podcast.title} about?`,
       a: podcast.description ?? podcast.short_description ?? `${podcast.title} is a true crime podcast covering ${podcast.case_types?.join(', ') ?? 'real criminal cases'}.`,
     },
     {
       q: `Is ${podcast.title} worth listening to?`,
-      a: `${podcast.quick_verdict ? `Our editorial verdict is "${podcast.quick_verdict}". ` : ''}${overallScore ? `The community has rated it ${overallScore.toFixed(1)}/10 overall. ` : ''}${podcast.binge_factor ? `It scores ${podcast.binge_factor}/10 on binge factor. ` : ''}${podcast.short_description ?? ''}`,
+      a: `${podcast.quick_verdict ? `Our editorial verdict is "${podcast.quick_verdict}". ` : ''}${overallScore ? `The community has rated it ${overallScore.toFixed(1)}/10 overall. ` : ''}${podcast.short_description ?? ''}`,
     },
     {
       q: `Who is ${podcast.title} for?`,
@@ -247,6 +245,8 @@ export default async function PodcastPage({ params }: Props) {
         : `Browse our ${podcast.case_types?.slice(0, 1)[0] ?? 'true crime'} category for similar podcasts.`,
     },
   ]
+  // A question with nothing to say is hidden rather than shown with an empty answer
+  const faqs = allFaqs.filter(f => f.a.trim().length > 0)
 
   const ratingCount = stats?.rating_count ?? 0
 
@@ -284,8 +284,8 @@ export default async function PodcastPage({ params }: Props) {
   }
 
   // Editorial review schema — only when we have editorial content
-  // A Review needs a real rating, so it is omitted when binge_factor is unset.
-  const reviewSchema = podcast.binge_factor != null ? {
+  // A Review needs a real, final editor rating: omitted when no rating is entered or it is provisional.
+  const reviewSchema = podcast.rating != null && !podcast.rating_is_provisional ? {
     '@context': 'https://schema.org',
     '@type': 'Review',
     itemReviewed: {
@@ -300,10 +300,10 @@ export default async function PodcastPage({ params }: Props) {
     },
     reviewRating: {
       '@type': 'Rating',
-      ratingValue: podcast.binge_factor,
+      ratingValue: podcast.rating,
       bestRating: 10,
-      worstRating: 1,
-      name: 'Binge Factor',
+      worstRating: 0,
+      name: 'Editorial rating',
       ...(podcast.quick_verdict && { description: podcast.quick_verdict }),
     },
     ...(podcast.newsletter_worthy_summary && { reviewBody: podcast.newsletter_worthy_summary }),
@@ -385,23 +385,18 @@ export default async function PodcastPage({ params }: Props) {
                 <p className="text-stone-subtle text-sm mb-1">
                   True crime podcast review — {year}
                 </p>
-                <p className="text-stone-subtle text-xs mb-3">
-                  Reviewed{' '}
-                  <time dateTime={podcast.created_at?.split('T')[0]}>
-                    {new Date(podcast.created_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
-                  </time>
-                  {podcast.updated_at !== podcast.created_at && (
-                    <>
-                      {' · Updated '}
-                      <time dateTime={podcast.updated_at?.split('T')[0]}>
-                        {new Date(podcast.updated_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
-                      </time>
-                    </>
-                  )}
-                </p>
-
                 {/* Score row */}
-                <div className="flex items-center gap-4 flex-wrap">
+                <div className="flex items-center gap-4 flex-wrap mt-3">
+                  {podcast.rating != null && (
+                    <div className="flex items-center gap-2">
+                      <span className={cn('score-badge text-sm', scoreBg(podcast.rating))}>
+                        {Number(podcast.rating).toFixed(1)}
+                      </span>
+                      <span className="text-stone-subtle text-xs">
+                        {podcast.rating_is_provisional ? 'Provisional rating' : 'Editorial rating'}
+                      </span>
+                    </div>
+                  )}
                   {overallScore && (
                     <div className="flex items-center gap-2">
                       <span className={cn('score-badge text-sm', scoreBg(overallScore))}>
@@ -504,10 +499,10 @@ export default async function PodcastPage({ params }: Props) {
               )}
 
               {/* Pros & Cons */}
-              {(pros.length > 0 || cons.length > 0) && (
+              {pros.length > 0 && (
                 <div className="card p-6">
-                  <h2 className="font-serif text-lg text-stone mb-5">Pros &amp; cons</h2>
-                  <div className="grid sm:grid-cols-2 gap-5">
+                  <h2 className="font-serif text-lg text-stone mb-5">Pros</h2>
+                  <div className="grid gap-5">
                     {pros.length > 0 && (
                       <div>
                         <div className="flex items-center gap-2 mb-3">
@@ -519,22 +514,6 @@ export default async function PodcastPage({ params }: Props) {
                             <li key={i} className="flex items-start gap-2 text-stone-muted text-sm">
                               <span className="text-emerald-400 mt-0.5 shrink-0 text-xs">+</span>
                               {p}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                    {cons.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-2 mb-3">
-                          <ThumbsDown size={14} className="text-stone-subtle" />
-                          <span className="text-xs font-semibold text-stone-subtle uppercase tracking-wider">Cons</span>
-                        </div>
-                        <ul className="space-y-2">
-                          {cons.map((c, i) => (
-                            <li key={i} className="flex items-start gap-2 text-stone-muted text-sm">
-                              <span className="text-stone-subtle mt-0.5 shrink-0 text-xs">−</span>
-                              {c}
                             </li>
                           ))}
                         </ul>
@@ -695,8 +674,7 @@ export default async function PodcastPage({ params }: Props) {
                     { label: 'Style', value: podcast.factual_style },
                     { label: 'Episode length', value: podcast.episode_length },
                     { label: 'Episodes', value: podcast.episode_count },
-                    { label: 'Binge factor', value: podcast.binge_factor ? `${podcast.binge_factor}/10` : null },
-                    { label: 'Country', value: podcast.country ? (COUNTRIES[podcast.country] ?? podcast.country) : null },
+                                    { label: 'Country', value: podcast.country ? (COUNTRIES[podcast.country] ?? podcast.country) : null },
                   ].filter(i => i.value).map(item => (
                     <div key={item.label} className="flex justify-between gap-3">
                       <dt className="text-stone-subtle text-xs">{item.label}</dt>
