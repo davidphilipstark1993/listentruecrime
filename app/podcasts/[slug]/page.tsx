@@ -13,6 +13,7 @@ import { ReviewForm } from '@/components/podcasts/review-form'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
+import { countryDisplayName } from '@/lib/country-names'
 import { listenLinks } from '@/lib/platform-urls'
 import { buildPodcastMeta } from '@/lib/seo/podcast-meta'
 import { getPros, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
@@ -211,6 +212,7 @@ export default async function PodcastPage({ params }: Props) {
   const pros = getPros(podcast, stats)
   const hostInfo = getHostDescription(podcast)
   // Only platforms with an editor-entered URL count as available
+  const countryName = countryDisplayName(podcast)
   const listenOn = listenLinks(podcast.platforms, podcast.platform_urls)
   const personSchema = getPodcastPersonSchema(podcast)
 
@@ -263,7 +265,7 @@ export default async function PodcastPage({ params }: Props) {
     datePublished: podcast.created_at?.split('T')[0],
     dateModified: podcast.updated_at?.split('T')[0],
     ...(podcast.case_types?.length && { genre: podcast.case_types }),
-    ...(podcast.country && { countryOfOrigin: { '@type': 'Country', name: COUNTRIES[podcast.country] ?? podcast.country } }),
+    ...(countryName && { countryOfOrigin: { '@type': 'Country', name: countryName } }),
     // ListenAction targets are the real, editor-entered listen URLs only
     ...(listenOn.length > 0 && {
       potentialAction: {
@@ -377,9 +379,9 @@ export default async function PodcastPage({ params }: Props) {
               {/* Title block */}
               <div className="flex-1 pt-2">
                 <div className="flex flex-wrap gap-1.5 mb-3">
-                  {podcast.country && (
+                  {podcast.country && countryName && (
                     <span className="tag">
-                      {countryFlag(podcast.country)} {COUNTRIES[podcast.country] ?? podcast.country}
+                      {countryFlag(podcast.country)} {countryName}
                     </span>
                   )}
                   {podcast.case_types?.map((t: string) => <span key={t} className="tag">{t}</span>)}
@@ -678,7 +680,7 @@ export default async function PodcastPage({ params }: Props) {
                     { label: 'Style', value: podcast.factual_style },
                     { label: 'Episode length', value: podcast.episode_length },
                     { label: 'Episodes', value: podcast.episode_count },
-                                    { label: 'Country', value: podcast.country ? (COUNTRIES[podcast.country] ?? podcast.country) : null },
+                                    { label: 'Country', value: countryName },
                   ].filter(i => i.value).map(item => (
                     <div key={item.label} className="flex justify-between gap-3">
                       <dt className="text-stone-subtle text-xs">{item.label}</dt>
