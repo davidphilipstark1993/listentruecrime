@@ -103,12 +103,15 @@ export async function generateMetadata({
   ogParams.set('sub', post.category)
   const ogImage = `${BASE}/og?${ogParams.toString()}`
 
+  // seoTitle is the complete <title> (it bypasses the site-wide " | ListenTrueCrime" template).
+  const pageTitle = post.seoTitle ?? post.title
+
   return {
-    title: post.title,
+    title: post.seoTitle ? { absolute: post.seoTitle } : post.title,
     description: post.description,
     alternates: { canonical: `${BASE}/blog/${post.slug}` },
     openGraph: {
-      title: post.title,
+      title: pageTitle,
       description: post.description,
       url: `${BASE}/blog/${post.slug}`,
       type: 'article',

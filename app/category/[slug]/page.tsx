@@ -8,9 +8,10 @@ import { Footer } from '@/components/layout/footer'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { NewsletterLeadMagnet } from '@/components/newsletter/newsletter-lead-magnet'
-import { CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/database'
+import { CATEGORIES, CATEGORY_TO_CASE_TYPES, CATEGORY_CURATED_SLUGS } from '@/lib/types/database'
 import { CATEGORY_SEO, buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
 import { BASE } from '@/lib/seo/config'
+import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
 interface Props {
@@ -18,6 +19,14 @@ interface Props {
 }
 
 export const revalidate = 3600
+
+// These two categories list exactly the same shows as the matching country
+// page (country = UK / AU) under an identical title, so they compete with it.
+// The country page is the canonical version; the category stays reachable.
+const CANONICAL_COUNTRY_PAGE: Record<string, string> = {
+  'uk-crime': '/country/UK',
+  'australian-crime': '/country/AU',
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
@@ -44,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: baseDescription.slice(0, 160),
       url: `${BASE}/category/${slug}`,
     },
-    alternates: { canonical: `${BASE}/category/${slug}` },
+    alternates: { canonical: `${BASE}${CANONICAL_COUNTRY_PAGE[slug] ?? `/category/${slug}`}` },
   }
 }
 
@@ -69,6 +78,8 @@ export default async function CategoryPage({ params }: Props) {
     q = q.eq('country', 'AU')
   } else if (slug === 'binge-worthy') {
     q = q.gte('binge_factor', 8)
+  } else if (CATEGORY_CURATED_SLUGS[slug]) {
+    q = q.in('slug', CATEGORY_CURATED_SLUGS[slug])
   } else if (caseTypes.length > 0) {
     q = q.overlaps('case_types', caseTypes)
   }
@@ -78,7 +89,10 @@ export default async function CategoryPage({ params }: Props) {
   // (was rendering all 48 at once with no pagination). `count: 'exact'` above
   // still returns the true total for the copy below.
   const { data, count } = await q.order('binge_factor', { ascending: false }).limit(24)
-  const podcasts = (data ?? []) as (Podcast & { rating_stats: RatingStats | null })[]
+  const curatedOrder = CATEGORY_CURATED_SLUGS[slug]
+  const podcasts = ((data ?? []) as (Podcast & { rating_stats: RatingStats | null })[]).sort((a, b) =>
+    curatedOrder ? curatedOrder.indexOf(a.slug) - curatedOrder.indexOf(b.slug) : 0
+  )
   const totalCount = count ?? podcasts.length
 
   const h1 = seo?.h1 ?? `Best ${cat.label} Podcasts`
@@ -219,6 +233,22 @@ export default async function CategoryPage({ params }: Props) {
         {/* ── Lead magnet ── */}
         <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
           <NewsletterLeadMagnet variant="banner" source={`category_lead_${slug}`} />
+        </section>
+
+        {/* ── Popular guides ── */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 section-divider">
+          <h2 className="heading-section text-xl mb-6">Popular guides</h2>
+          <div className="flex flex-wrap gap-3">
+            {POPULAR_GUIDES.slice(0, 6).map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-ink-800 border border-white/[0.08] text-stone-muted hover:text-stone hover:border-white/20 text-sm transition-colors"
+              >
+                {link.label} <ArrowRight size={13} />
+              </Link>
+            ))}
+          </div>
         </section>
 
         {/* ── Related categories ── */}

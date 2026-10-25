@@ -47,12 +47,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lead = (issue.editors_note ?? issue.body ?? issue.intro)?.replace(/\s+/g, ' ').trim()
   const description = (lead && lead.length > 160 ? `${lead.slice(0, 157)}…` : lead) || `Five true crime podcasts worth listening to — issue #${issue.issue_number} of the ListenTrueCrime newsletter.`
 
+  // Every issue shares the same editorial title ("5 True Crime Podcasts Worth
+  // Listening To"), which Search Console reads as duplicates — make each unique.
+  const title = `${issue.title} — Issue #${issue.issue_number}`
+
   return {
-    title: issue.title,
+    title,
     description,
     alternates: { canonical: `${BASE}/newsletter/${issue.slug}` },
     openGraph: {
-      title: issue.title,
+      title,
       description,
       url: `${BASE}/newsletter/${issue.slug}`,
       type: 'article',
@@ -60,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: issue.title,
+      title,
       description,
     },
   }

@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { CATEGORIES, COUNTRIES, PLATFORMS, PLATFORM_SLUGS } from '@/lib/types/database'
-import { getAllPosts, getAllCategories, getAllTags } from '@/lib/blog'
+import { getAllPosts, getAllCategories, getAllTags, MIN_INDEXABLE_TAG_POSTS } from '@/lib/blog'
 import { getAllCases } from '@/lib/cases'
 import { getAllAuthors } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
+import { getIndexablePodcastsLike, getListingCounts, MIN_INDEXABLE_COUNTRY_PODCASTS, MIN_INDEXABLE_PLATFORM_PODCASTS } from '@/lib/seo/indexability'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createAdminClient()
@@ -12,6 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // their own (categories/countries/platforms are static lists; podcasts,
   // blog posts, cases, and newsletters each carry their own real date below).
   const now = new Date()
+  const listingCounts = await getListingCounts()
   const { data: podcasts } = await supabase
     .from('podcasts')
     .select('slug, updated_at')
@@ -24,25 +26,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  // /podcasts-like/* is noindex'd (see app/podcasts-like/[slug]/page.tsx) —
-  // thin, auto-generated mirrors of /podcasts/*, so they don't belong in the
-  // sitemap either.
+  // /podcasts-like/* is noindex'd except for pages with demand signals — only
+  // that subset is listed (see lib/seo/indexability.ts).
+  const podcastsLikeUrls: MetadataRoute.Sitemap = (
+    await getIndexablePodcastsLike(getAllPosts().map(p => p.slug))
+  ).map(slug => ({
+    url: `${BASE}/podcasts-like/${slug}`,
+    lastModified: now,
+    changeFrequency: 'weekly',
+    priority: 0.6,
+  }))
 
-  const categoryUrls: MetadataRoute.Sitemap = CATEGORIES.map(c => ({
+  // uk-crime / australian-crime canonicalise to their country pages (see app/category/[slug]/page.tsx).
+  const categoryUrls: MetadataRoute.Sitemap = CATEGORIES.filter(c => c.slug !== 'uk-crime' && c.slug !== 'australian-crime').map(c => ({
     url: `${BASE}/category/${c.slug}`,
     lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.7,
   }))
 
-  const countryUrls: MetadataRoute.Sitemap = Object.keys(COUNTRIES).map(code => ({
+  const countryUrls: MetadataRoute.Sitemap = Object.keys(COUNTRIES).filter(code => (listingCounts.countries[code] ?? 0) >= MIN_INDEXABLE_COUNTRY_PODCASTS).map(code => ({
     url: `${BASE}/country/${code}`,
     lastModified: now,
     changeFrequency: 'weekly',
     priority: 0.6,
   }))
 
-  const platformUrls: MetadataRoute.Sitemap = PLATFORMS.map(p => ({
+  const platformUrls: MetadataRoute.Sitemap = PLATFORMS.filter(p => (listingCounts.platforms[p] ?? 0) >= MIN_INDEXABLE_PLATFORM_PODCASTS).map(p => ({
     url: `${BASE}/platform/${PLATFORM_SLUGS[p] ?? encodeURIComponent(p)}`,
     lastModified: now,
     changeFrequency: 'monthly',
@@ -59,7 +69,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const blogPosts = getAllPosts()
   const blogCategories = getAllCategories()
-  const blogTags = getAllTags()
+  const blogTags = getAllTags().filter(t => t.count >= MIN_INDEXABLE_TAG_POSTS)
 
   const blogPostUrls: MetadataRoute.Sitemap = blogPosts.map(p => ({
     url: `${BASE}/blog/${p.slug}`,
@@ -121,6 +131,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/privacy`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
     { url: `${BASE}/terms`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
     ...podcastUrls,
+    ...podcastsLikeUrls,
     ...categoryUrls,
     ...countryUrls,
     ...platformUrls,
