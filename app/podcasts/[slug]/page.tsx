@@ -13,12 +13,13 @@ import { ReviewForm } from '@/components/podcasts/review-form'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
+import { listenLinks } from '@/lib/platform-urls'
 import { buildPodcastMeta } from '@/lib/seo/podcast-meta'
 import { getPros, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
 import { getAuthor } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
 import { countryFlag, formatRelativeDate, scoreBg, cn, stripHtml } from '@/lib/utils'
-import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES, PLATFORMS, platformHref } from '@/lib/types/database'
+import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
@@ -209,6 +210,8 @@ export default async function PodcastPage({ params }: Props) {
   const year = new Date().getFullYear()
   const pros = getPros(podcast, stats)
   const hostInfo = getHostDescription(podcast)
+  // Only platforms with an editor-entered URL count as available
+  const listenOn = listenLinks(podcast.platforms, podcast.platform_urls)
   const personSchema = getPodcastPersonSchema(podcast)
 
   const allFaqs = [
@@ -234,9 +237,8 @@ export default async function PodcastPage({ params }: Props) {
     },
     {
       q: `Where can I listen to ${podcast.title}?`,
-      a: podcast.platforms?.length
-        ? `${podcast.title} is available on ${podcast.platforms.join(', ')}. Search for it by name on any of those apps.`
-        : `${podcast.title} is available on major podcast platforms including Spotify and Apple Podcasts.`,
+      // Empty (so the question is hidden) when no platform URL has been entered
+      a: listenOn.length ? `${podcast.title} is available on ${listenOn.map(l => l.name).join(', ')}.` : '',
     },
     {
       q: `What podcasts are similar to ${podcast.title}?`,
@@ -262,13 +264,15 @@ export default async function PodcastPage({ params }: Props) {
     dateModified: podcast.updated_at?.split('T')[0],
     ...(podcast.case_types?.length && { genre: podcast.case_types }),
     ...(podcast.country && { countryOfOrigin: { '@type': 'Country', name: COUNTRIES[podcast.country] ?? podcast.country } }),
-    // ListenAction.target needs a real EntryPoint URL — platform names alone
-    // (e.g. "Spotify") aren't valid targets and there's no per-platform URL
-    // in the data, so this only fires when we have the podcast's own site.
-    ...(podcast.website_url && {
+    // ListenAction targets are the real, editor-entered listen URLs only
+    ...(listenOn.length > 0 && {
       potentialAction: {
         '@type': 'ListenAction',
-        target: { '@type': 'EntryPoint', url: podcast.website_url, actionPlatform: ['http://schema.org/DesktopWebPlatform', 'http://schema.org/MobileWebPlatform'] },
+        target: listenOn.map(l => ({
+          '@type': 'EntryPoint',
+          url: l.url,
+          actionPlatform: ['http://schema.org/DesktopWebPlatform', 'http://schema.org/MobileWebPlatform'],
+        })),
       },
     }),
     // Only emit aggregateRating once there is a meaningful number of community ratings
@@ -684,26 +688,22 @@ export default async function PodcastPage({ params }: Props) {
                 </dl>
               </div>
 
-              {/* Platforms */}
-              {podcast.platforms && podcast.platforms.length > 0 && (
+              {/* Listen links: real anchors, only for platforms with an entered URL */}
+              {listenOn.length > 0 && (
                 <div className="card p-5">
                   <h3 className="font-serif text-sm text-stone mb-3 uppercase tracking-wide">Listen on</h3>
                   <div className="flex flex-wrap gap-2">
-                    {podcast.platforms.map((p: string) =>
-                      // Podcasts can list platforms (YouTube, CBC, ...) that have no
-                      // /platform/ page — a link there would 404.
-                      PLATFORMS.includes(p) ? (
-                        <Link
-                          key={p}
-                          href={platformHref(p)}
-                          className="tag hover:border-white/20 transition-colors"
-                        >
-                          {p}
-                        </Link>
-                      ) : (
-                        <span key={p} className="tag">{p}</span>
-                      )
-                    )}
+                    {listenOn.map(l => (
+                      <a
+                        key={l.name}
+                        href={l.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="tag hover:border-white/20 transition-colors"
+                      >
+                        {l.name}
+                      </a>
+                    ))}
                   </div>
                 </div>
               )}
