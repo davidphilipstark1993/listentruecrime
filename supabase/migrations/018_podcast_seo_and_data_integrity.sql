@@ -49,9 +49,11 @@ create table if not exists public.redirects (
 alter table public.redirects enable row level security;
 
 -- Middleware reads with the anon key; only admins can change rows.
+drop policy if exists "Redirects are publicly readable" on public.redirects;
 create policy "Redirects are publicly readable"
   on public.redirects for select using (true);
 
+drop policy if exists "Admins manage redirects" on public.redirects;
 create policy "Admins manage redirects"
   on public.redirects for all
   using (exists (select 1 from public.profiles where id = auth.uid() and is_admin = true))
