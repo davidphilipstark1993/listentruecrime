@@ -16,9 +16,9 @@ const SEO: Record<string, { title: string; description: string; intro: string }>
     intro: 'Black tees for people who solve cases from the sofa. Printed to order, delivered across the UK.',
   },
   hoodies: {
-    title: 'True Crime Hoodies UK',
-    description: 'True crime hoodies for long episodes and longer theories. Printed to order and delivered across the UK.',
-    intro: 'For long episodes and longer theories. Black hoodies, printed to order.',
+    title: 'True Crime Sweatshirts UK',
+    description: 'True crime sweatshirts for long episodes and longer theories. Printed to order and delivered across the UK.',
+    intro: 'For long episodes and longer theories. Sweatshirts printed to order.',
   },
   mugs: {
     title: 'True Crime Mugs and Gifts',

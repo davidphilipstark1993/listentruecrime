@@ -37,7 +37,8 @@ export const CURRENCY = 'gbp' as const
 
 export const SHOP_CATEGORIES = [
   { slug: 't-shirts', label: 'T-Shirts', blurb: 'Soft, black and quietly obsessive.' },
-  { slug: 'hoodies', label: 'Hoodies', blurb: 'For long episodes and longer theories.' },
+  // Slug stays 'hoodies' (it is in the DB check constraint); the range is sweatshirts.
+  { slug: 'hoodies', label: 'Sweatshirts', blurb: 'For long episodes and longer theories.' },
   { slug: 'mugs', label: 'Mugs', blurb: 'Every investigation needs a brew.' },
   { slug: 'accessories', label: 'Accessories', blurb: 'The finishing touches.' },
 ] as const

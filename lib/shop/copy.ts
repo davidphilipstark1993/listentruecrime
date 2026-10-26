@@ -36,5 +36,5 @@ export const RETURNS_SUMMARY = [
 export const SHOP_META = {
   title: 'True Crime Merchandise UK | Listen True Crime Shop',
   description:
-    'True crime T-shirts, hoodies and mugs for armchair detectives, cold case obsessives and podcast addicts. Designed by Listen True Crime, printed to order, delivered across the UK.',
+    'True crime T-shirts, sweatshirts, mugs and accessories for armchair detectives, cold case obsessives and podcast addicts. Designed by Listen True Crime, printed to order, delivered across the UK.',
 }

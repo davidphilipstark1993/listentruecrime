@@ -34,9 +34,11 @@ export function webhookSecret(): string {
  */
 export async function createCheckoutSession(order: ShopOrderRow, items: ShopOrderItemRow[], imageByVariant: Map<string, string | null>) {
   const stripe = getStripe()
-  return stripe.checkout.sessions.create(
-    {
+  const params: Stripe.Checkout.SessionCreateParams & { managed_payments?: { enabled: boolean } } = {
       mode: 'payment',
+      // Stripe accounts can have Managed Payments on by default, which rejects
+      // shipping_address_collection. We sell physical goods, so opt out per session.
+      managed_payments: { enabled: false },
       locale: 'en-GB',
       client_reference_id: order.id,
       metadata: { order_id: order.id, order_number: order.order_number },
@@ -71,7 +73,6 @@ export async function createCheckoutSession(order: ShopOrderRow, items: ShopOrde
       expires_at: Math.floor(Date.now() / 1000) + CHECKOUT_EXPIRY_MINUTES * 60,
       success_url: `${BASE}/shop/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${BASE}/shop/basket?cancelled=1`,
-    },
-    { idempotencyKey: `shop-checkout-${order.id}` },
-  )
+  }
+  return stripe.checkout.sessions.create(params, { idempotencyKey: `shop-checkout-${order.id}` })
 }
