@@ -6,7 +6,7 @@ import { Footer } from '@/components/layout/footer'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { BrowseControls } from '@/components/browse/browse-controls'
 import { Pagination } from '@/components/ui/pagination'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ogDefaults } from '@/lib/seo/config'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
 const PAGE_SIZE = 48
@@ -64,6 +64,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       title: `${title} | ListenTrueCrime`,
       description,
       url: canonicalUrl(sp),
+      ...ogDefaults(title, 'Browse True Crime Podcasts'),
     },
     twitter: {
       card: 'summary_large_image',

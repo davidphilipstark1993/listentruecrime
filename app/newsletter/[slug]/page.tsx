@@ -8,7 +8,7 @@ import { Footer } from '@/components/layout/footer'
 import { Breadcrumbs } from '@/components/blog/Breadcrumbs'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { scoreColor } from '@/lib/utils'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ogDefaults } from '@/lib/seo/config'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: ogTitle,
       description: ogDescription,
       url: canonical,
-      type: 'article',
+      ...ogDefaults(ogTitle, 'The ListenTrueCrime Newsletter', 'article'),
       publishedTime: issue.sent_at ?? issue.publication_date,
     },
     twitter: {

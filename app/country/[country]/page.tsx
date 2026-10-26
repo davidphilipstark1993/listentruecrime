@@ -10,7 +10,7 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { COUNTRIES } from '@/lib/types/database'
 import { COUNTRY_SEO, buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
 import { getListingCounts, MIN_INDEXABLE_COUNTRY_PODCASTS } from '@/lib/seo/indexability'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ogDefaults } from '@/lib/seo/config'
 import { countryFlag } from '@/lib/utils'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
@@ -37,6 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${h1} (${year}) | ListenTrueCrime`,
       description,
       url: `${BASE}/country/${country}`,
+      ...ogDefaults(`${h1} (${year})`),
     },
     alternates: { canonical: `${BASE}/country/${country}` },
     ...((await getListingCounts()).countries[country] ?? 0) < MIN_INDEXABLE_COUNTRY_PODCASTS && {

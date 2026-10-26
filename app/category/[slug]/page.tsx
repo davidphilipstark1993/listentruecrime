@@ -10,7 +10,7 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { NewsletterLeadMagnet } from '@/components/newsletter/newsletter-lead-magnet'
 import { CATEGORIES, CATEGORY_TO_CASE_TYPES, CATEGORY_CURATED_SLUGS } from '@/lib/types/database'
 import { CATEGORY_SEO, buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ogDefaults } from '@/lib/seo/config'
 import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
@@ -52,6 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${h1} (${year}) | ListenTrueCrime`,
       description: baseDescription.slice(0, 160),
       url: `${BASE}/category/${slug}`,
+      ...ogDefaults(`${h1} (${year})`),
     },
     alternates: { canonical: `${BASE}${CANONICAL_COUNTRY_PAGE[slug] ?? `/category/${slug}`}` },
   }

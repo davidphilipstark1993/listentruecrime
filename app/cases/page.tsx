@@ -4,7 +4,7 @@ import { ArrowRight, MapPin, Calendar } from 'lucide-react'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { getAllCases } from '@/lib/cases'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ogDefaults } from '@/lib/seo/config'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
 
 export const metadata: Metadata = {
@@ -15,6 +15,7 @@ export const metadata: Metadata = {
     title: 'True Crime Cases | ListenTrueCrime',
     description: 'Famous criminal cases mapped to the best podcasts covering them.',
     url: `${BASE}/cases`,
+    ...ogDefaults('True Crime Cases', 'Famous cases mapped to the best podcasts'),
   },
 }
 

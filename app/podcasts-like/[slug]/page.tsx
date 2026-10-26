@@ -11,7 +11,7 @@ import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { buildFAQSchema, buildBreadcrumbSchema } from '@/lib/seo/content'
 import { getPodcastNarrative } from '@/lib/seo/podcast-analysis'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ogDefaults } from '@/lib/seo/config'
 import { getAllPosts } from '@/lib/blog'
 import { getIndexablePodcastsLike } from '@/lib/seo/indexability'
 import { countryFlag, cn, scoreBg, stripHtml } from '@/lib/utils'
@@ -105,7 +105,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      images: podcast.image_url ? [{ url: podcast.image_url }] : [],
+      ...ogDefaults(title),
+      ...(podcast.image_url && { images: [{ url: podcast.image_url }] }),
       url: `${BASE}/podcasts-like/${slug}`,
     },
     alternates: { canonical: `${BASE}/podcasts-like/${slug}` },
@@ -202,7 +203,7 @@ export default async function PodcastsLikePage({ params }: Props) {
             <div className="flex items-start gap-5 mb-8 p-5 rounded-xl bg-ink-800 border border-white/[0.06]">
               <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-ink-700 shrink-0">
                 {podcast.image_url ? (
-                  <Image src={podcast.image_url} alt={podcast.title} fill className="object-cover" />
+                  <Image src={podcast.image_url} alt={podcast.title} fill className="object-cover" sizes="80px" />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <Headphones size={24} className="text-ink-500" />

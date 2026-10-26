@@ -9,7 +9,7 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { NewsletterLeadMagnet } from '@/components/newsletter/newsletter-lead-magnet'
 import { CATEGORIES, COUNTRIES } from '@/lib/types/database'
 import { buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ogDefaults } from '@/lib/seo/config'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
 import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     title: `Best True Crime Podcasts (${YEAR}): Expert-Reviewed, Binge-Scored`,
     description: 'Expert-reviewed, binge-scored and community-rated. Find your next true crime obsession.',
     url: `${BASE}/best-true-crime-podcasts`,
+    ...ogDefaults('Best True Crime Podcasts', 'Expert-reviewed, binge-scored and community-rated'),
   },
   twitter: {
     card: 'summary_large_image',
