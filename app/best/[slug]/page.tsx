@@ -13,6 +13,7 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { BEST_OF_PAGES, getBestOfPage } from '@/lib/best-of'
 import { CATEGORIES } from '@/lib/types/database'
 import { BASE, breadcrumbSchema } from '@/lib/seo'
+import { ogDefaults } from '@/lib/seo/config'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
 interface Props {
@@ -57,6 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${page.title} | ListenTrueCrime`,
       description: page.description,
       url: `${BASE}/best/${slug}`,
+      ...ogDefaults(page.title),
     },
   }
 }

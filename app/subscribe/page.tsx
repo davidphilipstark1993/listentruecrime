@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { Headphones, CalendarDays, MailCheck } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ogDefaults } from '@/lib/seo/config'
 
 // Dedicated newsletter landing page to send people to (social bios, podcast
 // guest spots, etc.). Deliberately no main nav — the only action is to subscribe.
@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     title: '5 True Crime Podcasts Worth Listening To — Every Sunday',
     description: 'A free weekly email with five true crime podcasts we think are worth your time.',
     url: `${BASE}/subscribe`,
+    ...ogDefaults('5 True Crime Podcasts Worth Listening To', 'Free weekly email, every Sunday'),
   },
 }
 

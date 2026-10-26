@@ -12,7 +12,7 @@ import { getAllCaseSlugs, getCaseBySlug, getRelatedCases } from '@/lib/cases'
 import { getAllTags } from '@/lib/blog'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
 import { getAuthor } from '@/lib/authors'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ogDefaults } from '@/lib/seo/config'
 import { COUNTRIES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${c.name} | ListenTrueCrime`,
       description,
       url: `${BASE}/cases/${slug}`,
-      type: 'article',
+      ...ogDefaults(c.name, 'True Crime Case & Podcasts', 'article'),
     },
   }
 }

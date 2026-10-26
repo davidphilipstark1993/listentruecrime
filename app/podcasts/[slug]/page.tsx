@@ -157,6 +157,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: meta.description,
     ...(meta.robots && { robots: meta.robots }),
     openGraph: {
+      type: 'website',
       title: meta.ogTitle,
       description: meta.ogDescription,
       // Use podcast cover art when available, otherwise fall back to branded OG
@@ -349,7 +350,7 @@ export default async function PodcastPage({ params }: Props) {
           <div className="absolute inset-0 h-72 bg-gradient-to-b from-ink-800 to-ink-950" />
           {podcast.image_url && (
             <div className="absolute inset-0 h-72 opacity-10">
-              <Image src={podcast.image_url} alt="" fill className="object-cover" sizes="100vw" quality={20} />
+              <Image src={podcast.image_url} alt="" fill className="object-cover" sizes="640px" quality={20} />
             </div>
           )}
           <div className="absolute inset-0 h-72 bg-gradient-to-b from-transparent via-ink-950/50 to-ink-950" />
