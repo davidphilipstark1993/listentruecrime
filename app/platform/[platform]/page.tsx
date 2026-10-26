@@ -8,8 +8,9 @@ import { Footer } from '@/components/layout/footer'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { PLATFORMS, PLATFORM_SLUGS, platformHref } from '@/lib/types/database'
+import { getListingCounts, MIN_INDEXABLE_PLATFORM_PODCASTS } from '@/lib/seo/indexability'
 import { PLATFORM_SEO, buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ogDefaults } from '@/lib/seo/config'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
 interface Props {
@@ -52,8 +53,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${h1} (${year}) | ListenTrueCrime`,
       description,
       url: canonical,
+      ...ogDefaults(`${h1} (${year})`),
     },
     alternates: { canonical },
+    ...((await getListingCounts()).platforms[name] ?? 0) < MIN_INDEXABLE_PLATFORM_PODCASTS && {
+      robots: { index: false, follow: true },
+    },
   }
 }
 

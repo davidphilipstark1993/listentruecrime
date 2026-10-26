@@ -19,6 +19,8 @@ export interface BlogBook {
 export interface BlogPost {
   slug: string
   title: string
+  /** Search-result title, when it should differ from the on-page H1. Optional. */
+  seoTitle?: string
   date: string
   updated?: string
   description: string
@@ -51,6 +53,7 @@ export function getAllPosts(): BlogPost[] {
       return {
         slug,
         title: data.title ?? '',
+        seoTitle: data.seoTitle,
         date: data.date ?? '',
         updated: data.updated,
         description: data.description ?? '',
@@ -85,6 +88,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
   return {
     slug,
     title: data.title ?? '',
+    seoTitle: data.seoTitle,
     date: data.date ?? '',
     updated: data.updated,
     description: data.description ?? '',
@@ -129,18 +133,29 @@ export function getAllCategories(): { name: string; slug: string; count: number 
     .sort((a, b) => b.count - a.count)
 }
 
+// Tags are matched case-insensitively (see getPostsByTag), so "Serial" and
+// "serial" are one tag — aggregate by slug or the sitemap lists the same URL twice.
 export function getAllTags(): { name: string; slug: string; count: number }[] {
   const posts = getAllPosts()
-  const counts: Record<string, number> = {}
+  const bySlug = new Map<string, { name: string; slug: string; count: number }>()
   posts.forEach(p => {
+    const seen = new Set<string>()
     p.tags.forEach(tag => {
-      counts[tag] = (counts[tag] || 0) + 1
+      const slug = slugifyCategory(tag)
+      if (seen.has(slug)) return
+      seen.add(slug)
+      const entry = bySlug.get(slug)
+      if (entry) entry.count++
+      else bySlug.set(slug, { name: tag, slug, count: 1 })
     })
   })
-  return Object.entries(counts)
-    .map(([name, count]) => ({ name, slug: slugifyCategory(name), count }))
-    .sort((a, b) => b.count - a.count)
+  return Array.from(bySlug.values()).sort((a, b) => b.count - a.count)
 }
+
+// A tag page is only a list of post cards, so with one or two posts it is
+// a thin near-duplicate of those posts. Below this it is noindexed and left
+// out of the sitemap (still reachable for visitors).
+export const MIN_INDEXABLE_TAG_POSTS = 3
 
 export function getRelatedPosts(post: BlogPost, limit = 3): BlogPost[] {
   const all = getAllPosts().filter(p => p.slug !== post.slug)

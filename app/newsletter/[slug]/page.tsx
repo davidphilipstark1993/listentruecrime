@@ -8,7 +8,7 @@ import { Footer } from '@/components/layout/footer'
 import { Breadcrumbs } from '@/components/blog/Breadcrumbs'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { scoreColor } from '@/lib/utils'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ogDefaults } from '@/lib/seo/config'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -47,21 +47,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lead = (issue.editors_note ?? issue.body ?? issue.intro)?.replace(/\s+/g, ' ').trim()
   const description = (lead && lead.length > 160 ? `${lead.slice(0, 157)}…` : lead) || `Five true crime podcasts worth listening to — issue #${issue.issue_number} of the ListenTrueCrime newsletter.`
 
+  // Every issue shares the same editorial title ("5 True Crime Podcasts Worth
+  // Listening To"), which Search Console reads as duplicates — make each unique.
+  const title = issue.seo_title?.trim() ? { absolute: issue.seo_title.trim() } : `${issue.title} — Issue #${issue.issue_number}`
+  const ogTitle = issue.og_title?.trim() || issue.seo_title?.trim() || `${issue.title} — Issue #${issue.issue_number}`
+
+  const metaDescription = issue.meta_description?.trim() || description
+  const ogDescription = issue.og_description?.trim() || metaDescription
+  const canonical = issue.canonical_url?.trim() || `${BASE}/newsletter/${issue.slug}`
+
   return {
-    title: issue.title,
-    description,
-    alternates: { canonical: `${BASE}/newsletter/${issue.slug}` },
+    title,
+    description: metaDescription,
+    ...(issue.noindex && { robots: { index: false, follow: true } }),
+    alternates: { canonical },
     openGraph: {
-      title: issue.title,
-      description,
-      url: `${BASE}/newsletter/${issue.slug}`,
-      type: 'article',
+      title: ogTitle,
+      description: ogDescription,
+      url: canonical,
+      ...ogDefaults(ogTitle, 'The ListenTrueCrime Newsletter', 'article'),
       publishedTime: issue.sent_at ?? issue.publication_date,
     },
     twitter: {
       card: 'summary_large_image',
-      title: issue.title,
-      description,
+      title: ogTitle,
+      description: ogDescription,
     },
   }
 }

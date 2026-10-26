@@ -10,7 +10,7 @@ The shop is a print-on-demand store at `/shop`: **Stripe Checkout** takes paymen
 |---|---|---|
 | Framework | Next.js 14.2.5 App Router, TypeScript, React 18 | New routes under `app/shop`, `app/api/shop`, `app/admin/shop` |
 | Styling | Tailwind, "ink" black/charcoal palette, crimson accent, Playfair + Inter, shared `.card` / `.btn-*` classes | Shop uses the same tokens, so it looks native — no new design system |
-| Database | Supabase Postgres, numbered SQL migrations run by hand (`supabase/migrations`), RLS on every table, service-role client in `lib/supabase/admin.ts` | `018_shop.sql` (017 is the newsletter double opt-in migration, so the shop takes 018) |
+| Database | Supabase Postgres, numbered SQL migrations run by hand (`supabase/migrations`), RLS on every table, service-role client in `lib/supabase/admin.ts` | `019_shop.sql` then `020_shop_match_printify.sql` (017 is newsletter double opt-in and 018 is podcast SEO/data integrity, so the shop takes 019-020; both already applied to prod on 26 Oct 2026) |
 | Auth | Supabase Auth; `middleware.ts` gates `/admin/*` on `profiles.is_admin`; API routes re-check with `requireAdmin()` | `/admin/shop/*` is covered by middleware; every `/api/admin/shop/*` route calls `requireAdmin()` |
 | Email | `lib/email/adminNotify.ts` (SendGrid, else Resend) for admin alerts; SendGrid for subscriber mail | Admin alerts reuse `notifyAdmin()`. Customer order/dispatch mail uses the same SendGrid→Resend selection (`lib/shop/email.ts`) but without an unsubscribe group (service mail, not marketing) |
 | Newsletter | `POST /api/newsletter` → `newsletter_subscribers` | Shop uses the existing `NewsletterForm` with `source="shop-*"`. No second subscriber list. Added an optional `buttonLabel` prop ("Subscribe Free") — default behaviour unchanged |
@@ -73,7 +73,7 @@ Set the first one on Vercel **Preview** only to review the shop without publishi
 
 | Topic | Decision | Where it's applied |
 |---|---|---|
-| Prices | I suggested: **T-shirts £24.99, hoodies £44.99, mug £13.99** (no VAT; delivery is extra at Printify's real rate) | Seeded in `018_shop.sql`; shown as "coming soon" until a Printify variant is linked; edit per variant in the admin |
+| Prices | I suggested: **T-shirts £24.99, hoodies £44.99, mug £13.99** (no VAT; delivery is extra at Printify's real rate) | Seeded in `019_shop.sql`, replaced by the real Printify products in `020_shop_match_printify.sql`; shown as "coming soon" until a Printify variant is linked; edit per variant in the admin |
 | Printify currency | You said GBP, but the API reports **USD**; converted at 0.78 (editable) | `shop_settings` seeded in migration |
 | Returns | A blanket "no returns" is not lawful for these goods in the UK (14-day cancellation right; faulty-goods rights can't be excluded). Instead: **customer pays return postage for change-of-mind returns**; we pay for faulty/damaged/misprinted items. Customers contact us first and we email the returns address | `app/shop/returns-and-refunds`, `lib/shop/copy.ts` |
 | Trading status | UK law, **sole trader** trading as Listen True Crime, Station Road, Hessle, HU13 0BG. Governing law: England and Wales (Scotland/NI customers keep local court rights) | `components/shop/terms-shop-section.tsx`, `lib/shop/copy.ts` |
@@ -97,7 +97,7 @@ Not built, by design: creating Printify products (the admin only *reads* a Print
 ## 4. Launch checklist
 
 ### A. Database
-- [ ] Run `supabase/migrations/018_shop.sql` in the Supabase SQL editor (creates tables + RLS + the 7 placeholder products with suggested prices, all unbuyable until linked to Printify).
+- [ ] Run `supabase/migrations/019_shop.sql` then `020_shop_match_printify.sql` in the Supabase SQL editor (creates tables + RLS + the 7 placeholder products with suggested prices, all unbuyable until linked to Printify).
 
 ### B. Printify
 - [ ] Create a Printify account/shop (a **Manual order approval** store — *Settings → Order approval → Manual*). Use a separate empty shop for testing if you can.

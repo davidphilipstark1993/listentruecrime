@@ -11,7 +11,9 @@ import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { buildFAQSchema, buildBreadcrumbSchema } from '@/lib/seo/content'
 import { getPodcastNarrative } from '@/lib/seo/podcast-analysis'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ogDefaults } from '@/lib/seo/config'
+import { getAllPosts } from '@/lib/blog'
+import { getIndexablePodcastsLike } from '@/lib/seo/indexability'
 import { countryFlag, cn, scoreBg, stripHtml } from '@/lib/utils'
 import { COUNTRIES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
@@ -92,8 +94,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const podcast = await getSourcePodcast(slug)
   if (!podcast) return {}
 
-  const title = `Podcasts Like ${podcast.title}`
-  const description = `If you loved ${podcast.title}, here are the best podcasts to listen to next. Similar true crime shows matched by case type, storytelling style, and listener ratings.`
+  const indexable = (await getIndexablePodcastsLike(getAllPosts().map(p => p.slug))).includes(slug)
+
+  const title = `Podcasts Like ${podcast.title} (${new Date().getFullYear()})`
+  const description = `Loved ${podcast.title}? These are the true crime podcasts to hear next, matched on case type, storytelling style and listener ratings — each with a binge score.`
 
   return {
     title,
@@ -101,17 +105,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      images: podcast.image_url ? [{ url: podcast.image_url }] : [],
+      ...ogDefaults(title),
+      ...(podcast.image_url && { images: [{ url: podcast.image_url }] }),
       url: `${BASE}/podcasts-like/${slug}`,
     },
     alternates: { canonical: `${BASE}/podcasts-like/${slug}` },
-    // 700+ near-duplicate "podcasts like X" pages, one per published podcast,
-    // templated from the same fields as /podcasts/{slug} — thin, auto-generated
-    // mirrors that add little unique value per page. noindex,follow keeps them
-    // out of the index (no ranking-dilution/duplicate-content risk) while still
-    // letting crawlers follow their links through to the real podcast pages and
-    // recommendations. See app/sitemap.ts — they're also dropped from the sitemap.
-    robots: { index: false, follow: true },
+    // ~730 templated pages, one per podcast. Only the ones with real demand
+    // signals are indexed (see lib/seo/indexability.ts); the rest are
+    // noindex,follow so they stay out of the index but pass link equity on to
+    // the real podcast pages. app/sitemap.ts lists only the indexable set.
+    robots: { index: indexable, follow: true },
   }
 }
 
@@ -200,7 +203,7 @@ export default async function PodcastsLikePage({ params }: Props) {
             <div className="flex items-start gap-5 mb-8 p-5 rounded-xl bg-ink-800 border border-white/[0.06]">
               <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-ink-700 shrink-0">
                 {podcast.image_url ? (
-                  <Image src={podcast.image_url} alt={podcast.title} fill className="object-cover" />
+                  <Image src={podcast.image_url} alt={podcast.title} fill className="object-cover" sizes="80px" />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <Headphones size={24} className="text-ink-500" />

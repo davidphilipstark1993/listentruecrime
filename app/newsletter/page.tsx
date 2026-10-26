@@ -6,7 +6,7 @@ import { Footer } from '@/components/layout/footer'
 import { Breadcrumbs } from '@/components/blog/Breadcrumbs'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { buildItemListSchema } from '@/lib/seo/content'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ogDefaults } from '@/lib/seo/config'
 
 export const metadata: Metadata = {
   title: 'Newsletter Archive',
@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     title: 'Newsletter Archive | ListenTrueCrime',
     description: 'Every past issue of the ListenTrueCrime newsletter.',
     url: `${BASE}/newsletter`,
+    ...ogDefaults('Newsletter Archive', 'Every past issue of the ListenTrueCrime newsletter'),
   },
 }
 

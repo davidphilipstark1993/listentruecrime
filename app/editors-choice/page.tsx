@@ -9,6 +9,7 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { BASE, breadcrumbSchema } from '@/lib/seo'
+import { ogDefaults } from '@/lib/seo/config'
 import { cn, countryFlag, scoreBg } from '@/lib/utils'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { ratingStatsOf } from '@/lib/rating-stats'
@@ -52,6 +53,7 @@ export const metadata: Metadata = {
     description:
       "Five essential true crime podcasts, personally chosen by the ListenTrueCrime editor.",
     url: `${BASE}/editors-choice`,
+    ...ogDefaults("Editor's Choice", 'Five essential true crime podcasts'),
   },
 }
 

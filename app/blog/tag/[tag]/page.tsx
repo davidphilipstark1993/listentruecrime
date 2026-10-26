@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getAllTags, getPostsByTag } from '@/lib/blog'
+import { getAllTags, getPostsByTag, MIN_INDEXABLE_TAG_POSTS } from '@/lib/blog'
 import { PostCard } from '@/components/blog/PostCard'
 import { Breadcrumbs } from '@/components/blog/Breadcrumbs'
 import { Header } from '@/components/layout/header'
@@ -23,6 +23,7 @@ export async function generateMetadata({
     title: `${tag.name} — True Crime Podcast Blog`,
     description: `Articles tagged "${tag.name}" on ListenTrueCrime. Expert podcast recommendations and guides.`,
     alternates: { canonical: `${BASE}/blog/tag/${params.tag}` },
+    ...(tag.count < MIN_INDEXABLE_TAG_POSTS && { robots: { index: false, follow: true } }),
   }
 }
 

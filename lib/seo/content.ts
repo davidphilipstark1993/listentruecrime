@@ -117,9 +117,43 @@ export const CATEGORY_SEO: Record<string, PageSeoContent> = {
       },
     ],
     relatedLinks: [
+      { href: '/blog/best-investigative-journalism-podcasts', label: 'Best Investigative Journalism Podcasts: The Guide' },
       { href: '/category/cold-cases', label: 'Cold Case Podcasts' },
       { href: '/category/courtroom', label: 'Courtroom Podcasts' },
       { href: '/category/missing-persons', label: 'Missing Persons Podcasts' },
+      { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
+    ],
+  },
+
+  'cults': {
+    h1: 'Best Cult Podcasts',
+    metaDescription: 'The best cult podcasts, with binge scores: NXIVM, Heaven\'s Gate, Twin Flames, John of God and more — how high-control groups recruit, and how people get out.',
+    intro: [
+      'Cult podcasts are about one question: how does it happen? Not to the gullible — to ordinary, intelligent people who joined a community, a course or a cause and found, years later, that they could not leave. The best shows here answer it through the people who were inside.',
+      'This is a curated list, not a keyword filter: each show is here because cults or high-control groups are its subject, in editorial order. Our written guide, Best Cult Podcasts, explains how to choose between them.',
+    ],
+    faqs: [
+      {
+        q: 'What are the best cult podcasts?',
+        a: 'Cults, The Clearing, and Heaven\'s Gate are the strongest starting points on our list, followed by Uncover (CBC), whose first season investigates NXIVM, and Two-Faced, on the faith healer known as John of God. Each is shown with its binge score, so you can see how compulsively listenable it is.',
+      },
+      {
+        q: 'Which cult podcast should I start with?',
+        a: 'If you want the widest overview, start with Cults, which moves across many groups and leaders. If you would rather follow a single story from beginning to end, choose a serialised show such as Heaven\'s Gate or Uncover.',
+      },
+      {
+        q: 'Are cult podcasts the same as true crime?',
+        a: 'They overlap. Some cult stories end in criminal convictions — NXIVM\'s leader, Keith Raniere, was convicted in 2019 — while others are about coercive control that never reached a courtroom. The shows here cover both.',
+      },
+      {
+        q: 'Are cult podcasts suitable if I have left a high-control group?',
+        a: 'Some episodes describe abuse and coercion in detail. If you are a survivor, check episode descriptions first and look for shows built around survivors, such as Tortured Path, which follows the long recovery after cult abuse.',
+      },
+    ],
+    relatedLinks: [
+      { href: '/blog/best-cult-podcasts', label: 'Best Cult Podcasts: The Guide' },
+      { href: '/category/serial-killers', label: 'Serial Killer Podcasts' },
+      { href: '/category/investigative', label: 'Investigative Podcasts' },
       { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
     ],
   },
@@ -295,6 +329,8 @@ export const CATEGORY_SEO: Record<string, PageSeoContent> = {
       },
     ],
     relatedLinks: [
+      { href: '/blog/best-serial-killer-podcasts', label: 'Best Serial Killer Podcasts: The Guide' },
+      { href: '/blog/best-murder-mystery-podcasts', label: 'Best Murder Mystery Podcasts' },
       { href: '/category/cold-cases', label: 'Cold Case Podcasts' },
       { href: '/category/investigative', label: 'Investigative Podcasts' },
       { href: '/category/missing-persons', label: 'Missing Persons Podcasts' },

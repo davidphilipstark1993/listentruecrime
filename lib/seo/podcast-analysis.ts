@@ -30,13 +30,6 @@ export function getPros(podcast: Podcast, stats: RatingStats | null): string[] {
     if ((stats.avg_factual_accuracy ?? 0) >= 8) pros.push('Listeners rate it highly for factual accuracy and responsible reporting')
   }
 
-  // Binge factor (editorial if no community ratings yet)
-  if ((podcast.binge_factor ?? 0) >= 9) {
-    pros.push('Exceptional binge factor — near impossible to stop at one episode')
-  } else if ((podcast.binge_factor ?? 0) >= 7 && pros.length < 3) {
-    pros.push('High binge factor — listeners consistently come back for more')
-  }
-
   // Format strengths
   if (podcast.format_type === 'Serialized' && pros.length < 4) {
     pros.push('Serialized format builds a compelling, sustained narrative arc across episodes')
@@ -55,54 +48,6 @@ export function getPros(podcast: Podcast, stats: RatingStats | null): string[] {
   }
 
   return pros.slice(0, 4)
-}
-
-export function getCons(podcast: Podcast, stats: RatingStats | null): string[] {
-  const cons: string[] = []
-
-  // Community rating weaknesses (only flag when meaningful sample)
-  if (stats && stats.rating_count >= 5) {
-    if ((stats.avg_production ?? 10) < 6) cons.push('Some listeners note inconsistent audio or production quality')
-    else if ((stats.avg_production ?? 10) < 7) cons.push('Production quality is functional but not polished — audio varies between episodes')
-
-    if ((stats.avg_storytelling ?? 10) < 6) cons.push('Storytelling style is divisive — some find the pacing slow or the narrative unfocused')
-
-    if ((stats.avg_host_quality ?? 10) < 6) cons.push('Host style is not to everyone\'s taste — check a sample episode first')
-  }
-
-  // Format limitations
-  if (podcast.format_type === 'Serialized') {
-    cons.push('Must listen in order — cannot dip in and out between episodes')
-  }
-
-  // Episode length
-  const len = podcast.episode_length ?? ''
-  if (len.includes('90') || len.includes('120') || len.includes('2 hour') || len.includes('2hr')) {
-    if (!cons.some(c => c.includes('episode'))) {
-      cons.push('Long episodes (90 min+) require a time commitment — not ideal for short commutes')
-    }
-  }
-
-  // Host dialogue style — flag as a con for listeners who prefer pure reporting
-  if (podcast.host_style === 'Dual Host' && podcast.factual_style === 'Host Dialogue') {
-    cons.push('Heavy on host conversation — listeners who prefer straight case reporting may find the banter distracting')
-  }
-
-  // Ongoing without resolution
-  if (
-    typeof podcast.episode_count === 'string' &&
-    podcast.episode_count.toLowerCase().includes('ongoing') &&
-    podcast.format_type === 'Serialized'
-  ) {
-    cons.push('Ongoing series with no definitive ending yet — cases may not resolve')
-  }
-
-  // Platform limitation
-  if ((podcast.platforms?.length ?? 0) === 1) {
-    cons.push(`Only available on ${podcast.platforms?.[0]} — not accessible on all podcast apps`)
-  }
-
-  return cons.slice(0, 3)
 }
 
 export function getHostDescription(podcast: Podcast): {
@@ -188,18 +133,10 @@ export function getPodcastNarrative(podcast: Podcast, stats: RatingStats | null)
   // What makes it special
   const caseTypes = podcast.case_types?.slice(0, 2).join(' and ') ?? 'true crime'
   const verdictNote = podcast.quick_verdict === 'Must listen' ? ', earning our highest editorial rating' : ''
-  const bingeNote = (podcast.binge_factor ?? 0) >= 8
-    ? ` With a binge factor of ${podcast.binge_factor}/10, it sits among the most compulsively listenable shows in the genre.`
-    : (podcast.binge_factor ?? 0) >= 6
-    ? ` Listeners rate its binge factor at ${podcast.binge_factor}/10.`
-    : ''
-
   if (!parts.length) {
     parts.push(
-      `${podcast.title} is a ${podcast.format_type?.toLowerCase() ?? 'true crime'} podcast covering ${caseTypes}${verdictNote}.${bingeNote}`
+      `${podcast.title} is a ${podcast.format_type?.toLowerCase() ?? 'true crime'} podcast covering ${caseTypes}${verdictNote}.`
     )
-  } else if (bingeNote) {
-    parts.push(bingeNote.trim())
   }
 
   // Community signal
