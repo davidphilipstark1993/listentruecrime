@@ -75,7 +75,8 @@ let inserted = 0, updated = 0, variantsWritten = 0
 const report = []
 for (const [idx, l] of listings.entries()) {
   const t = TYPES[l.typeKey]
-  const title = `${l.design.name} ${t.label}`
+  // No full stop before the product type: "Just One More Episode T-Shirt", not "Episode. T-Shirt".
+  const title = `${l.design.name.replace(/\.+$/, '')} ${t.label}`
   const pid = state[l.slug]?.printifyId
   if (!pid) throw new Error(`No Printify product for ${l.slug} — run create-printify-products.mjs`)
   const remote = await printify(`/shops/${SHOP}/products/${pid}.json`)
