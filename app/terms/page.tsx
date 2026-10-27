@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { BASE } from '@/lib/seo/config'
+import { shopEnabled } from '@/lib/shop/config'
+import { TermsShopSection } from '@/components/shop/terms-shop-section'
 
 // DRAFT — pending legal review, not final legal advice. [CONFIRM: ...]
 // markers stand in for facts only the site owner can supply.
@@ -133,6 +135,8 @@ export default function TermsPage() {
                 link to.
               </p>
             </section>
+
+            {shopEnabled() && <TermsShopSection />}
 
             <section>
               <h2 className="heading-section text-xl text-stone mb-3">10. Changes to these terms</h2>

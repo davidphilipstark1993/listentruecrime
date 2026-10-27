@@ -1,0 +1,26 @@
+name: Shop — retry failed fulfilment
+
+on:
+  schedule:
+    # Every 15 minutes. GitHub may delay scheduled runs under load; that is
+    # fine — retries back off over minutes to hours anyway.
+    - cron: '*/15 * * * *'
+  workflow_dispatch: {}
+
+jobs:
+  retry:
+    runs-on: ubuntu-latest
+    # Does nothing until the shop is live: needs both secrets to be set.
+    steps:
+      - name: Retry due fulfilment attempts
+        env:
+          SHOP_CRON_SECRET: ${{ secrets.SHOP_CRON_SECRET }}
+          SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+        run: |
+          if [ -z "$SHOP_CRON_SECRET" ] || [ -z "$SITE_URL" ]; then
+            echo "SHOP_CRON_SECRET / NEXT_PUBLIC_SITE_URL not set — shop not live, skipping."
+            exit 0
+          fi
+          curl --fail --silent --show-error --max-time 90 -X POST \
+            -H "Authorization: Bearer $SHOP_CRON_SECRET" \
+            "${SITE_URL%/}/api/shop/cron/retry"

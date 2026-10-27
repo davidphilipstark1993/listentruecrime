@@ -11,6 +11,8 @@ import { getPodcastCount, roundedPodcastCount } from '@/lib/podcast-count'
 import { getPostBySlug } from '@/lib/blog'
 import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
 import { stripHtml } from '@/lib/utils'
+import { shopEnabled } from '@/lib/shop/config'
+import { HomepageShopPromo } from '@/components/shop/homepage-promo'
 
 export const revalidate = 3600
 
@@ -230,6 +232,9 @@ export default async function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* ═══════════════ SHOP PROMO (only when the shop is enabled) ═══════════════ */}
+        {shopEnabled() && <HomepageShopPromo />}
 
         {/* ═══════════════ TRENDING / FEATURED ═══════════════ */}
         {featured.length > 0 && (

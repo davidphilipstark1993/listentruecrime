@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
+import { shopEnabled } from '@/lib/shop/config'
 
 const FOOTER_LINKS = {
   discover: [
@@ -32,6 +33,13 @@ const FOOTER_LINKS = {
     { href: '/subscribe', label: 'Weekly Newsletter' },
     { href: '/contact', label: 'Contact' },
   ],
+  shop: [
+    { href: '/shop', label: 'Shop' },
+    { href: '/shop/category/t-shirts', label: 'True Crime T-Shirts' },
+    { href: '/shop/category/hoodies', label: 'True Crime Hoodies' },
+    { href: '/shop/shipping-policy', label: 'Shipping Policy' },
+    { href: '/shop/returns-and-refunds', label: 'Returns & Refunds' },
+  ],
   legal: [
     { href: '/privacy', label: 'Privacy Policy' },
     { href: '/terms', label: 'Terms of Use' },
@@ -40,6 +48,7 @@ const FOOTER_LINKS = {
 }
 
 export function Footer() {
+  const showShop = shopEnabled()
   return (
     <footer className="border-t border-white/[0.06] bg-ink-950 mt-24">
       {/* Newsletter bar */}
@@ -70,7 +79,7 @@ export function Footer() {
               The best place to discover, rate, and discuss true crime podcasts. Expert reviews and community ratings.
             </p>
             <div className="space-y-1.5">
-              {FOOTER_LINKS.site.map(link => (
+              {(showShop ? [...FOOTER_LINKS.shop.slice(0, 1), ...FOOTER_LINKS.site] : FOOTER_LINKS.site).map(link => (
                 <Link key={link.href} href={link.href} className="block text-stone-subtle hover:text-stone text-xs transition-colors">
                   {link.label}
                 </Link>
@@ -129,7 +138,7 @@ export function Footer() {
             © {new Date().getFullYear()} ListenTrueCrime. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
-            {FOOTER_LINKS.legal.map(link => (
+            {(showShop ? [...FOOTER_LINKS.legal, ...FOOTER_LINKS.shop.slice(3)] : FOOTER_LINKS.legal).map(link => (
               <Link key={link.href} href={link.href} className="text-stone-subtle hover:text-stone text-xs transition-colors">
                 {link.label}
               </Link>
