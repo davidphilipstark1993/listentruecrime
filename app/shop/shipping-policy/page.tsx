@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BASE } from '@/lib/seo/config'
 import { supportEmail } from '@/lib/shop/config'
-import { DELIVERY_ESTIMATE, PRICES_INCLUDE_VAT } from '@/lib/shop/copy'
+import { DELIVERY_ESTIMATE, POLICIES_UPDATED, PRICES_INCLUDE_VAT } from '@/lib/shop/copy'
 import { PolicyShell } from '@/components/shop/policy-shell'
 
 // DRAFT — for owner / legal review before launch. [CONFIRM: …] markers stand in
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function ShippingPolicyPage() {
   return (
-    <PolicyShell title="Shipping Policy" updated="[CONFIRM: date this policy goes live]">
+    <PolicyShell title="Shipping Policy" updated={POLICIES_UPDATED}>
       <section>
         <h2>Where we deliver</h2>
         <p>We currently deliver to addresses in the United Kingdom. Some remote destinations (for example the Channel Islands or the Isle of Man) may not be available from our supplier; if your address cannot be served we will say so before you pay. We plan to add international delivery later.</p>

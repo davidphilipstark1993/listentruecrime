@@ -1,3 +1,4 @@
+import { POLICIES_UPDATED } from '@/lib/shop/copy'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BASE } from '@/lib/seo/config'
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
 export default function ReturnsPage() {
   const email = supportEmail()
   return (
-    <PolicyShell title="Returns and Refunds Policy" updated="[CONFIRM: date this policy goes live]">
+    <PolicyShell title="Returns and Refunds Policy" updated={POLICIES_UPDATED}>
       <section>
         <h2>Your right to change your mind</h2>
         <p>Our products are printed to order from our standard designs. They are not personalised to you, so under the Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013 you can cancel your order for any reason within <strong>14 days of the day you receive your goods</strong>.</p>

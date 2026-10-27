@@ -19,6 +19,9 @@ export const DELIVERY_ESTIMATE: string | null =
 export const PRICES_INCLUDE_VAT = false
 
 export const BUSINESS_NAME = 'Listen True Crime'
+export const OWNER_NAME = 'David Stark'
+// Date the shop policies took effect (update when a policy changes).
+export const POLICIES_UPDATED = '27 October 2026'
 export const BUSINESS_ADDRESS = 'Station Road, Hessle, HU13 0BG'
 
 export const DELIVERY_SUMMARY = [

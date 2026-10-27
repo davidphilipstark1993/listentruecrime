@@ -16,11 +16,11 @@ export function PrivacyShopSection() {
       <p className="mt-3"><strong className="text-stone">Who receives it.</strong></p>
       <ul className="space-y-2 list-disc pl-5 mt-3">
         <li><strong className="text-stone">Stripe</strong> — payment processing and fraud prevention.</li>
-        <li><strong className="text-stone">Printify</strong>, and the print provider and delivery carrier it uses for your order — they need your name, delivery address, email and phone number to make and deliver it. [CONFIRM: link Printify&apos;s privacy policy and confirm which of these are independent controllers.]</li>
+        <li><strong className="text-stone">Printify</strong>, and the print provider and delivery carrier it uses for your order — they need your name, delivery address, email and phone number to make and deliver it. See <a className="text-crimson hover:underline" href="https://printify.com/privacy-policy/" target="_blank" rel="noopener noreferrer">Printify&apos;s privacy policy</a> for how they use it.</li>
         <li>Our existing providers (Supabase, SendGrid/Resend, Vercel) host the order records and send order emails.</li>
       </ul>
-      <p className="mt-3">Printify and its print providers may be located outside the UK. [CONFIRM: the transfer safeguard relied on — for example the UK IDTA or the UK Extension to the EU–US Data Privacy Framework.]</p>
-      <p className="mt-3"><strong className="text-stone">How long.</strong> We keep order records for [CONFIRM: 6 years, to meet UK tax and accounting requirements], then delete or anonymise them.</p>
+      <p className="mt-3">Printify and its print providers may be located outside the UK. Your details may therefore be transferred outside the UK so that your order can be made and delivered.</p>
+      <p className="mt-3"><strong className="text-stone">How long.</strong> We keep order records for 6 years, to meet UK tax and accounting requirements, then delete or anonymise them.</p>
       <p className="mt-3">Your rights are described below. For shop privacy requests, contact <a className="text-crimson hover:underline" href={`mailto:${supportEmail()}`}>{supportEmail()}</a> or see <Link href="/contact" className="text-crimson hover:underline">Contact</Link>.</p>
     </section>
   )

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { BUSINESS_ADDRESS, BUSINESS_NAME, PRICES_INCLUDE_VAT } from '@/lib/shop/copy'
+import { BUSINESS_ADDRESS, BUSINESS_NAME, OWNER_NAME, PRICES_INCLUDE_VAT } from '@/lib/shop/copy'
 
 // DRAFT — for owner / legal review. Rendered on /terms only while the shop is enabled.
 export function TermsShopSection() {
@@ -7,7 +7,7 @@ export function TermsShopSection() {
     <section id="shop-terms" className="scroll-mt-24">
       <h2 className="heading-section text-xl text-stone mb-3">Shop terms of sale</h2>
       <ul className="space-y-3 list-disc pl-5">
-        <li><strong className="text-stone">Who you are buying from.</strong> {BUSINESS_NAME} is a trading name of <strong className="text-stone">[CONFIRM: your full legal name]</strong>, a sole trader, of {BUSINESS_ADDRESS}. Contact: see our <Link href="/contact" className="text-crimson hover:underline">Contact page</Link>. {PRICES_INCLUDE_VAT ? 'VAT number: [CONFIRM: VAT registration number].' : 'We are not VAT registered, so no VAT is charged.'}</li>
+        <li><strong className="text-stone">Who you are buying from.</strong> {BUSINESS_NAME} is a trading name of <strong className="text-stone">{OWNER_NAME}</strong>, a sole trader, of {BUSINESS_ADDRESS}. Contact: see our <Link href="/contact" className="text-crimson hover:underline">Contact page</Link>. {PRICES_INCLUDE_VAT ? 'VAT number: [CONFIRM: VAT registration number].' : 'We are not VAT registered, so no VAT is charged.'}</li>
         <li><strong className="text-stone">Your order.</strong> Placing an order is an offer to buy. Our contract with you is made when we send your order confirmation email. We may decline an order, for example if an item is unavailable or a price is wrong, and will refund anything you have paid.</li>
         <li><strong className="text-stone">Prices and payment.</strong> Prices are in pounds sterling. Delivery is shown before you pay. Payment is taken by Stripe when you place the order.</li>
         <li><strong className="text-stone">Made to order.</strong> Products are printed after you order, by third-party print providers. Colours on screen can differ slightly from the printed item.</li>
