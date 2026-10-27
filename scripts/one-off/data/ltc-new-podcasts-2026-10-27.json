@@ -1,0 +1,1219 @@
+[
+ {
+  "title": "DISGRACELAND",
+  "slug": "disgraceland",
+  "description": "Music and true crime: the crimes and scandals around famous musicians, told as stories.",
+  "short_description": "Music and true crime: the crimes and scandals around famous musicians, told as stories.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder",
+   "Celebrity Crime"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Single Host",
+  "host_name": "Jake Brennan",
+  "producer": "Exactly Right and iHeartPodcasts",
+  "episode_count": "605 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/disgraceland/id1275172907"
+  },
+  "website_url": "https://www.disgracelandpod.com/",
+  "rss_url": "https://rss.pdrl.fm/b36e29/www.omnycontent.com/d/playlist/e73c998e-6e60-432f-8610-ae210140c5b1/6832e3a9-08f5-4abe-9187-b41a010fdf8a/27cefb58-d75d-4314-b368-b41a010fdf9b/podcast.rss",
+  "apple_collection_id": 1275172907,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Invisible Choir",
+  "slug": "invisible-choir",
+  "description": "Covers murders using primary-source audio and the victims' stories.",
+  "short_description": "Covers murders using primary-source audio and the victims' stories.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Single Host",
+  "host_name": null,
+  "producer": "Reach Freaks",
+  "episode_count": "462 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/invisible-choir/id1407577718"
+  },
+  "website_url": "https://www.invisiblechoir.com/",
+  "rss_url": "https://rss.pdrl.fm/4df9c2/feeds.megaphone.fm/RVS6615715019",
+  "apple_collection_id": 1407577718,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "MURDERISH",
+  "slug": "murderish",
+  "description": "Jami Rice tells real cases in full, from start to finish, with detailed research.",
+  "short_description": "Jami Rice tells real cases in full, from start to finish, with detailed research.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Single Host",
+  "host_name": "Jami Rice",
+  "producer": "Cloud10",
+  "episode_count": "412 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/murderish/id1317929691"
+  },
+  "website_url": null,
+  "rss_url": "https://feeds.megaphone.fm/HSW6887235695",
+  "apple_collection_id": 1317929691,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "And Then They Were Gone",
+  "slug": "and-then-they-were-gone",
+  "description": "Each week the hosts take one missing-person case and lay out what is known, hoping new information might help.",
+  "short_description": "Each week the hosts take one missing-person case and lay out what is known, hoping new information might help.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Missing Person"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Kona, Ethan",
+  "producer": "Little Monster Productions",
+  "episode_count": "325 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/and-then-they-were-gone/id1524173209"
+  },
+  "website_url": "https://redcircle.com/shows/and-then-they-were-gone3159",
+  "rss_url": "https://feeds.redcircle.com/5a7ab732-8fea-45e0-92a6-14e88cf5ef2d",
+  "apple_collection_id": 1524173209,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Already Gone Podcast",
+  "slug": "already-gone-podcast",
+  "description": "Lesser-known cases from Michigan and the Great Lakes.",
+  "short_description": "Lesser-known cases from Michigan and the Great Lakes.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Missing Person",
+   "Cold Case"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Single Host",
+  "host_name": "Nina Innsted",
+  "producer": "Nina Innsted",
+  "episode_count": "255 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/already-gone-podcast/id1109927634"
+  },
+  "website_url": "https://art19.com/shows/already-gone",
+  "rss_url": "https://rss.pdrl.fm/8f50ef/feeds.libsyn.com/84981/rss/?redirect=false",
+  "apple_collection_id": 1109927634,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "The Consult: Real FBI Profilers",
+  "slug": "the-consult-real-fbi-profilers",
+  "description": "Retired FBI profilers discuss the behaviour behind crimes they worked on.",
+  "short_description": "Retired FBI profilers discuss the behaviour behind crimes they worked on.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder",
+   "Profiling"
+  ],
+  "format_type": "Episodic",
+  "host_style": null,
+  "host_name": null,
+  "producer": "PodcastOne",
+  "episode_count": "163 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/the-consult-real-fbi-profilers/id1586909557"
+  },
+  "website_url": "https://art19.com/shows/the-consult-real-fbi-profilers",
+  "rss_url": "https://rss.art19.com/the-consult-real-fbi-profilers",
+  "apple_collection_id": 1586909557,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Twisted Britain",
+  "slug": "twisted-britain",
+  "description": "A fortnightly UK true crime show recorded in a Stirling pub, with a taste for the weird.",
+  "short_description": "A fortnightly UK true crime show recorded in a Stirling pub, with a taste for the weird.",
+  "country": "UK",
+  "country_name": "United Kingdom",
+  "case_types": [
+   "Murder",
+   "Historical Crime"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Bob, Ali",
+  "producer": "Bob Dale",
+  "episode_count": "127 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/twisted-britain/id1415136161"
+  },
+  "website_url": "https://www.spreaker.com/podcast/twisted-britain--5856565",
+  "rss_url": "https://www.spreaker.com/show/5856565/episodes/feed",
+  "apple_collection_id": 1415136161,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Ireland Crimes and Mysteries",
+  "slug": "ireland-crimes-and-mysteries",
+  "description": "An Irish host retells crimes and mysteries from across Ireland.",
+  "short_description": "An Irish host retells crimes and mysteries from across Ireland.",
+  "country": "IE",
+  "country_name": "Ireland",
+  "case_types": [
+   "Murder",
+   "Missing Person"
+  ],
+  "format_type": "Serialized",
+  "host_style": "Single Host",
+  "host_name": null,
+  "producer": "GoLoud",
+  "episode_count": "126 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/ireland-crimes-and-mysteries/id1693261729"
+  },
+  "website_url": "https://www.goloudplayer.com/podcasts/ireland-crimes-and-mysteries-1165",
+  "rss_url": "https://rss.podplaystudio.com/3676.xml",
+  "apple_collection_id": 1693261729,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "A Moment In Crime",
+  "slug": "a-moment-in-crime",
+  "description": "NZ Herald crime reporter Anna Leask revisits a major New Zealand case each month with the reporting behind it.",
+  "short_description": "NZ Herald crime reporter Anna Leask revisits a major New Zealand case each month with the reporting behind it.",
+  "country": "NZ",
+  "country_name": "New Zealand",
+  "case_types": [
+   "Murder",
+   "Investigative"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Single Host",
+  "host_name": "Anna Leask",
+  "producer": "NZ Herald",
+  "episode_count": "81 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/a-moment-in-crime/id1479924698"
+  },
+  "website_url": null,
+  "rss_url": "https://www.omnycontent.com/d/playlist/7784f840-c291-422a-924b-ad9000bbad71/265a7456-99d5-4492-8fd3-ae4901860e2a/9017e444-6326-4ee9-b4a5-ae4901860e42/podcast.rss",
+  "apple_collection_id": 1479924698,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Murder in Miami",
+  "slug": "murder-in-miami",
+  "description": "Journalist Phil Stanford's story of 1980s Miami and a murder he got caught up in.",
+  "short_description": "Journalist Phil Stanford's story of 1980s Miami and a murder he got caught up in.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder",
+   "Organised Crime"
+  ],
+  "format_type": "Serialized",
+  "host_style": null,
+  "host_name": "Phil Stanford",
+  "producer": "iHeartPodcasts",
+  "episode_count": "52 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/murder-in-miami/id1478138996"
+  },
+  "website_url": "https://www.iheart.com/podcast/1119-murder-in-miami-50598718/",
+  "rss_url": "https://www.omnycontent.com/d/playlist/e73c998e-6e60-432f-8610-ae210140c5b1/d8a056dd-3601-4d2d-8147-ae32006cd47a/4096435f-49d3-4b27-807b-ae32006cd49b/podcast.rss",
+  "apple_collection_id": 1478138996,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Bad, Mad & Northern",
+  "slug": "bad-mad-and-northern",
+  "description": "A historical true crime show digging into dark and odd stories from the North of England.",
+  "short_description": "A historical true crime show digging into dark and odd stories from the North of England.",
+  "country": "UK",
+  "country_name": "United Kingdom",
+  "case_types": [
+   "Murder",
+   "Historical Crime"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Single Host",
+  "host_name": "Lucy Sheridan",
+  "producer": "Lucy Sheridan",
+  "episode_count": "12 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/bad-mad-northern/id6817816907"
+  },
+  "website_url": "https://rss.com/podcasts/bad-mad-and-northern/",
+  "rss_url": "https://media.rss.com/bad-mad-and-northern/feed.xml",
+  "apple_collection_id": 6817816907,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Stop Rewind: The Lost Boy",
+  "slug": "stop-rewind-the-lost-boy",
+  "description": "A cassette tape recorded by a kidnapped boy resurfaces decades later.",
+  "short_description": "A cassette tape recorded by a kidnapped boy resurfaces decades later.",
+  "country": "CA",
+  "country_name": "Canada",
+  "case_types": [
+   "Child Abduction"
+  ],
+  "format_type": "Serialized",
+  "host_style": null,
+  "host_name": null,
+  "producer": "Blanchard House / Curiouscast",
+  "episode_count": "12 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/stop-rewind-the-lost-boy/id1836199739"
+  },
+  "website_url": "https://curiouscast.ca/podcast/stop-rewind-the-lost-boy/",
+  "rss_url": "https://feeds.megaphone.fm/stoprewind-thelostboy",
+  "apple_collection_id": 1836199739,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Fur & Loathing",
+  "slug": "fur-and-loathing",
+  "description": "Brazen series on a 2014 chemical attack at a furry convention.",
+  "short_description": "Brazen series on a 2014 chemical attack at a furry convention.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Assault",
+   "Investigative"
+  ],
+  "format_type": "Serialized",
+  "host_style": null,
+  "host_name": null,
+  "producer": "Brazen",
+  "episode_count": "10 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/fur-loathing/id1739333983"
+  },
+  "website_url": "https://brazen.fm/fur-and-loathing/",
+  "rss_url": "https://feeds.megaphone.fm/furandloathing",
+  "apple_collection_id": 1739333983,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "A Date With Dateline",
+  "slug": "a-date-with-dateline",
+  "description": "Two friends recap episodes of NBC's Dateline with plenty of jokes alongside the case details.",
+  "short_description": "Two friends recap episodes of NBC's Dateline with plenty of jokes alongside the case details.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Kimberly, Katie",
+  "producer": "Kimberly and Katie - ADWDL",
+  "episode_count": "557 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/a-date-with-dateline/id1244348213"
+  },
+  "website_url": "https://adatewithdateline.libsyn.com",
+  "rss_url": "https://rss.libsyn.com/shows/585455/destinations/5079640.xml",
+  "apple_collection_id": 1244348213,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Affirmative Murder",
+  "slug": "affirmative-murder",
+  "description": "Two comedians swap murder stories from marginalised communities each week.",
+  "short_description": "Two comedians swap murder stories from marginalised communities each week.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Alvin Williams, Francel Evans",
+  "producer": "Alvin Williams & Francel Evans",
+  "episode_count": "464 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/affirmative-murder/id1296864488"
+  },
+  "website_url": null,
+  "rss_url": "https://rss.pdrl.fm/5c2134/feeds.megaphone.fm/IMP3092064820",
+  "apple_collection_id": 1296864488,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Forgotten Australia",
+  "slug": "forgotten-australia",
+  "description": "Strange and dark stories from Australian history, including crimes and unsolved mysteries.",
+  "short_description": "Strange and dark stories from Australian history, including crimes and unsolved mysteries.",
+  "country": "AU",
+  "country_name": "Australia",
+  "case_types": [
+   "Historical Crime",
+   "Murder",
+   "Mystery"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Single Host",
+  "host_name": "Michael Adams",
+  "producer": "Michael Adams",
+  "episode_count": "421 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/forgotten-australia/id1442763878"
+  },
+  "website_url": "https://forgottenaustralia.com/",
+  "rss_url": "https://feeds.acast.com/public/shows/8dc4b04f-b05b-4eac-9556-2a69d0be13cc",
+  "apple_collection_id": 1442763878,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Which Murderer?",
+  "slug": "which-murderer",
+  "description": "Two hosts cover two murderers per episode, looking at method and motive.",
+  "short_description": "Two hosts cover two murderers per episode, looking at method and motive.",
+  "country": "UK",
+  "country_name": "United Kingdom",
+  "case_types": [
+   "Murder",
+   "Serial Killer"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Holly, Garry",
+  "producer": "Which Murderer",
+  "episode_count": "345 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/which-murderer/id1375322572"
+  },
+  "website_url": "https://www.spreaker.com/podcast/which-murderer--4106338",
+  "rss_url": "https://www.spreaker.com/show/4106338/episodes/feed",
+  "apple_collection_id": 1375322572,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Status: Pending",
+  "slug": "status-pending",
+  "description": "Looks at cases that are unsolved or still raise questions.",
+  "short_description": "Looks at cases that are unsolved or still raise questions.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Cold Case",
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Heather Wright, Scott Fuller",
+  "producer": "Scott Fuller",
+  "episode_count": "173 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/status-pending/id1412462452"
+  },
+  "website_url": "https://www.spreaker.com/podcast/status-pending--3634430",
+  "rss_url": "https://www.spreaker.com/show/3634430/episodes/feed",
+  "apple_collection_id": 1412462452,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Re-Solved Mysteries: An Unsolved Mysteries Podcast",
+  "slug": "re-solved-mysteries-an-unsolved-mysteries-podcast",
+  "description": "Updates every segment from the 1990s Unsolved Mysteries TV show.",
+  "short_description": "Updates every segment from the 1990s Unsolved Mysteries TV show.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Cold Case",
+   "Missing Person"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Panel",
+  "host_name": "Alison, Karlin, Eliza",
+  "producer": "Alison, Karlin and Eliza",
+  "episode_count": "164 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/re-solved-mysteries-an-unsolved-mysteries-podcast/id1437500300"
+  },
+  "website_url": null,
+  "rss_url": "https://www.spreaker.com/show/4742650/episodes/feed",
+  "apple_collection_id": 1437500300,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Profiler: True Crime Africa",
+  "slug": "profiler-true-crime-africa",
+  "description": "A journalist and a forensic psychologist look at South African crimes.",
+  "short_description": "A journalist and a forensic psychologist look at South African crimes.",
+  "country": "ZA",
+  "country_name": "South Africa",
+  "case_types": [
+   "Murder",
+   "Serial Killer"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Paul Llewellyn, Gerard Labuschagne",
+  "producer": "plotshift.co.za",
+  "episode_count": "116 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/profiler-true-crime-africa/id1455830293"
+  },
+  "website_url": null,
+  "rss_url": "https://anchor.fm/s/ff74674c/podcast/rss",
+  "apple_collection_id": 1455830293,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "America's Most Infamous Crimes with Katie Ring",
+  "slug": "americas-most-infamous-crimes-with-katie-ring",
+  "description": "A Crime House weekly show revisiting famous American cases and the investigations behind them.",
+  "short_description": "A Crime House weekly show revisiting famous American cases and the investigations behind them.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Serial Killer",
+   "Murder",
+   "Cold Case"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Single Host",
+  "host_name": "Katie Ring",
+  "producer": "Crime House",
+  "episode_count": "105 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/americas-most-infamous-crimes-with-katie-ring/id1882861002"
+  },
+  "website_url": null,
+  "rss_url": "https://rss.amperwave.net/v2/feed/audacynetwork/b32fa24f4cd6312ace5c6c6b8edf7e19",
+  "apple_collection_id": 1882861002,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Gone South",
+  "slug": "gone-south",
+  "description": "Narrative series about crime in the American South, now widening to other regions.",
+  "short_description": "Narrative series about crime in the American South, now widening to other regions.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder",
+   "Investigative"
+  ],
+  "format_type": "Serialized",
+  "host_style": null,
+  "host_name": null,
+  "producer": "Audacy Podcasts",
+  "episode_count": "105 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/gone-south/id1592823205"
+  },
+  "website_url": "https://www.audacy.com/podcast/gone-south-d1135",
+  "rss_url": "https://rss.amperwave.net/v2/feed/audacynetwork/gone-south",
+  "apple_collection_id": 1592823205,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Hands Off My Podcast: True Crime",
+  "slug": "hands-off-my-podcast-true-crime",
+  "description": "Covers missing and murdered people from BIPOC and LGBTQIA+ communities.",
+  "short_description": "Covers missing and murdered people from BIPOC and LGBTQIA+ communities.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Missing Person",
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Single Host",
+  "host_name": "Jasmine Castillo",
+  "producer": "Jasmine Castillo",
+  "episode_count": "77 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/hands-off-my-podcast-true-crime/id6806886027"
+  },
+  "website_url": "https://rss.com/podcasts/handsoffmypodcast-true-crime/",
+  "rss_url": "https://media.rss.com/handsoffmypodcast-true-crime/feed.xml",
+  "apple_collection_id": 6806886027,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Agent of Betrayal: The Double Life of Robert Hanssen",
+  "slug": "agent-of-betrayal-the-double-life-of-robert-hanssen",
+  "description": "CBS News series on FBI agent Robert Hanssen, who spied for Moscow for years.",
+  "short_description": "CBS News series on FBI agent Robert Hanssen, who spied for Moscow for years.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Espionage"
+  ],
+  "format_type": "Serialized",
+  "host_style": null,
+  "host_name": null,
+  "producer": "CBS News",
+  "episode_count": "14 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/agent-of-betrayal-the-double-life-of-robert-hanssen/id1505853304"
+  },
+  "website_url": null,
+  "rss_url": "https://rss.amperwave.net/v2/feed/audacynetwork/a1eb04c1f1af3874ceb8ae1f3fbad481",
+  "apple_collection_id": 1505853304,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Son of a Hitman",
+  "slug": "son-of-a-hitman",
+  "description": "Investigates hitman Charles Harrelson and the crimes linked to him.",
+  "short_description": "Investigates hitman Charles Harrelson and the crimes linked to him.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Organised Crime",
+   "Murder"
+  ],
+  "format_type": "Serialized",
+  "host_style": "Single Host",
+  "host_name": "Jason Cavanagh",
+  "producer": "Spotify Studios",
+  "episode_count": "12 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/son-of-a-hitman/id1510664120"
+  },
+  "website_url": null,
+  "rss_url": "https://feeds.megaphone.fm/son-of-a-hitman",
+  "apple_collection_id": 1510664120,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "3 Spooked Girls",
+  "slug": "3-spooked-girls",
+  "description": "Weekly deep dives into true crime cases, with documentary recaps and urban legends.",
+  "short_description": "Weekly deep dives into true crime cases, with documentary recaps and urban legends.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Tara, Jessica",
+  "producer": "Bloody FM",
+  "episode_count": "600 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/3-spooked-girls/id1437535473"
+  },
+  "website_url": null,
+  "rss_url": "https://feeds.simplecast.com/5hiGB_cC",
+  "apple_collection_id": 1437535473,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "True Crime Recaps",
+  "slug": "true-crime-recaps",
+  "description": "Two storytellers go through widely discussed true crime cases.",
+  "short_description": "Two storytellers go through widely discussed true crime cases.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Chris Nathan, Amy Townsend",
+  "producer": "True Crime Recaps",
+  "episode_count": "403 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/true-crime-recaps/id1458291303"
+  },
+  "website_url": null,
+  "rss_url": "https://feeds.megaphone.fm/DLERL1699139894",
+  "apple_collection_id": 1458291303,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Crime Over Coffee",
+  "slug": "crime-over-coffee",
+  "description": "Two fans discuss cases each week.",
+  "short_description": "Two fans discuss cases each week.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder",
+   "Serial Killer"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Abby, Ericka",
+  "producer": "Crime Over Coffee",
+  "episode_count": "349 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/crime-over-coffee/id1474251285"
+  },
+  "website_url": "https://podcasters.spotify.com/pod/show/crimeovercoffee",
+  "rss_url": "https://anchor.fm/s/b402dc8/podcast/rss",
+  "apple_collection_id": 1474251285,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "True Crime Guys",
+  "slug": "true-crime-guys",
+  "description": "Two hosts talk through crimes from small local cases to famous ones, with humour.",
+  "short_description": "Two hosts talk through crimes from small local cases to famous ones, with humour.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": null,
+  "host_name": null,
+  "producer": "True Crime Guys",
+  "episode_count": "334 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/true-crime-guys/id1192864007"
+  },
+  "website_url": "https://bleav.com/shows/true-crime-guys/",
+  "rss_url": "https://feeds.simplecast.com/UFD8gAHh",
+  "apple_collection_id": 1192864007,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "They Will Kill",
+  "slug": "they-will-kill",
+  "description": "Sisters cover lesser-known and strange true crime cases.",
+  "short_description": "Sisters cover lesser-known and strange true crime cases.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Courtney Eck, Sadie Eck",
+  "producer": "Cloud10",
+  "episode_count": "255 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/they-will-kill/id1498356194"
+  },
+  "website_url": null,
+  "rss_url": "https://feeds.megaphone.fm/CTL1843945566",
+  "apple_collection_id": 1498356194,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Murder In The Rain",
+  "slug": "murder-in-the-rain",
+  "description": "Two hosts cover cases from the Pacific Northwest.",
+  "short_description": "Two hosts cover cases from the Pacific Northwest.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Alisha, Josh",
+  "producer": "Murder In The Rain",
+  "episode_count": "212 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/murder-in-the-rain/id1459555496"
+  },
+  "website_url": "https://redcircle.com/shows/murder-in-the-rain",
+  "rss_url": "https://feeds.redcircle.com/cf091c75-3efe-4031-903f-bc5dc3518e45",
+  "apple_collection_id": 1459555496,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Michigan Monsters",
+  "slug": "michigan-monsters",
+  "description": "Forgotten crimes and dark history from Michigan, told with some humour.",
+  "short_description": "Forgotten crimes and dark history from Michigan, told with some humour.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Historical Crime",
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Single Host",
+  "host_name": "Jenn Carpenter",
+  "producer": "Jenn Carpenter",
+  "episode_count": "153 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/michigan-monsters/id1447332205"
+  },
+  "website_url": "https://www.michiganmonsterspodcast.com",
+  "rss_url": "https://audioboom.com/channels/5047591.rss",
+  "apple_collection_id": 1447332205,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "All Crime No Cattle",
+  "slug": "all-crime-no-cattle",
+  "description": "A chatty show covering cases from Texas.",
+  "short_description": "A chatty show covering cases from Texas.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Shea, Erin",
+  "producer": "All Crime No Cattle",
+  "episode_count": "104 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/all-crime-no-cattle/id1327729036"
+  },
+  "website_url": "https://www.spreaker.com/show/allcrimenocattle",
+  "rss_url": "https://www.spreaker.com/show/3202978/episodes/feed",
+  "apple_collection_id": 1327729036,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "California True Crime",
+  "slug": "california-true-crime",
+  "description": "Stories of crimes from around California.",
+  "short_description": "Stories of crimes from around California.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": null,
+  "host_name": null,
+  "producer": "California True Crime",
+  "episode_count": "87 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/california-true-crime/id1374756115"
+  },
+  "website_url": "https://www.spreaker.com/show/california-true-crime",
+  "rss_url": "https://www.spreaker.com/show/4196181/episodes/feed",
+  "apple_collection_id": 1374756115,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "True Crime DEADLINE",
+  "slug": "true-crime-deadline",
+  "description": "Journalist Matt Johnson covers cold cases, unsolved mysteries and murders.",
+  "short_description": "Journalist Matt Johnson covers cold cases, unsolved mysteries and murders.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Cold Case",
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Single Host",
+  "host_name": "Matt Johnson",
+  "producer": "Matt Johnson",
+  "episode_count": "83 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/true-crime-deadline/id1464115779"
+  },
+  "website_url": "http://www.truecrimedeadline.com",
+  "rss_url": "https://rss.buzzsprout.com/329648.rss",
+  "apple_collection_id": 1464115779,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "True Crime Twins",
+  "slug": "true-crime-twins",
+  "description": "Twin sisters tell crime stories drawing on their academic backgrounds.",
+  "short_description": "Twin sisters tell crime stories drawing on their academic backgrounds.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Chloe Canter, Melina Canter",
+  "producer": "Crawlspace Media",
+  "episode_count": "72 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/true-crime-twins/id1459114107"
+  },
+  "website_url": null,
+  "rss_url": "https://feeds.megaphone.fm/GLSS8207117746",
+  "apple_collection_id": 1459114107,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "True Crime Fix",
+  "slug": "true-crime-fix",
+  "description": "A victim-first true crime show.",
+  "short_description": "A victim-first true crime show.",
+  "country": "UK",
+  "country_name": "United Kingdom",
+  "case_types": [
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": null,
+  "host_name": null,
+  "producer": "True Crime Fix",
+  "episode_count": "60 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/true-crime-fix/id1447438339"
+  },
+  "website_url": null,
+  "rss_url": "https://audioboom.com/channels/5017737.rss",
+  "apple_collection_id": 1447438339,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Crime & Conspiracies with Coffee",
+  "slug": "crime-and-conspiracies-with-coffee",
+  "description": "Friends cover true crime and conspiracy theories.",
+  "short_description": "Friends cover true crime and conspiracy theories.",
+  "country": "AU",
+  "country_name": "Australia",
+  "case_types": [
+   "Murder",
+   "Conspiracy"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Dual Host",
+  "host_name": "Georgia McGivern, Samantha Ferguson",
+  "producer": "Georgia McGivern & Samantha Ferguson",
+  "episode_count": "49 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/crime-conspiracies-with-coffee/id1457342025"
+  },
+  "website_url": "http://cacwcpodcast.libsyn.com/website",
+  "rss_url": "https://rss.libsyn.com/shows/172691/destinations/1161164.xml",
+  "apple_collection_id": 1457342025,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Murder, etc.",
+  "slug": "murder-etc",
+  "description": "Investigates a Southern city's long-buried secrets after 40 years.",
+  "short_description": "Investigates a Southern city's long-buried secrets after 40 years.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder",
+   "Cover-Up"
+  ],
+  "format_type": "Serialized",
+  "host_style": null,
+  "host_name": null,
+  "producer": "Resolver Media",
+  "episode_count": "44 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/murder-etc/id1450772662"
+  },
+  "website_url": "https://www.murderetcpodcast.com",
+  "rss_url": "https://feed.podbean.com/murderetcpodcast/feed.xml",
+  "apple_collection_id": 1450772662,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Allegedly: A True Crime Podcast",
+  "slug": "allegedly",
+  "description": "True crime mixed with comedy.",
+  "short_description": "True crime mixed with comedy.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder"
+  ],
+  "format_type": "Episodic",
+  "host_style": "Single Host",
+  "host_name": "Ashanda",
+  "producer": "Ashanda",
+  "episode_count": "41 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/allegedly-a-true-crime-podcast/id1623838491"
+  },
+  "website_url": null,
+  "rss_url": "https://anchor.fm/s/90205298/podcast/rss",
+  "apple_collection_id": 1623838491,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "True North Crime",
+  "slug": "true-north-crime",
+  "description": "Canadian crime, law and punishment.",
+  "short_description": "Canadian crime, law and punishment.",
+  "country": "CA",
+  "country_name": "Canada",
+  "case_types": [
+   "Murder",
+   "Courtroom"
+  ],
+  "format_type": "Episodic",
+  "host_style": null,
+  "host_name": null,
+  "producer": "True North Crime",
+  "episode_count": "26 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/true-north-crime/id1371068613"
+  },
+  "website_url": "https://truenorthcrime.podbean.com",
+  "rss_url": "https://feed.podbean.com/truenorthcrime/feed.xml",
+  "apple_collection_id": 1371068613,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Anatomy of a Scam",
+  "slug": "anatomy-of-a-scam",
+  "description": "Explains how scams work in Australia and who runs them.",
+  "short_description": "Explains how scams work in Australia and who runs them.",
+  "country": "AU",
+  "country_name": "Australia",
+  "case_types": [
+   "Fraud",
+   "Scam"
+  ],
+  "format_type": "Serialized",
+  "host_style": null,
+  "host_name": null,
+  "producer": "Tapt Media",
+  "episode_count": "16 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/anatomy-of-a-scam/id1651970109"
+  },
+  "website_url": null,
+  "rss_url": "https://www.omnycontent.com/d/playlist/88b564ea-a9a6-4751-910a-a5d800019396/01820059-2468-470d-b430-af3c0018ecfc/3d06f624-75e6-4545-95bb-af3c00231127/podcast.rss",
+  "apple_collection_id": 1651970109,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Chalk Murder To Me",
+  "slug": "chalk-murder-to-me",
+  "description": "Local reporters examine crimes in Mansfield, Ohio.",
+  "short_description": "Local reporters examine crimes in Mansfield, Ohio.",
+  "country": "US",
+  "country_name": "United States",
+  "case_types": [
+   "Murder",
+   "Cold Case"
+  ],
+  "format_type": "Episodic",
+  "host_style": null,
+  "host_name": null,
+  "producer": "Richland Source",
+  "episode_count": "9 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/chalk-murder-to-me/id1462173286"
+  },
+  "website_url": "http://chalkmurdertome.libsyn.com/website",
+  "rss_url": "https://rss.libsyn.com/shows/179693/destinations/1222079.xml",
+  "apple_collection_id": 1462173286,
+  "is_published": true,
+  "is_featured": false
+ },
+ {
+  "title": "Australian Murder",
+  "slug": "australian-murder",
+  "description": "Revisits old and cold Australian murders, setting each one against the history of its time.",
+  "short_description": "Revisits old and cold Australian murders, setting each one against the history of its time.",
+  "country": "AU",
+  "country_name": "Australia",
+  "case_types": [
+   "Murder",
+   "Cold Case"
+  ],
+  "format_type": "Serialized",
+  "host_style": "Single Host",
+  "host_name": "Michael Adams",
+  "producer": "Michael Adams",
+  "episode_count": "3 episodes",
+  "platforms": [
+   "Apple Podcasts"
+  ],
+  "platform_urls": {
+   "Apple Podcasts": "https://podcasts.apple.com/us/podcast/australian-murder/id6823507460"
+  },
+  "website_url": "https://shows.acast.com/australian-murder",
+  "rss_url": "https://feeds.acast.com/public/shows/6ad1bfda29b9fbfbe2bbebfc",
+  "apple_collection_id": 6823507460,
+  "is_published": true,
+  "is_featured": false
+ }
+]
