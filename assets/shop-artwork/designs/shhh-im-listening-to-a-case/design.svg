@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="48.522857666015625 -10 902.2161865234375 619.5139770507812" width="902.2161865234375" height="619.5139770507812">
+    <path d="M 350 130 a 150 130 0 0 1 300 0" fill="none" stroke="#EDE6D6" stroke-width="20" stroke-linecap="round"/>
+    <rect x="322" y="120" width="50" height="110" rx="20" fill="#EDE6D6"/>
+    <rect x="628" y="120" width="50" height="110" rx="20" fill="#EDE6D6"/>
+    <circle cx="350" cy="175" r="9" fill="#B3262E"/>
+<text x="500" y="363.6" text-anchor="middle" font-family="Playfair Display" font-weight="900"  font-size="132.25" letter-spacing="2.64" fill="#B3262E">SHHH…</text>
+<text x="500" y="467.4" text-anchor="middle" font-family="Playfair Display" font-weight="900"  font-size="118.25" letter-spacing="2.36" fill="#EDE6D6">I'M LISTENING</text>
+<text x="500" y="607.3" text-anchor="middle" font-family="Playfair Display" font-weight="900"  font-size="158.14" letter-spacing="3.16" fill="#EDE6D6">TO A CASE.</text></svg>

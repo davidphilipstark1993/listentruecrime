@@ -32,6 +32,9 @@ export interface ShopProductRow {
   seo_title: string | null
   seo_description: string | null
   admin_notes: string | null
+  collection?: string | null
+  design?: string | null
+  tags?: string[] | null
   created_at: string
   updated_at: string
 }
@@ -74,6 +77,8 @@ export interface PublicProduct {
   isBestSeller: boolean
   isNew: boolean
   isPlaceholder: boolean
+  collection: string | null
+  design: string | null
   seoTitle: string | null
   seoDescription: string | null
   variants: PublicVariant[]

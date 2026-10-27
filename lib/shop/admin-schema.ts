@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 const text = (max: number) => z.string().trim().max(max).nullable().optional().transform(v => v || null)
 
-export const RESERVED_SLUGS = ['basket', 'category', 'checkout', 'shipping-policy', 'returns-and-refunds']
+export const RESERVED_SLUGS = ['basket', 'category', 'checkout', 'shipping-policy', 'returns-and-refunds', 'collection']
 
 const imageSchema = z.object({
   url: z.string().trim().url().max(2000).refine(u => u.startsWith('https://'), 'Image URLs must start with https://'),
@@ -34,6 +34,9 @@ export const productSchema = z.object({
   seo_title: text(120),
   seo_description: text(320),
   admin_notes: text(2000),
+  collection: z.enum(['armchair-detective', 'podcast-addict', 'case-files']).nullable().optional().transform(v => v ?? null),
+  design: text(120),
+  tags: z.array(z.string().trim().min(1).max(60)).max(20).default([]),
 })
 
 export const variantSchema = z.object({

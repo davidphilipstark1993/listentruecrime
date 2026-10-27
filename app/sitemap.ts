@@ -5,7 +5,7 @@ import { getAllPosts, getAllCategories, getAllTags, MIN_INDEXABLE_TAG_POSTS } fr
 import { getAllCases } from '@/lib/cases'
 import { getAllAuthors } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
-import { shopEnabled, SHOP_CATEGORIES } from '@/lib/shop/config'
+import { shopEnabled, SHOP_CATEGORIES, SHOP_COLLECTIONS } from '@/lib/shop/config'
 import { normalisePath } from '@/lib/redirects'
 import { getIndexablePodcastsLike, getListingCounts, MIN_INDEXABLE_COUNTRY_PODCASTS, MIN_INDEXABLE_PLATFORM_PODCASTS } from '@/lib/seo/indexability'
 
@@ -136,6 +136,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     shopUrls = [
       { url: `${BASE}/shop`, changeFrequency: 'weekly', priority: 0.8, lastModified: now },
       ...SHOP_CATEGORIES.map(c => ({ url: `${BASE}/shop/category/${c.slug}`, changeFrequency: 'weekly' as const, priority: 0.7, lastModified: now })),
+      ...SHOP_COLLECTIONS.map(c => ({ url: `${BASE}/shop/collection/${c.slug}`, changeFrequency: 'weekly' as const, priority: 0.7, lastModified: now })),
       ...(shopProducts ?? []).map(p => ({ url: `${BASE}/shop/${p.slug}`, changeFrequency: 'weekly' as const, priority: 0.7, lastModified: p.updated_at ?? now })),
       { url: `${BASE}/shop/shipping-policy`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
       { url: `${BASE}/shop/returns-and-refunds`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
