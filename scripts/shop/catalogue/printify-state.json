@@ -1,0 +1,212 @@
+{
+  "uploads": {
+    "professional-armchair-detective": {
+      "hash": "d8551b8a4beea6be",
+      "id": "6ae110ce9b0bc40e2c73363b",
+      "width": 3600,
+      "height": 2214
+    },
+    "amateur-sleuth-professional-overthinker": {
+      "hash": "c846b19f115dc6cf",
+      "id": "6ae11102c77f15b9ec9f565f",
+      "width": 3600,
+      "height": 1303
+    },
+    "everyone-is-a-suspect": {
+      "hash": "0c4fd037d4c8388a",
+      "id": "6ae1110615d5b7ec5104e21e",
+      "width": 3600,
+      "height": 1703
+    },
+    "respectfully-i-have-questions": {
+      "hash": "847a4cd20e5d40ac",
+      "id": "6ae1110b9bbebaa2e7bf0aa7",
+      "width": 3600,
+      "height": 1636
+    },
+    "the-timeline-doesnt-lie": {
+      "hash": "bce10cda1221dcd3",
+      "id": "6ae11117d53124f27e338293",
+      "width": 3600,
+      "height": 1591
+    },
+    "just-one-more-episode": {
+      "hash": "cd5b9d357d7ad4b2",
+      "id": "6ae1111a33237cd58cbb0586",
+      "width": 3600,
+      "height": 1636
+    },
+    "if-i-go-missing-check-my-podcast-queue": {
+      "hash": "e823d7f0ceb7f78e",
+      "id": "6ae111214ad1c5f6abb4e54e",
+      "width": 3600,
+      "height": 1388
+    },
+    "shhh-im-listening-to-a-case": {
+      "hash": "8908c00469299311",
+      "id": "6ae11128ec28ffc927830605",
+      "width": 3600,
+      "height": 2472
+    },
+    "five-podcasts-behind-send-help": {
+      "hash": "a1a09cb963086316",
+      "id": "6ae1112d68293a85541b9793",
+      "width": 3600,
+      "height": 1943
+    },
+    "case-file-001": {
+      "hash": "4fc34ea455e8767e",
+      "id": "6ae111310e1e82eeb4b323ec",
+      "width": 3600,
+      "height": 2820
+    },
+    "cold-case-unit": {
+      "hash": "0c67ad61ef7bf34f",
+      "id": "6ae11138cafd514c7923b9c1",
+      "width": 3600,
+      "height": 2544
+    },
+    "persons-of-interest": {
+      "hash": "bd2a1d84ca74e35f",
+      "id": "6ae1113bfdc0ae39d5bfcdf7",
+      "width": 3600,
+      "height": 2437
+    },
+    "file-under-obsession": {
+      "hash": "3ef88029a17f0f57",
+      "id": "6ae1113f462e2b81b5532a51",
+      "width": 3600,
+      "height": 2820
+    },
+    "listen-investigate-repeat": {
+      "hash": "c3cdbf6d2466130b",
+      "id": "6ae11141b463511a21841412",
+      "width": 3600,
+      "height": 1819
+    },
+    "unresolved": {
+      "hash": "576ba96b69e54a3d",
+      "id": "6ae1114772eac4b0b835c8d6",
+      "width": 3600,
+      "height": 1264
+    }
+  },
+  "products": {
+    "professional-armchair-detective-t-shirt": {
+      "printifyId": "6ae110d29310c63cb0060e9c",
+      "title": "Professional Armchair Detective T-Shirt"
+    },
+    "professional-armchair-detective-premium-t-shirt": {
+      "printifyId": "6ae110fc5ac45e423e011b45",
+      "title": "Professional Armchair Detective Premium T-Shirt"
+    },
+    "professional-armchair-detective-hoodie": {
+      "printifyId": "6ae110feb7c2757e9601da02",
+      "title": "Professional Armchair Detective Hoodie"
+    },
+    "professional-armchair-detective-tote-bag": {
+      "printifyId": "6ae111005ff276936206972b",
+      "title": "Professional Armchair Detective Tote Bag"
+    },
+    "amateur-sleuth-professional-overthinker-t-shirt": {
+      "printifyId": "6ae111049310c63cb0060ecb",
+      "title": "Amateur Sleuth. Professional Overthinker. T-Shirt"
+    },
+    "everyone-is-a-suspect-t-shirt": {
+      "printifyId": "6ae111072195ccbd540e4fd8",
+      "title": "Everyone Is a Suspect. T-Shirt"
+    },
+    "everyone-is-a-suspect-mug": {
+      "printifyId": "6ae1110931654dc5ee0a8d3b",
+      "title": "Everyone Is a Suspect. Mug"
+    },
+    "respectfully-i-have-questions-t-shirt": {
+      "printifyId": "6ae1110eb7c2757e9601da19",
+      "title": "Respectfully, I Have Questions. T-Shirt"
+    },
+    "respectfully-i-have-questions-sweatshirt": {
+      "printifyId": "6ae1111165aaae1db90206e2",
+      "title": "Respectfully, I Have Questions. Sweatshirt"
+    },
+    "the-timeline-doesnt-lie-t-shirt": {
+      "printifyId": "6ae11119a044f1c02507515b",
+      "title": "The Timeline Doesn't Lie. T-Shirt"
+    },
+    "just-one-more-episode-t-shirt": {
+      "printifyId": "6ae1111da7605d7f8e0ac7b3",
+      "title": "Just One More Episode. T-Shirt"
+    },
+    "just-one-more-episode-sweatshirt": {
+      "printifyId": "6ae1111f31654dc5ee0a8d53",
+      "title": "Just One More Episode. Sweatshirt"
+    },
+    "just-one-more-episode-mug": {
+      "printifyId": "6ae111209cb855601e0f4bed",
+      "title": "Just One More Episode. Mug"
+    },
+    "if-i-go-missing-check-my-podcast-queue-t-shirt": {
+      "printifyId": "6ae111259e956df0ae0cc8ff",
+      "title": "If I Go Missing, Check My Podcast Queue. T-Shirt"
+    },
+    "if-i-go-missing-check-my-podcast-queue-mug": {
+      "printifyId": "6ae1112765aaae1db90206f2",
+      "title": "If I Go Missing, Check My Podcast Queue. Mug"
+    },
+    "shhh-im-listening-to-a-case-t-shirt": {
+      "printifyId": "6ae1112aa7605d7f8e0ac7c3",
+      "title": "Shhh… I'm Listening to a Case. T-Shirt"
+    },
+    "shhh-im-listening-to-a-case-tote-bag": {
+      "printifyId": "6ae1112c9e956df0ae0cc90e",
+      "title": "Shhh… I'm Listening to a Case. Tote Bag"
+    },
+    "five-podcasts-behind-send-help-t-shirt": {
+      "printifyId": "6ae1112f9cb855601e0f4c0c",
+      "title": "Five Podcasts Behind. Send Help. T-Shirt"
+    },
+    "case-file-001-t-shirt": {
+      "printifyId": "6ae111349cb855601e0f4c1b",
+      "title": "Case File: 001 T-Shirt"
+    },
+    "case-file-001-premium-t-shirt": {
+      "printifyId": "6ae111352195ccbd540e5022",
+      "title": "Case File: 001 Premium T-Shirt"
+    },
+    "case-file-001-hoodie": {
+      "printifyId": "6ae111375ff2769362069771",
+      "title": "Case File: 001 Hoodie"
+    },
+    "cold-case-unit-t-shirt": {
+      "printifyId": "6ae1113aa044f1c025075193",
+      "title": "Cold Case Unit T-Shirt"
+    },
+    "persons-of-interest-t-shirt": {
+      "printifyId": "6ae1113d9e956df0ae0cc939",
+      "title": "Persons of Interest T-Shirt"
+    },
+    "file-under-obsession-t-shirt": {
+      "printifyId": "6ae111405ff276936206977f",
+      "title": "File Under: Obsession T-Shirt"
+    },
+    "listen-investigate-repeat-t-shirt": {
+      "printifyId": "6ae111435ff2769362069786",
+      "title": "Listen. Investigate. Repeat. T-Shirt"
+    },
+    "listen-investigate-repeat-hoodie": {
+      "printifyId": "6ae11145b7c2757e9601da65",
+      "title": "Listen. Investigate. Repeat. Hoodie"
+    },
+    "listen-investigate-repeat-mug": {
+      "printifyId": "6ae11146a7605d7f8e0ac7fc",
+      "title": "Listen. Investigate. Repeat. Mug"
+    },
+    "unresolved-t-shirt": {
+      "printifyId": "6ae1114a914d9ad3060b9bb5",
+      "title": "Unresolved T-Shirt"
+    },
+    "unresolved-hoodie": {
+      "printifyId": "6ae1114c65aaae1db902072e",
+      "title": "Unresolved Hoodie"
+    }
+  }
+}

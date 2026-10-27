@@ -43,6 +43,15 @@ export const SHOP_CATEGORIES = [
   { slug: 'accessories', label: 'Accessories', blurb: 'The finishing touches.' },
 ] as const
 
+export const SHOP_COLLECTIONS = [
+  { slug: 'armchair-detective', label: 'The Armchair Detective', blurb: 'For people who solve it all from the sofa.' },
+  { slug: 'podcast-addict', label: 'The Podcast Addict', blurb: 'Just one more episode. You said that three episodes ago.' },
+  { slug: 'case-files', label: 'The Case Files', blurb: 'Evidence labels, folders and stamps. Quiet obsession, typeset.' },
+] as const
+
+export type ShopCollection = (typeof SHOP_COLLECTIONS)[number]['slug']
+export const collectionLabel = (slug: string | null) => SHOP_COLLECTIONS.find(c => c.slug === slug)?.label ?? ''
+
 export type ShopCategory = (typeof SHOP_CATEGORIES)[number]['slug']
 
 export const categoryLabel = (slug: string) => SHOP_CATEGORIES.find(c => c.slug === slug)?.label ?? slug
