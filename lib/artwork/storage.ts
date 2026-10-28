@@ -22,13 +22,16 @@ export async function cacheArtwork(
   podcastId: string,
   buffer: Buffer,
   format: NonNullable<ImageProbeResult['format']>,
-  contentType: string | null
+  // The remote server's own Content-Type header is deliberately ignored: it is
+  // sometimes non-standard (e.g. "image/jpg"), which the bucket rejects. The
+  // format here was already detected from the file's bytes, so use that.
+  _declaredContentType?: string | null
 ): Promise<{ url: string } | { error: string }> {
   const extension = EXTENSION_BY_FORMAT[format]
   const path = `${podcastId}.${extension}`
 
   const { error } = await admin.storage.from(BUCKET).upload(path, buffer, {
-    contentType: contentType ?? `image/${format === 'jpeg' ? 'jpeg' : format}`,
+    contentType: `image/${format}`,
     upsert: true,
     cacheControl: '3600',
   })
