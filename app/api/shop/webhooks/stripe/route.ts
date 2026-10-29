@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type Stripe from 'stripe'
-import { getStripe, webhookSecret } from '@/lib/shop/stripe'
+import { getStripe, stripeKeyMode, webhookSecret } from '@/lib/shop/stripe'
 import { finishWebhookEvent, claimWebhookEvent } from '@/lib/shop/webhook-events'
 import {
   handleAsyncPaymentFailed, handleChargeRefunded, handleCheckoutExpired, handleCheckoutPaid, handleDispute, logEvent,
@@ -27,12 +27,23 @@ export async function POST(req: Request) {
 
   let claim: Awaited<ReturnType<typeof claimWebhookEvent>>
   try {
-    claim = await claimWebhookEvent('stripe', event.id, event.type)
+    claim = await claimWebhookEvent('stripe', event.id, event.type, event.livemode)
   } catch (err) {
     console.error(err)
     return NextResponse.json({ error: 'Temporary error' }, { status: 500 }) // Stripe will retry
   }
   if (claim === 'duplicate') return NextResponse.json({ received: true, duplicate: true })
+
+  // A signed event whose mode disagrees with the configured secret key means test
+  // and live settings are mixed up (e.g. a live webhook secret with a test key).
+  // Processing it could never find the right order, so record it loudly and stop.
+  const keyMode = stripeKeyMode()
+  if (keyMode && event.livemode !== (keyMode === 'live')) {
+    const msg = `Received a ${event.livemode ? 'LIVE' : 'TEST'} Stripe event (${event.type}) but STRIPE_SECRET_KEY is a ${keyMode.toUpperCase()} key. Check that the key and webhook secret are both test or both live.`
+    await logEvent(null, 'error', 'stripe.mode_mismatch', msg, { event: event.id, vercel_env: process.env.VERCEL_ENV ?? null })
+    await finishWebhookEvent('stripe', event.id, msg)
+    return NextResponse.json({ received: true, ignored: 'mode_mismatch' })
+  }
 
   try {
     switch (event.type) {

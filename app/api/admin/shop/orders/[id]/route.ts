@@ -31,7 +31,7 @@ export async function POST(req: Request, { params }: Props) {
         return NextResponse.json({ ok: true, message: 'Refreshed from Printify' })
       case 'send_to_production': {
         if (!sendToProductionEnabled()) return NextResponse.json({ error: 'Sending to production is switched off (SHOP_PRINTIFY_SEND_TO_PRODUCTION) or Stripe is in test mode.' }, { status: 409 })
-        const ok = await sendOrderToProduction(id)
+        const ok = await sendOrderToProduction(id, { manual: true })
         return NextResponse.json({ ok, message: ok ? 'Sent to production' : 'Could not send — see the order log' })
       }
       case 'resend_confirmation': {

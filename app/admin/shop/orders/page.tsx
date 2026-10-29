@@ -18,7 +18,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: { q?:
   const admin = createAdminClient()
   let query = admin.from('shop_orders').select('*').order('created_at', { ascending: false }).limit(200)
   const f = searchParams.f ?? ''
-  if (f === 'attention') query = query.in('fulfilment_status', ['failed', 'needs_review']).eq('payment_status', 'paid')
+  if (f === 'attention') query = query.in('payment_status', ['paid', 'partially_refunded']).or('fulfilment_status.in.(failed,needs_review,printify_canceled),and(fulfilment_status.in.(created,in_production),last_error.not.is.null)')
   else if (f === 'in_progress') query = query.in('fulfilment_status', ['queued', 'submitting', 'created', 'in_production'])
   else if (f === 'fulfilled') query = query.in('fulfilment_status', ['shipped', 'delivered'])
   else if (f === 'unpaid') query = query.in('payment_status', ['pending', 'expired', 'failed'])

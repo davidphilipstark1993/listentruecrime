@@ -14,6 +14,7 @@ const TONES: Record<string, string> = {
   refunded: 'bg-amber-500/10 text-amber-400',
   failed: 'bg-red-500/10 text-red-400',
   needs_review: 'bg-red-500/10 text-red-400',
+  printify_canceled: 'bg-red-500/10 text-red-400',
   expired: 'bg-white/5 text-stone-subtle',
   cancelled: 'bg-white/5 text-stone-subtle',
 }
