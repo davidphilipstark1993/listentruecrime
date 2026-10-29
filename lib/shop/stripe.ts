@@ -15,6 +15,13 @@ export function getStripe(): Stripe {
   return client
 }
 
+/** Which mode the configured secret key is in, or null when no key is set. */
+export function stripeKeyMode(): 'live' | 'test' | null {
+  const key = process.env.STRIPE_SECRET_KEY ? sanitizeEnv(process.env.STRIPE_SECRET_KEY) : ''
+  if (!key) return null
+  return /^(sk|rk)_live_/.test(key) ? 'live' : 'test'
+}
+
 export function stripeConfigured() {
   return Boolean(process.env.STRIPE_SECRET_KEY)
 }

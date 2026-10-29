@@ -39,6 +39,11 @@ export default async function OrderPage({ params }: { params: { id: string } }) 
         <StatusBadge value={order.payment_status} /><StatusBadge value={order.fulfilment_status} />
       </div>
 
+      {order.fulfilment_status === 'printify_canceled' && (
+        <div className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200">
+          <strong>Printify has cancelled this order.</strong> The customer has paid, but it will never be produced and nothing will be retried or recreated automatically. Decide whether to <strong>refund</strong> the customer (below) or remake the order by hand in Printify and email them.
+        </div>
+      )}
       {order.last_error && <div className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300"><strong>Last error:</strong> {order.last_error}{order.next_retry_at && <span className="block text-xs text-red-300/70">Next automatic retry: {new Date(order.next_retry_at).toLocaleString('en-GB')} (attempt {order.fulfilment_attempts})</span>}</div>}
 
       <div className="grid gap-6 lg:grid-cols-2">

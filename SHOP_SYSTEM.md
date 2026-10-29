@@ -146,3 +146,16 @@ Not built, by design: creating Printify products (the admin only *reads* a Print
 - One delivery method (Printify "standard"). Express/economy is a small addition once you want it.
 - Customers have no order-lookup page; they use the emailed confirmation/tracking and the support address.
 - Product images are admin-entered URLs (Printify mock-ups are imported automatically); allowed hosts are in `next.config.js`.
+
+---
+
+## 7. Operations notes (29 Oct 2026 incident fixes)
+
+**Deploy order matters.** Run `supabase/migrations/021_shop_printify_canceled.sql` in Supabase **before** deploying this code (it adds the `printify_canceled` status, retry columns and `shop_webhook_events.livemode`; it changes no existing rows).
+
+- **Stripe Managed Payments:** checkout sessions pass `managed_payments[enabled]=false` (physical goods need `shipping_address_collection`). This fix has been on `main` since the 27 Oct merge of #24; the 26 Oct `checkout.failed` entry predates it.
+- **Printify-cancelled paid orders** get the terminal status `printify_canceled`: nothing is retried, recreated or refunded automatically; they show under "Failed / needs attention" and in the order page with refund guidance.
+- **send-to-production** now backs off (2m → 10m → 30m → 2h → 6h), caps at 5 attempts, treats Printify code 8502 and other 4xx as terminal, and logs/alerts once instead of on every retry.
+- **Status sync:** webhooks *and* a poll in the 15-minute job (`/api/shop/cron/retry`) refresh in-flight orders from Printify (each at most every 30 min), so cancellations and tracking arrive even if a webhook is missed. The poll runs before the send step, so a cancelled order is never sent.
+- **Test/live mix-ups:** Stripe events carry `livemode`; an event whose mode disagrees with `STRIPE_SECRET_KEY` is ignored and logged as `stripe.mode_mismatch`, and the admin overview shows key mode vs the last webhook's mode. `checkout.failed` events now record `stripe_mode` and `vercel_env`. Note that Preview and Production share one Supabase database, so a Preview deployment's test-mode events appear in the live admin.
+- **Refunds:** a refund (from the admin or the Stripe dashboard) updates the order's payment status and refunded amount, and alerts you if the order hasn't shipped. It does **not** cancel anything at Printify (their API can only cancel unpaid orders), but a refunded order is never sent to production by the shop. Cancel it in Printify yourself.
