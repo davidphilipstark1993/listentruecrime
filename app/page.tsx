@@ -176,12 +176,9 @@ export default async function HomePage() {
                 Browse Podcasts
                 <ArrowRight size={15} />
               </Link>
-              <div className="flex flex-col sm:flex-row items-center gap-2">
-                <NewsletterForm source="hero" variant="minimal" className="w-64" />
-              </div>
             </div>
             <p className="text-stone-subtle text-xs mt-3">
-              <span className="text-crimson font-semibold">Free newsletter</span> — 5 podcast picks emailed every Sunday
+              <a href="#newsletter" className="text-crimson font-semibold hover:underline">Free newsletter</a> — 5 podcast picks emailed every Sunday
             </p>
 
             {/* Social proof */}
@@ -205,7 +202,7 @@ export default async function HomePage() {
         </section>
 
         {/* ═══════════════ NEWSLETTER CTA ═══════════════ */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section id="newsletter" className="scroll-mt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="relative overflow-hidden rounded-2xl bg-ink-800 border border-white/[0.06] p-8 lg:p-10">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(190,18,60,0.1),transparent_60%)]" />
             <div className="relative z-10 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">

@@ -2,6 +2,7 @@
 // fields win; otherwise text is generated only from the podcast's own facts
 // (name, host, producer, format) and never from verdict, rating or platforms.
 import type { Podcast } from '@/lib/types/database'
+import { trimMeta } from '@/lib/seo/meta-length'
 
 type MetaSource = Pick<
   Podcast,
@@ -24,18 +25,19 @@ export function generatedDescription(p: MetaSource): string {
 export function buildPodcastMeta(p: MetaSource, slug: string, base: string) {
   // Editor-entered descriptions first, then generated. (short_description and
   // description are themselves editor fields, as before.)
-  const description =
+  const description = trimMeta(
     clean(p.meta_description) ??
     clean(p.short_description) ??
-    clean(p.description)?.slice(0, 160) ??
-    generatedDescription(p)
+    clean(p.description) ??
+    generatedDescription(p),
+  )
 
   return {
     // Same pattern the pages have always used, so rankings are not disturbed.
     title: clean(p.seo_title) ? { absolute: clean(p.seo_title)! } : `${p.title} Review`,
     description,
     ogTitle: clean(p.og_title) ?? clean(p.seo_title) ?? `${p.title} | ListenTrueCrime`,
-    ogDescription: clean(p.og_description) ?? description,
+    ogDescription: trimMeta(clean(p.og_description)) ?? description,
     canonical: clean(p.canonical_url) ?? `${base}/podcasts/${slug}`,
     robots: p.noindex ? { index: false, follow: true } : undefined,
   }

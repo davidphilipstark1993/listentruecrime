@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   // Absolute: the site template would append " | ListenTrueCrime" and push this past ~60 characters.
   title: { absolute: `Best True Crime Podcasts (${YEAR}): Expert-Reviewed, Binge-Scored` },
   description:
-    `The best true crime podcasts of ${YEAR}, each with an expert verdict, a binge score and community ratings. From Serial to Casefile to Teacher\'s Pet, find what to hear next.`,
+    `The best true crime podcasts of ${YEAR}, each with an expert verdict, binge score and community ratings. From Serial to Casefile, find what to hear next.`,
   openGraph: {
     title: `Best True Crime Podcasts (${YEAR}): Expert-Reviewed, Binge-Scored`,
     description: 'Expert-reviewed, binge-scored and community-rated. Find your next true crime obsession.',

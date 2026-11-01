@@ -9,7 +9,7 @@ import { buildBreadcrumbSchema } from '@/lib/seo/content'
 
 export const metadata: Metadata = {
   title: 'True Crime Cases',
-  description: 'A guide to famous criminal cases mapped to the best podcasts covering them. Solved mysteries, cold cases, and ongoing investigations — find the best place to start.',
+  description: 'Famous criminal cases mapped to the best podcasts covering them. Solved mysteries, cold cases and ongoing investigations: find where to start.',
   alternates: { canonical: `${BASE}/cases` },
   openGraph: {
     title: 'True Crime Cases | ListenTrueCrime',

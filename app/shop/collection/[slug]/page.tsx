@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { trimMeta } from '@/lib/seo/meta-length'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { BASE } from '@/lib/seo/config'
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const c = SHOP_COLLECTIONS.find(x => x.slug === params.slug)
   if (!c) return {}
   const title = `${c.label} | True Crime Merchandise UK`
-  const description = `${c.blurb} T-shirts, hoodies, mugs and more from the ${c.label} collection by Listen True Crime. Printed to order in the UK.`
+  const description = trimMeta(`${c.blurb} T-shirts, hoodies, mugs and more, printed to order in the UK.`)
   return { title, description, alternates: { canonical: `${BASE}/shop/collection/${c.slug}` }, openGraph: { title, description, url: `${BASE}/shop/collection/${c.slug}` } }
 }
 

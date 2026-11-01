@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { trimMeta } from '@/lib/seo/meta-length'
 import { notFound } from 'next/navigation'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
@@ -105,14 +106,15 @@ export async function generateMetadata({
 
   // seoTitle is the complete <title> (it bypasses the site-wide " | ListenTrueCrime" template).
   const pageTitle = post.seoTitle ?? post.title
+  const description = trimMeta(post.description)
 
   return {
     title: post.seoTitle ? { absolute: post.seoTitle } : post.title,
-    description: post.description,
+    description,
     alternates: { canonical: `${BASE}/blog/${post.slug}` },
     openGraph: {
       title: pageTitle,
-      description: post.description,
+      description,
       url: `${BASE}/blog/${post.slug}`,
       type: 'article',
       publishedTime: post.date,
@@ -124,7 +126,7 @@ export async function generateMetadata({
     twitter: {
       card: 'summary_large_image',
       title: post.title,
-      description: post.description,
+      description,
       images: [ogImage],
       creator: author.twitter,
     },

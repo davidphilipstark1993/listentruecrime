@@ -11,7 +11,8 @@ import { PolicyShell } from '@/components/shop/policy-shell'
 // and the carrier's transit times (see lib/shop/copy.ts → DELIVERY_ESTIMATE).
 
 export const metadata: Metadata = {
-  title: 'Shipping Policy | Listen True Crime Shop',
+  // Absolute: the site template would append " | ListenTrueCrime" a second time.
+  title: { absolute: 'Shipping Policy | Listen True Crime Shop' },
   description: 'How and where Listen True Crime merchandise is made, dispatched and delivered, and what delivery costs.',
   alternates: { canonical: `${BASE}/shop/shipping-policy` },
 }

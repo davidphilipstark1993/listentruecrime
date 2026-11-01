@@ -97,7 +97,7 @@ export default function PrivacyPage() {
               </ul>
             </section>
 
-            <section>
+            <section id="cookies" className="scroll-mt-24">
               <h2 className="heading-section text-xl text-stone mb-3">Cookies and local storage</h2>
               <p>We use:</p>
               <ul className="space-y-2 list-disc pl-5 mt-3">

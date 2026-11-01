@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { trimMeta } from '@/lib/seo/meta-length'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -97,7 +98,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const indexable = (await getIndexablePodcastsLike(getAllPosts().map(p => p.slug))).includes(slug)
 
   const title = `Podcasts Like ${podcast.title} (${new Date().getFullYear()})`
-  const description = `Loved ${podcast.title}? These are the true crime podcasts to hear next, matched on case type, storytelling style and listener ratings — each with a binge score.`
+  const description = trimMeta(`Loved ${podcast.title}? These true crime podcasts are matched on case type, storytelling style and listener ratings, each with a binge score.`)
 
   return {
     title,

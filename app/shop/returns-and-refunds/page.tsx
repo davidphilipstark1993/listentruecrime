@@ -26,7 +26,8 @@ import { PolicyShell } from '@/components/shop/policy-shell'
 //  • Faulty goods are governed by the Consumer Rights Act 2015 regardless of this page.
 
 export const metadata: Metadata = {
-  title: 'Returns and Refunds Policy | Listen True Crime Shop',
+  // Absolute: the site template would append " | ListenTrueCrime" a second time.
+  title: { absolute: 'Returns and Refunds Policy | Listen True Crime Shop' },
   description: 'Your right to cancel, how to return merchandise, and what we do about faulty or misprinted items.',
   alternates: { canonical: `${BASE}/shop/returns-and-refunds` },
 }

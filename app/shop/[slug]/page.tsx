@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { trimMeta } from '@/lib/seo/meta-length'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { BASE } from '@/lib/seo/config'
@@ -26,7 +27,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const p = await getProductBySlug(params.slug)
   if (!p) return {}
   const title = p.seoTitle ?? `${p.title} | Listen True Crime Shop`
-  const description = p.seoDescription ?? p.shortDescription ?? undefined
+  const description = trimMeta(p.seoDescription ?? p.shortDescription)
   const image = p.images.find(i => !i.placeholder)?.url
   return {
     title: { absolute: title },

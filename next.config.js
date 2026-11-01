@@ -52,6 +52,29 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          // Deliberately no script-src/default-src yet: the page relies on inline
+          // JSON-LD, Next.js bootstrap scripts and Google Analytics, so a full
+          // policy needs nonces and testing. These directives are safe today.
+          { key: 'Content-Security-Policy', value: "frame-ancestors 'self'; base-uri 'self'; object-src 'none'" },
+        ],
+      },
+    ]
+  },
+  async redirects() {
+    return [
+      { source: '/cookies', destination: '/privacy#cookies', permanent: true },
+      { source: '/cookie-policy', destination: '/privacy#cookies', permanent: true },
+    ]
+  },
   // CMS identity cleanup, 17 Sep 2026 — twin podcast pages unpublished and
   // 301'd to their canonical (see scripts/one-off/ltc-cms-cleanup-2026-09-17.js
   // and the critical-*-2026-09-11 source packs).
