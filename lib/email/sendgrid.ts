@@ -1,4 +1,5 @@
 import { BASE } from '@/lib/seo/config'
+import { shopPromoRowHtml } from './shop-promo'
 import { sanitizeEnv } from '@/lib/utils'
 
 export function buildWelcomeEmailHtml(firstName?: string | null): string {
@@ -68,6 +69,7 @@ export function buildWelcomeEmailHtml(firstName?: string | null): string {
         </td>
       </tr>
 
+${shopPromoRowHtml()}
       <!-- Footer -->
       <tr>
         <td style="padding:20px 32px;border-top:1px solid #f0f0f0;text-align:center;">
