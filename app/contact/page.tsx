@@ -5,13 +5,10 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { BASE } from '@/lib/seo/config'
 import { shopEnabled, supportEmail } from '@/lib/shop/config'
+import { CONTACT_EMAIL } from '@/lib/legal'
 
-// [CONFIRM: contact email] — no contact-form backend exists in the codebase,
-// so this uses a plain mailto link per the audit brief. If you'd rather have
-// a real form, that needs a new API route (e.g. one that emails via the
-// SendGrid integration already used for the newsletter).
-
-const CONTACT_EMAIL = '[CONFIRM: contact email]'
+// No contact-form backend exists, so this is a plain email address (shown as text as well as a
+// mailto button, so it still works without a mail app). A form would need a new API route.
 
 export const metadata: Metadata = {
   title: 'Contact',

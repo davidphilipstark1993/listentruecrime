@@ -5,9 +5,9 @@ import { Footer } from '@/components/layout/footer'
 import { BASE } from '@/lib/seo/config'
 import { shopEnabled } from '@/lib/shop/config'
 import { TermsShopSection } from '@/components/shop/terms-shop-section'
+import { LEGAL_UPDATED } from '@/lib/legal'
 
-// DRAFT — pending legal review, not final legal advice. [CONFIRM: ...]
-// markers stand in for facts only the site owner can supply.
+// Not legal advice: have it reviewed by a qualified adviser if the business changes or grows.
 
 export const metadata: Metadata = {
   title: 'Terms of Use',
@@ -29,7 +29,7 @@ export default function TermsPage() {
           </nav>
 
           <h1 className="heading-display text-3xl sm:text-4xl mb-3">Terms of Use</h1>
-          <p className="text-stone-subtle text-sm mb-10">Last updated: [CONFIRM: date this policy goes live]</p>
+          <p className="text-stone-subtle text-sm mb-10">Last updated: {LEGAL_UPDATED}</p>
 
           <div className="space-y-10 text-stone-muted text-sm leading-relaxed">
             <section>
@@ -145,7 +145,7 @@ export default function TermsPage() {
 
             <section>
               <h2 className="heading-section text-xl text-stone mb-3">11. Governing law</h2>
-              <p>These terms are governed by the laws of [CONFIRM: governing jurisdiction, e.g. England and Wales].</p>
+              <p>These terms are governed by the law of England and Wales. If you live in Scotland or Northern Ireland you can also bring a claim in the courts there, and nothing here affects your statutory consumer rights.</p>
             </section>
 
             <section>
