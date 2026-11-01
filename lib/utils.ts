@@ -11,7 +11,14 @@ export function cn(...inputs: ClassValue[]) {
 // from a malformed .env file that has broken builds when values were pasted
 // straight into Vercel's dashboard/CLI.
 export function sanitizeEnv(raw: string): string {
-  return raw.trim().replace(/^"+|"+$/g, '').replace(/\\n$/g, '').trim()
+  // Repeat until stable: a single pass can't undo `"value"\n`, where the
+  // trailing "\n" hides the closing quote from the quote-stripping step.
+  let value = raw.trim()
+  for (;;) {
+    const next = value.replace(/^"+|"+$/g, '').replace(/\\n$/g, '').trim()
+    if (next === value) return value
+    value = next
+  }
 }
 
 export function slugify(text: string): string {

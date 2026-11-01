@@ -110,6 +110,8 @@ export interface NewsletterSubscriber {
   unsubscribed_at: string | null
   sendgrid_synced: boolean
   sendgrid_contact_id: string | null
+  sync_error: string | null
+  last_sync_attempt: string | null
   welcome_sent: boolean
   created_at: string
   updated_at: string

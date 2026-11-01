@@ -1,4 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin'
+import { reconcileAwaiting } from '@/lib/email/sendgrid-sync'
 import { RetrySyncButton } from '@/components/admin/retry-sync-button'
 import { DeleteSubscriberButton } from '@/components/admin/delete-subscriber-button'
 import type { NewsletterSubscriberStatus } from '@/lib/types/database'
@@ -10,18 +11,59 @@ const STATUS_COLOR: Record<NewsletterSubscriberStatus, string> = {
   suppressed: 'bg-crimson-faint text-crimson',
 }
 
-async function getSubscribers() {
+interface SubscriberRow {
+  id: string
+  email: string
+  first_name: string | null
+  source: string | null
+  status: NewsletterSubscriberStatus
+  sendgrid_synced: boolean
+  sync_error?: string | null
+  last_sync_attempt?: string | null
+  created_at: string
+}
+
+async function getSubscribers(): Promise<SubscriberRow[]> {
   const admin = createAdminClient()
-  const { data } = await admin
+  const { data, error } = await admin
+    .from('newsletter_subscribers')
+    .select('id, email, first_name, source, status, sendgrid_synced, sync_error, last_sync_attempt, created_at')
+    .order('created_at', { ascending: false })
+  if (!error) return (data ?? []) as SubscriberRow[]
+
+  // Migration 018 (sync_error / last_sync_attempt) not applied yet: show the
+  // list without the new columns rather than an empty table.
+  console.error('Newsletter subscribers query failed, retrying without sync columns:', error.message)
+  const legacy = await admin
     .from('newsletter_subscribers')
     .select('id, email, first_name, source, status, sendgrid_synced, created_at')
     .order('created_at', { ascending: false })
-  return data ?? []
+  return (legacy.data ?? []) as SubscriberRow[]
+}
+
+function SyncCell({ s }: { s: SubscriberRow }) {
+  if (s.sendgrid_synced) return <span className="text-emerald-400">Synced</span>
+  if (s.sync_error) {
+    return (
+      <span title={s.sync_error}>
+        <span className="text-amber-400">Sync failed</span>
+        <span className="block text-stone-subtle max-w-[16rem] truncate">{s.sync_error}</span>
+      </span>
+    )
+  }
+  if (s.last_sync_attempt) {
+    return <span className="text-stone-subtle" title="SendGrid accepted the contact; waiting for it to appear in the list">Awaiting SendGrid</span>
+  }
+  return <span className="text-stone-subtle">Not synced</span>
 }
 
 export default async function AdminNewsletterPage() {
-  const subscribers = await getSubscribers()
   const provider = process.env.NEWSLETTER_PROVIDER ?? 'supabase'
+  if (provider === 'sendgrid' && process.env.SENDGRID_API_KEY) {
+    // Accepted-but-unseen contacts are confirmed by search, never re-submitted.
+    await reconcileAwaiting(createAdminClient()).catch(err => console.error('Reconcile failed:', err))
+  }
+  const subscribers = await getSubscribers()
   const unsyncedCount = subscribers.filter(s => s.status === 'active' && !s.sendgrid_synced).length
 
   return (
@@ -69,11 +111,7 @@ export default async function AdminNewsletterPage() {
                 </td>
                 {provider === 'sendgrid' && (
                   <td className="px-4 py-3 text-xs">
-                    {s.sendgrid_synced ? (
-                      <span className="text-emerald-400">Synced</span>
-                    ) : (
-                      <span className="text-stone-subtle">Pending</span>
-                    )}
+                    <SyncCell s={s} />
                   </td>
                 )}
                 <td className="px-4 py-3 text-stone-subtle text-xs">

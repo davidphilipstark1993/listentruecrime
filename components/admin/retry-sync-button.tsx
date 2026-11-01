@@ -14,7 +14,9 @@ export function RetrySyncButton({ unsyncedCount }: { unsyncedCount: number }) {
       const res = await fetch('/api/newsletter/retry-sync', { method: 'POST' })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Retry failed')
-      toast.success(`Synced ${data.synced} of ${data.attempted} subscribers`)
+      const summary = `${data.synced} synced, ${data.awaiting} awaiting SendGrid, ${data.failed} failed (of ${data.attempted})`
+      if (data.failed > 0) toast.error(`${summary}. First error: ${data.failures[0].error}`, { duration: 10000 })
+      else toast.success(summary)
       router.refresh()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Retry failed')

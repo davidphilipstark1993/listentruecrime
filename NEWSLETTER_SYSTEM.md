@@ -85,8 +85,8 @@ Open it from `/admin/discoveries`, optionally add a reason, and click **Reject**
 ## How subscribers are stored and synced
 
 - Every signup (from any form on the site) is saved to the `newsletter_subscribers` table first — this always succeeds, even if SendGrid is down.
-- If `NEWSLETTER_PROVIDER=sendgrid`, the subscriber is also pushed to your SendGrid Marketing Contacts list. If that push fails, it's logged and the subscriber stays marked "Pending" — nothing is lost.
-- On `/admin/newsletter`, you'll see a **Retry SendGrid sync** button whenever there are pending subscribers — click it to retry all of them at once.
+- If `NEWSLETTER_PROVIDER=sendgrid`, the subscriber is also pushed to your SendGrid Marketing Contacts list. SendGrid accepts contacts asynchronously, so a new subscriber shows **Awaiting SendGrid** until a lookup finds them in the list (the admin page checks this each time you open it); then it shows **Synced**. If the push fails, the subscriber shows **Sync failed** with SendGrid's error, and nothing is lost. Syncing affects only your Marketing Contacts list — weekly issues are sent to every active row in `newsletter_subscribers` regardless.
+- On `/admin/newsletter`, you'll see a **Retry SendGrid sync** button whenever any subscriber isn't synced yet — it confirms contacts already in SendGrid, re-submits failed ones, and reports the first error.
 - When someone unsubscribes or bounces in SendGrid, a webhook (`/api/webhooks/sendgrid`) updates their status here automatically, so future sends skip them.
 
 ## Running discovery manually
@@ -104,8 +104,8 @@ This is expected and intentional — the system never invents facts it can't con
 **Blurbs read generically / template-like.**
 This means `ANTHROPIC_API_KEY` wasn't set for that run, so the system fell back to a plain template instead of an LLM-drafted blurb. Add the key as a GitHub Actions secret and re-run.
 
-**SendGrid sync shows "Pending" for subscribers.**
-Check `SENDGRID_API_KEY` and `SENDGRID_LIST_ID` are set correctly in Vercel, then use the **Retry SendGrid sync** button on `/admin/newsletter`.
+**SendGrid sync shows "Sync failed" (or stays on "Awaiting SendGrid") for subscribers.**
+Read the error shown next to the subscriber: a 401/403 means the API key is wrong or lacks Marketing permissions; a 400 mentioning the list means `SENDGRID_LIST_ID` is wrong. "Awaiting" for more than ~10 minutes means SendGrid accepted the request but never created the contact (usually the same list/permission problem). Fix the variable in Vercel, redeploy, then use the **Retry SendGrid sync** button on `/admin/newsletter`.
 
 **Approve fails with a podcast-page-creation error.**
 Usually a slug collision or a required field missing on the discovery record — check the specific error message returned, it names the podcast and the Supabase error.

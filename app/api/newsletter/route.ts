@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { sendLeadMagnetEmail } from '@/lib/email/lead-magnet'
 import { sendSendGridWelcomeEmail } from '@/lib/email/sendgrid'
-import { subscribeSendGrid } from '@/lib/email/sendgrid-contacts'
+import { syncSubscriber } from '@/lib/email/sendgrid-sync'
 
 export async function POST(req: Request) {
   const { email: rawEmail, first_name, source, consent } = await req.json()
@@ -41,11 +41,8 @@ export async function POST(req: Request) {
 
   try {
     if (provider === 'sendgrid') {
-      const jobId = await subscribeSendGrid(email, first_name)
-      await supabase
-        .from('newsletter_subscribers')
-        .update({ sendgrid_synced: true, sendgrid_contact_id: jobId })
-        .eq('email', email)
+      // Never throws; records the outcome (or the error) on the subscriber row.
+      await syncSubscriber(supabase, { email, first_name: first_name || null }, { checkFirst: true })
     } else if (provider === 'beehiiv') {
       await subscribeBeehiiv(email)
     } else if (provider === 'convertkit') {
