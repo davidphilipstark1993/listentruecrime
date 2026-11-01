@@ -2,12 +2,14 @@ import { sanitizeEnv } from '@/lib/utils'
 import { BASE } from '@/lib/seo/config'
 
 const SUBJECT = 'Confirm your ListenTrueCrime subscription'
+const REMINDER_SUBJECT = 'Reminder: confirm your ListenTrueCrime subscription'
+const REMINDER_LINE = "You asked to join the ListenTrueCrime newsletter a few days ago but haven't confirmed yet."
 
 function escHtml(str: string): string {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 }
 
-export function buildConfirmationHtml(link: string, firstName?: string | null): string {
+export function buildConfirmationHtml(link: string, firstName?: string | null, reminder = false): string {
   const greeting = firstName ? `Hi ${escHtml(firstName)},` : 'Hi there,'
   return `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0" /><title>${SUBJECT}</title></head>
@@ -18,7 +20,7 @@ export function buildConfirmationHtml(link: string, firstName?: string | null): 
       <p style="color:#be123c;font-family:Georgia,serif;font-size:20px;font-weight:700;margin:0 0 20px;">ListenTrueCrime</p>
       <p style="color:#333;font-size:15px;line-height:1.6;margin:0 0 16px;">${greeting}</p>
       <p style="color:#333;font-size:15px;line-height:1.6;margin:0 0 24px;">
-        Please confirm your email address to start getting our weekly newsletter: five true crime podcasts worth your time, every Sunday.
+        ${reminder ? `${REMINDER_LINE} ` : ''}Please confirm your email address to start getting our weekly newsletter: five true crime podcasts worth your time, every Sunday.
       </p>
       <p style="margin:0 0 24px;"><a href="${link}" style="display:inline-block;background:#be123c;color:#ffffff;font-weight:600;font-size:15px;padding:12px 28px;border-radius:8px;text-decoration:none;">Confirm my subscription</a></p>
       <p style="color:#666;font-size:13px;line-height:1.6;margin:0 0 8px;">Or paste this link into your browser:<br /><span style="word-break:break-all;">${link}</span></p>
@@ -30,10 +32,10 @@ export function buildConfirmationHtml(link: string, firstName?: string | null): 
 </body></html>`
 }
 
-export function buildConfirmationText(link: string, firstName?: string | null): string {
+export function buildConfirmationText(link: string, firstName?: string | null, reminder = false): string {
   return `${firstName ? `Hi ${firstName},` : 'Hi there,'}
 
-Please confirm your email address to start getting the ListenTrueCrime weekly newsletter (five true crime podcasts worth your time, every Sunday):
+${reminder ? `${REMINDER_LINE} ` : ''}Please confirm your email address to start getting the ListenTrueCrime weekly newsletter (five true crime podcasts worth your time, every Sunday):
 
 ${link}
 
@@ -46,9 +48,11 @@ If you didn't ask for this, ignore this email and you won't be subscribed. The l
  * Deliberately no unsubscribe group: this is a one-off transactional message
  * and a suppression group could stop it being delivered.
  */
-export async function sendConfirmationEmail(email: string, link: string, firstName?: string | null): Promise<void> {
-  const html = buildConfirmationHtml(link, firstName)
-  const text = buildConfirmationText(link, firstName)
+export async function sendConfirmationEmail(email: string, link: string, firstName?: string | null, opts: { reminder?: boolean } = {}): Promise<void> {
+  const reminder = opts.reminder === true
+  const subject = reminder ? REMINDER_SUBJECT : SUBJECT
+  const html = buildConfirmationHtml(link, firstName, reminder)
+  const text = buildConfirmationText(link, firstName, reminder)
 
   if (process.env.SENDGRID_API_KEY) {
     const fromEmail = process.env.SENDGRID_FROM_EMAIL ? sanitizeEnv(process.env.SENDGRID_FROM_EMAIL) : 'info@listentruecrime.com'
@@ -59,7 +63,7 @@ export async function sendConfirmationEmail(email: string, link: string, firstNa
       body: JSON.stringify({
         personalizations: [{ to: [{ email }] }],
         from: { email: fromEmail, name: fromName },
-        subject: SUBJECT,
+        subject,
         content: [{ type: 'text/plain', value: text }, { type: 'text/html', value: html }],
         tracking_settings: { click_tracking: { enable: false }, open_tracking: { enable: false } },
       }),
@@ -72,7 +76,7 @@ export async function sendConfirmationEmail(email: string, link: string, firstNa
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: `Bearer ${sanitizeEnv(process.env.RESEND_API_KEY)}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: 'ListenTrueCrime <hello@listentruecrime.com>', to: email, subject: SUBJECT, html, text }),
+      body: JSON.stringify({ from: 'ListenTrueCrime <hello@listentruecrime.com>', to: email, subject, html, text }),
     })
     if (!res.ok) throw new Error(`Resend confirmation error ${res.status}: ${await res.text()}`)
     return

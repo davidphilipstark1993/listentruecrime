@@ -1,6 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { RetrySyncButton } from '@/components/admin/retry-sync-button'
 import { DeleteSubscriberButton } from '@/components/admin/delete-subscriber-button'
+import { ResendConfirmationButton } from '@/components/admin/resend-confirmation-button'
 import type { NewsletterSubscriberStatus } from '@/lib/types/database'
 
 const STATUS_COLOR: Record<NewsletterSubscriberStatus, string> = {
@@ -15,7 +16,7 @@ async function getSubscribers() {
   const admin = createAdminClient()
   const { data } = await admin
     .from('newsletter_subscribers')
-    .select('id, email, first_name, source, status, sendgrid_synced, created_at')
+    .select('id, email, first_name, source, status, sendgrid_synced, created_at, confirm_sent_at')
     .order('created_at', { ascending: false })
   return data ?? []
 }
@@ -23,6 +24,8 @@ async function getSubscribers() {
 export default async function AdminNewsletterPage() {
   const subscribers = await getSubscribers()
   const provider = process.env.NEWSLETTER_PROVIDER ?? 'supabase'
+  const activeCount = subscribers.filter(s => s.status === 'active').length
+  const pendingCount = subscribers.filter(s => s.status === 'pending').length
   const unsyncedCount = subscribers.filter(s => s.status === 'active' && !s.sendgrid_synced).length
 
   return (
@@ -30,7 +33,7 @@ export default async function AdminNewsletterPage() {
       <div className="mb-8 flex items-start justify-between">
         <div>
           <h1 className="heading-display text-2xl mb-1">Newsletter subscribers</h1>
-          <p className="text-stone-subtle text-sm">{subscribers.length} total</p>
+          <p className="text-stone-subtle text-sm">{subscribers.length} total · {activeCount} active · {pendingCount} awaiting confirmation</p>
         </div>
         {provider === 'sendgrid' && unsyncedCount > 0 && (
           <RetrySyncButton unsyncedCount={unsyncedCount} />
@@ -62,6 +65,11 @@ export default async function AdminNewsletterPage() {
                   <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_COLOR[s.status as NewsletterSubscriberStatus]}`}>
                     {s.status}
                   </span>
+                  {s.status === 'pending' && (
+                    <span className="block text-stone-subtle text-[11px] mt-1">
+                      {s.confirm_sent_at ? `Email sent ${new Date(s.confirm_sent_at).toLocaleDateString('en-GB')}` : 'Email not sent'}
+                    </span>
+                  )}
                 </td>
                 <td className="px-4 py-3">
                   <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-stone-subtle">
@@ -73,7 +81,7 @@ export default async function AdminNewsletterPage() {
                     {s.sendgrid_synced ? (
                       <span className="text-emerald-400">Synced</span>
                     ) : (
-                      <span className="text-stone-subtle">Pending</span>
+                      <span className="text-stone-subtle">Not synced</span>
                     )}
                   </td>
                 )}
@@ -81,6 +89,7 @@ export default async function AdminNewsletterPage() {
                   {new Date(s.created_at).toLocaleDateString('en-GB')}
                 </td>
                 <td className="px-4 py-3 text-right">
+                  {s.status === 'pending' && <ResendConfirmationButton id={s.id} />}
                   <DeleteSubscriberButton id={s.id} email={s.email} />
                 </td>
               </tr>

@@ -4,6 +4,10 @@ import { BASE } from '@/lib/seo/config'
 export const CONFIRM_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000
 export const RESEND_COOLDOWN_MS = 10 * 60 * 1000
 export const MAX_SIGNUPS_PER_IP_PER_HOUR = 10
+/** A pending subscriber gets one automatic reminder once the first email is this old (and while its link is still valid). */
+export const REMINDER_AFTER_MS = 3 * 24 * 60 * 60 * 1000
+/** Only signups from this date on get automatic reminders; earlier pending rows are left for a manual decision. */
+export const REMINDERS_FROM = '2026-11-02T00:00:00Z'
 
 /** Wording shown beside the signup forms; stored with each consent record. */
 export const CONSENT_TEXT =
@@ -25,6 +29,13 @@ export function confirmUrl(token: string): string {
 export function isTokenExpired(sentAt: string | null, now = Date.now()): boolean {
   if (!sentAt) return true
   return now - new Date(sentAt).getTime() > CONFIRM_TOKEN_TTL_MS
+}
+
+/** True when the confirmation email is old enough to nudge but its link hasn't expired yet. */
+export function isReminderDue(sentAt: string | null, now = Date.now()): boolean {
+  if (!sentAt) return false
+  const age = now - new Date(sentAt).getTime()
+  return age >= REMINDER_AFTER_MS && age <= CONFIRM_TOKEN_TTL_MS
 }
 
 /** A pending subscriber re-submitting the form gets a fresh link, but not more often than the cooldown. */
