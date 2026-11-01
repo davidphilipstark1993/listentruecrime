@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import { SHOP_CATEGORIES } from '@/lib/shop/config'
+import { SHOP_CATEGORIES, SHOP_COLLECTIONS } from '@/lib/shop/config'
 import type { ProductImage, ShopProductRow, ShopVariantRow, SizeGuide } from '@/lib/shop/types'
 
 type VariantDraft = {
@@ -52,7 +52,9 @@ export function ShopProductForm({ product, variants }: { product: ShopProductRow
     is_best_seller: product?.is_best_seller ?? false, is_new: product?.is_new ?? false,
     is_placeholder: product?.is_placeholder ?? true, sort_order: product?.sort_order ?? 0,
     seo_title: product?.seo_title ?? '', seo_description: product?.seo_description ?? '', admin_notes: product?.admin_notes ?? '',
+    collection: product?.collection ?? '', design: product?.design ?? '',
   })
+  const [tags, setTags] = useState((product?.tags ?? []).join(', '))
   const [images, setImages] = useState<ProductImage[]>((product?.images ?? []).filter(i => !i.placeholder))
   const [specs, setSpecs] = useState((product?.specs ?? []).join('\n'))
   const [guide, setGuide] = useState(product?.size_guide ? JSON.stringify(product.size_guide, null, 2) : '')
@@ -73,6 +75,9 @@ export function ShopProductForm({ product, variants }: { product: ShopProductRow
         images,
         specs: specs.split('\n').map(s => s.trim()).filter(Boolean),
         size_guide,
+        collection: p.collection || null,
+        design: p.design.trim() || null,
+        tags: tags.split(',').map(s => s.trim()).filter(Boolean),
       },
       variants: vs.map((v, i) => ({
         ...(v.id ? { id: v.id } : {}),
@@ -134,6 +139,9 @@ export function ShopProductForm({ product, variants }: { product: ShopProductRow
         <Field label="Title"><input className="input-base" value={p.title} onChange={e => set('title', e.target.value)} />{err('product.title')}</Field>
         <Field label="URL slug" hint="/shop/<slug> — lowercase, hyphens"><input className="input-base" value={p.slug} onChange={e => set('slug', e.target.value)} />{err('product.slug')}</Field>
         <Field label="Category"><select className="input-base" value={p.category} onChange={e => set('category', e.target.value)}>{SHOP_CATEGORIES.map(c => <option key={c.slug} value={c.slug}>{c.label}</option>)}</select></Field>
+        <Field label="Collection" hint="Groups products on /shop/collection/…"><select className="input-base" value={p.collection} onChange={e => set('collection', e.target.value)}><option value="">None</option>{SHOP_COLLECTIONS.map(c => <option key={c.slug} value={c.slug}>{c.label}</option>)}</select></Field>
+        <Field label="Design" hint="Same value on every product that carries the same artwork (used for cross-sells)"><input className="input-base" value={p.design} onChange={e => set('design', e.target.value)} /></Field>
+        <Field label="Tags" hint="Comma separated"><input className="input-base" value={tags} onChange={e => setTags(e.target.value)} /></Field>
         <Field label="Sort order" hint="Lower numbers first"><input type="number" className="input-base" value={p.sort_order} onChange={e => set('sort_order', Number(e.target.value))} /></Field>
         <div className="sm:col-span-2"><Field label="Short description" hint="Shown on cards and in search results"><input className="input-base" value={p.short_description} onChange={e => set('short_description', e.target.value)} /></Field></div>
         <div className="sm:col-span-2"><Field label="Description" hint="Blank line = new paragraph. British English."><textarea rows={7} className="input-base" value={p.description} onChange={e => set('description', e.target.value)} /></Field></div>

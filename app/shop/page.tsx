@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { BASE } from '@/lib/seo/config'
-import { SHOP_CATEGORIES } from '@/lib/shop/config'
+import { SHOP_CATEGORIES, SHOP_COLLECTIONS } from '@/lib/shop/config'
 import { SHOP_META } from '@/lib/shop/copy'
 import { getAllProducts } from '@/lib/shop/catalogue'
 import { JsonLd, itemListJsonLd } from '@/lib/shop/seo'
@@ -42,6 +42,9 @@ export default async function ShopPage() {
   const bestSellers = products.filter(p => p.isBestSeller)
   const newArrivals = products.filter(p => p.isNew)
   const counts = Object.fromEntries(SHOP_CATEGORIES.map(c => [c.slug, products.filter(p => p.category === c.slug).length]))
+  // Categories with nothing in them are not shown, so the shop never advertises an empty shelf.
+  const categories = SHOP_CATEGORIES.filter(c => counts[c.slug] > 0)
+  const collections = SHOP_COLLECTIONS.map(c => ({ ...c, items: products.filter(p => p.collection === c.slug) })).filter(c => c.items.length > 0)
 
   return (
     <>
@@ -66,10 +69,28 @@ export default async function ShopPage() {
         </div>
       </section>
 
+      {/* Collections */}
+      {collections.length > 0 && (
+        <section aria-label="Shop by collection" className="mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">
+          <ul className="grid gap-3 sm:grid-cols-3">
+            {collections.map(c => (
+              <li key={c.slug}>
+                <Link href={`/shop/collection/${c.slug}`} className="group relative flex h-40 flex-col justify-end overflow-hidden rounded-lg border border-white/[0.06] bg-ink-800 p-5 transition-all duration-300 hover:border-crimson/40 hover:shadow-glow-crimson">
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(190,18,60,0.14),transparent_60%)] opacity-60 transition-opacity group-hover:opacity-100" />
+                  <span className="relative text-2xs font-semibold uppercase tracking-widest text-crimson">Collection</span>
+                  <span className="relative mt-1 font-serif text-2xl uppercase tracking-wide text-stone">{c.label}</span>
+                  <span className="relative mt-0.5 text-xs text-stone-subtle">{c.items.length} product{c.items.length === 1 ? '' : 's'}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {/* Categories */}
       <section aria-label="Shop by category" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          {SHOP_CATEGORIES.map(c => (
+          {categories.map(c => (
             <li key={c.slug}>
               <Link href={`/shop/category/${c.slug}`} className="group relative flex h-36 flex-col justify-end overflow-hidden rounded-lg border border-white/[0.06] bg-ink-800 p-5 transition-all duration-300 hover:border-crimson/40 hover:shadow-glow-crimson">
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(190,18,60,0.12),transparent_60%)] opacity-0 transition-opacity group-hover:opacity-100" />
@@ -87,6 +108,11 @@ export default async function ShopPage() {
             <Grid>{featured.map((p, i) => <ProductCard key={p.id} product={p} priority={i < 4} />)}</Grid>
           </Section>
         )}
+        {collections.map(c => (
+          <Section key={c.slug} id={`collection-${c.slug}`} eyebrow="Collection" title={c.label} link={{ href: `/shop/collection/${c.slug}`, label: 'View the collection' }}>
+            <Grid>{c.items.slice(0, 4).map(p => <ProductCard key={p.id} product={p} />)}</Grid>
+          </Section>
+        ))}
         {bestSellers.length > 0 && (
           <Section id="best-sellers" eyebrow="Fan favourites" title="Best sellers">
             <Grid>{bestSellers.slice(0, 4).map(p => <ProductCard key={p.id} product={p} />)}</Grid>

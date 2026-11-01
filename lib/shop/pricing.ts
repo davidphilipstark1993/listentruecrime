@@ -47,6 +47,8 @@ export function toPublicProduct(p: ShopProductRow, variants: ShopVariantRow[]): 
     isBestSeller: p.is_best_seller,
     isNew: p.is_new,
     isPlaceholder: p.is_placeholder,
+    collection: p.collection ?? null,
+    design: p.design ?? null,
     seoTitle: p.seo_title,
     seoDescription: p.seo_description,
     variants: pub,
