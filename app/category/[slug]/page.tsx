@@ -13,6 +13,7 @@ import { CATEGORY_SEO, buildFAQSchema, buildBreadcrumbSchema, buildItemListSchem
 import { BASE, ogDefaults } from '@/lib/seo/config'
 import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
 import type { Podcast, RatingStats } from '@/lib/types/database'
+import { RelatedBooks } from '@/components/affiliates/related-books'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -209,6 +210,8 @@ export default async function CategoryPage({ params }: Props) {
             </div>
           </div>
         </section>
+
+        <RelatedBooks pageKey={`category-${slug}`} placement="category-reading" />
 
         {/* ── FAQ ── */}
         {seo?.faqs && (
