@@ -1,4 +1,5 @@
 import { ratingStatsOf, MIN_RATINGS_FOR_SCHEMA } from '@/lib/rating-stats'
+import { SOCIAL_PROFILES } from '@/lib/seo/social-profiles'
 
 type RatingStatsLike = { avg_overall: number | null; rating_count: number }
 
@@ -16,6 +17,7 @@ export const organizationSchema = {
   name: 'ListenTrueCrime',
   url: BASE,
   logo: { '@type': 'ImageObject', url: `${BASE}/logo.png` },
+  ...(SOCIAL_PROFILES.length > 0 && { sameAs: [...SOCIAL_PROFILES] }),
   description: 'The best destination for discovering, rating, and discussing true crime podcasts. Expert reviews, community ratings, and curated recommendations.',
 }
 

@@ -18,6 +18,13 @@ export const DELIVERY_ESTIMATE: string | null =
  */
 export const PRICES_INCLUDE_VAT = false
 
+/**
+ * The numbers behind DELIVERY_ESTIMATE and RETURNS_SUMMARY, for structured data.
+ * Keep in step with those sentences (lib/shop/seo.test.ts checks they agree).
+ */
+export const DELIVERY_TIMES = { productionMaxDays: 10, transitMinDays: 3, transitMaxDays: 5 }
+export const RETURN_WINDOW_DAYS = 14
+
 export const BUSINESS_NAME = 'Listen True Crime'
 export const OWNER_NAME = 'David Stark'
 // Date the shop policies took effect (update when a policy changes).

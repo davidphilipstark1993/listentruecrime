@@ -6,6 +6,7 @@ import { ExitIntent } from '@/components/newsletter/exit-intent'
 import '@/app/globals.css'
 
 import { BASE } from '@/lib/seo/config'
+import { SOCIAL_PROFILES } from '@/lib/seo/social-profiles'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -78,9 +79,7 @@ const organizationSchema = {
     width: 1254,
     height: 1254,
   },
-  // sameAs intentionally omitted — no social/profile URLs exist anywhere in
-  // the site or repo to populate it with (see audit summary). Add it back
-  // here once real profile URLs exist.
+  ...(SOCIAL_PROFILES.length > 0 && { sameAs: [...SOCIAL_PROFILES] }),
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
