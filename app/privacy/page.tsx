@@ -5,12 +5,11 @@ import { Footer } from '@/components/layout/footer'
 import { BASE } from '@/lib/seo/config'
 import { shopEnabled } from '@/lib/shop/config'
 import { PrivacyShopSection } from '@/components/shop/privacy-shop-section'
+import { CONTACT_EMAIL, CONTROLLER, LEGAL_UPDATED } from '@/lib/legal'
 
-// DRAFT — pending legal review. Content describes only what the codebase
-// actually does (see the audit that produced this page); [CONFIRM: ...]
-// markers stand in for facts (controller identity, contact address,
-// jurisdiction) that only the site owner can supply. Do not treat this as
-// final legal advice or a completed policy until those are resolved.
+// Content describes only what the codebase actually does. Controller, address and
+// contact details come from lib/legal.ts / lib/shop/copy.ts. Not legal advice: have it
+// reviewed by a qualified adviser if the business changes or grows.
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -32,7 +31,7 @@ export default function PrivacyPage() {
           </nav>
 
           <h1 className="heading-display text-3xl sm:text-4xl mb-3">Privacy Policy</h1>
-          <p className="text-stone-subtle text-sm mb-10">Last updated: [CONFIRM: date this policy goes live]</p>
+          <p className="text-stone-subtle text-sm mb-10">Last updated: {LEGAL_UPDATED}</p>
 
           <div className="space-y-10 text-stone-muted text-sm leading-relaxed">
             <section>
@@ -43,9 +42,10 @@ export default function PrivacyPage() {
                 UK GDPR and the Data Protection Act 2018.
               </p>
               <p className="mt-3">
-                The data controller is <strong className="text-stone">[CONFIRM: controller/company legal name]</strong>,
-                <strong className="text-stone"> [CONFIRM: registered address, if applicable]</strong>. For any
-                privacy question or request, contact <strong className="text-stone">[CONFIRM: privacy contact email]</strong> or
+                The data controller is <strong className="text-stone">{CONTROLLER.name}</strong>, a sole trader
+                trading as {CONTROLLER.tradingAs}, of {CONTROLLER.address}. We are not a registered company. For
+                any privacy question or request, email{' '}
+                <a href={`mailto:${CONTACT_EMAIL}`} className="text-crimson hover:underline">{CONTACT_EMAIL}</a> or
                 see our <Link href="/contact" className="text-crimson hover:underline">Contact page</Link>.
               </p>
             </section>
@@ -98,7 +98,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="heading-section text-xl text-stone mb-3">Cookies and local storage</h2>
+              <h2 id="cookies" className="heading-section text-xl text-stone mb-3 scroll-mt-24">Cookies and local storage</h2>
               <p>We use:</p>
               <ul className="space-y-2 list-disc pl-5 mt-3">
                 <li><strong className="text-stone">Essential cookies</strong> set by Supabase to keep you signed in.</li>
@@ -112,13 +112,16 @@ export default function PrivacyPage() {
               <p>We don't sell your personal data. We use the following processors to run the site:</p>
               <ul className="space-y-2 list-disc pl-5 mt-3">
                 <li><strong className="text-stone">Supabase</strong> — our database and authentication provider, which stores your account, ratings, and newsletter subscriber records.</li>
-                <li><strong className="text-stone">SendGrid (Twilio)</strong> — sends our newsletter and account emails.</li>
+                <li><strong className="text-stone">SendGrid (Twilio) and/or Resend</strong> — send our newsletter and account emails. Whichever we use at the time receives the email address it is sending to.</li>
                 <li><strong className="text-stone">Google</strong> — provides Google Analytics, and Google Sign-In if you choose to use it.</li>
                 <li><strong className="text-stone">Vercel</strong> — hosts the website itself.</li>
               </ul>
               <p className="mt-3">
-                Some of these providers may process data outside the UK/EEA. [CONFIRM: confirm each provider's data
-                region and, if outside the UK/EEA, the safeguard relied on — e.g. UK IDTA or SCCs.]
+                Some of these providers are based in, or may process data in, the United States or other countries
+                outside the UK. Where your data is transferred outside the UK, it is protected by the safeguards each
+                provider puts in place in its own data processing terms, such as the UK–US data bridge (for certified
+                providers) or standard contractual clauses with the UK addendum. You can ask us for more detail using
+                the contact details below.
               </p>
             </section>
 
@@ -147,7 +150,7 @@ export default function PrivacyPage() {
                 <li>Complain to the UK Information Commissioner's Office (ico.org.uk) if you think we've mishandled your data</li>
               </ul>
               <p className="mt-3">
-                To exercise any of these rights, contact <strong className="text-stone">[CONFIRM: privacy contact email]</strong> or
+                To exercise any of these rights, email <a href={`mailto:${CONTACT_EMAIL}`} className="text-crimson hover:underline">{CONTACT_EMAIL}</a> or
                 use our <Link href="/contact" className="text-crimson hover:underline">Contact page</Link>.
               </p>
             </section>
