@@ -1,14 +1,12 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { sendConfirmationEmail } from '@/lib/email/newsletter-confirm'
+import { issueConfirmation } from '@/lib/newsletter/confirmation'
 import {
   CONSENT_TEXT,
   MAX_SIGNUPS_PER_IP_PER_HOUR,
   canResendConfirmation,
   clientIp,
-  confirmUrl,
   hashIp,
-  newConfirmToken,
 } from '@/lib/newsletter/optin'
 
 // Double opt-in: this endpoint only records a *pending* subscriber and emails a
@@ -78,24 +76,4 @@ export async function POST(req: Request) {
 
   await issueConfirmation(supabase, email, first_name)
   return ok
-}
-
-/** Stores a fresh token hash, then emails the link. A failed send leaves confirm_sent_at null so a retry isn't throttled. */
-async function issueConfirmation(supabase: ReturnType<typeof createAdminClient>, email: string, firstName?: string | null) {
-  const { token, hash } = newConfirmToken()
-  const { error } = await supabase
-    .from('newsletter_subscribers')
-    .update({ confirm_token_hash: hash, confirm_sent_at: null })
-    .eq('email', email)
-  if (error) {
-    console.error('Newsletter token save error:', error.message)
-    return
-  }
-  try {
-    // Awaited: on serverless the function is frozen once the response is sent.
-    await sendConfirmationEmail(email, confirmUrl(token), firstName)
-    await supabase.from('newsletter_subscribers').update({ confirm_sent_at: new Date().toISOString() }).eq('email', email)
-  } catch (err) {
-    console.error('Newsletter confirmation email error:', err)
-  }
 }

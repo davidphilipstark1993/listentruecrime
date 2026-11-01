@@ -1,0 +1,33 @@
+name: Newsletter Confirmation Reminders
+
+on:
+  schedule:
+    # 10:00 UTC daily. Sends at most one reminder per pending subscriber.
+    - cron: '0 10 * * *'
+  workflow_dispatch: {} # manual trigger
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # npm install rather than npm ci: see weekly-newsletter-send.yml.
+      - run: npm install
+
+      - name: Remind subscribers who haven't confirmed
+        run: npx tsx scripts/newsletter/confirm-reminders.ts
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          # Production confirmations go via Resend; SendGrid is used only if configured (see lib/email/newsletter-confirm.ts).
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          SENDGRID_FROM_EMAIL: ${{ secrets.SENDGRID_FROM_EMAIL }}
+          SENDGRID_FROM_NAME: ${{ secrets.SENDGRID_FROM_NAME }}
+          ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
