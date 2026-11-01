@@ -18,6 +18,7 @@ import { countryFlag, cn, scoreBg, stripHtml } from '@/lib/utils'
 import { COUNTRIES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { ratingStatsOf } from '@/lib/rating-stats'
+import { RelatedBooks } from '@/components/affiliates/related-books'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -412,6 +413,8 @@ export default async function PodcastsLikePage({ params }: Props) {
             </div>
           </div>
         </section>
+
+        <RelatedBooks pageKey={`podcasts-like-${slug}`} placement="podcasts-like-reading" />
 
         {/* ── FAQ ── */}
         <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
