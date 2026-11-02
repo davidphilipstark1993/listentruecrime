@@ -6,7 +6,7 @@ A referral programme for the newsletter, and a reusable discount-code system for
 
 ## 1. Launch checklist (the manual bits)
 
-- [ ] **Run `supabase/migrations/023_referrals_and_discounts.sql`** in the Supabase SQL editor (already verified on a real Postgres: see §7). It adds subscriber referral codes (and backfills every existing subscriber), the `referrals`, `discount_campaigns` and `discount_codes` tables, and the discount columns on `shop_orders`. Safe to re-run.
+- [ ] **Apply the migration.** Easiest: add the repository secret `SUPABASE_DB_URL` (Supabase → Project Settings → Database → Connection string, session pooler) and run **Actions → Apply Supabase migration** (defaults to 023; all-or-nothing; prints the seeded campaigns and a subscriber/referral-code count afterwards). Or paste `supabase/migrations/023_referrals_and_discounts.sql` into the SQL editor. Already verified on a real Postgres (§7). It adds subscriber referral codes (and backfills every existing subscriber), the `referrals`, `discount_campaigns` and `discount_codes` tables, and the discount columns on `shop_orders`. Safe to re-run.
 - [ ] Deploy. There is nothing to configure: referral rewards use the SendGrid/Resend keys you already have, and discounts use your existing `STRIPE_SECRET_KEY`.
 - [ ] Optional: set `DISCOUNT_MAX_PERCENT` (see §5) — leave blank to keep the default of 30.
 - [ ] **Send yourself a real test** once deployed (see §7). Email delivery and the Stripe coupon call could not be exercised against real services while building this.
@@ -111,7 +111,9 @@ group by 1 order by 3 desc;
 
 Automated (`npm test`, 332 tests in total, **148 new**): code generation, prefix naming, input parsing (case, dashes, two codes), expiry maths, validation (every failure + the max-discount cap incl. lowering it), campaign creation, unique/public issuing and idempotence, concurrent single-use reservation, release-once, abandon-and-retry takeover, the full quote→checkout→paid/expired lifecycle with real routes, referral registration (new-only, self, same-IP, one referrer, inactive referrer), confirmation-only counting and idempotence, tier rewards (1→20%, 3→30%, no duplicates, catch-up, cap clamp, email retry), the sign-up→confirm→reward journey through the real routes, and the email contents/gating. **The migration** was run against a real Postgres (PGlite) holding 500 existing subscribers by `node scripts/referrals/verify-migration.mjs` (see the header for the one-line setup): backfill gives 500 distinct valid codes, re-running is safe, and self-referral, second referrer, duplicate tier, missing expiry, bad prefix, out-of-range %, negative use counts and the compare-and-swap all behave. The three emails (reward, welcome, weekly issue) were rendered and checked visually. Type-check is clean for new code (one pre-existing error in `components/admin/podcast-form.tsx`), and the sign-up field and basket UI were checked in a real browser (desktop and phone width).
 
-**Not tested against real services — please do this once:**
+**Stripe:** the real coupon, Checkout Session (with and without the discount) and session-expire calls were run against Stripe's official `stripe-mock` server, which validates requests against Stripe's OpenAPI spec (`lib/shop/stripe-mock.test.ts`, skipped unless `STRIPE_MOCK_PORT` is set; setup is in the file header).
+
+**Not testable without your live accounts (a test-mode checkout covers all of it):**
 
 1. Deploy, sign up with a second address using your own link (use a different network/phone data, because same-IP referrals are blocked), confirm it, and check the reward email arrives and that **Admin → Referrals** shows 1.
 2. With Stripe **test keys**: put the reward code in the basket, pay with `4242 4242 4242 4242`, and check Stripe shows the discount, the order page shows the code, and the code now reads "used" in **Admin → Discounts**.
