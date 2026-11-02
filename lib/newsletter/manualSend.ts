@@ -116,7 +116,7 @@ export async function sendApprovedManualNewsletter(supabase: SupabaseClient, new
   const plain_text_content = renderNewsletterPlainText(input)
   await supabase.from('newsletters').update({ html_content, plain_text_content }).eq('id', newsletterId)
 
-  const { data: subscribers } = await supabase.from('newsletter_subscribers').select('email').eq('status', 'active')
+  const { data: subscribers } = await supabase.from('newsletter_subscribers').select('email, referral_code').eq('status', 'active')
   if (!subscribers?.length) return { ok: false, reason: 'no_subscribers' }
 
   const { campaignId, sentCount } = await sendNewsletterCampaign({ ...newsletter, html_content, plain_text_content }, subscribers)

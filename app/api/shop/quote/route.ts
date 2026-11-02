@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   const parsed = cartSchema.safeParse(await req.json().catch(() => null))
   if (!parsed.success) return NextResponse.json({ error: 'Invalid basket' }, { status: 400 })
 
-  const q = await buildQuote(parsed.data.items)
+  const q = await buildQuote(parsed.data.items, undefined, parsed.data.code)
   return NextResponse.json({
     lines: q.lines.map(l => ({
       variantId: l.variantId,
@@ -27,6 +27,8 @@ export async function POST(req: Request) {
     })),
     problems: q.problems,
     subtotalPence: q.subtotalPence,
+    discount: q.discount ? { code: q.discount.code, percent: q.discount.percent, pence: q.discount.pence } : null,
+    discountError: q.discountError,
     shippingPence: q.shippingPence,
     shippingError: q.shippingError,
     totalPence: q.totalPence,

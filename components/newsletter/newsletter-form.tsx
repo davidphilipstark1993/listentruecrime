@@ -1,5 +1,5 @@
 'use client'
-import { useState, useId } from 'react'
+import { useEffect, useState, useId } from 'react'
 import Link from 'next/link'
 import { Mail, ArrowRight } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -12,9 +12,14 @@ interface NewsletterFormProps {
   className?: string
   /** Overrides the submit button text (default "Subscribe"). */
   buttonLabel?: string
+  /** Show the optional "Referred by someone?" field. It also appears by itself when the page URL has ?ref=CODE. */
+  showReferral?: boolean
 }
 
-export function NewsletterForm({ source = 'unknown', variant = 'default', showFirstName = false, className, buttonLabel = 'Subscribe' }: NewsletterFormProps) {
+/** Referral codes are 6 letters/digits; tolerate spaces, dashes and lower case when typed or pasted. */
+const cleanReferral = (v: string) => v.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6)
+
+export function NewsletterForm({ source = 'unknown', variant = 'default', showFirstName = false, className, buttonLabel = 'Subscribe', showReferral = false }: NewsletterFormProps) {
   const [email, setEmail] = useState('')
   const [firstName, setFirstName] = useState('')
   const [loading, setLoading] = useState(false)
@@ -22,6 +27,27 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
   const uid = useId()
   const emailId = `${uid}-email`
   const nameId = `${uid}-name`
+  const refId = `${uid}-ref`
+  const [referral, setReferral] = useState('')
+  const [refVisible, setRefVisible] = useState(showReferral)
+  const [refState, setRefState] = useState<'idle' | 'valid' | 'unknown'>('idle')
+
+  // A shared link (/subscribe?ref=CODE) fills the field in for them.
+  useEffect(() => {
+    const fromUrl = cleanReferral(new URLSearchParams(window.location.search).get('ref') ?? '')
+    if (fromUrl) { setReferral(fromUrl); setRefVisible(true) }
+  }, [])
+
+  // Tell them if the code is recognised. Never blocks signing up: a wrong code is simply ignored.
+  useEffect(() => {
+    if (referral.length !== 6) { setRefState('idle'); return }
+    const ctrl = new AbortController()
+    fetch(`/api/referrals/validate?code=${encodeURIComponent(referral)}`, { signal: ctrl.signal })
+      .then(r => r.json())
+      .then(d => setRefState(d.valid ? 'valid' : 'unknown'))
+      .catch(() => {})
+    return () => ctrl.abort()
+  }, [referral])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,7 +58,7 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
       const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, first_name: firstName || undefined, source, consent: true }),
+        body: JSON.stringify({ email, first_name: firstName || undefined, source, consent: true, ref: referral || undefined }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Something went wrong')
@@ -44,6 +70,29 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
       setLoading(false)
     }
   }
+
+  const referralField = refVisible && (
+    <div className="mt-3">
+      <label htmlFor={refId} className="block text-xs text-stone-muted mb-1">Referred by someone? Enter their code <span className="text-stone-subtle">(optional)</span></label>
+      <input
+        id={refId}
+        type="text"
+        value={referral}
+        onChange={e => setReferral(cleanReferral(e.target.value))}
+        placeholder="e.g. K7M2QX"
+        autoComplete="off"
+        autoCapitalize="characters"
+        spellCheck={false}
+        aria-describedby={refState === 'idle' ? undefined : `${refId}-status`}
+        className="input-base w-40 font-mono text-sm uppercase tracking-wider"
+      />
+      {refState !== 'idle' && (
+        <p id={`${refId}-status`} className={cn('mt-1 text-2xs', refState === 'valid' ? 'text-emerald-400' : 'text-stone-subtle')}>
+          {refState === 'valid' ? 'Code recognised. Thanks for joining via a friend.' : "We don't recognise that code, but you can still subscribe."}
+        </p>
+      )}
+    </div>
+  )
 
   const consentNote = (
     <p className="text-2xs text-stone-subtle mt-2 leading-snug">
@@ -134,6 +183,7 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
           {!loading && <ArrowRight size={14} />}
         </button>
       </form>
+      {referralField}
       {consentNote}
     </div>
   )

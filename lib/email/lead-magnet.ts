@@ -1,5 +1,6 @@
 import { BASE } from '@/lib/seo/config'
 import { shopPromoRowHtml } from './shop-promo'
+import { referralPromoRowHtml } from './referral-promo'
 import { sanitizeEnv } from '@/lib/utils'
 
 interface PodcastEntry {
@@ -11,7 +12,7 @@ interface PodcastEntry {
   case_types: string[] | null
 }
 
-export function buildLeadMagnetHtml(podcasts: PodcastEntry[]): string {
+export function buildLeadMagnetHtml(podcasts: PodcastEntry[], referralLink?: string | null): string {
   const rows = podcasts
     .map(
       (p, i) => `
@@ -113,7 +114,7 @@ export function buildLeadMagnetHtml(podcasts: PodcastEntry[]): string {
         </td>
       </tr>
 
-${shopPromoRowHtml()}
+${shopPromoRowHtml()}${referralPromoRowHtml(referralLink)}
       <!-- Footer -->
       <tr>
         <td style="padding:20px 32px;border-top:1px solid #f0f0f0;text-align:center;">
@@ -134,11 +135,11 @@ ${shopPromoRowHtml()}
 </html>`
 }
 
-export async function sendLeadMagnetEmail(email: string, podcasts: PodcastEntry[]): Promise<void> {
+export async function sendLeadMagnetEmail(email: string, podcasts: PodcastEntry[], referralLink?: string | null): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY ? sanitizeEnv(process.env.RESEND_API_KEY) : undefined
   if (!apiKey) return // graceful degradation — no key, no send
 
-  const html = buildLeadMagnetHtml(podcasts)
+  const html = buildLeadMagnetHtml(podcasts, referralLink)
 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',

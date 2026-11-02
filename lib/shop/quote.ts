@@ -1,11 +1,26 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { calculateShipping, printifyConfigured, PrintifyError } from './printify'
 import { SHIPPING_COUNTRIES } from './config'
+import { validateDiscountCode } from '@/lib/discounts/validate'
 import { shippingChargePence, validateCart, type CartInput, type ValidatedCart } from './pricing'
 import { getShopSettings } from './settings'
 import type { ShopProductRow, ShopVariantRow } from './types'
 
+/** A discount that passed every rule. Percent and pence come from the database, never the browser. */
+export interface AppliedDiscount {
+  codeId: string
+  code: string
+  campaignId: string
+  campaignPrefix: string
+  percent: number
+  /** Pence off the merchandise subtotal. Delivery is never discounted. */
+  pence: number
+}
+
 export interface Quote extends ValidatedCart {
+  discount: AppliedDiscount | null
+  /** Set when the customer entered a code that cannot be used; checkout refuses until it is removed. */
+  discountError: string | null
   shippingPence: number | null
   /** Printify's quoted shipping in its own minor units (kept for profit tracking). */
   shippingMinor: number | null
@@ -53,11 +68,24 @@ async function printifyShippingMinor(lines: ValidatedCart['lines'], country: str
  * back to a guessed flat rate, because the brief is that shipping reflects the
  * supplier's real charge.
  */
-export async function buildQuote(input: CartInput[], country = SHIPPING_COUNTRIES[0] as string): Promise<Quote> {
+export async function buildQuote(input: CartInput[], country = SHIPPING_COUNTRIES[0] as string, codeInput?: string | null): Promise<Quote> {
   const catalogue = await loadCatalogueFor(Array.from(new Set(input.map(i => i.variantId))))
   const cart = validateCart(input, catalogue)
-  const base: Quote = { ...cart, shippingPence: null, shippingMinor: null, shippingError: null, totalPence: null, country }
+  const base: Quote = { ...cart, discount: null, discountError: null, shippingPence: null, shippingMinor: null, shippingError: null, totalPence: null, country }
   if (!cart.lines.length) return base
+
+  // At most one code per order: `codeInput` is a single string and the order stores a single code.
+  if (codeInput && codeInput.trim()) {
+    const result = await validateDiscountCode(createAdminClient(), codeInput, cart.subtotalPence)
+    if (result.ok) {
+      base.discount = {
+        codeId: result.code.id, code: result.code.code, campaignId: result.campaign.id, campaignPrefix: result.campaign.prefix,
+        percent: result.percent, pence: result.discountPence,
+      }
+    } else {
+      base.discountError = result.message
+    }
+  }
 
   if (!(SHIPPING_COUNTRIES as readonly string[]).includes(country)) {
     return { ...base, shippingError: 'We do not deliver to that country yet.' }
@@ -70,7 +98,7 @@ export async function buildQuote(input: CartInput[], country = SHIPPING_COUNTRIE
     const [minor, settings] = await Promise.all([printifyShippingMinor(cart.lines, country), getShopSettings()])
     const pence = shippingChargePence(minor, settings)
     if (pence == null) return { ...base, shippingError: 'Delivery pricing is not available yet.' }
-    return { ...base, shippingMinor: minor, shippingPence: pence, totalPence: cart.subtotalPence + pence }
+    return { ...base, shippingMinor: minor, shippingPence: pence, totalPence: cart.subtotalPence - (base.discount?.pence ?? 0) + pence }
   } catch (err) {
     console.error('Shop shipping quote failed:', err instanceof PrintifyError ? err.message : err)
     return { ...base, shippingError: 'We could not work out delivery for this basket just now. Please try again in a moment.' }

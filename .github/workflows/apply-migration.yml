@@ -1,0 +1,40 @@
+name: Apply Supabase migration
+
+# Manual only. Applies ONE migration file from supabase/migrations to your database, in a single
+# transaction (all or nothing). The migrations in this repo are written to be safe to re-run.
+#
+# One-time setup: add the repository secret SUPABASE_DB_URL
+#   (Supabase → Project Settings → Database → Connection string → URI, "Session pooler").
+# Then: Actions → "Apply Supabase migration" → Run workflow → file name (default below).
+on:
+  workflow_dispatch:
+    inputs:
+      file:
+        description: 'Migration file in supabase/migrations/'
+        required: true
+        default: '023_referrals_and_discounts.sql'
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the file name
+        env:
+          FILE: ${{ inputs.file }}
+        run: |
+          [[ "$FILE" =~ ^[0-9]{3}_[a-z0-9_]+\.sql$ ]] || { echo "Not a valid migration file name"; exit 1; }
+          test -f "supabase/migrations/$FILE" || { echo "No such migration"; exit 1; }
+      - name: Apply
+        env:
+          FILE: ${{ inputs.file }}
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          [ -n "$SUPABASE_DB_URL" ] || { echo "Add the SUPABASE_DB_URL repository secret first"; exit 1; }
+          psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 --single-transaction -f "supabase/migrations/$FILE"
+      - name: Show what now exists
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          psql "$SUPABASE_DB_URL" -c "select prefix, type, discount_percent, is_active from discount_campaigns order by prefix" || true
+          psql "$SUPABASE_DB_URL" -c "select count(*) as subscribers, count(referral_code) as with_referral_code from newsletter_subscribers" || true

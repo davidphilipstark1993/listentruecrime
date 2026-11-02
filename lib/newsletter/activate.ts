@@ -2,6 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { sendLeadMagnetEmail } from '@/lib/email/lead-magnet'
 import { sendSendGridWelcomeEmail } from '@/lib/email/sendgrid'
 import { subscribeSendGrid } from '@/lib/email/sendgrid-contacts'
+import { referralLink } from '@/lib/referrals/code'
 
 /**
  * Runs once a subscriber has confirmed their address: syncs them to the
@@ -10,6 +11,15 @@ import { subscribeSendGrid } from '@/lib/email/sendgrid-contacts'
  */
 export async function activateSubscriber(supabase: SupabaseClient, email: string, firstName?: string | null): Promise<void> {
   const provider = process.env.NEWSLETTER_PROVIDER ?? 'supabase'
+
+  // Every subscriber has a referral code; the welcome email tells them their share link.
+  let shareLink: string | null = null
+  try {
+    const { data } = await supabase.from('newsletter_subscribers').select('referral_code').eq('email', email).maybeSingle()
+    if (data?.referral_code) shareLink = referralLink(data.referral_code)
+  } catch (err) {
+    console.error('Referral code lookup error:', err)
+  }
 
   try {
     if (provider === 'sendgrid') {
@@ -30,7 +40,7 @@ export async function activateSubscriber(supabase: SupabaseClient, email: string
   if (provider === 'sendgrid' && process.env.SENDGRID_API_KEY) {
     // Awaited: on serverless the function is frozen once the response is sent.
     try {
-      await sendSendGridWelcomeEmail(email, firstName)
+      await sendSendGridWelcomeEmail(email, firstName, shareLink)
       await supabase.from('newsletter_subscribers').update({ welcome_sent: true }).eq('email', email)
     } catch (err) {
       console.error('SendGrid welcome email error:', err)
@@ -44,7 +54,7 @@ export async function activateSubscriber(supabase: SupabaseClient, email: string
       .limit(10)
     if (podcasts?.length) {
       try {
-        await sendLeadMagnetEmail(email, podcasts)
+        await sendLeadMagnetEmail(email, podcasts, shareLink)
       } catch (err) {
         console.error('Lead magnet email error:', err)
       }

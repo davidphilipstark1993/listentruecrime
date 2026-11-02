@@ -9,7 +9,7 @@ import type { ShippingAddress, ShopOrderItemRow, ShopOrderRow, ShopShipmentRow }
 // no unsubscribe group: these are service messages about an order the customer
 // placed, not marketing.
 
-const esc = (s: unknown) =>
+export const esc = (s: unknown) =>
   String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
 export async function sendShopEmail(opts: { to: string; subject: string; html: string; text: string }): Promise<void> {
@@ -57,7 +57,7 @@ function addressLines(a: ShippingAddress | null): string[] {
   return [a.name, a.line1, a.line2, a.city, a.state, a.postal_code, a.country].filter((x): x is string => Boolean(x))
 }
 
-function shell(title: string, bodyHtml: string): string {
+export function shell(title: string, bodyHtml: string): string {
   return `<!DOCTYPE html>
 <html lang="en-GB"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1.0" /><title>${esc(title)}</title></head>
 <body style="margin:0;padding:0;background:#f6f6f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
@@ -91,6 +91,7 @@ export function buildOrderConfirmationEmail(order: ShopOrderRow, items: ShopOrde
 <div style="margin:16px 0;">${itemsTable(items)}</div>
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:16px;">
 <tr><td>Subtotal</td><td style="text-align:right;">${formatGBP(order.subtotal_pence)}</td></tr>
+${order.discount_pence > 0 ? `<tr><td>Discount${order.discount_code ? ` (${esc(order.discount_code)})` : ''}</td><td style="text-align:right;">-${formatGBP(order.discount_pence)}</td></tr>` : ''}
 <tr><td>Delivery</td><td style="text-align:right;">${formatGBP(order.shipping_pence)}</td></tr>
 <tr><td style="padding-top:6px;"><strong>Total paid</strong></td><td style="text-align:right;padding-top:6px;"><strong>${formatGBP(order.total_pence)}</strong></td></tr></table>
 <p style="margin:0 0 4px;"><strong>Delivering to</strong></p>
@@ -102,6 +103,7 @@ export function buildOrderConfirmationEmail(order: ShopOrderRow, items: ShopOrde
     ...items.map(i => `- ${i.product_title} (${i.colour} / ${i.size}) x${i.quantity}: ${formatGBP(i.unit_price_pence * i.quantity)}`),
     '',
     `Subtotal: ${formatGBP(order.subtotal_pence)}`,
+    ...(order.discount_pence > 0 ? [`Discount${order.discount_code ? ` (${order.discount_code})` : ''}: -${formatGBP(order.discount_pence)}`] : []),
     `Delivery: ${formatGBP(order.shipping_pence)}`,
     `Total paid: ${formatGBP(order.total_pence)}`,
     '',

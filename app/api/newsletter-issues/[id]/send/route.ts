@@ -29,7 +29,7 @@ export async function POST(_req: Request, { params }: Props) {
 
   const { data: subscribers } = await admin
     .from('newsletter_subscribers')
-    .select('email')
+    .select('email, referral_code')
     .eq('status', 'active')
 
   if (!subscribers?.length) {
