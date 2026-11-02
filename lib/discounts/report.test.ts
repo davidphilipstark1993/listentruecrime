@@ -32,3 +32,18 @@ describe('summariseCampaignRevenue', () => {
     expect(row).toMatchObject({ orders: 2, revenuePence: 3000 })
   })
 })
+
+import { codeStatus } from './report'
+describe('codeStatus', () => {
+  const campaign: any = { is_active: true, starts_at: null, expires_at: null }
+  const code = (o = {}): any => ({ is_active: true, starts_at: null, expires_at: '2027-01-01T00:00:00Z', max_uses: 1, use_count: 0, discount_percent: 20, ...o })
+  const now = new Date('2026-11-02T00:00:00Z')
+  it('labels each state', () => {
+    expect(codeStatus(code(), campaign, now)).toBe('live')
+    expect(codeStatus(code({ use_count: 1 }), campaign, now)).toBe('used')
+    expect(codeStatus(code({ expires_at: '2026-10-01T00:00:00Z' }), campaign, now)).toBe('expired')
+    expect(codeStatus(code({ is_active: false }), campaign, now)).toBe('switched off')
+    expect(codeStatus(code(), { ...campaign, is_active: false }, now)).toBe('switched off')
+    expect(codeStatus(code({ discount_percent: 40 }), campaign, now)).toBe('over max')
+  })
+})

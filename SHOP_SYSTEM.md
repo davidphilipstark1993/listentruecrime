@@ -90,7 +90,7 @@ Set the first one on Vercel **Preview** only to review the shop without publishi
 - **Returns:** the supplier won't take change-of-mind returns, so those come to the address we email the customer; the item is then yours (usually of little resale value).
 - Artwork for the T-shirt and hoodie designs (in progress), privacy-policy placeholders (Printify controller status, transfer safeguard, retention period), policy "last updated" dates, and a solicitor's read of the four policy texts.
 
-Not built, by design: creating Printify products (the admin only *reads* a Printify product you've made), international shipping (one constant in `lib/shop/config.ts`, `SHIPPING_COUNTRIES`, plus a shipping check), subscriber discount codes / referral rewards (the newsletter `source` tag and order table are the hooks).
+Not built, by design: creating Printify products (the admin only *reads* a Printify product you've made), international shipping (one constant in `lib/shop/config.ts`, `SHIPPING_COUNTRIES`, plus a shipping check), ~~subscriber discount codes / referral rewards~~ (now built: see [REFERRALS_AND_DISCOUNTS.md](REFERRALS_AND_DISCOUNTS.md); run migration `023_referrals_and_discounts.sql`).
 
 ---
 

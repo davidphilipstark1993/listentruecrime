@@ -48,7 +48,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: { q?:
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-white/[0.06]">
-              {['Order', 'Date', 'Customer', 'Total', 'Payment', 'Fulfilment', 'Printify'].map(h => <th key={h} className="px-4 py-3 text-left text-xs font-medium text-stone-subtle">{h}</th>)}
+              {['Order', 'Date', 'Customer', 'Total', 'Code', 'Payment', 'Fulfilment', 'Printify'].map(h => <th key={h} className="px-4 py-3 text-left text-xs font-medium text-stone-subtle">{h}</th>)}
             </tr>
           </thead>
           <tbody className="divide-y divide-white/[0.04]">
@@ -58,12 +58,13 @@ export default async function OrdersPage({ searchParams }: { searchParams: { q?:
                 <td className="px-4 py-3 text-xs text-stone-subtle">{new Date(o.created_at).toLocaleString('en-GB')}</td>
                 <td className="px-4 py-3 text-xs text-stone-muted">{o.customer_name ?? '—'}<br /><span className="text-stone-subtle">{o.customer_email}</span></td>
                 <td className="px-4 py-3 tabular-nums">{formatGBP(o.total_pence)}</td>
+                <td className="px-4 py-3 font-mono text-2xs text-stone-subtle">{o.discount_code ?? '—'}</td>
                 <td className="px-4 py-3"><StatusBadge value={o.payment_status} /></td>
                 <td className="px-4 py-3"><StatusBadge value={o.fulfilment_status} /></td>
                 <td className="px-4 py-3 text-xs text-stone-subtle">{o.printify_order_id ?? '—'}</td>
               </tr>
             ))}
-            {orders.length === 0 && <tr><td colSpan={7} className="px-4 py-10 text-center text-stone-subtle">No orders found.</td></tr>}
+            {orders.length === 0 && <tr><td colSpan={8} className="px-4 py-10 text-center text-stone-subtle">No orders found.</td></tr>}
           </tbody>
         </table>
       </div>

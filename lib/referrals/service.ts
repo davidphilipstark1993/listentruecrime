@@ -204,3 +204,18 @@ export async function sendUnsentRewards(
   }
   return sent
 }
+
+/** Admin action: email a reward code to its owner again (e.g. it went to spam, or never sent). */
+export async function resendRewardEmail(admin: SupabaseClient, codeId: string, now = new Date()): Promise<boolean> {
+  const { data } = await admin.from('discount_codes').select('*').eq('id', codeId).maybeSingle()
+  const code = data as CodeRow | null
+  if (!code?.owner_subscriber_id) return false
+  const { data: sub } = await admin
+    .from('newsletter_subscribers').select('id, email, first_name, status, referral_code').eq('id', code.owner_subscriber_id).maybeSingle()
+  const referrer = sub as Pick<SubscriberLite, 'id' | 'email' | 'first_name' | 'referral_code' | 'status'> | null
+  if (!referrer || referrer.status !== 'active') return false
+
+  await admin.from('discount_codes').update({ email_sent_at: null }).eq('id', codeId)
+  const count = await confirmedReferralCount(admin, referrer.id)
+  return (await sendUnsentRewards(admin, referrer, count, code.campaign_id, now)) > 0
+}

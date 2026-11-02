@@ -10,6 +10,7 @@ export function PrivacyShopSection() {
       <p>If you buy from our shop, we (Listen True Crime, a trading name of a sole trader) collect and use:</p>
       <ul className="space-y-2 list-disc pl-5 mt-3">
         <li><strong className="text-stone">Order details</strong> — your name, email address, phone number (optional), delivery address, what you ordered, and the amount and status of your payment.</li>
+        <li><strong className="text-stone">Discount codes</strong> — if you use a discount code, we record which code (and so which campaign) was used on your order.</li>
         <li><strong className="text-stone">Payment</strong> — handled entirely by Stripe on its own secure page. We never see or store your card number. Stripe tells us whether payment succeeded.</li>
       </ul>
       <p className="mt-3"><strong className="text-stone">Why, and our lawful basis.</strong> To take payment, make and deliver your order and handle returns (contract, Art. 6(1)(b)); to keep accounting and tax records (legal obligation, Art. 6(1)(c)); and to prevent fraud and keep the shop secure (legitimate interests, Art. 6(1)(f)). Order and dispatch emails are service messages about your purchase. We only send marketing, including our newsletter, if you separately subscribe.</p>

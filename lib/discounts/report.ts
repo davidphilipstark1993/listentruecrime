@@ -40,3 +40,21 @@ export function summariseCampaignRevenue(orders: ReportOrder[]): CampaignRevenue
   // Campaigns first (biggest revenue first), the no-code baseline last.
   return rows.sort((a, b) => (a.prefix === null ? 1 : b.prefix === null ? -1 : b.revenuePence - a.revenuePence))
 }
+
+// ─── Code status for the admin list ──────────────────────────────────────────
+import { evaluateCode } from './validate'
+import type { CampaignRow, CodeRow } from './types'
+
+export type CodeStatus = 'live' | 'used' | 'expired' | 'switched off' | 'not started' | 'over max'
+
+export function codeStatus(code: CodeRow, campaign: CampaignRow, now = new Date()): CodeStatus {
+  const v = evaluateCode(code, campaign, now)
+  if (v.ok) return 'live'
+  switch (v.reason) {
+    case 'used': return 'used'
+    case 'expired': return 'expired'
+    case 'not_started': return 'not started'
+    case 'over_max': return 'over max'
+    default: return 'switched off'
+  }
+}
