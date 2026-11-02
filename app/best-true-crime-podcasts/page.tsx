@@ -9,30 +9,48 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { NewsletterLeadMagnet } from '@/components/newsletter/newsletter-lead-magnet'
 import { CATEGORIES, COUNTRIES } from '@/lib/types/database'
 import { buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
-import { BASE, ogDefaults } from '@/lib/seo/config'
+import { BASE, CURRENT_YEAR, ogDefaults } from '@/lib/seo/config'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
 import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
+import { joinNames } from '@/lib/best-of-meta'
+import { oneLine } from '@/lib/seo/one-line'
 import type { Podcast, RatingStats } from '@/lib/types/database'
-const YEAR = new Date().getFullYear()
+const YEAR = CURRENT_YEAR
 
-export const metadata: Metadata = {
-  // Absolute: the site template would append " | ListenTrueCrime" and push this past ~60 characters.
-  title: { absolute: `Best True Crime Podcasts (${YEAR}): Expert-Reviewed, Binge-Scored` },
-  description:
-    `The best true crime podcasts of ${YEAR}, each with an expert verdict, a binge score and community ratings. From Serial to Casefile to Teacher\'s Pet, find what to hear next.`,
-  openGraph: {
-    title: `Best True Crime Podcasts (${YEAR}): Expert-Reviewed, Binge-Scored`,
-    description: 'Expert-reviewed, binge-scored and community-rated. Find your next true crime obsession.',
-    url: `${BASE}/best-true-crime-podcasts`,
-    ...ogDefaults('Best True Crime Podcasts', 'Expert-reviewed, binge-scored and community-rated'),
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: `Best True Crime Podcasts (${YEAR}): Expert-Reviewed, Binge-Scored`,
-    description: 'Expert-reviewed and community-rated. From Serial to Crime Junkie, Casefile to Teacher\'s Pet — find your next obsession.',
-  },
-  alternates: { canonical: `${BASE}/best-true-crime-podcasts` },
+const HUB_TITLE = `Best True Crime Podcasts ${YEAR}: Our Top Picks`
+const HUB_DESCRIPTION_FALLBACK = `The best true crime podcasts of ${YEAR}, each with an expert verdict, a binge score and community ratings. Find what to hear next.`
+
+async function getTopPodcastNames(): Promise<string[]> {
+  const { data } = await createAdminClient()
+    .from('podcasts')
+    .select('title')
+    .eq('is_published', true)
+    .order('binge_factor', { ascending: false })
+    .limit(3)
+  return (data ?? []).map(p => p.title as string)
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const names = await getTopPodcastNames()
+  const described = names.length === 3
+    ? `The best true crime podcasts of ${YEAR}: ${joinNames(names)} lead our ranking. Expert verdicts, binge scores and community ratings for every show.`
+    : null
+  // Named shows come from the live ranking; fall back to generic copy if it is too long or empty.
+  const description = described && described.length <= 160 ? described : HUB_DESCRIPTION_FALLBACK
+  return {
+    // Absolute: the site template would append " | ListenTrueCrime" and push this past ~60 characters.
+    title: { absolute: HUB_TITLE },
+    description,
+    openGraph: {
+      title: HUB_TITLE,
+      description,
+      url: `${BASE}/best-true-crime-podcasts`,
+      ...ogDefaults('Best True Crime Podcasts', 'Expert-reviewed, binge-scored and community-rated'),
+    },
+    twitter: { card: 'summary_large_image', title: HUB_TITLE, description },
+    alternates: { canonical: `${BASE}/best-true-crime-podcasts` },
+  }
 }
 
 const faqs = [
@@ -137,9 +155,33 @@ export default async function BestTrueCrimePodcastsPage() {
             host quality, and binge-worthiness. No filler — only the ones worth your time.
           </p>
           <p className="text-stone-subtle text-sm mt-3">
-            Updated {new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
+            Last updated {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
         </section>
+
+        {/* Answer-first top 10 */}
+        {top.length > 0 && (
+          <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+            <h2 className="heading-section text-2xl mb-2">The short answer: our top 10 true crime podcasts</h2>
+            <p className="text-stone-muted text-sm mb-6">Ranked by binge factor. Each links to our full review.</p>
+            <ol className="space-y-3 list-decimal list-inside">
+              {top.slice(0, 10).map(p => (
+                <li key={p.id} className="text-stone">
+                  <Link href={`/podcasts/${p.slug}`} className="font-semibold text-crimson hover:underline">{p.title}</Link>
+                  {p.short_description ? <span className="text-stone-muted text-sm">: {oneLine(p.short_description)}</span> : null}
+                </li>
+              ))}
+            </ol>
+            <p className="text-sm text-stone-muted mt-6">
+              Looking for something specific? Try our guides to{' '}
+              <Link href="/blog/true-crime-podcasts-spotify" className="text-crimson hover:underline">true crime podcasts on Spotify</Link>,{' '}
+              <Link href="/best/murder-mystery" className="text-crimson hover:underline">murder mystery podcasts</Link>,{' '}
+              <Link href="/blog/best-investigative-journalism-podcasts" className="text-crimson hover:underline">investigative podcasts</Link>,{' '}
+              <Link href="/blog/best-courtroom-true-crime-podcasts" className="text-crimson hover:underline">courtroom podcasts</Link> and{' '}
+              <Link href="/blog/podcasts-like-casefile" className="text-crimson hover:underline">podcasts like Casefile</Link>.
+            </p>
+          </section>
+        )}
 
         {/* Must Listen */}
         {must.length > 0 && (

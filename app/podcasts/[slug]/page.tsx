@@ -24,6 +24,7 @@ import { countryFlag, formatRelativeDate, scoreBg, cn, stripHtml } from '@/lib/u
 import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
+import { getGuidesForPodcast } from '@/lib/blog'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
 import { ratingStatsOf, MIN_RATINGS_FOR_SCHEMA } from '@/lib/rating-stats'
@@ -208,6 +209,7 @@ export default async function PodcastPage({ params }: Props) {
   const podcastCategories = getPodcastCategories(podcast)
   const whoIsItFor = getWhoIsItFor(podcast)
   const relatedCases = getCasesForPodcast(slug)
+  const guides = getGuidesForPodcast(slug)
   const stats = ratingStatsOf(podcast.rating_stats)
   const overallScore = stats?.avg_overall
   const year = new Date().getFullYear()
@@ -773,6 +775,25 @@ export default async function PodcastPage({ params }: Props) {
                 </Link>
                 <p className="text-stone-subtle text-xs mt-2">Find your next obsession</p>
               </div>
+
+              {/* Guides that feature this show */}
+              {guides.length > 0 && (
+                <div className="card p-5">
+                  <h3 className="font-serif text-sm text-stone mb-3 uppercase tracking-wide">In our guides</h3>
+                  <div className="space-y-2">
+                    {guides.map(g => (
+                      <Link
+                        key={g.slug}
+                        href={`/blog/${g.slug}`}
+                        className="flex items-start gap-2 text-stone-muted hover:text-white text-sm transition-colors"
+                      >
+                        <ArrowRight size={11} className="text-crimson shrink-0 mt-1" />
+                        <span>{g.seoTitle ?? g.title}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Badge */}
               {podcast.quick_verdict && podcast.quick_verdict !== 'Avoid' && (

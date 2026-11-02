@@ -10,6 +10,8 @@ export const POPULAR_GUIDES: { href: string; label: string }[] = [
   { href: '/podcasts-like/love-trapped', label: 'Podcasts Like Love Trapped' },
   { href: '/blog/best-serial-killer-podcasts', label: 'Best Serial Killer Podcasts' },
   { href: '/blog/best-murder-mystery-podcasts', label: 'Best Murder Mystery Podcasts' },
-  { href: '/blog/best-investigative-journalism-podcasts', label: 'Best Investigative Journalism Podcasts' },
+  { href: '/best/murder-mystery', label: 'Murder Mystery Podcasts, Ranked' },
+  { href: '/blog/best-investigative-journalism-podcasts', label: 'Best Investigative Podcasts' },
+  { href: '/blog/best-courtroom-true-crime-podcasts', label: 'Best Courtroom Podcasts' },
   { href: '/blog/best-cult-podcasts', label: 'Best Cult Podcasts' },
 ]

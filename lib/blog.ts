@@ -157,6 +157,20 @@ export function getAllTags(): { name: string; slug: string; count: number }[] {
 // out of the sitemap (still reachable for visitors).
 export const MIN_INDEXABLE_TAG_POSTS = 3
 
+/**
+ * Guides that feature a podcast (frontmatter relatedPodcasts), for linking from its page.
+ * "Podcasts like X" guides first, then posts whose slug names the show, then newest.
+ */
+export function getGuidesForPodcast(podcastSlug: string, limit = 3): BlogPost[] {
+  const key = podcastSlug.split('-')[0]
+  const rank = (post: BlogPost) =>
+    post.slug.startsWith('podcasts-like-') && post.slug.includes(key) ? 0 : post.slug.includes(key) ? 1 : 2
+  return getAllPosts()
+    .filter(post => post.relatedPodcasts?.includes(podcastSlug))
+    .sort((a, b) => rank(a) - rank(b) || new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, limit)
+}
+
 export function getRelatedPosts(post: BlogPost, limit = 3): BlogPost[] {
   const all = getAllPosts().filter(p => p.slug !== post.slug)
   return all

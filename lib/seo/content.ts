@@ -89,7 +89,8 @@ export const CATEGORY_SEO: Record<string, PageSeoContent> = {
   },
 
   'investigative': {
-    h1: 'Best Investigative True Crime Podcasts',
+    h1: 'Best Investigative Podcasts',
+    metaDescription: 'The best investigative podcasts, ranked: true crime shows doing original reporting, from Serial to In the Dark. Binge scores, verdicts and community ratings.',
     intro: [
       'Investigative true crime podcasts do what great journalism has always done — they hold power to account. These shows go beyond surface-level reporting to interview sources nobody else could reach, obtain documents nobody thought to request, and ask questions that make the powerful uncomfortable.',
       'The genre has produced some of podcasting\'s most significant cultural moments, from Serial\'s influence on a real criminal case to In the Dark\'s pressure on the US justice system. These are the podcasts that change things.',

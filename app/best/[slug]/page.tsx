@@ -1,5 +1,6 @@
 export const revalidate = 3600
 
+import { cache } from 'react'
 import { notFound } from 'next/navigation'
 import { ratingStatsOf, MIN_RATINGS_FOR_SCHEMA } from '@/lib/rating-stats'
 import type { Metadata } from 'next'
@@ -13,6 +14,8 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { BEST_OF_PAGES, getBestOfPage } from '@/lib/best-of'
 import { CATEGORIES } from '@/lib/types/database'
 import { BASE, breadcrumbSchema } from '@/lib/seo'
+import { buildFAQSchema } from '@/lib/seo/content'
+import { bestOfMeta, fillBestOfTokens } from '@/lib/best-of-meta'
 import { ogDefaults } from '@/lib/seo/config'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
@@ -22,7 +25,8 @@ interface Props {
 
 type PodcastWithStats = Podcast & { rating_stats: RatingStats | null }
 
-async function getPodcasts(page: ReturnType<typeof getBestOfPage>): Promise<PodcastWithStats[]> {
+const getPodcasts = cache(async function getPodcasts(slug: string): Promise<PodcastWithStats[]> {
+  const page = getBestOfPage(slug)
   if (!page) return []
   let q = supabasePublic
     .from('podcasts')
@@ -36,7 +40,7 @@ async function getPodcasts(page: ReturnType<typeof getBestOfPage>): Promise<Podc
 
   const { data } = await q.order('binge_factor', { ascending: false }).limit(24)
   return (data ?? []) as PodcastWithStats[]
-}
+})
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
@@ -48,17 +52,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // just a smaller limit) — canonicalize to that page instead of competing
   // with it as a near-duplicate.
   const canonical = page.canonicalOverride ?? `${BASE}/best/${slug}`
+  const podcasts = await getPodcasts(slug)
+  const meta = bestOfMeta(page, podcasts.map(p => p.title))
 
   return {
-    title: page.title,
-    description: page.description,
+    // Absolute: the site template would append " | ListenTrueCrime" and push these past ~60 characters.
+    title: { absolute: meta.title },
+    description: meta.description,
     alternates: { canonical },
     ...(page.canonicalOverride && { robots: { index: false, follow: true } }),
     openGraph: {
-      title: `${page.title} | ListenTrueCrime`,
-      description: page.description,
+      title: meta.title,
+      description: meta.description,
       url: `${BASE}/best/${slug}`,
-      ...ogDefaults(page.title),
+      ...ogDefaults(meta.title),
     },
   }
 }
@@ -68,7 +75,10 @@ export default async function BestOfPage({ params }: Props) {
   const page = getBestOfPage(slug)
   if (!page) notFound()
 
-  const podcasts = await getPodcasts(page)
+  const podcasts = await getPodcasts(slug)
+  const names = podcasts.map(p => p.title)
+  const meta = bestOfMeta(page, names)
+  const faqs = (page.faqs ?? []).map(f => ({ q: f.q, a: fillBestOfTokens(f.a, names) }))
 
   const breadcrumbs = breadcrumbSchema([
     { name: 'Home', url: BASE },
@@ -80,7 +90,7 @@ export default async function BestOfPage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: page.h1,
-    description: page.description,
+    description: meta.description,
     url: `${BASE}/best/${slug}`,
     numberOfItems: podcasts.length,
     itemListElement: podcasts.map((p, i) => {
@@ -112,6 +122,9 @@ export default async function BestOfPage({ params }: Props) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
+      {faqs.length > 0 && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFAQSchema(faqs)) }} />
+      )}
 
       <Header />
 
@@ -131,13 +144,24 @@ export default async function BestOfPage({ params }: Props) {
             Community-rated & expert-reviewed
           </div>
           <h1 className="heading-display text-4xl sm:text-5xl mb-4">{page.h1}</h1>
-          <p className="text-stone-muted text-lg max-w-2xl leading-relaxed">{page.description}</p>
+          <p className="text-stone-muted text-lg max-w-2xl leading-relaxed">{meta.description}</p>
         </section>
 
         {/* Editorial intro — AI discoverability */}
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
           <div className="card p-6 sm:p-8 border-l-4 border-crimson/60">
-            <p className="text-stone leading-relaxed">{page.intro}</p>
+            <p className="text-stone leading-relaxed">{fillBestOfTokens(page.intro, names)}</p>
+            {page.related?.length ? (
+              <p className="text-sm text-stone-muted mt-4">
+                Related:{' '}
+                {page.related.map((r, i) => (
+                  <span key={r.href}>
+                    {i > 0 && ' · '}
+                    <Link href={r.href} className="text-crimson hover:underline">{r.label}</Link>
+                  </span>
+                ))}
+              </p>
+            ) : null}
           </div>
         </section>
 
@@ -146,7 +170,7 @@ export default async function BestOfPage({ params }: Props) {
           <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
             <div className="flex items-center justify-between mb-6">
               <h2 className="heading-section text-2xl">
-                {podcasts.length} podcast{podcasts.length !== 1 ? 's' : ''} — ranked by binge factor
+                {meta.listHeading}
               </h2>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -160,6 +184,20 @@ export default async function BestOfPage({ params }: Props) {
             <div className="text-center py-24">
               <p className="text-stone-muted text-lg mb-2">No podcasts found yet</p>
               <Link href="/browse" className="btn-outline mt-4 inline-flex">Browse all podcasts</Link>
+            </div>
+          </section>
+        )}
+
+        {faqs.length > 0 && (
+          <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 section-divider pt-12">
+            <h2 className="heading-section text-2xl mb-6">Frequently asked questions</h2>
+            <div className="space-y-4">
+              {faqs.map(f => (
+                <div key={f.q} className="card p-5">
+                  <h3 className="text-stone font-semibold mb-2">{f.q}</h3>
+                  <p className="text-stone-muted text-sm leading-relaxed">{f.a}</p>
+                </div>
+              ))}
             </div>
           </section>
         )}
