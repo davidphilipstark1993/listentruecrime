@@ -1,10 +1,18 @@
 import { sanitizeEnv } from '@/lib/utils'
 import type { Newsletter } from '@/lib/types/database'
+import { REFERRAL_LINK_TAG } from './referral-promo'
+import { referralLink } from '@/lib/referrals/code'
 
 const RESEND_BATCH_SIZE = 100 // Resend's /emails/batch cap per request
 
 interface Recipient {
   email: string
+  referral_code?: string | null
+}
+
+/** Swaps the referral placeholder for this recipient's own link (a no-op for issues without one). */
+function personalise(content: string, r: Recipient): string {
+  return content.split(REFERRAL_LINK_TAG).join(referralLink(r.referral_code ?? ''))
 }
 
 /**
@@ -41,8 +49,8 @@ export async function sendNewsletterCampaignViaResend(
           from: `${fromName} <${fromEmail}>`,
           to: [r.email],
           subject: newsletter.title,
-          html: newsletter.html_content,
-          ...(newsletter.plain_text_content ? { text: newsletter.plain_text_content } : {}),
+          html: personalise(newsletter.html_content as string, r),
+          ...(newsletter.plain_text_content ? { text: personalise(newsletter.plain_text_content, r) } : {}),
           tags: [{ name: 'newsletter_id', value: newsletter.id }],
         }))
       ),

@@ -6,12 +6,12 @@ A referral programme for the newsletter, and a reusable discount-code system for
 
 ## 1. Launch checklist (the manual bits)
 
-- [ ] **Run `supabase/migrations/023_referrals_and_discounts.sql`** in the Supabase SQL editor. It adds subscriber referral codes (and backfills every existing subscriber), the `referrals`, `discount_campaigns` and `discount_codes` tables, and the discount columns on `shop_orders`. Safe to re-run.
+- [ ] **Run `supabase/migrations/023_referrals_and_discounts.sql`** in the Supabase SQL editor (already verified on a real Postgres: see §7). It adds subscriber referral codes (and backfills every existing subscriber), the `referrals`, `discount_campaigns` and `discount_codes` tables, and the discount columns on `shop_orders`. Safe to re-run.
 - [ ] Deploy. There is nothing to configure: referral rewards use the SendGrid/Resend keys you already have, and discounts use your existing `STRIPE_SECRET_KEY`.
 - [ ] Optional: set `DISCOUNT_MAX_PERCENT` (see §5) — leave blank to keep the default of 30.
 - [ ] **Send yourself a real test** once deployed (see §7). Email delivery and the Stripe coupon call could not be exercised against real services while building this.
 - [ ] Referral share links, the confirmed-page share box and the referral block in the welcome emails only appear while `NEXT_PUBLIC_SHOP_ENABLED=true` (the reward is a shop discount). Open the shop first, then announce referrals. Reward codes expire 60 days after they are issued, so don't promote the programme long before the shop can take orders.
-- [ ] Optional one-off: tell your *existing* subscribers about their links. They already have codes (the migration backfilled them) but nothing emails them. A subscriber's link is `https://www.listentruecrime.com/subscribe?ref=<referral_code>` (column `newsletter_subscribers.referral_code`). Per-subscriber links in the weekly issue would need SendGrid merge fields; that is not built.
+- Nothing to do for existing subscribers: they already have codes (the migration backfills them) and, once the shop is open, **every weekly issue and welcome email carries each subscriber's own link** (added at send time via SendGrid substitutions / per-recipient replacement for Resend, so the archive page and RSS are untouched). No separate announcement blast is needed.
 - [ ] Privacy policy: a "Referrals" bullet and a "Discount codes" shop bullet were added. Have it reviewed with the rest of the policy.
 - [ ] Creating a Black Friday campaign: **Admin → Shop → Discounts → Campaigns → BF26-** → *Create public code* (e.g. `BLACKFRIDAY`), then switch the campaign **On**. It is seeded **off**.
 
@@ -109,11 +109,11 @@ group by 1 order by 3 desc;
 
 ## 7. Testing
 
-Automated (`npm test`, 332 tests in total, **148 new**): code generation, prefix naming, input parsing (case, dashes, two codes), expiry maths, validation (every failure + the max-discount cap incl. lowering it), campaign creation, unique/public issuing and idempotence, concurrent single-use reservation, release-once, abandon-and-retry takeover, the full quote→checkout→paid/expired lifecycle with real routes, referral registration (new-only, self, same-IP, one referrer, inactive referrer), confirmation-only counting and idempotence, tier rewards (1→20%, 3→30%, no duplicates, catch-up, cap clamp, email retry), the sign-up→confirm→reward journey through the real routes, and the email contents/gating. Type-check is clean for new code (one pre-existing error in `components/admin/podcast-form.tsx`), and the sign-up field and basket UI were checked in a real browser (desktop and phone width).
+Automated (`npm test`, 332 tests in total, **148 new**): code generation, prefix naming, input parsing (case, dashes, two codes), expiry maths, validation (every failure + the max-discount cap incl. lowering it), campaign creation, unique/public issuing and idempotence, concurrent single-use reservation, release-once, abandon-and-retry takeover, the full quote→checkout→paid/expired lifecycle with real routes, referral registration (new-only, self, same-IP, one referrer, inactive referrer), confirmation-only counting and idempotence, tier rewards (1→20%, 3→30%, no duplicates, catch-up, cap clamp, email retry), the sign-up→confirm→reward journey through the real routes, and the email contents/gating. **The migration** was run against a real Postgres (PGlite) holding 500 existing subscribers by `node scripts/referrals/verify-migration.mjs` (see the header for the one-line setup): backfill gives 500 distinct valid codes, re-running is safe, and self-referral, second referrer, duplicate tier, missing expiry, bad prefix, out-of-range %, negative use counts and the compare-and-swap all behave. The three emails (reward, welcome, weekly issue) were rendered and checked visually. Type-check is clean for new code (one pre-existing error in `components/admin/podcast-form.tsx`), and the sign-up field and basket UI were checked in a real browser (desktop and phone width).
 
 **Not tested against real services — please do this once:**
 
-1. Run the migration, deploy, sign up with a second address using your own link (use a different network/phone data, because same-IP referrals are blocked), confirm it, and check the reward email arrives and that **Admin → Referrals** shows 1.
+1. Deploy, sign up with a second address using your own link (use a different network/phone data, because same-IP referrals are blocked), confirm it, and check the reward email arrives and that **Admin → Referrals** shows 1.
 2. With Stripe **test keys**: put the reward code in the basket, pay with `4242 4242 4242 4242`, and check Stripe shows the discount, the order page shows the code, and the code now reads "used" in **Admin → Discounts**.
 3. Open checkout with a code, cancel on Stripe, return to the basket and check the same code still applies.
 4. Create a `BF26-` public code and confirm two different orders can use it.
@@ -121,6 +121,5 @@ Automated (`npm test`, 332 tests in total, **148 new**): code generation, prefix
 ## 8. Known limitations
 
 - No rate limiting on code entry (same as the rest of the shop API). Random codes can't be guessed in practice, but a public code can be shared freely, which is the point. Consider a Vercel Firewall rule on `/api/shop/quote`.
-- A referral link in the *weekly issue* (per-subscriber) isn't built; links are in the welcome email and the confirmed page.
-- The Supabase queries were tested against an in-memory fake, not Postgres. The migration and the unique indexes are the parts to eyeball when you run it.
+- The application's Supabase queries were tested against an in-memory fake; the migration itself was tested on real Postgres (§7). The one thing neither covers is PostgREST's own request handling, which only a deployment exercises.
 - Per-campaign revenue counts orders by the code snapshot, so deleting a campaign leaves its prefix on past orders (intentional) but unlinks its id.
