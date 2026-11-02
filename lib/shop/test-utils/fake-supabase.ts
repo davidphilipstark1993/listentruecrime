@@ -10,6 +10,20 @@ const UNIQUE: Record<string, string[][]> = {
   shop_orders: [['stripe_checkout_session_id'], ['printify_order_id'], ['order_number']],
   shop_webhook_events: [['provider', 'event_id']],
   shop_shipments: [['order_id', 'tracking_number']],
+  // Referrals + discounts (migration 023)
+  newsletter_subscribers: [['email'], ['referral_code']],
+  referrals: [['referred_id']],
+  discount_campaigns: [['prefix']],
+  discount_codes: [['code'], ['owner_subscriber_id', 'campaign_id', 'reward_tier']],
+}
+
+const REF_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'
+/** Deterministic stand-in for the database default generate_referral_code(). */
+function fakeReferralCode(n: number): string {
+  let out = ''
+  let x = n
+  for (let i = 0; i < 6; i++) { out = REF_ALPHABET[x % REF_ALPHABET.length] + out; x = Math.floor(x / REF_ALPHABET.length) }
+  return out
 }
 
 export function createFakeDb() {
@@ -48,6 +62,22 @@ export function createFakeDb() {
             row.stripe_checkout_session_id ??= null; row.printify_sent_to_production_at ??= null
           }
           if (name === 'shop_shipments') { row.email_sent_at ??= null }
+          // Column defaults from migration 023.
+          if (name === 'shop_orders') {
+            row.discount_pence ??= 0; row.discount_released_at ??= null; row.discount_code_id ??= null
+            row.discount_code ??= null; row.discount_campaign_id ??= null; row.discount_campaign_prefix ??= null; row.discount_percent ??= null
+          }
+          if (name === 'newsletter_subscribers') {
+            row.status ??= 'active'; row.referral_code ??= fakeReferralCode(++idCounter)
+          }
+          if (name === 'referrals') { row.status ??= 'pending'; row.confirmed_at ??= null }
+          if (name === 'discount_campaigns') {
+            row.is_active ??= true; row.starts_at ??= null; row.expires_at ??= null; row.code_valid_days ??= null; row.max_uses_per_code ??= null; row.notes ??= null
+          }
+          if (name === 'discount_codes') {
+            row.use_count ??= 0; row.is_active ??= true; row.max_uses ??= null; row.starts_at ??= null
+            row.owner_subscriber_id ??= null; row.reward_tier ??= null; row.email_sent_at ??= null
+          }
           if (violatesUnique(name, rows, row)) {
             if (op === 'upsert' && onConflict) {
               const cols = onConflict.split(',')
