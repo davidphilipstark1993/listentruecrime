@@ -34,6 +34,27 @@ export function webhookSecret(): string {
  */
 export async function createCheckoutSession(order: ShopOrderRow, items: ShopOrderItemRow[], imageByVariant: Map<string, string | null>) {
   const stripe = getStripe()
+
+  // The discount was validated and priced by our own code (lib/discounts). Stripe is only told
+  // the final amount, as a one-off fixed-amount coupon, so its page and receipt show the
+  // saving and amount_total matches the order total the webhook checks against.
+  // `allow_promotion_codes` stays false below, so Stripe-side codes can never be stacked on top.
+  let discounts: Stripe.Checkout.SessionCreateParams.Discount[] | undefined
+  if (order.discount_pence > 0 && order.discount_code) {
+    const coupon = await stripe.coupons.create(
+      {
+        amount_off: order.discount_pence,
+        currency: CURRENCY,
+        duration: 'once',
+        max_redemptions: 1,
+        name: `${order.discount_code} (${order.discount_percent ?? ''}% off)`.slice(0, 40),
+        metadata: { order_id: order.id, discount_code: order.discount_code },
+      },
+      { idempotencyKey: `shop-coupon-${order.id}` },
+    )
+    discounts = [{ coupon: coupon.id }]
+  }
+
   const params: Stripe.Checkout.SessionCreateParams & { managed_payments?: { enabled: boolean } } = {
       mode: 'payment',
       // Stripe accounts can have Managed Payments on by default, which rejects
@@ -70,9 +91,15 @@ export async function createCheckoutSession(order: ShopOrderRow, items: ShopOrde
         },
       ],
       allow_promotion_codes: false,
+      ...(discounts ? { discounts } : {}),
       expires_at: Math.floor(Date.now() / 1000) + CHECKOUT_EXPIRY_MINUTES * 60,
       success_url: `${BASE}/shop/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${BASE}/shop/basket?cancelled=1`,
   }
   return stripe.checkout.sessions.create(params, { idempotencyKey: `shop-checkout-${order.id}` })
+}
+
+/** Expires an unpaid Checkout Session so it can never be paid. Throws if it already completed. */
+export async function expireCheckoutSession(sessionId: string): Promise<void> {
+  await getStripe().checkout.sessions.expire(sessionId)
 }

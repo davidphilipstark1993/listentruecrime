@@ -12,6 +12,8 @@ import { evaluateCode, loadCodeWithCampaign } from './validate'
 // Friday code never contends on one row; their usage is counted from orders instead.
 
 const MAX_CAS_ATTEMPTS = 6
+/** An unpaid order that still has no Stripe session after this long never will (its request died). */
+const ORPHAN_AFTER_MS = 10 * 60 * 1000
 
 type ReserveResult = { ok: true } | { ok: false; reason: CodeFailure }
 
@@ -93,18 +95,25 @@ export async function reserveDiscountForOrder(admin: SupabaseClient, input: Rese
 
   const { data: holders } = await admin
     .from('shop_orders')
-    .select('id, stripe_checkout_session_id')
+    .select('id, stripe_checkout_session_id, created_at')
     .eq('discount_code_id', found.code.id)
     .eq('payment_status', 'pending')
     .is('discount_released_at', null)
     .neq('id', input.orderId)
 
   let freed = false
-  for (const holder of (holders ?? []) as { id: string; stripe_checkout_session_id: string | null }[]) {
-    try {
-      if (holder.stripe_checkout_session_id) await deps.expireSession(holder.stripe_checkout_session_id)
-    } catch {
-      continue // that checkout may be completing right now: leave it alone
+  const now = (deps.now ?? new Date()).getTime()
+  for (const holder of (holders ?? []) as { id: string; stripe_checkout_session_id: string | null; created_at: string }[]) {
+    if (holder.stripe_checkout_session_id) {
+      try {
+        await deps.expireSession(holder.stripe_checkout_session_id)
+      } catch {
+        continue // that checkout may be completing right now: leave it alone
+      }
+    } else if (now - new Date(holder.created_at).getTime() < ORPHAN_AFTER_MS) {
+      // No Stripe session yet: that request is probably still being set up (and will create one),
+      // so it can't be expired. Only an order stuck this way for minutes is dead and can be reclaimed.
+      continue
     }
     // Close the superseded order the same way the "session expired" webhook would.
     await admin.from('shop_orders').update({ payment_status: 'expired', fulfilment_status: 'cancelled' }).eq('id', holder.id).eq('payment_status', 'pending')

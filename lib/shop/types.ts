@@ -105,6 +105,13 @@ export interface ShopOrderRow {
   shipping_pence: number
   total_pence: number
   refunded_pence: number
+  discount_code_id: string | null
+  discount_code: string | null
+  discount_campaign_id: string | null
+  discount_campaign_prefix: string | null
+  discount_percent: number | null
+  discount_pence: number
+  discount_released_at: string | null
   stripe_checkout_session_id: string | null
   stripe_payment_intent_id: string | null
   stripe_fee_pence: number | null

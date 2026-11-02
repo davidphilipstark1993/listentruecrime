@@ -58,6 +58,14 @@ export async function loadCodeWithCampaign(admin: SupabaseClient, code: string):
   return { code: codeRow as CodeRow, campaign: campaign as CampaignRow }
 }
 
+/** Orders that reserved the code but haven't been paid (and haven't given it back). */
+export async function countUnpaidHolds(admin: SupabaseClient, codeId: string): Promise<number> {
+  const { data } = await admin
+    .from('shop_orders').select('id')
+    .eq('discount_code_id', codeId).eq('payment_status', 'pending').is('discount_released_at', null)
+  return data?.length ?? 0
+}
+
 /**
  * Looks a customer-entered code up and checks it against every rule: it exists, is
  * active, has started, hasn't expired, hasn't been used up (single-use), and is within
@@ -74,7 +82,15 @@ export async function validateDiscountCode(
   if (!parsed.ok) return reject(parsed.reason)
 
   const found = await loadCodeWithCampaign(admin, parsed.code)
-  const verdict = evaluateCode(found?.code ?? null, found?.campaign ?? null, now)
+  let verdict = evaluateCode(found?.code ?? null, found?.campaign ?? null, now)
+
+  // A single-use code that is only *reserved* by an unpaid checkout (typically the customer's own,
+  // abandoned on Stripe's page) is still available to them: checkout will take it over. Only a
+  // code that is actually paid for counts as used here.
+  if (!verdict.ok && verdict.reason === 'used' && found && found.code.max_uses === 1) {
+    const unpaid = await countUnpaidHolds(admin, found.code.id)
+    verdict = evaluateCode({ ...found.code, use_count: Math.max(0, found.code.use_count - unpaid) }, found.campaign, now)
+  }
   if (!verdict.ok || !found) return reject(verdict.ok ? 'not_found' : verdict.reason)
 
   return {

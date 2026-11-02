@@ -10,5 +10,7 @@ export const cartSchema = z.object({
     }))
     .min(1)
     .max(MAX_BASKET_LINES),
+  // One optional discount code. A single string on purpose: there is no way to send two.
+  code: z.string().max(100).nullish(),
 })
 export type CartPayload = z.infer<typeof cartSchema>
