@@ -120,6 +120,8 @@ export function createFakeDb() {
       is(c: string, v: any) { filters.push(r => (r[c] ?? null) === v); return q },
       in(c: string, v: any[]) { filters.push(r => v.includes(r[c])); return q },
       not(c: string, o: string, v: any) { filters.push(r => (o === 'is' ? (r[c] ?? null) !== v : !String(v).replace(/[()]/g, '').split(',').includes(r[c]))); return q },
+      gt(c: string, v: any) { filters.push(r => r[c] != null && r[c] > v); return q },
+      gte(c: string, v: any) { filters.push(r => r[c] != null && r[c] >= v); return q },
       lt(c: string, v: any) { filters.push(r => r[c] != null && r[c] < v); return q },
       lte(c: string, v: any) { filters.push(r => r[c] != null && r[c] <= v); return q },
       order(col: string, o?: { ascending?: boolean }) { orderBy = { col, asc: o?.ascending ?? true }; return q },

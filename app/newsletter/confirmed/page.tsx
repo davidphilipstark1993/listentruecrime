@@ -3,6 +3,10 @@ import Link from 'next/link'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
+import { ReferralShare } from '@/components/newsletter/referral-share'
+import { referralLink, normalizeReferralCode } from '@/lib/referrals/code'
+import { referralRewardSummary } from '@/lib/email/referral-promo'
+import { shopEnabled } from '@/lib/shop/config'
 
 export const metadata: Metadata = {
   title: 'Subscription confirmation',
@@ -24,9 +28,11 @@ const COPY = {
   },
 } as const
 
-export default function ConfirmedPage({ searchParams }: { searchParams: { status?: string } }) {
+export default function ConfirmedPage({ searchParams }: { searchParams: { status?: string; code?: string } }) {
   const status = searchParams.status === 'ok' || searchParams.status === 'expired' ? searchParams.status : 'invalid'
   const copy = COPY[status]
+  // The referral reward is a shop discount, so the share box only appears once the shop is open.
+  const shareCode = status === 'ok' && shopEnabled() ? normalizeReferralCode(searchParams.code) : null
   return (
     <>
       <Header />
@@ -34,6 +40,7 @@ export default function ConfirmedPage({ searchParams }: { searchParams: { status
         <section className="max-w-xl mx-auto px-4 sm:px-6 text-center">
           <h1 className="heading-display text-3xl sm:text-4xl mb-4">{copy.title}</h1>
           <p className="text-stone-muted leading-relaxed mb-8">{copy.body}</p>
+          {shareCode && <ReferralShare link={referralLink(shareCode)} rewards={referralRewardSummary()} />}
           {status === 'ok' ? (
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/best-true-crime-podcasts" className="btn-primary px-6 py-3">See our top picks</Link>

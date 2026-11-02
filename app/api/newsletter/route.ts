@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { issueConfirmation } from '@/lib/newsletter/confirmation'
+import { registerReferral } from '@/lib/referrals/service'
 import {
   CONSENT_TEXT,
   MAX_SIGNUPS_PER_IP_PER_HOUR,
@@ -13,12 +14,17 @@ import {
 // confirmation link. The subscriber becomes 'active' (and is synced to the
 // provider / welcomed) in /api/newsletter/confirm.
 //
+// Referrals: an optional `ref` (a subscriber's referral code) is only ever acted on below, after a
+// brand-new row has been inserted, so an address that is already in the database can never be
+// "referred". It is recorded as pending and only counts once the new subscriber confirms
+// (see /api/newsletter/confirm). A missing/invalid/unusable code is ignored silently.
+//
 // The response is identical whatever happens to the address (new, pending,
 // already subscribed, unsubscribed, throttled), so the form can't be used to
 // probe the list, and an existing unsubscribed/bounced/suppressed row is never
 // reactivated by someone typing the address into a form.
 export async function POST(req: Request) {
-  const { email: rawEmail, first_name, source, consent } = await req.json()
+  const { email: rawEmail, first_name, source, consent, ref } = await req.json()
   const email = typeof rawEmail === 'string' ? rawEmail.toLowerCase().trim() : ''
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -54,7 +60,7 @@ export async function POST(req: Request) {
     .gte('consent_at', new Date(Date.now() - 60 * 60 * 1000).toISOString())
   if ((recent ?? 0) >= MAX_SIGNUPS_PER_IP_PER_HOUR) return ok
 
-  const { error: insertError } = await supabase.from('newsletter_subscribers').insert({
+  const { data: inserted, error: insertError } = await supabase.from('newsletter_subscribers').insert({
     email,
     first_name: first_name || null,
     source: source ?? 'unknown',
@@ -64,7 +70,7 @@ export async function POST(req: Request) {
     consent_at: new Date().toISOString(),
     consent_text: CONSENT_TEXT,
     consent_ip_hash: ipHash,
-  })
+  }).select('id').single()
   if (insertError) {
     // 23505 = lost a race with a concurrent identical signup; nothing more to do.
     if (insertError.code !== '23505') {
@@ -72,6 +78,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Subscription failed' }, { status: 500 })
     }
     return ok
+  }
+
+  if (ref && inserted?.id) {
+    await registerReferral(supabase, { referredId: inserted.id, referredEmail: email, referredIpHash: ipHash, refCode: ref })
   }
 
   await issueConfirmation(supabase, email, first_name)

@@ -3,9 +3,12 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { BASE } from '@/lib/seo/config'
 import { activateSubscriber } from '@/lib/newsletter/activate'
 import { hashToken, isTokenExpired } from '@/lib/newsletter/optin'
+import { creditReferral } from '@/lib/referrals/service'
 
-function done(status: 'ok' | 'invalid' | 'expired') {
-  return NextResponse.redirect(`${BASE}/newsletter/confirmed?status=${status}`, 303)
+function done(status: 'ok' | 'invalid' | 'expired', referralCode?: string | null) {
+  // On success the page shows the subscriber their own share link (the code is public by design).
+  const extra = status === 'ok' && referralCode ? `&code=${encodeURIComponent(referralCode)}` : ''
+  return NextResponse.redirect(`${BASE}/newsletter/confirmed?status=${status}${extra}`, 303)
 }
 
 // GET so the emailed link works with one click. Confirming is idempotent: a
@@ -17,12 +20,12 @@ export async function GET(req: Request) {
   const supabase = createAdminClient()
   const { data: sub } = await supabase
     .from('newsletter_subscribers')
-    .select('email, first_name, status, confirm_sent_at')
+    .select('id, email, first_name, status, confirm_sent_at, referral_code')
     .eq('confirm_token_hash', hashToken(token))
     .maybeSingle()
 
   if (!sub) return done('invalid')
-  if (sub.status === 'active') return done('ok')
+  if (sub.status === 'active') return done('ok', sub.referral_code)
   if (sub.status !== 'pending') return done('invalid') // unsubscribed / bounced / suppressed stay that way
   if (isTokenExpired(sub.confirm_sent_at)) return done('expired')
 
@@ -36,6 +39,9 @@ export async function GET(req: Request) {
     return done('invalid')
   }
 
+  // Count their referral now that the address is confirmed (idempotent; never throws).
+  await creditReferral(supabase, sub.id)
+
   await activateSubscriber(supabase, sub.email, sub.first_name)
-  return done('ok')
+  return done('ok', sub.referral_code)
 }

@@ -94,8 +94,8 @@ export function resolveIssuePercent(campaign: Pick<CampaignRow, 'discount_percen
   return Math.max(1, Math.min(requested ?? campaign.discount_percent, maxDiscountPercent()))
 }
 
-function assertIssuable(campaign: CampaignRow, now: Date): Date {
-  const expiry = computeExpiry(campaign, now)
+function assertIssuable(campaign: CampaignRow, now: Date, validDays?: number): Date {
+  const expiry = computeExpiry(campaign, now, validDays)
   if (!expiry) throw new DiscountError('This campaign has no expiry; set an end date or a valid-for-days value first.')
   if (expiry.getTime() <= now.getTime()) throw new DiscountError('This campaign has already ended, so no new codes can be issued.')
   return expiry
@@ -111,7 +111,7 @@ export async function issueUniqueCodes(admin: SupabaseClient, campaign: Campaign
   if (campaign.type !== 'unique') throw new DiscountError('Only unique campaigns issue personal codes. Use "create public code" for a public campaign.')
   if (!Number.isInteger(count) || count < 1 || count > MAX_CODES_PER_BATCH) throw new DiscountError(`Choose between 1 and ${MAX_CODES_PER_BATCH} codes.`)
   const now = opts.now ?? new Date()
-  const expiry = assertIssuable(campaign, now)
+  const expiry = assertIssuable(campaign, now, opts.validDays)
   const percent = resolveIssuePercent(campaign, opts.percent)
   const personal = opts.ownerSubscriberId != null && opts.rewardTier != null
 
