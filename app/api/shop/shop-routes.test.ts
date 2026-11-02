@@ -42,7 +42,7 @@ function stripeReq(payload: object, opts: { sign?: boolean; secret?: string } = 
   if (opts.sign !== false) headers['stripe-signature'] = stripe.webhooks.generateTestHeaderString({ payload: body, secret: opts.secret ?? SECRET })
   return new Request('http://localhost/api/shop/webhooks/stripe', { method: 'POST', body, headers })
 }
-const event = (id: string, type = 'checkout.session.completed') => ({ id, object: 'event', type, data: { object: { id: 'cs_test_1', object: 'checkout.session' } } })
+const event = (id: string, type = 'checkout.session.completed', livemode = false) => ({ id, object: 'event', livemode, type, data: { object: { id: 'cs_test_1', object: 'checkout.session' } } })
 
 const VARIANT = '11111111-1111-4111-8111-111111111111'
 
@@ -86,6 +86,20 @@ describe('Stripe webhook', () => {
     expect((await stripeWebhook(stripeReq(payload))).status).toBe(500)
     expect((await stripeWebhook(stripeReq(payload))).status).toBe(200)
     expect(handlers.handleCheckoutPaid).toHaveBeenCalledTimes(2)
+  })
+
+  it('ignores and logs a LIVE event when the secret key is a TEST key (mixed-up configuration)', async () => {
+    const res = await stripeWebhook(stripeReq(event('evt_live', 'checkout.session.completed', true)))
+    expect(res.status).toBe(200)
+    expect(await res.json()).toMatchObject({ ignored: 'mode_mismatch' })
+    expect(handlers.handleCheckoutPaid).not.toHaveBeenCalled()
+    expect(handlers.logEvent).toHaveBeenCalledWith(null, 'error', 'stripe.mode_mismatch', expect.stringContaining('LIVE'), expect.anything())
+  })
+
+  it('processes a LIVE event when the key is a live key', async () => {
+    process.env.STRIPE_SECRET_KEY = 'sk_live_x'
+    expect((await stripeWebhook(stripeReq(event('evt_live2', 'checkout.session.completed', true)))).status).toBe(200)
+    expect(handlers.handleCheckoutPaid).toHaveBeenCalledTimes(1)
   })
 
   it('acknowledges unrelated event types without acting', async () => {

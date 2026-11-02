@@ -30,8 +30,9 @@ vi.mock('./stripe', () => ({
 }))
 
 import {
-  fulfilOrder, handleCheckoutPaid, handleChargeRefunded, processDueRetries, refundOrder, retryFulfilment, syncFromPrintify,
+  fulfilOrder, handleCheckoutPaid, handleChargeRefunded, processDueRetries, refundOrder, retryFulfilment, sendOrderToProduction, syncFromPrintify,
 } from './orders'
+import { needsAttention } from './admin-stats'
 import { claimWebhookEvent } from './webhook-events'
 
 // ── fixtures ─────────────────────────────────────────────────────────────────
@@ -41,7 +42,7 @@ function seedOrder(over: Record<string, any> = {}) {
     id, order_number: 'LTC-10001', payment_status: 'pending', fulfilment_status: 'awaiting_payment', fulfilment_attempts: 0,
     refunded_pence: 0, currency: 'gbp', subtotal_pence: 2500, shipping_pence: 400, total_pence: 2900,
     stripe_checkout_session_id: 'cs_test_1', printify_order_id: null, confirmation_email_sent_at: null,
-    printify_sent_to_production_at: null, ...over,
+    printify_sent_to_production_at: null, send_attempts: 0, next_send_retry_at: null, printify_synced_at: null, ...over,
   }]
   db.current.tables.shop_order_items = [{
     id: 'item_1', order_id: id, product_title: 'Tee', colour: 'Black', size: 'M', quantity: 1, unit_price_pence: 2500,
@@ -65,6 +66,7 @@ beforeEach(() => {
   vi.clearAllMocks()
   printify.printifyConfigured.mockReturnValue(true)
   printify.createOrder.mockResolvedValue({ id: 'pf_order_1' })
+  printify.getOrder.mockResolvedValue({ id: 'pf_order_1', status: 'pending', shipments: [] })
   delete process.env.SHOP_PRINTIFY_SEND_TO_PRODUCTION
   process.env.STRIPE_SECRET_KEY = 'sk_test_x'
 })
@@ -289,5 +291,128 @@ describe('webhook de-duplication', () => {
     db.current.tables.shop_webhook_events[0].processed_at = new Date().toISOString()
     expect(await claimWebhookEvent('stripe', 'evt_1', 'x')).toBe('duplicate')
     expect(await claimWebhookEvent('printify', 'evt_1', 'x')).toBe('new') // separate namespace
+  })
+})
+
+
+// ── send-to-production failures (the LTC-10002 incident) ─────────────────────
+const PfErr = printify.PrintifyError
+const CANCELED_BODY = '{"status":"error","code":8502,"message":"It is not allowed to sent order \\"29403020.1\\" to production with status canceled."}'
+const canceledError = () => new PfErr(`Printify POST /shops/29403020/orders/6adfd9bb1438efd1a003b641/send_to_production.json failed (400): ${CANCELED_BODY}`, 400, CANCELED_BODY, false, false)
+const past = () => new Date(Date.now() - 1000).toISOString()
+
+function seedHeldOrder(over: Record<string, any> = {}) {
+  seedOrder({ payment_status: 'paid', fulfilment_status: 'created', printify_order_id: 'pf_order_1', customer_email: 'fan@example.com', ...over })
+}
+const goLive = () => { process.env.SHOP_PRINTIFY_SEND_TO_PRODUCTION = 'true'; process.env.STRIPE_SECRET_KEY = 'sk_live_x' }
+const sendFailedEvents = () => db.current.tables.shop_events.filter((e: any) => e.type.startsWith('printify.send_failed') || e.type === 'printify.canceled')
+
+describe('send-to-production failures', () => {
+  beforeEach(goLive)
+
+  it('Printify code 8502 (order cancelled) is terminal: one attempt, one alert, never retried', async () => {
+    printify.sendToProduction.mockRejectedValue(canceledError())
+    printify.getOrder.mockResolvedValue({ id: 'pf_order_1', status: 'pending', shipments: [] }) // webhook missed: our poll still sees it as pending
+    seedHeldOrder()
+    await processDueRetries()
+    expect(order()).toMatchObject({ fulfilment_status: 'printify_canceled', printify_status: 'canceled' })
+    expect(order().last_error).toMatch(/8502|canceled/)
+    expect(needsAttention(order())).toBe(true)
+    expect(notify.notifyAdmin).toHaveBeenCalledTimes(1)
+    for (let i = 0; i < 4; i++) { order().printify_synced_at = null; await processDueRetries() }
+    expect(printify.sendToProduction).toHaveBeenCalledTimes(1)
+    expect(notify.notifyAdmin).toHaveBeenCalledTimes(1)
+    expect(sendFailedEvents()).toHaveLength(1)
+  })
+
+  it('polling notices a cancellation in Printify and never tries to send it', async () => {
+    printify.getOrder.mockResolvedValue({ id: 'pf_order_1', status: 'canceled', shipments: [] })
+    seedHeldOrder()
+    const r = await processDueRetries()
+    expect(r.synced).toBe(1)
+    expect(order().fulfilment_status).toBe('printify_canceled')
+    expect(printify.sendToProduction).not.toHaveBeenCalled()
+    expect(notify.notifyAdmin).toHaveBeenCalledTimes(1)
+    await processDueRetries()
+    expect(notify.notifyAdmin).toHaveBeenCalledTimes(1)
+  })
+
+  it('a cancelled order is not recreated or resent by admin retry actions', async () => {
+    seedHeldOrder({ fulfilment_status: 'printify_canceled' })
+    expect(await retryFulfilment('order_1')).toBe('skipped')
+    expect(await sendOrderToProduction('order_1', { manual: true })).toBe(false)
+    expect(printify.createOrder).not.toHaveBeenCalled()
+    expect(printify.sendToProduction).not.toHaveBeenCalled()
+  })
+
+  it('transient errors back off, log/alert once, and stop at the cap', async () => {
+    printify.sendToProduction.mockRejectedValue(new PfErr('503 unavailable', 503, '', true, false))
+    seedHeldOrder()
+    await processDueRetries()
+    expect(order()).toMatchObject({ fulfilment_status: 'created', send_attempts: 1 })
+    expect(new Date(order().next_send_retry_at).getTime()).toBeGreaterThan(Date.now())
+    await processDueRetries() // not due yet
+    expect(printify.sendToProduction).toHaveBeenCalledTimes(1)
+
+    for (let i = 0; i < 10 && order().fulfilment_status === 'created'; i++) { order().next_send_retry_at = past(); order().printify_synced_at = null; await processDueRetries() }
+    expect(order().fulfilment_status).toBe('needs_review')
+    expect(printify.sendToProduction).toHaveBeenCalledTimes(5) // MAX_FULFILMENT_ATTEMPTS
+    expect(notify.notifyAdmin).toHaveBeenCalledTimes(2) // first failure + giving up, not every retry
+    expect(sendFailedEvents()).toHaveLength(2)
+    await processDueRetries()
+    expect(printify.sendToProduction).toHaveBeenCalledTimes(5)
+  })
+
+  it('any other rejection (4xx) goes straight to needs_review, once', async () => {
+    printify.sendToProduction.mockRejectedValue(new PfErr('400 bad', 400, '{"code":1234}', false, false))
+    seedHeldOrder()
+    await processDueRetries(); await processDueRetries()
+    expect(order().fulfilment_status).toBe('needs_review')
+    expect(printify.sendToProduction).toHaveBeenCalledTimes(1)
+    expect(notify.notifyAdmin).toHaveBeenCalledTimes(1)
+  })
+
+  it('an unclear answer (timeout) is not blindly retried', async () => {
+    printify.sendToProduction.mockRejectedValue(new PfErr('timeout', 0, 'timeout', false, true))
+    seedHeldOrder()
+    await processDueRetries(); await processDueRetries()
+    expect(order().fulfilment_status).toBe('needs_review')
+    expect(printify.sendToProduction).toHaveBeenCalledTimes(1)
+  })
+
+  it('an admin can retry a needs_review send once the cause is fixed', async () => {
+    printify.sendToProduction.mockRejectedValueOnce(new PfErr('400 bad', 400, '{"code":1234}', false, false)).mockResolvedValue({})
+    seedHeldOrder()
+    await processDueRetries()
+    expect(order().fulfilment_status).toBe('needs_review')
+    expect(await sendOrderToProduction('order_1')).toBe(false) // automatic path leaves it alone
+    expect(await sendOrderToProduction('order_1', { manual: true })).toBe(true)
+    expect(order()).toMatchObject({ fulfilment_status: 'in_production', send_attempts: 0, last_error: null })
+  })
+
+  it('never sends a refunded order to production', async () => {
+    seedHeldOrder({ payment_status: 'refunded' })
+    await processDueRetries()
+    expect(printify.sendToProduction).not.toHaveBeenCalled()
+  })
+
+  it('a successful send resets the retry bookkeeping', async () => {
+    printify.sendToProduction.mockResolvedValue({})
+    seedHeldOrder({ send_attempts: 2, last_error: 'old' })
+    await processDueRetries()
+    expect(order()).toMatchObject({ fulfilment_status: 'in_production', send_attempts: 0, last_error: null })
+  })
+})
+
+describe('needs-attention rule', () => {
+  it('flags failures, cancellations, and in-progress orders carrying an error — only for paid orders', () => {
+    const base = { payment_status: 'paid' as const, last_error: null as string | null }
+    expect(needsAttention({ ...base, fulfilment_status: 'printify_canceled' })).toBe(true)
+    expect(needsAttention({ ...base, fulfilment_status: 'needs_review' })).toBe(true)
+    expect(needsAttention({ ...base, fulfilment_status: 'failed' })).toBe(true)
+    expect(needsAttention({ ...base, fulfilment_status: 'created', last_error: 'send failed' })).toBe(true)
+    expect(needsAttention({ ...base, fulfilment_status: 'created' })).toBe(false) // held on purpose, no error
+    expect(needsAttention({ ...base, fulfilment_status: 'shipped' })).toBe(false)
+    expect(needsAttention({ payment_status: 'pending', fulfilment_status: 'failed', last_error: 'x' })).toBe(false)
   })
 })

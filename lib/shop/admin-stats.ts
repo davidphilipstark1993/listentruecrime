@@ -21,7 +21,19 @@ export interface ShopSummary {
 
 const PENDING = new Set(['queued', 'submitting', 'created', 'in_production'])
 const FULFILLED = new Set(['shipped', 'delivered'])
-const FAILED = new Set(['failed', 'needs_review'])
+const FAILED = new Set(['failed', 'needs_review', 'printify_canceled'])
+
+/**
+ * A paid order a human must look at: stopped in a failure state, OR still
+ * nominally in progress but carrying an error (for example `created` with a
+ * failing send-to-production). Without the second case a stuck order looked
+ * perfectly healthy on the overview.
+ */
+export function needsAttention(o: Pick<ShopOrderRow, 'payment_status' | 'fulfilment_status' | 'last_error'>): boolean {
+  if (o.payment_status !== 'paid' && o.payment_status !== 'partially_refunded') return false
+  if (FAILED.has(o.fulfilment_status)) return true
+  return (o.fulfilment_status === 'created' || o.fulfilment_status === 'in_production') && Boolean(o.last_error)
+}
 
 export function summarise(orders: ShopOrderRow[], items: ShopOrderItemRow[], settings: ShopSettings): ShopSummary {
   const itemsByOrder = new Map<string, ShopOrderItemRow[]>()
@@ -37,9 +49,9 @@ export function summarise(orders: ShopOrderRow[], items: ShopOrderItemRow[], set
     s.revenuePence += o.total_pence - o.refunded_pence
     const its = itemsByOrder.get(o.id) ?? []
     s.productsSold += its.reduce((n, i) => n + i.quantity, 0)
-    if (PENDING.has(o.fulfilment_status)) s.pending++
-    if (FULFILLED.has(o.fulfilment_status)) s.fulfilled++
-    if (FAILED.has(o.fulfilment_status)) s.failed++
+    if (needsAttention(o)) s.failed++
+    else if (PENDING.has(o.fulfilment_status)) s.pending++
+    else if (FULFILLED.has(o.fulfilment_status)) s.fulfilled++
 
     const p = calculateProfit({
       totalPence: o.total_pence, refundedPence: o.refunded_pence, subtotalPence: o.subtotal_pence,

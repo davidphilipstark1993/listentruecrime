@@ -359,22 +359,74 @@ async function markNeedsReview(order: ShopOrderRow, reason: string): Promise<Ful
   return 'needs_review'
 }
 
-/** Explicit second step: approve an already-created Printify order for production. */
-export async function sendOrderToProduction(orderId: string): Promise<boolean> {
+/**
+ * Printify answers a send-to-production for a cancelled order with HTTP 400 and
+ * code 8502 ("It is not allowed to sent order … to production with status
+ * canceled"). That can never succeed, so it is terminal, not retryable.
+ */
+export function isPrintifyCanceledError(err: unknown): boolean {
+  if (!(err instanceof PrintifyError) || err.status !== 400) return false
+  return /\b8502\b/.test(err.body) || /status\s+canceled/i.test(err.body)
+}
+
+/**
+ * Explicit second step: approve an already-created Printify order for production.
+ *
+ * Failure handling (this used to retry every run and alert every time):
+ *  • Printify says the order is cancelled (8502) → terminal `printify_canceled`.
+ *  • Any other 4xx / unclear answer → terminal `needs_review` (a retry can't help).
+ *  • Transient (429/502/503) → backoff and a retry cap, then `needs_review`.
+ * Each outcome is logged and alerted once, not on every retry.
+ */
+export async function sendOrderToProduction(orderId: string, opts: { manual?: boolean } = {}): Promise<boolean> {
   const admin = createAdminClient()
   const { data } = await admin.from('shop_orders').select('*').eq('id', orderId).maybeSingle()
   const order = data as ShopOrderRow | null
   if (!order?.printify_order_id || order.payment_status !== 'paid' || order.printify_sent_to_production_at) return false
+  // Automatic runs only touch orders waiting in `created`. An admin pressing
+  // "Send to production" may also retry one that stopped in `needs_review`; a
+  // Printify-cancelled order can never be sent.
+  const retryingReview = Boolean(opts.manual) && order.fulfilment_status === 'needs_review'
+  if (order.fulfilment_status !== 'created' && !retryingReview) return false
+  if (retryingReview) {
+    await admin.from('shop_orders').update({ fulfilment_status: 'created', send_attempts: 0, next_send_retry_at: null }).eq('id', orderId).eq('fulfilment_status', 'needs_review')
+    order.send_attempts = 0
+  }
   try {
     await printify.sendToProduction(order.printify_order_id)
-    await admin.from('shop_orders').update({ fulfilment_status: 'in_production', printify_sent_to_production_at: new Date().toISOString(), last_error: null }).eq('id', orderId)
+    await admin.from('shop_orders').update({
+      fulfilment_status: 'in_production', printify_sent_to_production_at: new Date().toISOString(),
+      last_error: null, send_attempts: 0, next_send_retry_at: null,
+    }).eq('id', orderId)
     await logEvent(orderId, 'info', 'printify.sent_to_production', 'Sent to production')
     return true
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    await admin.from('shop_orders').update({ last_error: message }).eq('id', orderId)
-    await logEvent(orderId, 'error', 'printify.send_failed', message)
-    await alertAdmin(order, `Could not send ${order.order_number} to production`, `The Printify order ${order.printify_order_id} exists but sending it to production failed:\n${message}`)
+
+    if (isPrintifyCanceledError(err)) {
+      await admin.from('shop_orders').update({
+        fulfilment_status: 'printify_canceled', printify_status: 'canceled', last_error: message, next_send_retry_at: null,
+      }).eq('id', orderId).eq('fulfilment_status', 'created')
+      await logEvent(orderId, 'error', 'printify.canceled', `Printify order ${order.printify_order_id} is cancelled, so it cannot be sent to production. No further attempts will be made.`)
+      await alertAdmin(order, `${order.order_number} was cancelled in Printify`, `The customer has paid but Printify order ${order.printify_order_id} is cancelled, so it can never be produced. Nothing will be retried. Decide whether to refund the customer or remake the order manually.\n\n${message}`)
+      return false
+    }
+
+    const attempts = order.send_attempts + 1
+    const transient = err instanceof PrintifyError && err.retryable && !err.ambiguous
+    if (!transient || attempts >= MAX_FULFILMENT_ATTEMPTS) {
+      await admin.from('shop_orders').update({ fulfilment_status: 'needs_review', last_error: message, send_attempts: attempts, next_send_retry_at: null }).eq('id', orderId).eq('fulfilment_status', 'created')
+      await logEvent(orderId, 'error', 'printify.send_failed', transient ? `${message} (gave up after ${attempts} attempts)` : message)
+      await alertAdmin(order, `Could not send ${order.order_number} to production`, `The Printify order ${order.printify_order_id} exists but sending it to production ${transient ? `failed ${attempts} times` : 'was rejected'}:\n${message}\n\nNo further automatic attempts will be made.`)
+      return false
+    }
+
+    // Transient: back off. Log and alert on the first failure only.
+    await admin.from('shop_orders').update({ last_error: message, send_attempts: attempts, next_send_retry_at: nextRetryAt(attempts) }).eq('id', orderId)
+    if (attempts === 1) {
+      await logEvent(orderId, 'warn', 'printify.send_failed', `${message} (will retry with backoff)`)
+      await alertAdmin(order, `Sending ${order.order_number} to production failed (will retry)`, message)
+    }
     return false
   }
 }
@@ -406,12 +458,25 @@ export async function retryFulfilment(orderId: string): Promise<FulfilResult> {
   return fulfilOrder(orderId)
 }
 
-/** Called on a schedule: retries due failures and flags orders stuck mid-submit. */
-export async function processDueRetries(): Promise<{ retried: number; stale: number }> {
+/** How stale an order's Printify sync may get before the scheduled job refreshes it. */
+const POLL_SYNC_MINUTES = 30
+const POLL_STATUSES = ['created', 'in_production', 'shipped']
+
+/**
+ * Called on a schedule (every ~15 min):
+ *  1. flags orders stuck mid-submit,
+ *  2. retries due failed fulfilment,
+ *  3. POLLS Printify for orders still in flight, so cancellations, tracking and
+ *     status changes are picked up even if a webhook was never delivered,
+ *  4. sends held orders to production (when enabled) — after step 3, so an order
+ *     Printify has cancelled is detected and never sent.
+ */
+export async function processDueRetries(): Promise<{ retried: number; stale: number; synced: number }> {
   const admin = createAdminClient()
   const now = new Date().toISOString()
+  const nowMs = Date.now()
 
-  const staleBefore = new Date(Date.now() - SUBMITTING_STALE_MINUTES * 60_000).toISOString()
+  const staleBefore = new Date(nowMs - SUBMITTING_STALE_MINUTES * 60_000).toISOString()
   const { data: stale } = await admin.from('shop_orders').select('*').eq('fulfilment_status', 'submitting').lt('submitting_since', staleBefore)
   for (const o of (stale ?? []) as ShopOrderRow[]) {
     await markNeedsReview(o, 'A fulfilment attempt stopped part-way through. Check Printify for this order number before retrying so it is not created twice.')
@@ -427,15 +492,34 @@ export async function processDueRetries(): Promise<{ retried: number; stale: num
     if (r !== 'skipped') retried++
   }
 
+  // Poll Printify for in-flight orders, least recently synced first.
+  const { data: inflight } = await admin
+    .from('shop_orders').select('*')
+    .in('fulfilment_status', POLL_STATUSES).in('payment_status', ['paid', 'partially_refunded'])
+    .not('printify_order_id', 'is', null).limit(100)
+  const staleMs = POLL_SYNC_MINUTES * 60_000
+  const toSync = ((inflight ?? []) as ShopOrderRow[])
+    .filter(o => !o.printify_synced_at || nowMs - new Date(o.printify_synced_at).getTime() > staleMs)
+    .sort((x, y) => (x.printify_synced_at ?? '').localeCompare(y.printify_synced_at ?? ''))
+    .slice(0, 10)
+  let synced = 0
+  for (const o of toSync) {
+    try { await syncFromPrintify(o.id); synced++ } catch (err) {
+      // Don't write an event per failure (would repeat every run); the order stays due for the next run.
+      console.warn(`[shop] poll sync failed for ${o.order_number}:`, err instanceof Error ? err.message : err)
+    }
+  }
+
   // Orders created in Printify but not yet sent, now that sending is enabled.
   if (sendToProductionEnabled()) {
     const { data: held } = await admin
-      .from('shop_orders').select('id')
+      .from('shop_orders').select('*')
       .eq('fulfilment_status', 'created').eq('payment_status', 'paid')
-      .not('printify_order_id', 'is', null).is('printify_sent_to_production_at', null).limit(10)
-    for (const o of held ?? []) if (await sendOrderToProduction(o.id)) retried++
+      .not('printify_order_id', 'is', null).is('printify_sent_to_production_at', null).limit(50)
+    const ready = ((held ?? []) as ShopOrderRow[]).filter(o => !o.next_send_retry_at || o.next_send_retry_at <= now).slice(0, 10)
+    for (const o of ready) if (await sendOrderToProduction(o.id)) retried++
   }
-  return { retried, stale: stale?.length ?? 0 }
+  return { retried, stale: stale?.length ?? 0, synced }
 }
 
 // ─── Printify → us: status, costs, tracking ─────────────────────────────────
@@ -447,7 +531,7 @@ export function mapPrintifyStatus(status: string): FulfilmentStatus | null {
     case 'sending-to-production': case 'in-production':
     case 'sending_to_production_delegate': case 'sending_to_production_delegate_sync': return 'in_production'
     case 'fulfilled': case 'partially-fulfilled': return 'shipped'
-    case 'canceled': return 'cancelled'
+    case 'canceled': return 'printify_canceled'
     default: return PROBLEM_STATUSES.has(status) ? 'needs_review' : null
   }
 }
@@ -471,7 +555,7 @@ export async function syncFromPrintify(orderId: string): Promise<void> {
   const allDelivered = shipments.length > 0 && shipments.every(s => s.delivered_at)
 
   let next: FulfilmentStatus = order.fulfilment_status
-  if (mapped === 'needs_review' || mapped === 'cancelled') next = mapped
+  if (mapped === 'needs_review' || mapped === 'printify_canceled') next = mapped
   else if (mapped) {
     const target: FulfilmentStatus = allDelivered && mapped === 'shipped' ? 'delivered' : mapped
     // Never move an order backwards (e.g. a late 'pending' update after dispatch).
@@ -481,6 +565,11 @@ export async function syncFromPrintify(orderId: string): Promise<void> {
   const update: Record<string, unknown> = {
     printify_status: remote.status,
     fulfilment_status: next,
+    printify_synced_at: new Date().toISOString(),
+    // A cancelled order has nothing left to retry; keep the reason visible.
+    ...(next === 'printify_canceled' && order.fulfilment_status !== 'printify_canceled'
+      ? { last_error: 'Printify reports this order as cancelled, so it will not be produced.', next_send_retry_at: null }
+      : {}),
     ...(typeof remote.total_price === 'number' ? { printify_cost_minor: remote.total_price } : {}),
     ...(typeof remote.total_shipping === 'number' ? { printify_shipping_minor: remote.total_shipping } : {}),
     ...(typeof remote.total_tax === 'number' ? { printify_tax_minor: remote.total_tax } : {}),
@@ -488,12 +577,12 @@ export async function syncFromPrintify(orderId: string): Promise<void> {
   }
   await admin.from('shop_orders').update(update).eq('id', orderId)
 
-  if (next !== order.fulfilment_status) await logEvent(orderId, next === 'needs_review' ? 'error' : 'info', 'printify.status', `Printify status ${remote.status} → ${next}`)
+  if (next !== order.fulfilment_status) await logEvent(orderId, next === 'needs_review' || next === 'printify_canceled' ? 'error' : 'info', 'printify.status', `Printify status ${remote.status} → ${next}`)
   if (next === 'needs_review' && order.fulfilment_status !== 'needs_review') {
     await alertAdmin(order, `Printify flagged ${order.order_number}: ${remote.status}`, `Printify reports status "${remote.status}" for order ${order.printify_order_id}. Open it in Printify to resolve (for example an artwork, address or payment problem).`)
   }
-  if (next === 'cancelled' && order.fulfilment_status !== 'cancelled') {
-    await alertAdmin(order, `${order.order_number} was cancelled in Printify`, 'Printify reports this order as cancelled. If the customer has paid, a refund likely needs to be issued.')
+  if (next === 'printify_canceled' && order.fulfilment_status !== 'printify_canceled') {
+    await alertAdmin(order, `${order.order_number} was cancelled in Printify`, `The customer has paid but Printify reports order ${order.printify_order_id} as cancelled, so it will not be produced. Nothing will be retried. Decide whether to refund the customer or remake the order manually.`)
   }
 
   for (const s of shipments) {

@@ -3,7 +3,7 @@ import { checkoutEnabled, shopEnabled } from '@/lib/shop/config'
 import { cartSchema } from '@/lib/shop/schema'
 import { buildQuote } from '@/lib/shop/quote'
 import { attachCheckoutSession, createPendingOrder, logEvent } from '@/lib/shop/orders'
-import { createCheckoutSession, stripeConfigured } from '@/lib/shop/stripe'
+import { createCheckoutSession, stripeConfigured, stripeKeyMode } from '@/lib/shop/stripe'
 
 export const dynamic = 'force-dynamic'
 
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ url: session.url })
   } catch (err) {
     console.error('Shop checkout failed:', err)
-    if (orderId) await logEvent(orderId, 'error', 'checkout.failed', err instanceof Error ? err.message : String(err))
+    if (orderId) await logEvent(orderId, 'error', 'checkout.failed', err instanceof Error ? err.message : String(err), { stripe_mode: stripeKeyMode(), vercel_env: process.env.VERCEL_ENV ?? null })
     return NextResponse.json({ error: 'We could not start checkout. Please try again.' }, { status: 502 })
   }
 }

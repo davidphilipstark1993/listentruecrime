@@ -124,7 +124,7 @@ describe('mapPrintifyStatus', () => {
   it('maps lifecycle and problem statuses', () => {
     expect(mapPrintifyStatus('in-production')).toBe('in_production')
     expect(mapPrintifyStatus('fulfilled')).toBe('shipped')
-    expect(mapPrintifyStatus('canceled')).toBe('cancelled')
+    expect(mapPrintifyStatus('canceled')).toBe('printify_canceled')
     expect(mapPrintifyStatus('has-issues')).toBe('needs_review')
     expect(mapPrintifyStatus('payment-not-received')).toBe('needs_review')
     expect(mapPrintifyStatus('something-new')).toBeNull()

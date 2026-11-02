@@ -93,6 +93,8 @@ export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'partial
 export type FulfilmentStatus =
   | 'awaiting_payment' | 'queued' | 'submitting' | 'created' | 'in_production'
   | 'shipped' | 'delivered' | 'failed' | 'needs_review' | 'cancelled'
+  /** Printify cancelled a PAID order. Terminal: nothing is retried; the owner decides (refund / remake). */
+  | 'printify_canceled'
 
 export interface ShopOrderRow {
   id: string
@@ -125,6 +127,9 @@ export interface ShopOrderRow {
   next_retry_at: string | null
   last_error: string | null
   submitting_since: string | null
+  send_attempts: number
+  next_send_retry_at: string | null
+  printify_synced_at: string | null
   confirmation_email_sent_at: string | null
   admin_alerted_at: string | null
   notes: string | null

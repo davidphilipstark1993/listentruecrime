@@ -2,8 +2,9 @@ import Link from 'next/link'
 import { AlertTriangle, CheckCircle2, XCircle } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getShopSettings } from '@/lib/shop/settings'
-import { summarise } from '@/lib/shop/admin-stats'
+import { needsAttention, summarise } from '@/lib/shop/admin-stats'
 import { checkoutEnabled, sendToProductionEnabled, shopEnabled } from '@/lib/shop/config'
+import { stripeKeyMode } from '@/lib/shop/stripe'
 import { formatGBP } from '@/lib/shop/money'
 import { Stat, StatusBadge } from '@/components/admin/shop-ui'
 import type { ShopOrderItemRow, ShopOrderRow } from '@/lib/shop/types'
@@ -23,16 +24,23 @@ function Check({ ok, label, hint }: { ok: boolean; label: string; hint?: string 
 
 export default async function ShopOverviewPage() {
   const admin = createAdminClient()
-  const [settings, { data: orders }, { data: items }, { data: problems }, { data: events }] = await Promise.all([
+  const [settings, { data: orders }, { data: items }, { data: events }, { data: lastHook }] = await Promise.all([
     getShopSettings(),
     admin.from('shop_orders').select('*'),
     admin.from('shop_order_items').select('*'),
-    admin.from('shop_orders').select('*').in('fulfilment_status', ['failed', 'needs_review']).eq('payment_status', 'paid').order('created_at', { ascending: false }).limit(10),
     admin.from('shop_events').select('*').in('level', ['warn', 'error']).order('created_at', { ascending: false }).limit(12),
+    admin.from('shop_webhook_events').select('livemode, received_at').eq('provider', 'stripe').not('livemode', 'is', null).order('received_at', { ascending: false }).limit(1),
   ])
   const s = summarise((orders ?? []) as ShopOrderRow[], (items ?? []) as ShopOrderItemRow[], settings)
-  const stripeKey = process.env.STRIPE_SECRET_KEY ?? ''
-  const stripeMode = stripeKey.startsWith('sk_live') || stripeKey.startsWith('rk_live') ? 'LIVE' : stripeKey ? 'TEST' : 'not set'
+  // Same rule as the "Failed / needs attention" counter, so the two can never disagree.
+  const problems = ((orders ?? []) as ShopOrderRow[])
+    .filter(needsAttention)
+    .sort((a, b) => b.created_at.localeCompare(a.created_at))
+    .slice(0, 10)
+  const keyMode = stripeKeyMode()
+  const hookLive = lastHook?.[0]?.livemode as boolean | undefined
+  const modeMismatch = hookLive !== undefined && keyMode !== null && hookLive !== (keyMode === 'live')
+  const stripeMode = keyMode ? keyMode.toUpperCase() : 'not set'
   const rateOk = settings.printifyCostCurrency === 'GBP' || settings.printifyToGbpRate != null
 
   return (
@@ -61,6 +69,7 @@ export default async function ShopOverviewPage() {
             <Check ok={shopEnabled()} label={`Shop visible (NEXT_PUBLIC_SHOP_ENABLED) — ${shopEnabled() ? 'on' : 'off'}`} />
             <Check ok={checkoutEnabled()} label={`Checkout open (SHOP_CHECKOUT_ENABLED) — ${checkoutEnabled() ? 'on' : 'off'}`} />
             <Check ok={stripeMode !== 'not set'} label={`Stripe key — mode: ${stripeMode}`} hint="Set STRIPE_SECRET_KEY" />
+            <Check ok={!modeMismatch} label={hookLive === undefined ? 'Stripe webhook mode — no events received yet' : `Stripe webhook mode — last event was ${hookLive ? 'LIVE' : 'TEST'}, key is ${stripeMode}`} hint="The Stripe key and the webhook signing secret must both be test or both be live. Check STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET in Vercel (and which environments they apply to)." />
             <Check ok={has('STRIPE_WEBHOOK_SECRET')} label="Stripe webhook secret" hint="Set STRIPE_WEBHOOK_SECRET from the webhook endpoint in Stripe" />
             <Check ok={has('PRINTIFY_API_TOKEN') && has('PRINTIFY_SHOP_ID')} label="Printify token + shop id" hint="Set PRINTIFY_API_TOKEN and PRINTIFY_SHOP_ID" />
             <Check ok={has('PRINTIFY_WEBHOOK_SECRET')} label="Printify webhook secret" hint="Set PRINTIFY_WEBHOOK_SECRET, then register the webhooks (see SHOP_SYSTEM.md)" />
@@ -73,9 +82,9 @@ export default async function ShopOverviewPage() {
 
         <section className="card p-5">
           <h2 className="mb-4 font-serif text-lg text-stone">Needs attention</h2>
-          {(problems ?? []).length === 0 ? <p className="text-sm text-stone-subtle">No paid orders are stuck.</p> : (
+          {problems.length === 0 ? <p className="text-sm text-stone-subtle">No paid orders are stuck.</p> : (
             <ul className="space-y-2">
-              {(problems as ShopOrderRow[]).map(o => (
+              {problems.map(o => (
                 <li key={o.id} className="flex items-start justify-between gap-3 text-sm">
                   <Link href={`/admin/shop/orders/${o.id}`} className="text-stone hover:text-crimson">{o.order_number}</Link>
                   <span className="min-w-0 flex-1 truncate text-xs text-stone-subtle">{o.last_error}</span>
