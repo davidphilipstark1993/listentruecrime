@@ -5,6 +5,10 @@ import { codeStatus, summariseCampaignRevenue, type ReportOrder } from '@/lib/di
 import type { CampaignRow, CodeRow } from '@/lib/discounts/types'
 
 export const dynamic = 'force-dynamic'
+// force-dynamic alone still let Next's data cache serve an old copy of the Supabase reads,
+// so the on/off switches showed the previous state after a change.
+export const fetchCache = 'force-no-store'
+export const revalidate = 0
 
 export default async function DiscountsPage() {
   const admin = createAdminClient()
