@@ -9,6 +9,7 @@ import { JsonLd, itemListJsonLd } from '@/lib/shop/seo'
 import { breadcrumbSchema } from '@/lib/seo'
 import { ProductCard } from '@/components/shop/product-card'
 import { DeliveryInfo } from '@/components/shop/delivery-info'
+import { BlackFridayBanner } from '@/components/shop/black-friday-banner'
 import { ShopNewsletter } from '@/components/shop/shop-newsletter'
 
 export const metadata: Metadata = {
@@ -50,6 +51,8 @@ export default async function ShopPage() {
     <>
       <JsonLd data={breadcrumbSchema([{ name: 'Home', url: BASE }, { name: 'Shop', url: `${BASE}/shop` }])} />
       <JsonLd data={itemListJsonLd('Listen True Crime merchandise', products)} />
+
+      <BlackFridayBanner />
 
       {/* Hero */}
       <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden px-4 py-24 text-center">
