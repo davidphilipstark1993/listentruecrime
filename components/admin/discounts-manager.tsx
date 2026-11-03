@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { formatGBP } from '@/lib/shop/money'
@@ -28,6 +28,13 @@ export function DiscountsManager({ maxPercent, campaigns, codes, revenue }: {
 }) {
   const router = useRouter()
   const [busy, setBusy] = useState<string | null>(null)
+  // On/off as last confirmed by the server, so a switch shows the new state straight away
+  // and never depends on router.refresh() having re-rendered. Cleared whenever fresh props arrive.
+  const [flags, setFlags] = useState<Record<string, boolean>>({})
+  useEffect(() => setFlags({}), [campaigns, codes])
+  const isOn = (key: string, fromProps: boolean) => flags[key] ?? fromProps
+  const toggle = (key: string, url: string, next: boolean) =>
+    run(key, async () => { await call(url, 'PATCH', { isActive: next }); setFlags(f => ({ ...f, [key]: next })) })
   const [generated, setGenerated] = useState<{ campaign: string; codes: string[] } | null>(null)
   const [counts, setCounts] = useState<Record<string, string>>({})
   const [suffixes, setSuffixes] = useState<Record<string, string>>({})
@@ -112,10 +119,10 @@ export function DiscountsManager({ maxPercent, campaigns, codes, revenue }: {
                   </div>
                   <button
                     disabled={busy === `act-${c.id}`}
-                    onClick={() => run(`act-${c.id}`, async () => { await call(`/api/admin/discounts/campaigns/${c.id}`, 'PATCH', { isActive: !c.is_active }) })}
-                    className={`tag shrink-0 px-3 py-1 ${c.is_active ? 'border-emerald-400/40 text-emerald-400' : ''}`}
-                    aria-label={`${c.prefix} campaign is ${c.is_active ? 'on' : 'off'}. Click to switch ${c.is_active ? 'off' : 'on'}.`}
-                  >{c.is_active ? 'On' : 'Off'}</button>
+                    onClick={() => toggle(`act-${c.id}`, `/api/admin/discounts/campaigns/${c.id}`, !isOn(`act-${c.id}`, c.is_active))}
+                    className={`tag shrink-0 px-3 py-1 ${isOn(`act-${c.id}`, c.is_active) ? 'border-emerald-400/40 text-emerald-400' : ''}`}
+                    aria-label={`${c.prefix} campaign is ${isOn(`act-${c.id}`, c.is_active) ? 'on' : 'off'}. Click to switch ${isOn(`act-${c.id}`, c.is_active) ? 'off' : 'on'}.`}
+                  >{isOn(`act-${c.id}`, c.is_active) ? 'On' : 'Off'}</button>
                 </div>
                 <p className="mt-3 text-xs text-stone-muted">{own.length} codes · {live} live</p>
                 <div className="mt-3 flex flex-wrap items-end gap-2">
@@ -181,7 +188,7 @@ export function DiscountsManager({ maxPercent, campaigns, codes, revenue }: {
                   <td className="px-4 py-2 text-xs text-stone-muted">{fmtDate(c.expires_at)}</td>
                   <td className="px-4 py-2 text-xs tabular-nums text-stone-muted">{c.max_uses == null ? 'unlimited' : `${c.use_count}/${c.max_uses}`}</td>
                   <td className="px-4 py-2 text-right text-xs">
-                    <button className="text-stone-subtle hover:text-stone" disabled={busy === `code-${c.id}`} onClick={() => run(`code-${c.id}`, async () => { await call(`/api/admin/discounts/codes/${c.id}`, 'PATCH', { isActive: !c.is_active }) })}>{c.is_active ? 'Switch off' : 'Switch on'}</button>
+                    <button className="text-stone-subtle hover:text-stone" disabled={busy === `code-${c.id}`} onClick={() => toggle(`code-${c.id}`, `/api/admin/discounts/codes/${c.id}`, !isOn(`code-${c.id}`, c.is_active))}>{isOn(`code-${c.id}`, c.is_active) ? 'Switch off' : 'Switch on'}</button>
                     {c.owner_subscriber_id && <button className="ml-3 text-stone-subtle hover:text-stone" disabled={busy === `mail-${c.id}`} onClick={() => run(`mail-${c.id}`, async () => { await call(`/api/admin/discounts/codes/${c.id}`, 'PATCH', { resendEmail: true }); toast.success('Email sent') })}>{c.email_sent_at ? 'Resend email' : 'Send email'}</button>}
                   </td>
                 </tr>
