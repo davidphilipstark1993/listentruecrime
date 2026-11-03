@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { bestOfMeta, fillBestOfTokens, joinNames } from './best-of-meta'
+import { bestOfMeta, fillBestOfTokens, joinNames, rankPodcasts } from './best-of-meta'
 import { BEST_OF_PAGES } from './best-of'
 import { CURRENT_YEAR } from './seo/config'
 
@@ -35,5 +35,13 @@ describe('best-of meta', () => {
     const m = bestOfMeta(page, [])
     expect(m.description).toBe(page.description)
     expect(m.title).toBe(`Best Murder Mystery Podcasts (${CURRENT_YEAR})`)
+  })
+})
+
+describe('rankPodcasts', () => {
+  it('breaks binge ties by Must listen, then title', () => {
+    const mk = (title: string, binge: number, v: string | null) => ({ title, binge_factor: binge, quick_verdict: v })
+    const out = rankPodcasts([mk('B', 10, null), mk('Serial', 10, 'Must listen'), mk('A', 10, null), mk('Z', 9, 'Must listen')])
+    expect(out.map(p => p.title)).toEqual(['Serial', 'A', 'B', 'Z'])
   })
 })

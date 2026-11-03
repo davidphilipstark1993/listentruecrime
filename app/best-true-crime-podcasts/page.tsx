@@ -13,7 +13,7 @@ import { BASE, CURRENT_YEAR, ogDefaults } from '@/lib/seo/config'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
 import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
-import { joinNames } from '@/lib/best-of-meta'
+import { joinNames, rankPodcasts } from '@/lib/best-of-meta'
 import { oneLine } from '@/lib/seo/one-line'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 const YEAR = CURRENT_YEAR
@@ -24,11 +24,11 @@ const HUB_DESCRIPTION_FALLBACK = `The best true crime podcasts of ${YEAR}, each 
 async function getTopPodcastNames(): Promise<string[]> {
   const { data } = await createAdminClient()
     .from('podcasts')
-    .select('title')
+    .select('title, binge_factor, quick_verdict, rating_stats:podcast_rating_stats(avg_overall)')
     .eq('is_published', true)
     .order('binge_factor', { ascending: false })
-    .limit(3)
-  return (data ?? []).map(p => p.title as string)
+    .limit(100)
+  return rankPodcasts((data ?? []) as any[]).slice(0, 3).map(p => p.title as string)
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -95,7 +95,7 @@ export default async function BestTrueCrimePodcastsPage() {
       .select(`*, rating_stats:podcast_rating_stats(*)`)
       .eq('is_published', true)
       .order('binge_factor', { ascending: false })
-      .limit(12),
+      .limit(100),
     supabase
       .from('podcasts')
       .select(`*, rating_stats:podcast_rating_stats(*)`)
@@ -113,7 +113,7 @@ export default async function BestTrueCrimePodcastsPage() {
   ])
 
   type PodcastWithStats = Podcast & { rating_stats: RatingStats | null }
-  const top = (topRated ?? []) as PodcastWithStats[]
+  const top = rankPodcasts((topRated ?? []) as PodcastWithStats[]).slice(0, 12)
   const must = (featured ?? []) as PodcastWithStats[]
   const fresh = (newest ?? []) as PodcastWithStats[]
 

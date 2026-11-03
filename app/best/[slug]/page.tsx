@@ -15,7 +15,7 @@ import { BEST_OF_PAGES, getBestOfPage } from '@/lib/best-of'
 import { CATEGORIES } from '@/lib/types/database'
 import { BASE, breadcrumbSchema } from '@/lib/seo'
 import { buildFAQSchema } from '@/lib/seo/content'
-import { bestOfMeta, fillBestOfTokens } from '@/lib/best-of-meta'
+import { bestOfMeta, fillBestOfTokens, rankPodcasts } from '@/lib/best-of-meta'
 import { ogDefaults } from '@/lib/seo/config'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
@@ -38,8 +38,8 @@ const getPodcasts = cache(async function getPodcasts(slug: string): Promise<Podc
   if (page.format) q = q.eq('format_type', page.format)
   if (page.minBinge) q = q.gte('binge_factor', page.minBinge)
 
-  const { data } = await q.order('binge_factor', { ascending: false }).limit(24)
-  return (data ?? []) as PodcastWithStats[]
+  const { data } = await q.order('binge_factor', { ascending: false }).limit(100)
+  return rankPodcasts((data ?? []) as PodcastWithStats[]).slice(0, 24)
 })
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -46,3 +46,22 @@ export function bestOfMeta(page: BestOfPage, names: string[]): BestOfMeta {
   const listHeading = `${count} podcast${count !== 1 ? 's' : ''}, ranked by binge factor`
   return { title, description, listHeading }
 }
+
+interface Rankable {
+  title: string
+  binge_factor: number | null
+  quick_verdict: string | null
+  rating_stats?: { avg_overall?: number | null } | null
+}
+
+/**
+ * Binge factor ties are common, so break them by editorial verdict ("Must listen" first),
+ * then community rating, then title, so the same shows lead every render.
+ */
+export function rankPodcasts<T extends Rankable>(list: T[]): T[] {
+  return [...list].sort((a, b) =>
+    (b.binge_factor ?? 0) - (a.binge_factor ?? 0) ||
+    Number(b.quick_verdict === 'Must listen') - Number(a.quick_verdict === 'Must listen') ||
+    (b.rating_stats?.avg_overall ?? 0) - (a.rating_stats?.avg_overall ?? 0) ||
+    a.title.localeCompare(b.title))
+}
