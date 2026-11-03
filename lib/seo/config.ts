@@ -14,3 +14,7 @@ export function ogDefaults(title: string, sub = 'True Crime Podcast Discovery & 
     images: [{ url: `${BASE}/og?${params.toString()}`, width: 1200, height: 630, alt: title }],
   }
 }
+
+// The year shown in titles of evergreen "best of" lists. One place to change;
+// evaluated at build/ISR time, so lists roll over on the first deploy of a new year.
+export const CURRENT_YEAR = new Date().getFullYear()

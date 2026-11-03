@@ -10,7 +10,7 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { NewsletterLeadMagnet } from '@/components/newsletter/newsletter-lead-magnet'
 import { CATEGORIES, CATEGORY_TO_CASE_TYPES, CATEGORY_CURATED_SLUGS } from '@/lib/types/database'
 import { CATEGORY_SEO, buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
-import { BASE, ogDefaults } from '@/lib/seo/config'
+import { BASE, CURRENT_YEAR, ogDefaults } from '@/lib/seo/config'
 import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { RelatedBooks } from '@/components/affiliates/related-books'
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const seo = CATEGORY_SEO[slug]
   const h1 = seo?.h1 ?? `Best ${cat.label} Podcasts`
-  const year = new Date().getFullYear()
+  const year = CURRENT_YEAR
 
   // For geography-overlap categories, differentiate from country pages explicitly
   const geoNote: Record<string, string> = {
@@ -44,11 +44,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     'australian-crime': ' Editorial picks for quality — for the full list by country see /country/AU.',
   }
   const descriptionSuffix = geoNote[slug] ?? ' Expert-reviewed and community-rated.'
-  const baseDescription = seo?.intro[0] ?? `Discover the best ${cat.label.toLowerCase()} true crime podcasts. ${cat.description}`
+  const baseDescription = seo?.metaDescription ?? seo?.intro[0] ?? `Discover the best ${cat.label.toLowerCase()} true crime podcasts. ${cat.description}`
 
   return {
     title: `${h1} (${year})`,
-    description: (baseDescription + descriptionSuffix).slice(0, 160),
+    description: seo?.metaDescription ?? (baseDescription + descriptionSuffix).slice(0, 160),
     openGraph: {
       title: `${h1} (${year}) | ListenTrueCrime`,
       description: baseDescription.slice(0, 160),
@@ -66,7 +66,7 @@ export default async function CategoryPage({ params }: Props) {
 
   const seo = CATEGORY_SEO[slug]
   const caseTypes = CATEGORY_TO_CASE_TYPES[slug] ?? []
-  const year = new Date().getFullYear()
+  const year = CURRENT_YEAR
 
   const supabase = createAdminClient()
   let q = supabase

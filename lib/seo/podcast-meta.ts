@@ -13,6 +13,27 @@ const FORMAT_WORDS: Record<string, string> = { Serialized: 'serialised', Episodi
 
 const clean = (v: string | null | undefined) => v?.trim() || null
 
+const MAX_DESCRIPTION = 160
+
+// short_description is sometimes an audience note ("Listeners who prefer...") rather than
+// a sentence about the show; as a meta description it reads as a fragment.
+const AUDIENCE_BLURB = /^(listeners|fans|anyone|people|those|readers|viewers|audiences|perfect for|ideal for|best for|great for|suited|for )/i
+
+/** Whole sentences up to `max` characters; otherwise a word-boundary cut with an ellipsis. */
+export function fitSentences(text: string, max = MAX_DESCRIPTION): string {
+  const t = text.replace(/\s+/g, ' ').trim()
+  if (t.length <= max) return t
+  const sentences = t.match(/[^.!?]+[.!?]+(?=\s|$)/g) ?? []
+  let out = ''
+  for (const sentence of sentences) {
+    const next = `${out} ${sentence.trim()}`.trim()
+    if (next.length > max) break
+    out = next
+  }
+  if (out) return out
+  return `${t.slice(0, max - 1).replace(/\s+\S*$/, '')}…`
+}
+
 export function generatedDescription(p: MetaSource): string {
   const format = FORMAT_WORDS[p.format_type ?? '']
   const host = clean(p.host_name)
@@ -24,10 +45,12 @@ export function generatedDescription(p: MetaSource): string {
 export function buildPodcastMeta(p: MetaSource, slug: string, base: string) {
   // Editor-entered descriptions first, then generated. (short_description and
   // description are themselves editor fields, as before.)
+  const short = clean(p.short_description)
+  const full = clean(p.description)
   const description =
     clean(p.meta_description) ??
-    clean(p.short_description) ??
-    clean(p.description)?.slice(0, 160) ??
+    (short && !(AUDIENCE_BLURB.test(short) && full) ? short : null) ??
+    (full ? fitSentences(`${p.title} review: ${full}`) : null) ??
     generatedDescription(p)
 
   return {
