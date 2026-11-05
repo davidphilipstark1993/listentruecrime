@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { BASE } from '@/lib/seo/config'
 import { SHOP_CATEGORIES, SHOP_COLLECTIONS } from '@/lib/shop/config'
-import { SHOP_META } from '@/lib/shop/copy'
+import { SHOP_HOME, SHOP_META } from '@/lib/shop/copy'
 import { getAllProducts } from '@/lib/shop/catalogue'
 import { JsonLd, itemListJsonLd } from '@/lib/shop/seo'
 import { breadcrumbSchema } from '@/lib/seo'
@@ -60,12 +60,10 @@ export default async function ShopPage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:64px_64px]" />
         <div className="relative z-10 mx-auto max-w-4xl">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-crimson">Listen True Crime · The Shop</p>
-          <h1 className="heading-display mt-5 text-5xl uppercase leading-[1.02] sm:text-6xl lg:text-7xl">
-            True crime.<br /><span className="text-crimson">Real obsession.</span>
+          <h1 className="heading-display mt-5 text-4xl uppercase leading-[1.05] sm:text-5xl lg:text-6xl">
+            {SHOP_HOME.h1}
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-stone-muted">
-            Exclusive merchandise for amateur detectives, cold case enthusiasts and true crime addicts.
-          </p>
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-stone-muted">{SHOP_HOME.intro}</p>
           <Link href="#collection" className="btn-primary mt-9 px-8 py-4 uppercase tracking-widest">
             Explore the collection <ArrowRight size={15} />
           </Link>
@@ -74,7 +72,8 @@ export default async function ShopPage() {
 
       {/* Collections */}
       {collections.length > 0 && (
-        <section aria-label="Shop by collection" className="mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">
+        <section aria-labelledby="shop-by-obsession" className="mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">
+          <h2 id="shop-by-obsession" className="mb-4 font-serif text-2xl uppercase tracking-tight text-stone">{SHOP_HOME.collectionsHeading}</h2>
           <ul className="grid gap-3 sm:grid-cols-3">
             {collections.map(c => (
               <li key={c.slug}>
@@ -82,6 +81,7 @@ export default async function ShopPage() {
                   <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(190,18,60,0.14),transparent_60%)] opacity-60 transition-opacity group-hover:opacity-100" />
                   <span className="relative text-2xs font-semibold uppercase tracking-widest text-crimson">Collection</span>
                   <span className="relative mt-1 font-serif text-2xl uppercase tracking-wide text-stone">{c.label}</span>
+                  {SHOP_HOME.collectionLines[c.slug] && <span className="relative mt-1 text-sm text-stone-muted">{SHOP_HOME.collectionLines[c.slug]}</span>}
                   <span className="relative mt-0.5 text-xs text-stone-subtle">{c.items.length} product{c.items.length === 1 ? '' : 's'}</span>
                 </Link>
               </li>
@@ -91,13 +91,14 @@ export default async function ShopPage() {
       )}
 
       {/* Categories */}
-      <section aria-label="Shop by category" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section aria-labelledby="shop-by-type" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h2 id="shop-by-type" className="mb-4 mt-8 font-serif text-2xl uppercase tracking-tight text-stone">{SHOP_HOME.categoriesHeading}</h2>
         <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {categories.map(c => (
             <li key={c.slug}>
               <Link href={`/shop/category/${c.slug}`} className="group relative flex h-36 flex-col justify-end overflow-hidden rounded-lg border border-white/[0.06] bg-ink-800 p-5 transition-all duration-300 hover:border-crimson/40 hover:shadow-glow-crimson">
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(190,18,60,0.12),transparent_60%)] opacity-0 transition-opacity group-hover:opacity-100" />
-                <span className="relative font-serif text-xl uppercase tracking-wide text-stone">{c.label}</span>
+                <span className="relative font-serif text-xl uppercase tracking-wide text-stone">{SHOP_HOME.categoryLabels[c.slug] ?? c.label}</span>
                 <span className="relative mt-0.5 text-xs text-stone-subtle">{counts[c.slug] ? `${counts[c.slug]} design${counts[c.slug] === 1 ? '' : 's'}` : 'Coming soon'}</span>
               </Link>
             </li>
@@ -128,6 +129,15 @@ export default async function ShopPage() {
         )}
         {products.length === 0 && <p className="py-20 text-center text-stone-muted">The collection is being prepared. Check back soon.</p>}
       </div>
+
+      <section aria-labelledby="gift-guide" className="mx-auto max-w-3xl px-4 py-12 text-center sm:px-6 lg:px-8">
+        <h2 id="gift-guide" className="font-serif text-2xl uppercase tracking-tight text-stone">{SHOP_HOME.giftHeading}</h2>
+        <p className="mt-3 text-stone-muted">
+          Not sure what they&rsquo;d like? Our{' '}
+          <Link href={SHOP_HOME.giftGuideHref} className="text-crimson underline hover:text-stone">true crime gift guide</Link>{' '}
+          matches books, audiobooks and merch to the kind of listener you&rsquo;re buying for.
+        </p>
+      </section>
 
       <ShopNewsletter source="shop-home" />
       <DeliveryInfo variant="strip" />
