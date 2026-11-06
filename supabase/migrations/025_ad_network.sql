@@ -1,5 +1,5 @@
 -- ============================================================
--- AD NETWORK (cross-promotion)
+-- AD NETWORK (cross-promotion)  [already applied to production as "021" before renumbering]
 -- Admin-managed adverts promoting the owner's other sites. Managed in
 -- /admin/ads; rendered by <AdSlot placement="..."/>; impressions and
 -- clicks are logged to ad_events by /api/ads/track.

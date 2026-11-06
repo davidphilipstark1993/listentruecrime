@@ -62,6 +62,10 @@ UPDATE profiles SET is_admin = true WHERE id = '<your-user-id>';
 
 Then visit `/admin` to access the dashboard.
 
+## Referrals and discount codes
+
+Every subscriber gets a referral link; reaching 1 / 3 confirmed referrals earns a single-use 20% / 30% merch code. Campaign codes (Black Friday etc.) are created in **Admin → Shop → Discounts**. Setup, rules and assumptions: [REFERRALS_AND_DISCOUNTS.md](REFERRALS_AND_DISCOUNTS.md).
+
 ## Newsletter providers
 
 Set `NEWSLETTER_PROVIDER` in your env to one of:

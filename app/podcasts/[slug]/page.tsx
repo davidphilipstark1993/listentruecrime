@@ -15,6 +15,7 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
 import { countryDisplayName } from '@/lib/country-names'
 import { listenLinks } from '@/lib/platform-urls'
+import { listenActionSchema } from '@/lib/seo/listen-action'
 import { buildPodcastMeta } from '@/lib/seo/podcast-meta'
 import { getPros, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
 import { getAuthor } from '@/lib/authors'
@@ -216,6 +217,7 @@ export default async function PodcastPage({ params }: Props) {
   // Only platforms with an editor-entered URL count as available
   const countryName = countryDisplayName(podcast)
   const listenOn = listenLinks(podcast.platforms, podcast.platform_urls)
+  const listenAction = listenActionSchema(listenOn)
   const personSchema = getPodcastPersonSchema(podcast)
 
   const allFaqs = [
@@ -269,16 +271,7 @@ export default async function PodcastPage({ params }: Props) {
     ...(podcast.case_types?.length && { genre: podcast.case_types }),
     ...(countryName && { countryOfOrigin: { '@type': 'Country', name: countryName } }),
     // ListenAction targets are the real, editor-entered listen URLs only
-    ...(listenOn.length > 0 && {
-      potentialAction: {
-        '@type': 'ListenAction',
-        target: listenOn.map(l => ({
-          '@type': 'EntryPoint',
-          url: l.url,
-          actionPlatform: ['http://schema.org/DesktopWebPlatform', 'http://schema.org/MobileWebPlatform'],
-        })),
-      },
-    }),
+    ...(listenAction && { potentialAction: listenAction }),
     // Only emit aggregateRating once there is a meaningful number of community ratings
     ...(ratingCount >= MIN_RATINGS_FOR_SCHEMA && overallScore != null && {
       aggregateRating: {

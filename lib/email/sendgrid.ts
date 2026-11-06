@@ -1,7 +1,9 @@
 import { BASE } from '@/lib/seo/config'
+import { shopPromoRowHtml } from './shop-promo'
+import { referralPromoRowHtml } from './referral-promo'
 import { sanitizeEnv } from '@/lib/utils'
 
-export function buildWelcomeEmailHtml(firstName?: string | null): string {
+export function buildWelcomeEmailHtml(firstName?: string | null, referralLink?: string | null): string {
   const greeting = firstName ? `Hi ${escHtml(firstName)},` : 'Hi there,'
 
   return `<!DOCTYPE html>
@@ -68,6 +70,7 @@ export function buildWelcomeEmailHtml(firstName?: string | null): string {
         </td>
       </tr>
 
+${shopPromoRowHtml()}${referralPromoRowHtml(referralLink)}
       <!-- Footer -->
       <tr>
         <td style="padding:20px 32px;border-top:1px solid #f0f0f0;text-align:center;">
@@ -90,7 +93,7 @@ export function buildWelcomeEmailHtml(firstName?: string | null): string {
 </html>`
 }
 
-export async function sendSendGridWelcomeEmail(email: string, firstName?: string | null): Promise<void> {
+export async function sendSendGridWelcomeEmail(email: string, firstName?: string | null, referralLink?: string | null): Promise<void> {
   const apiKey = process.env.SENDGRID_API_KEY ? sanitizeEnv(process.env.SENDGRID_API_KEY) : undefined
   if (!apiKey) return // graceful degradation — no key, no send
 
@@ -98,7 +101,7 @@ export async function sendSendGridWelcomeEmail(email: string, firstName?: string
   const fromName = process.env.SENDGRID_FROM_NAME ? sanitizeEnv(process.env.SENDGRID_FROM_NAME) : 'Listen True Crime'
   const groupId = process.env.SENDGRID_UNSUBSCRIBE_GROUP_ID ? Number(sanitizeEnv(process.env.SENDGRID_UNSUBSCRIBE_GROUP_ID)) : undefined
 
-  const html = buildWelcomeEmailHtml(firstName)
+  const html = buildWelcomeEmailHtml(firstName, referralLink)
 
   const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
     method: 'POST',

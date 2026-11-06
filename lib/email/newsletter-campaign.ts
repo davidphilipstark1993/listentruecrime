@@ -1,9 +1,12 @@
 import { sendNewsletterCampaignViaSendGrid } from './sendgrid-campaign'
 import { sendNewsletterCampaignViaResend } from './resend-campaign'
 import type { Newsletter } from '@/lib/types/database'
+import { withReferralBlock } from './referral-promo'
 
-interface Recipient {
+export interface Recipient {
   email: string
+  /** Their referral code; becomes their personal share link in the issue. */
+  referral_code?: string | null
 }
 
 /**
@@ -16,7 +19,9 @@ export async function sendNewsletterCampaign(
   newsletter: Pick<Newsletter, 'id' | 'title' | 'html_content' | 'plain_text_content'>,
   recipients: Recipient[]
 ): Promise<{ campaignId: string; sentCount: number }> {
-  if (process.env.SENDGRID_API_KEY) return sendNewsletterCampaignViaSendGrid(newsletter, recipients)
-  if (process.env.RESEND_API_KEY) return sendNewsletterCampaignViaResend(newsletter, recipients)
+  // Adds each subscriber's referral link at send time (no-op while the shop is off).
+  const issue = withReferralBlock(newsletter)
+  if (process.env.SENDGRID_API_KEY) return sendNewsletterCampaignViaSendGrid(issue, recipients)
+  if (process.env.RESEND_API_KEY) return sendNewsletterCampaignViaResend(issue, recipients)
   throw new Error('No email provider configured — set SENDGRID_API_KEY or RESEND_API_KEY')
 }

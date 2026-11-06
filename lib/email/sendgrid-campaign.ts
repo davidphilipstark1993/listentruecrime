@@ -1,10 +1,13 @@
 import { sanitizeEnv } from '@/lib/utils'
 import type { Newsletter } from '@/lib/types/database'
+import { REFERRAL_LINK_TAG } from './referral-promo'
+import { referralLink } from '@/lib/referrals/code'
 
 const SENDGRID_BATCH_SIZE = 900 // SendGrid personalizations cap is 1000 per request
 
 interface Recipient {
   email: string
+  referral_code?: string | null
 }
 
 /**
@@ -28,6 +31,7 @@ export async function sendNewsletterCampaignViaSendGrid(
 
   let lastMessageId = ''
   let sentCount = 0
+  const hasReferralTag = newsletter.html_content.includes(REFERRAL_LINK_TAG)
 
   for (let i = 0; i < recipients.length; i += SENDGRID_BATCH_SIZE) {
     const batch = recipients.slice(i, i + SENDGRID_BATCH_SIZE)
@@ -39,7 +43,11 @@ export async function sendNewsletterCampaignViaSendGrid(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        personalizations: batch.map(r => ({ to: [{ email: r.email }] })),
+        // Each copy is its own personalization, so every subscriber gets their own referral link.
+        personalizations: batch.map(r => ({
+          to: [{ email: r.email }],
+          ...(hasReferralTag ? { substitutions: { [REFERRAL_LINK_TAG]: referralLink(r.referral_code ?? '') } } : {}),
+        })),
         from: { email: fromEmail, name: fromName },
         subject: newsletter.title,
         content: [

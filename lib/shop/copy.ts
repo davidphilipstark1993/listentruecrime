@@ -18,6 +18,13 @@ export const DELIVERY_ESTIMATE: string | null =
  */
 export const PRICES_INCLUDE_VAT = false
 
+/**
+ * The numbers behind DELIVERY_ESTIMATE and RETURNS_SUMMARY, for structured data.
+ * Keep in step with those sentences (lib/shop/seo.test.ts checks they agree).
+ */
+export const DELIVERY_TIMES = { productionMaxDays: 10, transitMinDays: 3, transitMaxDays: 5 }
+export const RETURN_WINDOW_DAYS = 14
+
 export const BUSINESS_NAME = 'Listen True Crime'
 export const OWNER_NAME = 'David Stark'
 // Date the shop policies took effect (update when a policy changes).
@@ -37,7 +44,24 @@ export const RETURNS_SUMMARY = [
 ]
 
 export const SHOP_META = {
-  title: 'True Crime Merchandise UK | Listen True Crime Shop',
+  title: 'True Crime Merch & Gifts UK | Listen True Crime',
   description:
-    'True crime T-shirts, sweatshirts, mugs and accessories for armchair detectives, cold case obsessives and podcast addicts. Designed by Listen True Crime, printed to order, delivered across the UK.',
+    'True crime T-shirts, hoodies, sweatshirts, mugs and tote bags for armchair detectives and podcast addicts. Our own designs, printed to order and delivered in the UK.',
+}
+
+/** Copy used on the /shop landing page only. Other pages keep the labels and blurbs in config.ts. */
+export const SHOP_HOME = {
+  h1: 'True crime merch and gifts, made for armchair detectives',
+  intro:
+    'T-shirts, hoodies, sweatshirts, mugs and tote bags in our own designs, for people who have opinions about timelines and are always five podcasts behind. Everything is printed to order, with UK delivery. A good gift for the true crime fan in your life, or for yourself.',
+  categoriesHeading: 'Shop by type',
+  collectionsHeading: 'Shop by obsession',
+  categoryLabels: { hoodies: 'Sweatshirts & Hoodies' } as Record<string, string>,
+  collectionLines: {
+    'armchair-detective': 'For people who solve cases from the sofa.',
+    'podcast-addict': 'For the \u201cjust one more episode\u201d crowd.',
+    'case-files': 'Cold cases, case numbers and unresolved business.',
+  } as Record<string, string>,
+  giftHeading: 'Buying for someone else?',
+  giftGuideHref: '/blog/true-crime-gift-ideas-for-podcast-listeners',
 }

@@ -32,6 +32,9 @@ export interface ShopProductRow {
   seo_title: string | null
   seo_description: string | null
   admin_notes: string | null
+  collection?: string | null
+  design?: string | null
+  tags?: string[] | null
   created_at: string
   updated_at: string
 }
@@ -74,6 +77,8 @@ export interface PublicProduct {
   isBestSeller: boolean
   isNew: boolean
   isPlaceholder: boolean
+  collection: string | null
+  design: string | null
   seoTitle: string | null
   seoDescription: string | null
   variants: PublicVariant[]
@@ -100,6 +105,13 @@ export interface ShopOrderRow {
   shipping_pence: number
   total_pence: number
   refunded_pence: number
+  discount_code_id: string | null
+  discount_code: string | null
+  discount_campaign_id: string | null
+  discount_campaign_prefix: string | null
+  discount_percent: number | null
+  discount_pence: number
+  discount_released_at: string | null
   stripe_checkout_session_id: string | null
   stripe_payment_intent_id: string | null
   stripe_fee_pence: number | null

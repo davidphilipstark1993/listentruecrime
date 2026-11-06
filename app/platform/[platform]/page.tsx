@@ -12,6 +12,7 @@ import { getListingCounts, MIN_INDEXABLE_PLATFORM_PODCASTS } from '@/lib/seo/ind
 import { PLATFORM_SEO, buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
 import { BASE, ogDefaults } from '@/lib/seo/config'
 import type { Podcast, RatingStats } from '@/lib/types/database'
+import { RelatedBooks } from '@/components/affiliates/related-books'
 
 interface Props {
   params: Promise<{ platform: string }>
@@ -188,6 +189,8 @@ export default async function PlatformPage({ params }: Props) {
             </div>
           </div>
         </section>
+
+        <RelatedBooks pageKey={`platform-${name.toLowerCase().replace(/\s+/g, '-')}`} placement="platform-reading" />
 
         {/* ── FAQ ── */}
         {seo?.faqs && (

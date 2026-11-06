@@ -5,6 +5,8 @@ const TABS = [
   { href: '/admin/shop', label: 'Overview' },
   { href: '/admin/shop/orders', label: 'Orders' },
   { href: '/admin/shop/products', label: 'Products' },
+  { href: '/admin/shop/discounts', label: 'Discounts' },
+  { href: '/admin/shop/referrals', label: 'Referrals' },
   { href: '/admin/shop/settings', label: 'Settings' },
 ]
 

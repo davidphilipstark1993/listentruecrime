@@ -59,6 +59,12 @@ export default function PrivacyPage() {
                   the footer and elsewhere on the site.
                 </li>
                 <li>
+                  <strong className="text-stone">Referrals</strong> — every subscriber has a personal referral code. If
+                  you sign up using someone else&apos;s code, we record that link between your two subscriptions and, once
+                  you have confirmed yours, count it towards their reward. We never ask for, collect or store the email
+                  address of anyone who has not signed up themselves, and we don&apos;t tell a referrer who joined.
+                </li>
+                <li>
                   <strong className="text-stone">Account sign-in</strong> — if you sign in to rate or review podcasts, we
                   collect your email address (for passwordless "magic link" sign-in) or, if you choose "Continue with
                   Google", the name, email address, and profile picture Google shares with us.

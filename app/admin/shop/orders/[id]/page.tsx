@@ -54,6 +54,7 @@ export default async function OrderPage({ params }: { params: { id: string } }) 
           </ul>
           <dl className="mt-3 border-t border-white/[0.06] pt-2">
             <Row k="Subtotal" v={formatGBP(order.subtotal_pence)} />
+            {order.discount_pence > 0 && <Row k={`Discount (${order.discount_code ?? 'code'}${order.discount_percent ? `, ${order.discount_percent}%` : ''})`} v={`-${formatGBP(order.discount_pence)}`} />}
             <Row k="Delivery charged" v={formatGBP(order.shipping_pence)} />
             <Row k="Total" v={<strong className="text-stone">{formatGBP(order.total_pence)}</strong>} />
             {order.refunded_pence > 0 && <Row k="Refunded" v={formatGBP(order.refunded_pence)} />}

@@ -6,6 +6,7 @@ import {
   clientIp,
   confirmUrl,
   hashToken,
+  isReminderDue,
   isTokenExpired,
   newConfirmToken,
 } from './optin'
@@ -52,5 +53,22 @@ describe('confirmUrl / clientIp', () => {
   it('takes the first forwarded address', () => {
     expect(clientIp(new Headers({ 'x-forwarded-for': '1.2.3.4, 5.6.7.8' }))).toBe('1.2.3.4')
     expect(clientIp(new Headers())).toBe('unknown')
+  })
+})
+
+describe('isReminderDue', () => {
+  const now = Date.parse('2026-11-10T12:00:00Z')
+  const ago = (days: number) => new Date(now - days * 24 * 60 * 60 * 1000).toISOString()
+
+  it('is not due before 3 days', () => {
+    expect(isReminderDue(ago(2.9), now)).toBe(false)
+  })
+  it('is due from 3 days until the link expires at 7', () => {
+    expect(isReminderDue(ago(3), now)).toBe(true)
+    expect(isReminderDue(ago(6.9), now)).toBe(true)
+  })
+  it('is not due once the link has expired, or if no email was ever sent', () => {
+    expect(isReminderDue(ago(7.1), now)).toBe(false)
+    expect(isReminderDue(null, now)).toBe(false)
   })
 })

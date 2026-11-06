@@ -1,0 +1,152 @@
+[
+  {
+    "slug": "professional-armchair-detective",
+    "name": "Professional Armchair Detective",
+    "collection": "armchair-detective",
+    "aspect": 0.615,
+    "png": {
+      "width": 3600,
+      "height": 2214
+    }
+  },
+  {
+    "slug": "amateur-sleuth-professional-overthinker",
+    "name": "Amateur Sleuth. Professional Overthinker.",
+    "collection": "armchair-detective",
+    "aspect": 0.3619,
+    "png": {
+      "width": 3600,
+      "height": 1303
+    }
+  },
+  {
+    "slug": "everyone-is-a-suspect",
+    "name": "Everyone Is a Suspect.",
+    "collection": "armchair-detective",
+    "aspect": 0.4732,
+    "png": {
+      "width": 3600,
+      "height": 1703
+    }
+  },
+  {
+    "slug": "respectfully-i-have-questions",
+    "name": "Respectfully, I Have Questions.",
+    "collection": "armchair-detective",
+    "aspect": 0.4543,
+    "png": {
+      "width": 3600,
+      "height": 1636
+    }
+  },
+  {
+    "slug": "the-timeline-doesnt-lie",
+    "name": "The Timeline Doesn't Lie.",
+    "collection": "armchair-detective",
+    "aspect": 0.4418,
+    "png": {
+      "width": 3600,
+      "height": 1591
+    }
+  },
+  {
+    "slug": "just-one-more-episode",
+    "name": "Just One More Episode.",
+    "collection": "podcast-addict",
+    "aspect": 0.4545,
+    "png": {
+      "width": 3600,
+      "height": 1636
+    }
+  },
+  {
+    "slug": "if-i-go-missing-check-my-podcast-queue",
+    "name": "If I Go Missing, Check My Podcast Queue.",
+    "collection": "podcast-addict",
+    "aspect": 0.3854,
+    "png": {
+      "width": 3600,
+      "height": 1388
+    }
+  },
+  {
+    "slug": "shhh-im-listening-to-a-case",
+    "name": "Shhh… I'm Listening to a Case.",
+    "collection": "podcast-addict",
+    "aspect": 0.6867,
+    "png": {
+      "width": 3600,
+      "height": 2472
+    }
+  },
+  {
+    "slug": "five-podcasts-behind-send-help",
+    "name": "Five Podcasts Behind. Send Help.",
+    "collection": "podcast-addict",
+    "aspect": 0.5396,
+    "png": {
+      "width": 3600,
+      "height": 1943
+    }
+  },
+  {
+    "slug": "case-file-001",
+    "name": "Case File: 001",
+    "collection": "case-files",
+    "aspect": 0.7833,
+    "png": {
+      "width": 3600,
+      "height": 2820
+    }
+  },
+  {
+    "slug": "cold-case-unit",
+    "name": "Cold Case Unit",
+    "collection": "case-files",
+    "aspect": 0.7065,
+    "png": {
+      "width": 3600,
+      "height": 2544
+    }
+  },
+  {
+    "slug": "persons-of-interest",
+    "name": "Persons of Interest",
+    "collection": "case-files",
+    "aspect": 0.6768,
+    "png": {
+      "width": 3600,
+      "height": 2437
+    }
+  },
+  {
+    "slug": "file-under-obsession",
+    "name": "File Under: Obsession",
+    "collection": "case-files",
+    "aspect": 0.7833,
+    "png": {
+      "width": 3600,
+      "height": 2820
+    }
+  },
+  {
+    "slug": "listen-investigate-repeat",
+    "name": "Listen. Investigate. Repeat.",
+    "collection": "case-files",
+    "aspect": 0.5051,
+    "png": {
+      "width": 3600,
+      "height": 1819
+    }
+  },
+  {
+    "slug": "unresolved",
+    "name": "Unresolved",
+    "collection": "case-files",
+    "aspect": 0.351,
+    "png": {
+      "width": 3600,
+      "height": 1264
+    }
+  }
+]

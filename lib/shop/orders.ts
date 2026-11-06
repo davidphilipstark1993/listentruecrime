@@ -6,6 +6,7 @@ import {
   CURRENCY, MAX_FULFILMENT_ATTEMPTS, RETRY_BACKOFF_MINUTES, SUBMITTING_STALE_MINUTES, sendToProductionEnabled,
 } from './config'
 import { buildDispatchEmail, buildOrderConfirmationEmail, sendShopEmail } from './email'
+import { releaseDiscountForOrder } from '@/lib/discounts/redeem'
 import * as printify from './printify'
 import { PrintifyError } from './printify'
 import { getStripe } from './stripe'
@@ -48,6 +49,12 @@ export async function createPendingOrder(quote: Quote): Promise<{ order: ShopOrd
     .insert({
       currency: CURRENCY,
       subtotal_pence: quote.subtotalPence,
+      discount_pence: quote.discount?.pence ?? 0,
+      discount_code_id: quote.discount?.codeId ?? null,
+      discount_code: quote.discount?.code ?? null,
+      discount_campaign_id: quote.discount?.campaignId ?? null,
+      discount_campaign_prefix: quote.discount?.campaignPrefix ?? null,
+      discount_percent: quote.discount?.percent ?? null,
       shipping_pence: quote.shippingPence,
       total_pence: quote.totalPence,
       est_printify_shipping_minor: quote.shippingMinor,
@@ -75,7 +82,10 @@ export async function createPendingOrder(quote: Quote): Promise<{ order: ShopOrd
     await admin.from('shop_orders').delete().eq('id', order.id)
     throw new Error(`Could not create order items: ${itemsError?.message}`)
   }
-  await logEvent(order.id, 'info', 'order.created', 'Pending order created, awaiting Stripe Checkout', { total_pence: quote.totalPence })
+  await logEvent(order.id, 'info', 'order.created', 'Pending order created, awaiting Stripe Checkout', {
+    total_pence: quote.totalPence,
+    ...(quote.discount ? { discount_code: quote.discount.code, discount_pence: quote.discount.pence } : {}),
+  })
   return { order: order as ShopOrderRow, items: items as ShopOrderItemRow[] }
 }
 
@@ -541,14 +551,20 @@ export async function handleCheckoutExpired(session: Stripe.Checkout.Session) {
   const admin = createAdminClient()
   const { data } = await admin.from('shop_orders').update({ payment_status: 'expired', fulfilment_status: 'cancelled' })
     .eq('stripe_checkout_session_id', session.id).eq('payment_status', 'pending').select('id')
-  if (data?.length) await logEvent(data[0].id, 'info', 'stripe.expired', 'Checkout session expired unpaid')
+  if (data?.length) {
+    await logEvent(data[0].id, 'info', 'stripe.expired', 'Checkout session expired unpaid')
+    if (await releaseDiscountForOrder(admin, data[0].id)) await logEvent(data[0].id, 'info', 'discount.released', 'Discount code given back (checkout expired unpaid)')
+  }
 }
 
 export async function handleAsyncPaymentFailed(session: Stripe.Checkout.Session) {
   const admin = createAdminClient()
   const { data } = await admin.from('shop_orders').update({ payment_status: 'failed', fulfilment_status: 'cancelled' })
     .eq('stripe_checkout_session_id', session.id).eq('payment_status', 'pending').select('*')
-  if (data?.length) await logEvent(data[0].id, 'warn', 'stripe.async_failed', 'Delayed payment failed')
+  if (data?.length) {
+    await logEvent(data[0].id, 'warn', 'stripe.async_failed', 'Delayed payment failed')
+    if (await releaseDiscountForOrder(admin, data[0].id)) await logEvent(data[0].id, 'info', 'discount.released', 'Discount code given back (payment failed)')
+  }
 }
 
 /** Mirrors refunds made anywhere (our admin or the Stripe dashboard) onto the order. */

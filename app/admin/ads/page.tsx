@@ -56,7 +56,7 @@ export default async function AdminAdsPage({ searchParams }: { searchParams: { r
       {(missingTable || !stats.ok) && (
         <div className="card p-5 mb-6 border-crimson/30">
           <p className="text-sm text-stone font-medium mb-1">The advertising tables aren&apos;t set up yet</p>
-          <p className="text-xs text-stone-muted">Run <code className="text-stone">supabase/migrations/021_ad_network.sql</code> in the Supabase SQL editor, then reload this page.</p>
+          <p className="text-xs text-stone-muted">Run <code className="text-stone">supabase/migrations/025_ad_network.sql</code> in the Supabase SQL editor, then reload this page.</p>
         </div>
       )}
 

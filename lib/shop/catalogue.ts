@@ -26,15 +26,27 @@ async function loadProducts(filter: (q: any) => any): Promise<PublicProduct[]> {
 
 export const getAllProducts = () => loadProducts(q => q)
 export const getProductsByCategory = (category: string) => loadProducts(q => q.eq('category', category))
+export const getProductsByCollection = (collection: string) => loadProducts(q => q.eq('collection', collection))
 
 export async function getProductBySlug(slug: string): Promise<PublicProduct | null> {
   const [p] = await loadProducts(q => q.eq('slug', slug).limit(1))
   return p ?? null
 }
 
+/** Ranks cross-sells: the same design on other products first, then the same collection, then the same category. */
+export function relatedScore(product: PublicProduct, p: PublicProduct): number {
+  return (
+    (product.design && p.design === product.design ? 8 : 0) +
+    (product.collection && p.collection === product.collection ? 4 : 0) +
+    (p.category === product.category ? 2 : 0) +
+    (p.isFeatured ? 1 : 0)
+  )
+}
+
 export async function getRelatedProducts(product: PublicProduct, limit = 4): Promise<PublicProduct[]> {
   const all = await getAllProducts()
-  const others = all.filter(p => p.id !== product.id)
-  const score = (p: PublicProduct) => (p.category === product.category ? 2 : 0) + (p.isFeatured ? 1 : 0)
-  return others.sort((a, b) => score(b) - score(a)).slice(0, limit)
+  return all
+    .filter(p => p.id !== product.id)
+    .sort((a, b) => relatedScore(product, b) - relatedScore(product, a))
+    .slice(0, limit)
 }

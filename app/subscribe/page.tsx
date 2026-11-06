@@ -118,7 +118,7 @@ export default async function SubscribePage() {
             </p>
 
             <div className="card p-5 sm:p-6 text-left">
-              <NewsletterForm source="subscribe_page" variant="hero" />
+              <NewsletterForm source="subscribe_page" variant="hero" showReferral />
             </div>
           </div>
         </section>
@@ -178,7 +178,7 @@ export default async function SubscribePage() {
             <div className="relative z-10">
               <h2 className="heading-section text-2xl mb-2">Get this Sunday&apos;s five</h2>
               <p className="text-stone-muted text-sm mb-5">Free, once a week, unsubscribe any time.</p>
-              <NewsletterForm source="subscribe_page_bottom" />
+              <NewsletterForm source="subscribe_page_bottom" showReferral />
             </div>
           </div>
         </section>
