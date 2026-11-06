@@ -106,7 +106,7 @@ export default async function CountryPage({ params }: Props) {
       .eq('quick_verdict', 'Must listen')
       .order('binge_factor', { ascending: false })
       .order('id', { ascending: true })
-      .limit(12)
+      .limit(24)
     picks = (pickRows ?? []) as typeof picks
   }
 
