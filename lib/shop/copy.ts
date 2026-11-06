@@ -44,7 +44,24 @@ export const RETURNS_SUMMARY = [
 ]
 
 export const SHOP_META = {
-  title: 'True Crime Merchandise UK | Listen True Crime Shop',
+  title: 'True Crime Merch & Gifts UK | Listen True Crime',
   description:
-    'True crime T-shirts, sweatshirts, mugs and accessories for armchair detectives, cold case obsessives and podcast addicts. Designed by Listen True Crime, printed to order, delivered across the UK.',
+    'True crime T-shirts, hoodies, sweatshirts, mugs and tote bags for armchair detectives and podcast addicts. Our own designs, printed to order and delivered in the UK.',
+}
+
+/** Copy used on the /shop landing page only. Other pages keep the labels and blurbs in config.ts. */
+export const SHOP_HOME = {
+  h1: 'True crime merch and gifts, made for armchair detectives',
+  intro:
+    'T-shirts, hoodies, sweatshirts, mugs and tote bags in our own designs, for people who have opinions about timelines and are always five podcasts behind. Everything is printed to order, with UK delivery. A good gift for the true crime fan in your life, or for yourself.',
+  categoriesHeading: 'Shop by type',
+  collectionsHeading: 'Shop by obsession',
+  categoryLabels: { hoodies: 'Sweatshirts & Hoodies' } as Record<string, string>,
+  collectionLines: {
+    'armchair-detective': 'For people who solve cases from the sofa.',
+    'podcast-addict': 'For the \u201cjust one more episode\u201d crowd.',
+    'case-files': 'Cold cases, case numbers and unresolved business.',
+  } as Record<string, string>,
+  giftHeading: 'Buying for someone else?',
+  giftGuideHref: '/blog/true-crime-gift-ideas-for-podcast-listeners',
 }
