@@ -26,6 +26,7 @@ import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
+import { AdSlot } from '@/components/ads/ad-slot'
 import { ratingStatsOf, MIN_RATINGS_FOR_SCHEMA } from '@/lib/rating-stats'
 
 interface Props {
@@ -706,6 +707,9 @@ export default async function PodcastPage({ params }: Props) {
 
               {/* Editorially chosen affiliate products — only when added in /admin/affiliates */}
               <FurtherReading products={affiliateProducts.products} note={affiliateProducts.note} placement="podcast-sidebar" variant="sidebar" headingAs="h3" />
+
+              {/* Cross-promotion (managed in /admin/ads) */}
+              <AdSlot placement="podcast_review" />
 
               {/* Categories this podcast belongs to */}
               {podcastCategories.length > 0 && (

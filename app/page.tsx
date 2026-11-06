@@ -3,6 +3,7 @@ import { Search, ArrowRight, TrendingUp, Star, Zap, BookOpen } from 'lucide-reac
 import { createAdminClient } from '@/lib/supabase/admin'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
+import { AdSlot } from '@/components/ads/ad-slot'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { CATEGORIES } from '@/lib/types/database'
@@ -236,6 +237,9 @@ export default async function HomePage() {
         {/* ═══════════════ SHOP PROMO (only when the shop is enabled) ═══════════════ */}
         {shopEnabled() && <HomepageShopPromo />}
 
+        {/* Cross-promotion (managed in /admin/ads) — renders nothing when no advert is live */}
+        <AdSlot placement="homepage_promo" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6" />
+
         {/* ═══════════════ TRENDING / FEATURED ═══════════════ */}
         {featured.length > 0 && (
           <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -305,6 +309,8 @@ export default async function HomePage() {
             ))}
           </div>
         </section>
+
+        <AdSlot placement="homepage_between" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12" />
 
         {/* ═══════════════ TOP COMMUNITY RATED ═══════════════ */}
         {topRated.length > 0 && (
