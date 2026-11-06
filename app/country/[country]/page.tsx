@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { Fragment, type ReactNode } from 'react'
 import { ArrowRight, ChevronDown, ChevronUp } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
@@ -20,6 +21,28 @@ interface Props {
 
 export const revalidate = 3600
 
+/** Fills "{count}" in country copy with the live published-podcast count. */
+const withCount = (text: string, count: number) => text.replaceAll('{count}', String(count))
+
+/** Renders `text` with each listed phrase turned into an internal link. Text itself is unchanged. */
+function LinkedText({ text, links }: { text: string; links?: { text: string; href: string }[] }): ReactNode {
+  if (!links?.length) return text
+  const parts: ReactNode[] = []
+  let rest = text
+  let key = 0
+  while (rest) {
+    const hit = links
+      .map(l => ({ l, i: rest.indexOf(l.text) }))
+      .filter(h => h.i >= 0)
+      .sort((a, b) => a.i - b.i)[0]
+    if (!hit) { parts.push(<Fragment key={key++}>{rest}</Fragment>); break }
+    if (hit.i > 0) parts.push(<Fragment key={key++}>{rest.slice(0, hit.i)}</Fragment>)
+    parts.push(<Link key={key++} href={hit.l.href} className="text-crimson underline hover:text-stone">{hit.l.text}</Link>)
+    rest = rest.slice(hit.i + hit.l.text.length)
+  }
+  return <>{parts}</>
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { country } = await params
   const name = COUNTRIES[country]
@@ -28,19 +51,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const seo = COUNTRY_SEO[country]
   const h1 = seo?.h1 ?? `Best ${name} True Crime Podcasts`
   const year = new Date().getFullYear()
-  const description = seo?.metaDescription ?? `The best true crime podcasts from ${name}, expertly reviewed and community-rated.`
+  const listingCounts = await getListingCounts()
+  const rawDescription = seo?.metaDescription ?? `The best true crime podcasts from ${name}, expertly reviewed and community-rated.`
+  const description = withCount(rawDescription, listingCounts.countries[country] ?? 0)
+  const title = seo?.title ?? `${h1} (${year})`
 
   return {
-    title: `${h1} (${year})`,
+    title,
     description,
     openGraph: {
-      title: `${h1} (${year}) | ListenTrueCrime`,
+      title: `${title} | ListenTrueCrime`,
       description,
       url: `${BASE}/country/${country}`,
-      ...ogDefaults(`${h1} (${year})`),
+      ...ogDefaults(title),
     },
     alternates: { canonical: `${BASE}/country/${country}` },
-    ...((await getListingCounts()).countries[country] ?? 0) < MIN_INDEXABLE_COUNTRY_PODCASTS && {
+    ...(listingCounts.countries[country] ?? 0) < MIN_INDEXABLE_COUNTRY_PODCASTS && {
       robots: { index: false, follow: true },
     },
   }
@@ -69,6 +95,21 @@ export default async function CountryPage({ params }: Props) {
   const podcasts = (data ?? []) as (Podcast & { rating_stats: RatingStats | null })[]
   const totalCount = count ?? podcasts.length
 
+  // Must-listen shelf: read from the data (country + current editorial verdict), never hard-coded.
+  let picks: (Podcast & { rating_stats: RatingStats | null })[] = []
+  if (seo?.picksHeading) {
+    const { data: pickRows } = await supabase
+      .from('podcasts')
+      .select(`*, rating_stats:podcast_rating_stats(*)`)
+      .eq('is_published', true)
+      .eq('country', country)
+      .eq('quick_verdict', 'Must listen')
+      .order('binge_factor', { ascending: false })
+      .order('id', { ascending: true })
+      .limit(24)
+    picks = (pickRows ?? []) as typeof picks
+  }
+
   const faqSchema = seo?.faqs ? buildFAQSchema(seo.faqs) : null
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', url: BASE },
@@ -77,7 +118,7 @@ export default async function CountryPage({ params }: Props) {
   ])
   const itemListSchema = podcasts.length > 0 ? buildItemListSchema(
     h1,
-    seo?.intro[0] ?? `Best true crime podcasts from ${name}`,
+    seo?.intro[0] ? withCount(seo.intro[0], totalCount) : `Best true crime podcasts from ${name}`,
     podcasts.slice(0, 20).map(p => ({ name: p.title, url: `${BASE}/podcasts/${p.slug}` }))
   ) : null
 
@@ -104,13 +145,15 @@ export default async function CountryPage({ params }: Props) {
 
             <div className="text-4xl mb-4">{countryFlag(country)}</div>
             <h1 className="heading-display text-3xl sm:text-4xl lg:text-5xl mb-4">
-              {h1} <span className="text-stone-subtle text-2xl font-sans font-normal">({year})</span>
+              {h1}{!seo?.title && <> <span className="text-stone-subtle text-2xl font-sans font-normal">({year})</span></>}
             </h1>
 
             {seo?.intro ? (
               <div className="space-y-3 max-w-2xl">
                 {seo.intro.map((para, i) => (
-                  <p key={i} className="text-stone-muted text-sm sm:text-base leading-relaxed">{para}</p>
+                  <p key={i} className="text-stone-muted text-sm sm:text-base leading-relaxed">
+                    <LinkedText text={withCount(para, totalCount)} links={seo.introLinks} />
+                  </p>
                 ))}
               </div>
             ) : (
@@ -125,14 +168,39 @@ export default async function CountryPage({ params }: Props) {
           </div>
         </section>
 
+        {/* ── Must-listen picks (data-driven; omitted when none) ── */}
+        {seo?.picksHeading && picks.length > 0 && (
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+            <h2 className="heading-section text-xl mb-6">{seo.picksHeading}</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {picks.map(p => (
+                <PodcastCard key={p.id} podcast={p} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ── How to choose ── */}
+        {seo?.howToChoose && (
+          <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+            <h2 className="heading-section text-xl mb-4">{seo.howToChoose.heading}</h2>
+            <ul className="space-y-3 text-sm text-stone-muted leading-relaxed list-disc pl-5">
+              {seo.howToChoose.items.map(item => (
+                <li key={item.lead}><strong className="text-stone font-medium">{item.lead}</strong> {item.text}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         {/* ── Podcast grid ── */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {podcasts.length > 0 ? (
             <>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="heading-section text-xl">Top {name} True Crime Podcasts</h2>
-                <Link href="/browse" className="text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
-                  Browse all <ArrowRight size={14} />
+                {/* UK page: /browse?country=UK is a supported server-side filter, so "Browse all" stays in the country. */}
+                <Link href={seo?.picksHeading ? `/browse?country=${country}` : '/browse'} className="text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
+                  {seo?.picksHeading ? `Browse all ${country} podcasts` : 'Browse all'} <ArrowRight size={14} />
                 </Link>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -179,7 +247,7 @@ export default async function CountryPage({ params }: Props) {
                     <ChevronUp size={16} className="text-stone-subtle shrink-0 hidden group-open:block" />
                   </summary>
                   <p className="text-stone-muted text-sm leading-relaxed mt-3 pt-3 border-t border-white/[0.06]">
-                    {faq.a}
+                    <LinkedText text={faq.a} links={faq.links} />
                   </p>
                 </details>
               ))}

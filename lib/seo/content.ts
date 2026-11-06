@@ -4,12 +4,23 @@
 
 export interface PageSeoContent {
   h1: string
+  // Optional <title> override (country pages). When set, the page is not given a "(year)" suffix
+  // in its title or H1: the year would claim a freshness we cannot show.
+  title?: string
   // Short, standalone summary for <meta name="description"> — kept separate
   // from `intro` because intro[0] is on-page body copy (2-3 sentences) and
   // is too long for a meta description on its own.
+  // May contain "{count}", replaced with the live published-podcast count for the page.
   metaDescription?: string
+  // May contain "{count}". Plain text: it is also used as the ItemList description.
   intro: string[]
-  faqs: { q: string; a: string }[]
+  // Phrases in `intro` rendered as internal links.
+  introLinks?: { text: string; href: string }[]
+  // Data-driven shelf of Must-listen podcasts for this page's country (omitted if none).
+  picksHeading?: string
+  howToChoose?: { heading: string; items: { lead: string; text: string }[] }
+  // `links`: phrases in `a` rendered as links. The FAQPage JSON-LD uses `a` as plain text, so it matches the visible text.
+  faqs: { q: string; a: string; links?: { text: string; href: string }[] }[]
   relatedLinks?: { href: string; label: string }[]
 }
 
@@ -415,16 +426,30 @@ export const COUNTRY_SEO: Record<string, PageSeoContent> = {
     ],
   },
   UK: {
-    h1: 'Best UK True Crime Podcasts',
-    metaDescription: 'The best UK true crime podcasts, expert-reviewed and community-rated, covering everything from Victorian murders to modern miscarriages of justice.',
+    h1: 'UK true crime podcasts, reviewed',
+    title: 'UK True Crime Podcasts: Reviewed British Shows',
+    metaDescription: '{count} true crime podcasts in our UK directory. Explore editorial verdicts, listener ratings where available, and our guide to British true crime.',
     intro: [
-      'UK true crime podcasts bring British perspective and journalistic tradition to some of the country\'s most compelling criminal cases. From Victorian murders to contemporary gang crime, British podcasters approach their subjects with a distinctive sensibility — measured, detailed, and attentive to the systemic failures that allow crime to happen.',
-      'The UK true crime scene has produced internationally acclaimed shows that compete with the best from the US and Australia. British cases carry their own particular atmosphere — tightly-knit communities, infamous miscarriages of justice, and a legal system with its own distinctive rhythms.',
+      'Explore {count} true crime podcasts in our UK directory, including Untold: The Daniel Morgan Murder, They Walk Among Us and RedHanded. Read our editorial verdicts and check community scores for research, accuracy and storytelling where ratings are available (see how we review). Looking for where to start? Our guide to British true crime podcasts walks through the essentials.',
     ],
+    introLinks: [
+      { text: 'how we review', href: '/how-we-review' },
+      { text: 'guide to British true crime podcasts', href: '/blog/best-british-true-crime-podcasts' },
+    ],
+    picksHeading: 'Our must-listen UK picks',
+    howToChoose: {
+      heading: 'How to choose',
+      items: [
+        { lead: 'Want a new case each week?', text: 'Try long-running episodic shows such as They Walk Among Us or RedHanded.' },
+        { lead: 'Want one story told in depth?', text: 'Look for the investigative series from BBC, Tortoise and The Crime Desk.' },
+        { lead: 'Care about rigour?', text: 'Check the Research Quality and Factual Accuracy community scores where listeners have submitted ratings. These scores are not an independent fact-check.' },
+      ],
+    },
     faqs: [
       {
         q: 'What are the best UK true crime podcasts?',
-        a: 'Real Crimes, Crime & Punishment UK, The British True Crime Club, and Bad People are among the most listened-to UK-produced true crime podcasts. BBC Sounds has also produced acclaimed documentary podcasts including Untold: The Daniel Morgan Murder, which became a major public inquiry.',
+        a: 'Our must-listen UK picks include They Walk Among Us, RedHanded and Untold: The Daniel Morgan Murder. See the full list above, or our guide to British true crime podcasts.',
+        links: [{ text: 'guide to British true crime podcasts', href: '/blog/best-british-true-crime-podcasts' }],
       },
       {
         q: 'Are UK true crime podcasts different from American ones?',
