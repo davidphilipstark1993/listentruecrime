@@ -25,6 +25,7 @@ import { disclosedProviders, getAffiliateProductsBySlugs, getAffiliateProductsFo
 import { extractAffiliateSlugs, parseSlugList } from '@/lib/affiliates/mdx'
 import { AffiliateProductCard } from '@/components/affiliates/affiliate-product-card'
 import { FurtherReading } from '@/components/affiliates/further-reading'
+import { AdSlot } from '@/components/ads/ad-slot'
 import { AffiliateLink } from '@/components/affiliates/affiliate-link'
 import { AffiliateDisclosure } from '@/components/affiliates/affiliate-disclosure'
 
@@ -321,6 +322,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 headingAs="h2"
                 className="mt-10"
               />
+
+              {/* Cross-promotion (managed in /admin/ads) */}
+              <AdSlot placement="article" className="mt-10" />
 
               <ShareButtons title={post.title} url={postUrl} />
 

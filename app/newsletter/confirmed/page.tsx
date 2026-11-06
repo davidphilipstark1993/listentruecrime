@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
+import { AdSlot } from '@/components/ads/ad-slot'
 
 export const metadata: Metadata = {
   title: 'Subscription confirmation',
@@ -45,6 +46,8 @@ export default function ConfirmedPage({ searchParams }: { searchParams: { status
             </div>
           )}
         </section>
+        {/* Cross-promotion (managed in /admin/ads) — only after a successful confirmation */}
+        {status === 'ok' && <AdSlot placement="newsletter_confirmed" className="max-w-xl mx-auto px-4 sm:px-6 mt-12" />}
       </main>
       <Footer />
     </>
