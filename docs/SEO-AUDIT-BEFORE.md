@@ -29,7 +29,7 @@ The technical foundations are already strong. Every sitemap URL returns `200`, h
 | 10 | **`llms.txt` exists but is thin** (no `llms.txt` link to `/about`, the author page, UK/serial-killer guides; no last-updated; rating language needs alignment). | Low–Medium |
 | 11 | **Stale `2025` in the titles of 12 `/best/*` pages**; the best page title uses the current year dynamically (good) but the hard-coded FAQ copy does not reflect real data. | Low |
 | 12 | **Podcast meta quality:** 108 of 775 meta descriptions exceed 165 characters, 46 are under 70, and 31 titles exceed 65 characters (truncated in SERPs). | Low |
-| 13 | **Data inconsistencies that leak into pages:** case type labels differ only by case (`Cold case` 15 vs `Cold Case` 114; `Missing person` 25 vs `Missing Person` 70; `Serial killer` 7 vs `Serial Killer` 52) and `Serialized` (153) vs `Serialised` (68) format values. Category membership logic compares exact strings, so a share of shows is silently missed from category and "who it's for" logic. | Medium |
+| 13 | **Data inconsistencies that leak into pages:** case-type labels differ by case (`Cold case` 15 vs `Cold Case` 114; `Missing person` 25 vs `Missing Person` 70; `Serial killer` 7 vs `Serial Killer` 52) and `Serialized` (153) vs `Serialised` (68) format values. Category pages already tolerate the casing variants via `CATEGORY_TO_CASE_TYPES`, but the podcast template's "who it's for" and "best episode" logic and the `/best/*` filters compare exact strings, so the 68 `Serialised` shows and the lower-case variants are silently skipped. | Medium |
 
 ---
 
@@ -136,7 +136,7 @@ Two parallel schema helper modules exist (`lib/seo.ts`, whose `BASE` default has
   - `/best/cold-case`, `/best/missing-persons` already canonicalise to categories and are `noindex`.
   - `/blog/true-crime-podcasts-spotify` ↔ `/platform/Spotify`
 - **Title staleness:** all `/best/*` titles hard-code "2025".
-- **Case-type taxonomy:** inconsistent casing (finding 13) and 52 podcasts with no `format_type`, 22 with no `case_types`, 15 with empty/missing country.
+- **Case-type taxonomy:** inconsistent casing (finding 13; category pages already normalise it, the podcast template and `/best/*` do not) and 52 podcasts with no `format_type`, 22 with no `case_types`, 15 with empty/missing country.
 - **Probable data error found:** `the-trial-of-erin-patterson` is stored with `country = UK` although the case is Australian. Listed in the editorial review report; **not changed**.
 
 ---
