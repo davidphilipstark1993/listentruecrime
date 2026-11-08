@@ -14,3 +14,10 @@ export function ogDefaults(title: string, sub = 'True Crime Podcast Discovery & 
     images: [{ url: `${BASE}/og?${params.toString()}`, width: 1200, height: 630, alt: title }],
   }
 }
+
+// Stable JSON-LD node identifiers. Every template refers to the same
+// Organization, WebSite and editor by @id so search engines and AI systems
+// resolve them to one entity rather than several unconnected copies.
+export const ORG_ID = `${BASE}/#organization`
+export const WEBSITE_ID = `${BASE}/#website`
+export const personId = (authorSlug: string) => `${BASE}/authors/${authorSlug}#person`
