@@ -18,6 +18,12 @@ export const AUTHORS: Record<string, Author> = {
   },
 }
 
+/** Exact lookup: undefined for unknown slugs (page routes use this so unknown authors 404). */
+export function findAuthor(slug: string): Author | undefined {
+  return AUTHORS[slug]
+}
+
+/** Lookup with a fallback to the founder, for bylines on content that has no/unknown author set. */
 export function getAuthor(slug: string): Author {
   return AUTHORS[slug] ?? AUTHORS['david-stark']
 }

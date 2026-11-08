@@ -1,15 +1,18 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { getAuthor, getAllAuthors } from '@/lib/authors'
+import { findAuthor, getAllAuthors } from '@/lib/authors'
 import { getAllPosts } from '@/lib/blog'
 import { PostCard } from '@/components/blog/PostCard'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ORG_ID, WEBSITE_ID, personId } from '@/lib/seo/config'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
 
 interface Props { params: Promise<{ slug: string }> }
+
+// Only real authors exist; any other slug is a 404 (it used to render the founder's page under a new URL).
+export const dynamicParams = false
 
 export function generateStaticParams() {
   return getAllAuthors().map(a => ({ slug: a.slug }))
@@ -17,29 +20,48 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const author = getAuthor(slug)
+  const author = findAuthor(slug)
+  if (!author) return {}
+  const description = author.bio.length <= 160 ? author.bio : `${author.bio.slice(0, 157).replace(/\s+\S*$/, '')}…`
   return {
-    title: `${author.name} — Author`,
-    description: author.bio.slice(0, 160),
+    title: `${author.name} — ${author.role} at ListenTrueCrime`,
+    description,
     alternates: { canonical: `${BASE}/authors/${slug}` },
+    openGraph: { type: 'profile', title: `${author.name} — ${author.role}`, description, url: `${BASE}/authors/${slug}` },
   }
 }
 
 export default async function AuthorPage({ params }: Props) {
   const { slug } = await params
-  const author = getAuthor(slug)
+  const author = findAuthor(slug)
   if (!author) notFound()
 
   const posts = getAllPosts().filter(p => (p.author ?? 'david-stark') === slug)
 
+  const url = `${BASE}/authors/${author.slug}`
   const personSchema = {
     '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: author.name,
-    jobTitle: author.role,
-    description: author.bio,
-    url: `${BASE}/authors/${author.slug}`,
-    worksFor: { '@type': 'Organization', name: 'ListenTrueCrime', url: BASE },
+    '@graph': [
+      {
+        '@type': 'ProfilePage',
+        '@id': `${url}#webpage`,
+        url,
+        name: `${author.name} — ${author.role} at ListenTrueCrime`,
+        inLanguage: 'en-GB',
+        isPartOf: { '@id': WEBSITE_ID },
+        mainEntity: { '@id': personId(author.slug) },
+        breadcrumb: { '@id': `${url}#breadcrumb` },
+      },
+      {
+        '@type': 'Person',
+        '@id': personId(author.slug),
+        name: author.name,
+        jobTitle: author.role,
+        description: author.bio,
+        url,
+        worksFor: { '@id': ORG_ID },
+      },
+    ],
   }
 
   const breadcrumbSchema = buildBreadcrumbSchema([
@@ -51,7 +73,7 @@ export default async function AuthorPage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ ...breadcrumbSchema, '@id': `${url}#breadcrumb` }) }} />
 
       <Header />
       <main id="main-content" className="min-h-screen bg-ink-950 pt-16">

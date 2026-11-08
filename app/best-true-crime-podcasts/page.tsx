@@ -1,206 +1,249 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Star, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react'
+import { ArrowRight, Star } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
-import { PodcastCard } from '@/components/podcasts/podcast-card'
+import { RecommendationEntry } from '@/components/best/recommendation-entry'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { NewsletterLeadMagnet } from '@/components/newsletter/newsletter-lead-magnet'
 import { CATEGORIES, COUNTRIES } from '@/lib/types/database'
-import { buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
 import { BASE, ogDefaults } from '@/lib/seo/config'
+import { buildBestPageGraph } from '@/lib/seo/best-schema'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
 import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
-import type { Podcast, RatingStats } from '@/lib/types/database'
-const YEAR = new Date().getFullYear()
+import { getPostBySlug } from '@/lib/blog'
+import { getAuthor } from '@/lib/authors'
+import {
+  BEST_PAGE_COLUMNS, BEST_PAGE_UPDATED, BEST_PAGE_YEAR, BEST_SECTIONS, buildBestFaqs, buildSections, computeFacts,
+  describeEntry, formatBestPageDate, pickTopPicks, type BestPodcast,
+} from '@/lib/best-page'
+
+const PATH = '/best-true-crime-podcasts'
+const URL_ = `${BASE}${PATH}`
+const YEAR = BEST_PAGE_YEAR
+const TITLE = `Best True Crime Podcasts (${YEAR}): Editor's Picks by Genre`
+const DESCRIPTION = `The best true crime podcasts of ${YEAR}, picked by our editor with Binge Factor scores, plus top picks for beginners, cold cases, serial killers and the UK.`
 
 export const metadata: Metadata = {
   // Absolute: the site template would append " | ListenTrueCrime" and push this past ~60 characters.
-  title: { absolute: `Best True Crime Podcasts (${YEAR}): Expert-Reviewed, Binge-Scored` },
-  description:
-    `The best true crime podcasts of ${YEAR}, each with an expert verdict, a binge score and community ratings. From Serial to Casefile to Teacher\'s Pet, find what to hear next.`,
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   openGraph: {
-    title: `Best True Crime Podcasts (${YEAR}): Expert-Reviewed, Binge-Scored`,
-    description: 'Expert-reviewed, binge-scored and community-rated. Find your next true crime obsession.',
-    url: `${BASE}/best-true-crime-podcasts`,
-    ...ogDefaults('Best True Crime Podcasts', 'Expert-reviewed, binge-scored and community-rated'),
+    title: TITLE,
+    description: DESCRIPTION,
+    url: URL_,
+    ...ogDefaults(`Best True Crime Podcasts (${YEAR})`, "Editor's picks, scored for Binge Factor"),
   },
   twitter: {
     card: 'summary_large_image',
-    title: `Best True Crime Podcasts (${YEAR}): Expert-Reviewed, Binge-Scored`,
-    description: 'Expert-reviewed and community-rated. From Serial to Crime Junkie, Casefile to Teacher\'s Pet — find your next obsession.',
+    title: TITLE,
+    description: DESCRIPTION,
   },
-  alternates: { canonical: `${BASE}/best-true-crime-podcasts` },
+  alternates: { canonical: URL_ },
 }
 
-const faqs = [
-  {
-    q: `What are the best true crime podcasts in ${YEAR}?`,
-    a: 'The best true crime podcasts right now include Serial (the podcast that started the genre\'s golden age), Casefile (the definitive Australian crime podcast), Crime Junkie (for weekly case summaries), In the Dark (for serious investigative journalism), and Teacher\'s Pet (arguably the finest single-season true crime podcast ever made). Our community ratings and expert scores are updated regularly as new shows emerge.',
-  },
-  {
-    q: 'What is the most popular true crime podcast of all time?',
-    a: 'Serial is the most downloaded and influential true crime podcast of all time, with hundreds of millions of downloads since its 2014 launch. Crime Junkie is arguably the most popular currently-active weekly true crime podcast, with millions of listeners per episode. Casefile is the most popular Australian true crime podcast globally.',
-  },
-  {
-    q: 'What true crime podcast should I start with?',
-    a: 'If you\'re new to true crime podcasts, start with Serial Season 1. It\'s short (12 episodes), brilliantly produced, and perfectly encapsulates what the genre can do at its best. After that, try Casefile for episodic variety, or Teacher\'s Pet if you want another deep serialized investigation.',
-  },
-  {
-    q: 'How do we rank true crime podcasts?',
-    a: 'Our rankings draw on our editorial verdict and Binge Factor score for each show, alongside community ratings from registered listeners where they exist. Podcasts with a "Must Listen" verdict are the ones we recommend most strongly. Full details are on our How We Review page.',
-  },
-  {
-    q: 'Are there true crime podcasts specifically about cold cases?',
-    a: 'Yes — cold case podcasts are one of the most popular subgenres. Your Own Backyard, In the Dark, Atlanta Monster, and dedicated episodes from Casefile all focus on unsolved or long-cold cases. Browse our Cold Cases category for the full list.',
-  },
-  {
-    q: 'What are the best UK true crime podcasts?',
-    a: 'The best UK true crime podcasts include Real Crimes, Crime & Punishment UK, and various BBC documentary podcasts. For British cases covered by international shows, Casefile and Crime Junkie both regularly cover UK crimes. Browse our UK True Crime category for a curated selection.',
-  },
-  {
-    q: 'What\'s the difference between investigative podcasts and true crime podcasts?',
-    a: 'Investigative true crime podcasts conduct original reporting — filing FOIA requests, interviewing primary sources, and bringing new evidence to light. Standard true crime podcasts typically retell cases using existing public records. Shows like Serial, In the Dark, and Your Own Backyard are investigative; Crime Junkie is summarising and retelling.',
-  },
-]
-
 export const revalidate = 3600
+
+/** Safe to inline in a <script>: stops "</script>" or "<!--" sequences in data ending the block. */
+const jsonLd = (data: unknown) => JSON.stringify(data).replace(/</g, '\\u003c')
+
+function NameLink({ p }: { p: BestPodcast }) {
+  return <Link href={`/podcasts/${p.slug}`} className="text-crimson hover:underline font-medium">{p.title}</Link>
+}
 
 export default async function BestTrueCrimePodcastsPage() {
   const supabase = createAdminClient()
 
-  const [{ data: topRated }, { data: newest }, { data: featured }, reading] = await Promise.all([
-    supabase
-      .from('podcasts')
-      .select(`*, rating_stats:podcast_rating_stats(*)`)
-      .eq('is_published', true)
-      .order('binge_factor', { ascending: false })
-      .limit(12),
-    supabase
-      .from('podcasts')
-      .select(`*, rating_stats:podcast_rating_stats(*)`)
-      .eq('is_published', true)
-      .order('created_at', { ascending: false })
-      .limit(6),
-    supabase
-      .from('podcasts')
-      .select(`*, rating_stats:podcast_rating_stats(*)`)
-      .eq('is_published', true)
-      .eq('quick_verdict', 'Must listen')
-      .limit(6),
+  const curatedSlugs = Array.from(new Set(BEST_SECTIONS.map(s => s.curatedFrom).filter((s): s is string => !!s)))
+  const curated: Record<string, string[]> = {}
+  for (const slug of curatedSlugs) curated[slug] = getPostBySlug(slug)?.relatedPodcasts ?? []
+
+  const [{ data: rows }, { count: threeRatings }, reading] = await Promise.all([
+    supabase.from('podcasts').select(BEST_PAGE_COLUMNS).eq('is_published', true).limit(5000),
+    supabase.from('podcast_rating_stats').select('podcast_id', { count: 'exact', head: true }).gte('rating_count', 3),
     // Books placed on this page in /admin/affiliates (page type "Other page")
     getAffiliateProductsForPage('page', 'best-true-crime-podcasts'),
   ])
 
-  type PodcastWithStats = Podcast & { rating_stats: RatingStats | null }
-  const top = (topRated ?? []) as PodcastWithStats[]
-  const must = (featured ?? []) as PodcastWithStats[]
-  const fresh = (newest ?? []) as PodcastWithStats[]
+  const all = (rows ?? []) as unknown as BestPodcast[]
+  const { picks: top, total: topTotal } = pickTopPicks(all, 10)
+  const sections = buildSections(all, curated, 5)
+  const facts = computeFacts(all, threeRatings ?? 0)
+  const dateLabel = formatBestPageDate()
+  const faqs = buildBestFaqs(top, sections, facts, dateLabel)
+  const author = getAuthor('david-stark')
+  const section = (id: string) => sections.find(s => s.id === id)
 
-  const faqSchema = buildFAQSchema(faqs)
-  const breadcrumbSchema = buildBreadcrumbSchema([
-    { name: 'Home', url: BASE },
-    { name: 'Best True Crime Podcasts', url: `${BASE}/best-true-crime-podcasts` },
-  ])
-  const itemListSchema = buildItemListSchema(
-    'Best True Crime Podcasts',
-    'Expert-reviewed and community-rated true crime podcasts',
-    top.map((p, i) => ({ name: p.title, url: `${BASE}/podcasts/${p.slug}` }))
-  )
+  const topSummaries = top.map(p => ({ podcast: p, summary: describeEntry(p).summary }))
+  const graph = buildBestPageGraph({
+    url: URL_,
+    name: `Best True Crime Podcasts (${YEAR})`,
+    description: DESCRIPTION,
+    dateModified: BEST_PAGE_UPDATED,
+    authorSlug: author.slug,
+    topPicks: topSummaries,
+    faqs,
+    breadcrumb: [{ name: 'Home', url: BASE }, { name: 'Best True Crime Podcasts', url: URL_ }],
+  })
+
+  // "Quick answers": the first entry of each section, so a skim reader (or an
+  // answer engine) gets the headline pick for each intent without scrolling.
+  const quick: { label: string; p: BestPodcast }[] = [
+    ...(top[0] ? [{ label: 'Best overall', p: top[0] }] : []),
+    ...sections.filter(s => s.id !== 'limited-series' && s.id !== 'episodic' && s.id !== 'apple-podcasts')
+      .map(s => ({ label: s.quickLabel, p: s.podcasts[0] })),
+  ]
+
+  const jumpLinks = [
+    { href: '#how-we-choose', label: 'How we choose' },
+    { href: '#top-picks', label: "Editor's top picks" },
+    ...sections.map(s => ({ href: `#${s.id}`, label: s.shortLabel })),
+    { href: '#faq', label: 'FAQs' },
+  ]
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(graph) }} />
       <Header />
 
       <main id="main-content" className="pt-24 pb-16">
-        {/* Hero */}
-        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
-          <nav aria-label="Breadcrumb" className="flex items-center justify-center gap-1.5 text-xs text-stone-subtle mb-6">
+        {/* Hero + answer-first introduction */}
+        <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-stone-subtle mb-6">
             <Link href="/" className="hover:text-stone transition-colors">Home</Link>
             <span>/</span>
             <span className="text-stone-muted">Best True Crime Podcasts</span>
           </nav>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold-DEFAULT/10 border border-gold-DEFAULT/20 text-gold-light text-xs font-medium mb-6">
-            <Star size={11} fill="currentColor" />
-            Community-rated & expert-reviewed
-          </div>
-          <h1 className="heading-display text-4xl sm:text-5xl mb-4">
-            Best True Crime Podcasts ({YEAR})
-          </h1>
-          <p className="text-stone-muted text-lg max-w-2xl mx-auto leading-relaxed">
-            Every podcast on this list has been reviewed for storytelling, research quality,
-            host quality, and binge-worthiness. No filler — only the ones worth your time.
+          <h1 className="heading-display text-4xl sm:text-5xl mb-5">Best True Crime Podcasts ({YEAR})</h1>
+
+          {top.length >= 3 && (
+            <p className="text-stone text-lg leading-relaxed mb-4">
+              The best true crime podcasts of {YEAR}, by our ranking, are <NameLink p={top[0]} />, <NameLink p={top[1]} /> and <NameLink p={top[2]} />.
+              All three carry our <strong>Must listen</strong> verdict and a Binge Factor of {Math.min(...top.slice(0, 3).map(p => p.binge_factor ?? 0))} or more out of 10.
+              Below are {top.length} editor’s top picks, then the best shows for beginners, cold cases, serial killers, the UK, binge-listening and more, each linked to our full review.
+            </p>
+          )}
+          <p className="text-stone-muted leading-relaxed mb-5">
+            Our directory covers {facts.publishedCount} true crime podcasts. Rankings come from our editorial verdict and Binge Factor score, with community ratings shown separately.{' '}
+            <Link href="/how-we-review" className="text-crimson hover:underline">See how we review</Link>.
           </p>
-          <p className="text-stone-subtle text-sm mt-3">
-            Updated {new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
+          <p className="text-stone-subtle text-sm">
+            Edited by <Link href={`/authors/${author.slug}`} className="text-stone-muted hover:text-stone underline underline-offset-2">{author.name}</Link>, {author.role}
+            {' · '}Last updated <time dateTime={BEST_PAGE_UPDATED}>{dateLabel}</time>
           </p>
         </section>
 
-        {/* Must Listen */}
-        {must.length > 0 && (
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-            <div className="mb-6">
-              <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Essential listening</p>
-              <h2 className="heading-section text-2xl sm:text-3xl">Must-listen picks</h2>
-              <p className="text-stone-muted text-sm mt-1">Podcasts that have earned our highest editorial rating across all dimensions</p>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-              {must.map((p, i) => <PodcastCard key={p.id} podcast={p} priority={i < 3} />)}
-            </div>
+        {/* Quick answers */}
+        {quick.length > 0 && (
+          <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-10" aria-labelledby="quick-answers">
+            <h2 id="quick-answers" className="font-serif text-xl text-stone mb-3">Quick answers</h2>
+            <dl className="card p-5 grid sm:grid-cols-[minmax(0,13rem)_1fr] gap-x-6 gap-y-2 text-sm">
+              {quick.map(q => (
+                <div key={q.label} className="contents">
+                  <dt className="text-stone-subtle">{q.label}</dt>
+                  <dd className="text-stone-muted"><NameLink p={q.p} /></dd>
+                </div>
+              ))}
+            </dl>
           </section>
         )}
 
-        {/* Top by binge factor */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 section-divider pt-16">
-          <div className="flex items-end justify-between mb-6">
-            <div>
-              <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Rankings</p>
-              <h2 className="heading-section text-2xl sm:text-3xl">Highest binge factor</h2>
-              <p className="text-stone-muted text-sm mt-1">Ranked by our community's compulsive listenability score</p>
-            </div>
-            <Link href="/browse?sort=binge_desc" className="text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
-              Full list <ArrowRight size={14} />
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {top.map((p, i) => <PodcastCard key={p.id} podcast={p} priority={i < 6} />)}
+        {/* Jump links */}
+        <nav aria-label="On this page" className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-14">
+          <ul className="flex flex-wrap gap-2">
+            {jumpLinks.map(j => (
+              <li key={j.href}>
+                <a href={j.href} className="inline-block px-3 py-1.5 rounded-full bg-ink-800 border border-white/[0.08] text-xs text-stone-muted hover:text-stone hover:border-white/20 transition-colors">{j.label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* How we choose */}
+        <section id="how-we-choose" className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-14 scroll-mt-24" aria-labelledby="how-we-choose-h">
+          <h2 id="how-we-choose-h" className="heading-section text-2xl sm:text-3xl mb-4">How we choose the best true crime podcasts</h2>
+          <div className="space-y-4 text-stone-muted leading-relaxed">
+            <p>Three things shape the lists on this page, and we keep them separate so you can see which is doing the work.</p>
+            <ol className="list-decimal pl-5 space-y-3">
+              <li>
+                <strong className="text-stone">Editorial verdict.</strong> Each podcast gets a short verdict from the editor: <em>Must listen</em> for our strongest recommendations, or a line saying who a show suits. Every pick on this page is a Must listen show unless it comes from one of our published guides, and the verdict is always shown beside it.
+              </li>
+              <li>
+                <strong className="text-stone">Binge Factor.</strong> An editorial score from 1 to 10 for how compulsively listenable a show is. It sets the order within each list. {top.length > 0 && <>{topTotal} of the {facts.mustListenCount} Must listen shows score 9 or 10.</>}
+              </li>
+              <li>
+                <strong className="text-stone">Community ratings.</strong> Listeners can rate shows on six dimensions, and those scores appear on each podcast page.{' '}
+                {facts.threeRatingCount === 0
+                  ? 'No podcast has yet reached three community ratings, so they do not influence the order here.'
+                  : `${facts.threeRatingCount} podcasts have three or more ratings; community scores inform, but do not set, the order here.`}
+              </li>
+            </ol>
+            <p>
+              Verdicts and Binge Factor scores are the editor’s opinion, informed by public listener and critic reviews. We do not claim to have listened to every episode of every show. Paid promotion is kept separate: buying a placement does not buy a review, a verdict or a place in these lists.{' '}
+              <Link href="/how-we-review" className="text-crimson hover:underline">Read the full method</Link>{' · '}
+              <Link href="/promote-your-podcast#independence-heading" className="text-crimson hover:underline">Editorial independence</Link>.
+            </p>
           </div>
         </section>
 
-        {/* Popular guides */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 section-divider pt-16">
-          <div className="mb-6">
-            <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Guides</p>
-            <h2 className="heading-section text-2xl sm:text-3xl">Popular guides</h2>
-          </div>
+        {/* Editor's top picks */}
+        <section id="top-picks" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 scroll-mt-24" aria-labelledby="top-picks-h">
+          <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Ranked</p>
+          <h2 id="top-picks-h" className="heading-section text-2xl sm:text-3xl mb-2">Editor’s top picks</h2>
+          <p className="text-stone-muted text-sm mb-6">
+            The {top.length} highest-ranked of {topTotal} podcasts that are both Must listen and Binge Factor 9 or 10. Ties are broken by whether the show is featured, then alphabetically.
+          </p>
+          <ol className="space-y-4">
+            {top.map((p, i) => <RecommendationEntry key={p.id} podcast={p} rank={i + 1} priority={i < 2} />)}
+          </ol>
+          <p className="mt-5 text-sm">
+            <Link href="/browse?sort=binge_desc" className="inline-flex items-center gap-1 text-stone-muted hover:text-stone">
+              Browse every podcast by Binge Factor <ArrowRight size={14} aria-hidden />
+            </Link>
+          </p>
+        </section>
+
+        {/* Sub-intent sections */}
+        {sections.map(s => (
+          <section key={s.id} id={s.id} className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 section-divider pt-14 scroll-mt-24" aria-labelledby={`${s.id}-h`}>
+            <h2 id={`${s.id}-h`} className="heading-section text-2xl sm:text-3xl mb-2">{s.heading}</h2>
+            <p className="text-stone-muted text-sm leading-relaxed mb-1">{s.blurb}</p>
+            <p className="text-stone-subtle text-xs mb-6">
+              How these are picked: {s.rule} {s.total > s.podcasts.length ? `Showing ${s.podcasts.length} of ${s.total} shows that meet this rule.` : `Showing ${s.podcasts.length} shows.`}
+            </p>
+            <ul className="space-y-4">
+              {s.podcasts.map(p => <RecommendationEntry key={p.id} podcast={p} platform={s.platform} />)}
+            </ul>
+            <p className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+              {s.more.map(m => (
+                <Link key={m.href} href={m.href} className="inline-flex items-center gap-1 text-crimson hover:underline">
+                  {m.label} <ArrowRight size={13} aria-hidden />
+                </Link>
+              ))}
+            </p>
+          </section>
+        ))}
+
+        {/* Guides + browse hubs */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 section-divider pt-14" aria-labelledby="guides-h">
+          <h2 id="guides-h" className="heading-section text-2xl sm:text-3xl mb-6">More true crime podcast guides</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
             {POPULAR_GUIDES.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="card-hover p-4 flex items-center text-stone-muted text-sm font-medium hover:text-white transition-colors"
-              >
+              <Link key={link.href} href={link.href} className="card-hover p-4 flex items-center text-stone-muted text-sm font-medium hover:text-white transition-colors">
                 {link.label}
               </Link>
             ))}
           </div>
         </section>
 
-        {/* Browse by category */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 section-divider pt-16">
-          <div className="mb-6">
-            <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">By genre</p>
-            <h2 className="heading-section text-2xl sm:text-3xl">Browse by category</h2>
-          </div>
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16" aria-labelledby="browse-cats-h">
+          <h2 id="browse-cats-h" className="heading-section text-2xl sm:text-3xl mb-6">Browse true crime podcasts by category</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {CATEGORIES.map(cat => (
               <Link key={cat.slug} href={`/category/${cat.slug}`} className="card-hover group p-5 flex flex-col gap-2">
-                <span className="text-2xl">{cat.emoji}</span>
+                <span className="text-2xl" aria-hidden>{cat.emoji}</span>
                 <h3 className="text-stone text-sm font-semibold group-hover:text-white transition-colors">{cat.label}</h3>
                 <p className="text-stone-subtle text-xs leading-relaxed line-clamp-2">{cat.description}</p>
               </Link>
@@ -208,12 +251,8 @@ export default async function BestTrueCrimePodcastsPage() {
           </div>
         </section>
 
-        {/* By country */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 section-divider pt-16">
-          <div className="mb-6">
-            <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">By region</p>
-            <h2 className="heading-section text-2xl sm:text-3xl">Browse by country</h2>
-          </div>
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16" aria-labelledby="browse-countries-h">
+          <h2 id="browse-countries-h" className="heading-section text-2xl sm:text-3xl mb-6">Browse true crime podcasts by country</h2>
           <div className="flex flex-wrap gap-3">
             {Object.entries(COUNTRIES).map(([code, name]) => (
               <Link
@@ -221,46 +260,48 @@ export default async function BestTrueCrimePodcastsPage() {
                 href={`/country/${code}`}
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-ink-800 border border-white/[0.08] text-stone-muted hover:text-stone hover:border-white/20 text-sm transition-colors"
               >
-                {name} True Crime <ArrowRight size={13} />
+                {name} True Crime <ArrowRight size={13} aria-hidden />
               </Link>
             ))}
           </div>
         </section>
 
-        {/* New additions */}
-        {fresh.length > 0 && (
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 section-divider pt-16">
-            <div className="mb-6">
-              <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Just added</p>
-              <h2 className="heading-section text-2xl sm:text-3xl">Newest reviews</h2>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-              {fresh.map((p) => <PodcastCard key={p.id} podcast={p} />)}
-            </div>
-          </section>
-        )}
+        {/* FAQ: plain headings and paragraphs, always visible, identical to the FAQPage markup */}
+        <section id="faq" className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 section-divider pt-14 scroll-mt-24" aria-labelledby="faq-h">
+          <h2 id="faq-h" className="heading-section text-2xl sm:text-3xl mb-8">Best true crime podcasts: frequently asked questions</h2>
+          <div className="space-y-7">
+            {faqs.map(f => (
+              <div key={f.q}>
+                <h3 className="font-serif text-lg text-stone mb-2">{f.q}</h3>
+                <p className="text-stone-muted leading-relaxed">{f.a}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-8 text-stone-subtle text-xs flex items-center gap-1.5">
+            <Star size={11} aria-hidden /> Last updated <time dateTime={BEST_PAGE_UPDATED}>{dateLabel}</time>
+          </p>
+        </section>
 
         {/* Newsletter CTA */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-divider pt-16 mb-16">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-divider pt-14 mb-16">
           <div className="relative overflow-hidden rounded-2xl bg-ink-800 border border-white/[0.06] p-8 sm:p-12">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(190,18,60,0.1),transparent_60%)]" />
             <div className="relative z-10 max-w-lg">
               <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-3">Newsletter</p>
               <h2 className="heading-section text-2xl sm:text-3xl mb-3">Get the best picks weekly</h2>
               <p className="text-stone-muted text-sm mb-6 leading-relaxed">
-                New reviews, hidden gems, and community favourites — straight to your inbox every week.
+                New reviews, hidden gems, and community favourites, straight to your inbox every week.
               </p>
               <NewsletterForm source="best_page" />
             </div>
           </div>
         </section>
 
-        {/* Lead magnet */}
         <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
           <NewsletterLeadMagnet variant="banner" source="best_page_lead_magnet" />
         </section>
 
-        {/* Related reading — only shown once products placed here are live */}
+        {/* Related reading: only shown once products placed here are live */}
         {reading.products.length > 0 && (
           <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
             <FurtherReading
@@ -272,25 +313,6 @@ export default async function BestTrueCrimePodcastsPage() {
             />
           </section>
         )}
-
-        {/* FAQ */}
-        <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-          <h2 className="heading-section text-2xl sm:text-3xl mb-8">Frequently Asked Questions</h2>
-          <div className="space-y-4">
-            {faqs.map((faq, i) => (
-              <details key={i} className="card p-5 group">
-                <summary className="flex items-center justify-between cursor-pointer list-none gap-4">
-                  <span className="text-stone font-medium text-sm">{faq.q}</span>
-                  <ChevronDown size={16} className="text-stone-subtle shrink-0 group-open:hidden" />
-                  <ChevronUp size={16} className="text-stone-subtle shrink-0 hidden group-open:block" />
-                </summary>
-                <p className="text-stone-muted text-sm leading-relaxed mt-3 pt-3 border-t border-white/[0.06]">
-                  {faq.a}
-                </p>
-              </details>
-            ))}
-          </div>
-        </section>
       </main>
 
       <Footer />

@@ -8,7 +8,8 @@ import { PostCard } from '@/components/blog/PostCard'
 import { Pagination } from '@/components/ui/pagination'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ORG_ID, WEBSITE_ID } from '@/lib/seo/config'
+import { buildBreadcrumbSchema } from '@/lib/seo/content'
 
 const PAGE_SIZE = 12
 
@@ -78,11 +79,9 @@ export default async function BlogIndexPage({ searchParams }: Props) {
     name: 'ListenTrueCrime Blog',
     description: 'Expert guides, reviews, and recommendations for true crime podcast lovers.',
     url: `${BASE}/blog`,
-    publisher: {
-      '@type': 'Organization',
-      name: 'ListenTrueCrime',
-      url: BASE,
-    },
+    publisher: { '@id': ORG_ID },
+    isPartOf: { '@id': WEBSITE_ID },
+    inLanguage: 'en-GB',
     blogPost: posts.slice(0, 10).map(p => ({
       '@type': 'BlogPosting',
       headline: p.title,
@@ -98,6 +97,10 @@ export default async function BlogIndexPage({ searchParams }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbSchema([{ name: 'Home', url: BASE }, { name: 'Blog', url: `${BASE}/blog` }])) }}
       />
       <Header />
       <main id="main-content" className="min-h-screen bg-ink-950">

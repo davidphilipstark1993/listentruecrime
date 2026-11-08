@@ -7,6 +7,7 @@ import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { BrowseControls } from '@/components/browse/browse-controls'
 import { Pagination } from '@/components/ui/pagination'
 import { BASE, ogDefaults } from '@/lib/seo/config'
+import { buildBreadcrumbSchema } from '@/lib/seo/content'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
 const PAGE_SIZE = 48
@@ -166,6 +167,7 @@ export default async function BrowsePage({ searchParams }: Props) {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbSchema([{ name: 'Home', url: BASE }, { name: 'Browse true crime podcasts', url: `${BASE}/browse` }])) }} />
       <Header />
       <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 min-h-screen">
         <div className="mb-8">

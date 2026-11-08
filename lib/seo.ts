@@ -3,7 +3,7 @@ import { SOCIAL_PROFILES } from '@/lib/seo/social-profiles'
 
 type RatingStatsLike = { avg_overall: number | null; rating_count: number }
 
-const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://listentruecrime.com'
+import { BASE } from '@/lib/seo/config' // single source of truth (www host, sanitised)
 
 export { BASE }
 

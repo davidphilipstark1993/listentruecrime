@@ -4,19 +4,26 @@ import { Star, Search, Users, Shield } from 'lucide-react'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { NewsletterForm } from '@/components/newsletter/newsletter-form'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ORG_ID, WEBSITE_ID, personId, ogDefaults } from '@/lib/seo/config'
+import { buildBreadcrumbSchema } from '@/lib/seo/content'
+import { getAuthor } from '@/lib/authors'
+
+const ABOUT_TITLE = 'About ListenTrueCrime — Independent True Crime Podcast Guide'
+const ABOUT_DESCRIPTION = 'ListenTrueCrime is an independent true crime podcast guide run by editor David Stark: editorial verdicts, Binge Factor scores and separate community ratings.'
 
 export const metadata: Metadata = {
-  title: 'About',
+  title: { absolute: ABOUT_TITLE },
   alternates: { canonical: `${BASE}/about` },
-  description: 'ListenTrueCrime helps you discover the best true crime podcasts through expert reviews, community ratings, and personalised recommendations.',
+  description: ABOUT_DESCRIPTION,
+  openGraph: { title: ABOUT_TITLE, description: ABOUT_DESCRIPTION, url: `${BASE}/about`, ...ogDefaults('About ListenTrueCrime', 'Independent true crime podcast guide') },
+  twitter: { card: 'summary_large_image', title: ABOUT_TITLE, description: ABOUT_DESCRIPTION },
 }
 
 const pillars = [
   {
     icon: Search,
     title: 'Discovery first',
-    body: 'No algorithms, no ads, no clickbait. Every podcast is reviewed on storytelling, research quality, host quality, and production — giving you the signal, not the noise.',
+    body: 'Picks are made by an editor, not an algorithm. Every podcast in the directory carries an editorial verdict and a Binge Factor score, so you get a clear signal rather than a wall of listings.',
   },
   {
     icon: Star,
@@ -36,16 +43,36 @@ const pillars = [
 ]
 
 export default function AboutPage() {
+  const editor = getAuthor('david-stark')
+  const aboutSchema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'AboutPage',
+        '@id': `${BASE}/about#webpage`,
+        url: `${BASE}/about`,
+        name: ABOUT_TITLE,
+        description: ABOUT_DESCRIPTION,
+        inLanguage: 'en-GB',
+        isPartOf: { '@id': WEBSITE_ID },
+        about: { '@id': ORG_ID },
+        mainEntity: { '@id': ORG_ID },
+        breadcrumb: { '@id': `${BASE}/about#breadcrumb` },
+      },
+      { ...buildBreadcrumbSchema([{ name: 'Home', url: BASE }, { name: 'About', url: `${BASE}/about` }]), '@id': `${BASE}/about#breadcrumb` },
+    ],
+  }
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutSchema).replace(/</g, '\\u003c') }} />
       <Header />
       <main id="main-content" className="pt-24 pb-16">
         {/* Hero */}
         <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-20">
           <h1 className="heading-display text-4xl sm:text-5xl mb-6">About ListenTrueCrime</h1>
           <p className="text-stone-muted text-xl leading-relaxed">
-            The internet's best destination for discovering, rating, and discussing
-            true crime podcasts. Built by fans, for fans.
+            ListenTrueCrime is an independent guide to true crime podcasts: editorial verdicts,
+            Binge Factor scores and community ratings, all in one directory. Built by fans, for fans.
           </p>
         </section>
 
@@ -90,6 +117,24 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* Who runs it */}
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-20" aria-labelledby="who-runs-it">
+          <div className="card p-8 sm:p-10">
+            <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-4">Who runs ListenTrueCrime</p>
+            <h2 id="who-runs-it" className="heading-section text-2xl sm:text-3xl mb-4">Edited by {editor.name}</h2>
+            <div className="space-y-4 text-stone-muted leading-relaxed">
+              <p>
+                <Link href={`/authors/${editor.slug}`} className="text-crimson hover:underline">{editor.name}</Link> is the {editor.role} of ListenTrueCrime.
+                {' '}{editor.bio}
+              </p>
+              <p>
+                Editorial verdicts and Binge Factor scores are the editor&apos;s opinion, informed by what listeners and critics say in public reviews.
+                We do not claim to have listened to every episode of every show in the directory.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* How ratings work */}
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-20 section-divider pt-16">
           <h2 className="heading-section text-2xl sm:text-3xl mb-6">How ratings work</h2>
@@ -116,6 +161,22 @@ export default function AboutPage() {
             <Link href="/how-we-review" className="inline-flex items-center gap-1.5 text-crimson text-sm hover:underline">
               Read our full review methodology →
             </Link>
+          </div>
+        </section>
+
+        {/* Funding and independence */}
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-20 section-divider pt-16" aria-labelledby="independence">
+          <h2 id="independence" className="heading-section text-2xl sm:text-3xl mb-6">How the site is funded</h2>
+          <div className="card p-6 sm:p-8 space-y-4 text-stone-muted text-sm leading-relaxed">
+            <p>
+              ListenTrueCrime may earn from affiliate links (for example to books and audiobooks through the Amazon EU Associates Programme)
+              and from paid podcast promotion. Pages with affiliate links say so, and paid placements are always labelled as promoted or sponsored.
+            </p>
+            <p>
+              Commissions never decide which podcasts we review or how we rate them, and buying a placement does not buy a review, a rating or a verdict.
+              See our <Link href="/terms#affiliate-links" className="text-crimson hover:underline">terms</Link> and
+              our <Link href="/promote-your-podcast#independence-heading" className="text-crimson hover:underline">editorial independence statement</Link>.
+            </p>
           </div>
         </section>
 

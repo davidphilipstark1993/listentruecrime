@@ -1,10 +1,13 @@
 import type { MetadataRoute } from 'next'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { CATEGORIES, COUNTRIES, PLATFORMS, PLATFORM_SLUGS } from '@/lib/types/database'
-import { getAllPosts, getAllCategories, getAllTags, MIN_INDEXABLE_TAG_POSTS } from '@/lib/blog'
+import { CATEGORIES, CATEGORY_CURATED_SLUGS, CATEGORY_TO_CASE_TYPES, COUNTRIES, PLATFORMS, PLATFORM_SLUGS } from '@/lib/types/database'
+import { getAllPosts, getAllCategories, getAllTags, MIN_INDEXABLE_TAG_POSTS, slugifyCategory } from '@/lib/blog'
 import { getAllCases } from '@/lib/cases'
 import { getAllAuthors } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
+import { BEST_PAGE_UPDATED } from '@/lib/best-page'
+import { HOW_WE_REVIEW_UPDATED, ABOUT_UPDATED } from '@/lib/seo/page-dates'
+import { hasCaseType } from '@/lib/podcast-facets'
 import { shopEnabled, SHOP_CATEGORIES, SHOP_COLLECTIONS } from '@/lib/shop/config'
 import { normalisePath } from '@/lib/redirects'
 import { getIndexablePodcastsLike, getListingCounts, MIN_INDEXABLE_COUNTRY_PODCASTS, MIN_INDEXABLE_PLATFORM_PODCASTS } from '@/lib/seo/indexability'
@@ -15,14 +18,18 @@ export const revalidate = 3600
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createAdminClient()
-  // Shared freshness stamp for collections with no per-item updated_at of
-  // their own (categories/countries/platforms are static lists; podcasts,
-  // blog posts, cases, and newsletters each carry their own real date below).
-  const now = new Date()
+  // lastmod is only given where there is a real date behind it: the newest update among
+  // the records a hub page lists, a post's own date, or an editorial date constant.
+  // Pages with no honest date omit lastModified rather than reporting "now" on every
+  // regeneration, which teaches crawlers to ignore the field.
+  const latest = (dates: (string | null | undefined)[]): Date | undefined => {
+    const ts = dates.filter((d): d is string => !!d).map(d => new Date(d).getTime()).filter(n => !Number.isNaN(n))
+    return ts.length ? new Date(Math.max(...ts)) : undefined
+  }
   const listingCounts = await getListingCounts()
   const { data: podcasts } = await supabase
     .from('podcasts')
-    .select('slug, updated_at')
+    .select('slug, updated_at, country, platforms, case_types, binge_factor')
     .eq('is_published', true)
 
   // Redirected and noindexed pages must not be in the sitemap. These columns/tables
@@ -32,10 +39,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { data: noindexRows } = await supabase.from('podcasts').select('slug').eq('noindex', true)
   const noindexed = new Set((noindexRows ?? []).map(r => r.slug))
   const isListed = (path: string) => !redirected.has(path)
+  const updatedBySlug = new Map((podcasts ?? []).map(p => [p.slug, p.updated_at as string | null]))
+  const allPodcastsUpdated = latest((podcasts ?? []).map(p => p.updated_at))
 
   const podcastUrls: MetadataRoute.Sitemap = (podcasts ?? []).filter(p => isListed(`/podcasts/${p.slug}`) && !noindexed.has(p.slug)).map(p => ({
     url: `${BASE}/podcasts/${p.slug}`,
-    lastModified: p.updated_at ?? new Date(),
+    lastModified: latest([p.updated_at]),
     changeFrequency: 'weekly',
     priority: 0.8,
   }))
@@ -46,29 +55,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     await getIndexablePodcastsLike(getAllPosts().map(p => p.slug))
   ).map(slug => ({
     url: `${BASE}/podcasts-like/${slug}`,
-    lastModified: now,
+    lastModified: latest([updatedBySlug.get(slug)]),
     changeFrequency: 'weekly',
     priority: 0.6,
   }))
 
   // uk-crime / australian-crime canonicalise to their country pages (see app/category/[slug]/page.tsx).
-  const categoryUrls: MetadataRoute.Sitemap = CATEGORIES.filter(c => c.slug !== 'uk-crime' && c.slug !== 'australian-crime').map(c => ({
+  const categoryUrls: MetadataRoute.Sitemap = CATEGORIES.filter(c => c.slug !== 'uk-crime' && c.slug !== 'australian-crime').map(c => {
+    const types = CATEGORY_TO_CASE_TYPES[c.slug] ?? []
+    const curated = new Set(CATEGORY_CURATED_SLUGS[c.slug] ?? [])
+    const members = (podcasts ?? []).filter(p =>
+      curated.size ? curated.has(p.slug)
+        : c.slug === 'binge-worthy' ? (p.binge_factor ?? 0) >= 8
+        : types.length > 0 && hasCaseType(p, ...types))
+    return { slug: c.slug, updated: latest(members.map(p => p.updated_at)) }
+  }).map(c => ({
     url: `${BASE}/category/${c.slug}`,
-    lastModified: now,
+    lastModified: c.updated,
     changeFrequency: 'weekly',
     priority: 0.7,
   }))
 
   const countryUrls: MetadataRoute.Sitemap = Object.keys(COUNTRIES).filter(code => (listingCounts.countries[code] ?? 0) >= MIN_INDEXABLE_COUNTRY_PODCASTS).map(code => ({
     url: `${BASE}/country/${code}`,
-    lastModified: now,
+    lastModified: latest((podcasts ?? []).filter(p => p.country === code).map(p => p.updated_at)),
     changeFrequency: 'weekly',
     priority: 0.6,
   }))
 
   const platformUrls: MetadataRoute.Sitemap = PLATFORMS.filter(p => (listingCounts.platforms[p] ?? 0) >= MIN_INDEXABLE_PLATFORM_PODCASTS).map(p => ({
     url: `${BASE}/platform/${PLATFORM_SLUGS[p] ?? encodeURIComponent(p)}`,
-    lastModified: now,
+    lastModified: latest((podcasts ?? []).filter(x => (x.platforms ?? []).includes(p)).map(x => x.updated_at)),
     changeFrequency: 'monthly',
     priority: 0.5,
   }))
@@ -76,7 +93,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const cases = getAllCases()
   const caseUrls: MetadataRoute.Sitemap = cases.map(c => ({
     url: `${BASE}/cases/${c.slug}`,
-    lastModified: now,
     changeFrequency: 'monthly',
     priority: 0.7,
   }))
@@ -94,14 +110,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const blogCategoryUrls: MetadataRoute.Sitemap = blogCategories.map(c => ({
     url: `${BASE}/blog/category/${c.slug}`,
-    lastModified: now,
+    lastModified: latest(blogPosts.filter(p => slugifyCategory(p.category) === c.slug).map(p => p.updated ?? p.date)),
     changeFrequency: 'weekly',
     priority: 0.6,
   }))
 
   const blogTagUrls: MetadataRoute.Sitemap = blogTags.map(t => ({
     url: `${BASE}/blog/tag/${t.slug}`,
-    lastModified: now,
+    lastModified: latest(blogPosts.filter(p => p.tags.some(x => slugifyCategory(x) === t.slug)).map(p => p.updated ?? p.date)),
     changeFrequency: 'weekly',
     priority: 0.5,
   }))
@@ -109,7 +125,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const authors = getAllAuthors()
   const authorUrls: MetadataRoute.Sitemap = authors.map(a => ({
     url: `${BASE}/authors/${a.slug}`,
-    lastModified: now,
     changeFrequency: 'monthly' as const,
     priority: 0.5,
   }))
@@ -124,7 +139,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const newsletterUrls: MetadataRoute.Sitemap = (newsletters ?? []).filter(n => !noindexedIssues.has(n.slug)).map(n => ({
     url: `${BASE}/newsletter/${n.slug}`,
-    lastModified: n.updated_at ?? new Date(),
+    lastModified: latest([n.updated_at]),
     changeFrequency: 'weekly',
     priority: 0.75,
   }))
@@ -134,34 +149,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (shopEnabled()) {
     const { data: shopProducts } = await supabase.from('shop_products').select('slug, updated_at').eq('is_published', true)
     shopUrls = [
-      { url: `${BASE}/shop`, changeFrequency: 'weekly', priority: 0.8, lastModified: now },
-      ...SHOP_CATEGORIES.map(c => ({ url: `${BASE}/shop/category/${c.slug}`, changeFrequency: 'weekly' as const, priority: 0.7, lastModified: now })),
-      ...SHOP_COLLECTIONS.map(c => ({ url: `${BASE}/shop/collection/${c.slug}`, changeFrequency: 'weekly' as const, priority: 0.7, lastModified: now })),
-      ...(shopProducts ?? []).map(p => ({ url: `${BASE}/shop/${p.slug}`, changeFrequency: 'weekly' as const, priority: 0.7, lastModified: p.updated_at ?? now })),
-      { url: `${BASE}/shop/shipping-policy`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
-      { url: `${BASE}/shop/returns-and-refunds`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
+      { url: `${BASE}/shop`, changeFrequency: 'weekly', priority: 0.8 },
+      ...SHOP_CATEGORIES.map(c => ({ url: `${BASE}/shop/category/${c.slug}`, changeFrequency: 'weekly' as const, priority: 0.7 })),
+      ...SHOP_COLLECTIONS.map(c => ({ url: `${BASE}/shop/collection/${c.slug}`, changeFrequency: 'weekly' as const, priority: 0.7 })),
+      ...(shopProducts ?? []).map(p => ({ url: `${BASE}/shop/${p.slug}`, changeFrequency: 'weekly' as const, priority: 0.7, lastModified: latest([p.updated_at]) })),
+      { url: `${BASE}/shop/shipping-policy`, changeFrequency: 'yearly', priority: 0.3 },
+      { url: `${BASE}/shop/returns-and-refunds`, changeFrequency: 'yearly', priority: 0.3 },
     ]
   }
 
   return [
     ...shopUrls,
-    { url: `${BASE}/cases`, changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
+    { url: `${BASE}/cases`, changeFrequency: 'weekly', priority: 0.8 },
     ...caseUrls,
-    { url: `${BASE}/badge`, changeFrequency: 'monthly', priority: 0.4, lastModified: now },
-    { url: `${BASE}/promote-your-podcast`, changeFrequency: 'monthly', priority: 0.5, lastModified: now },
+    { url: `${BASE}/badge`, changeFrequency: 'monthly', priority: 0.4 },
+    { url: `${BASE}/promote-your-podcast`, changeFrequency: 'monthly', priority: 0.5 },
     ...authorUrls,
-    { url: BASE, changeFrequency: 'daily', priority: 1.0, lastModified: new Date() },
-    { url: `${BASE}/browse`, changeFrequency: 'daily', priority: 0.9, lastModified: new Date() },
-    { url: `${BASE}/best-true-crime-podcasts`, changeFrequency: 'weekly', priority: 0.95, lastModified: new Date() },
-    { url: `${BASE}/how-we-review`, changeFrequency: 'monthly', priority: 0.6, lastModified: now },
-    { url: `${BASE}/editors-choice`, changeFrequency: 'weekly', priority: 0.7, lastModified: now },
-    { url: `${BASE}/blog`, changeFrequency: 'daily', priority: 0.85, lastModified: new Date() },
-    { url: `${BASE}/newsletter`, changeFrequency: 'daily', priority: 0.85, lastModified: new Date() },
-    { url: `${BASE}/subscribe`, changeFrequency: 'monthly', priority: 0.7, lastModified: now },
-    { url: `${BASE}/about`, changeFrequency: 'monthly', priority: 0.4, lastModified: now },
-    { url: `${BASE}/contact`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
-    { url: `${BASE}/privacy`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
-    { url: `${BASE}/terms`, changeFrequency: 'yearly', priority: 0.3, lastModified: now },
+    { url: BASE, changeFrequency: 'daily', priority: 1.0, lastModified: allPodcastsUpdated },
+    { url: `${BASE}/browse`, changeFrequency: 'daily', priority: 0.9, lastModified: allPodcastsUpdated },
+    { url: `${BASE}/best-true-crime-podcasts`, changeFrequency: 'weekly', priority: 0.95, lastModified: new Date(BEST_PAGE_UPDATED) },
+    { url: `${BASE}/how-we-review`, changeFrequency: 'monthly', priority: 0.6, lastModified: new Date(HOW_WE_REVIEW_UPDATED) },
+    { url: `${BASE}/editors-choice`, changeFrequency: 'weekly', priority: 0.7, lastModified: allPodcastsUpdated },
+    { url: `${BASE}/blog`, changeFrequency: 'daily', priority: 0.85, lastModified: latest(blogPosts.map(p => p.updated ?? p.date)) },
+    { url: `${BASE}/newsletter`, changeFrequency: 'daily', priority: 0.85, lastModified: latest((newsletters ?? []).map(n => n.updated_at)) },
+    { url: `${BASE}/subscribe`, changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${BASE}/about`, changeFrequency: 'monthly', priority: 0.4, lastModified: new Date(ABOUT_UPDATED) },
+    { url: `${BASE}/contact`, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${BASE}/privacy`, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${BASE}/terms`, changeFrequency: 'yearly', priority: 0.3 },
     ...podcastUrls,
     ...podcastsLikeUrls,
     ...categoryUrls,

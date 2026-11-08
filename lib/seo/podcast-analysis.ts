@@ -4,6 +4,7 @@
 // ============================================================
 
 import type { Podcast, RatingStats } from '@/lib/types/database'
+import { isEpisodic, isSerialised } from '@/lib/podcast-facets'
 
 export function getPros(podcast: Podcast, stats: RatingStats | null): string[] {
   const pros: string[] = []
@@ -31,9 +32,9 @@ export function getPros(podcast: Podcast, stats: RatingStats | null): string[] {
   }
 
   // Format strengths
-  if (podcast.format_type === 'Serialized' && pros.length < 4) {
-    pros.push('Serialized format builds a compelling, sustained narrative arc across episodes')
-  } else if (podcast.format_type === 'Episodic' && pros.length < 4) {
+  if (isSerialised(podcast) && pros.length < 4) {
+    pros.push('Serialised format builds a compelling, sustained narrative arc across episodes')
+  } else if (isEpisodic(podcast) && pros.length < 4) {
     pros.push('Episodic format — great for both casual listeners and committed fans, start anywhere')
   }
 
@@ -147,8 +148,8 @@ export function getPodcastNarrative(podcast: Podcast, stats: RatingStats | null)
   }
 
   // Format note
-  if (podcast.format_type === 'Serialized') {
-    parts.push(`It follows a serialized format — each season covers one case in depth, building suspense across episodes.`)
+  if (isSerialised(podcast)) {
+    parts.push(`It follows a serialised format, building a single story across episodes.`)
   }
 
   return parts.join(' ')
