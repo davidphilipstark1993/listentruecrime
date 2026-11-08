@@ -137,7 +137,7 @@ Two parallel schema helper modules exist (`lib/seo.ts`, whose `BASE` default has
   - `/blog/true-crime-podcasts-spotify` ↔ `/platform/Spotify`
 - **Title staleness:** all `/best/*` titles hard-code "2025".
 - **Case-type taxonomy:** inconsistent casing (finding 13; category pages already normalise it, the podcast template and `/best/*` do not) and 52 podcasts with no `format_type`, 22 with no `case_types`, 15 with empty/missing country.
-- **Probable data error found:** `the-trial-of-erin-patterson` is stored with `country = UK` although the case is Australian. Listed in the editorial review report; **not changed**.
+- **Data note (not an error):** `the-trial-of-erin-patterson` is stored with `country = UK`; the case is Australian but the show is produced by The Crime Desk (UK), so this is plausible. Worth a glance only if the field is meant to be the case location rather than the producer's country.
 
 ---
 
@@ -194,4 +194,4 @@ Two parallel schema helper modules exist (`lib/seo.ts`, whose `BASE` default has
 7. Internal links: homepage → best page → categories → podcasts (Phase 7).
 
 **Report for human follow-up (not fabricated)**
-- Incomplete podcast records, the `rating` column, thin community ratings, the Erin Patterson country value, GA4/GSC confirmation, CWV measurement.
+- Incomplete podcast records, the `rating` column, thin community ratings, GA4/GSC confirmation, CWV measurement.
