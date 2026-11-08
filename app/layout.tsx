@@ -50,7 +50,6 @@ export const metadata: Metadata = {
     images: ['/og'],
   },
   robots: { index: true, follow: true },
-  alternates: { canonical: BASE },
 }
 
 const editor = getAuthor('david-stark')

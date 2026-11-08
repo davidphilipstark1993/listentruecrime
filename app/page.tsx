@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { Search, ArrowRight, TrendingUp, Star, Zap, BookOpen } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
@@ -13,7 +14,12 @@ import { getPostBySlug } from '@/lib/blog'
 import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
 import { stripHtml } from '@/lib/utils'
 import { shopEnabled } from '@/lib/shop/config'
+import { BASE } from '@/lib/seo/config'
 import { HomepageShopPromo } from '@/components/shop/homepage-promo'
+
+// Title, description and social tags come from the root layout; the canonical is set
+// here (not in the layout) so pages that forget their own never inherit the homepage's.
+export const metadata: Metadata = { alternates: { canonical: BASE } }
 
 export const revalidate = 3600
 
@@ -177,6 +183,9 @@ export default async function HomePage() {
                 Browse Podcasts
                 <ArrowRight size={15} />
               </Link>
+              <Link href="/best-true-crime-podcasts" className="btn-outline px-6 py-3 text-sm">
+                Best True Crime Podcasts
+              </Link>
               <div className="flex flex-col sm:flex-row items-center gap-2">
                 <NewsletterForm source="hero" variant="minimal" className="w-64" />
               </div>
@@ -317,14 +326,14 @@ export default async function HomePage() {
           <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 section-divider">
             <div className="flex items-end justify-between mb-8">
               <div>
-                <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Community</p>
+                <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Editor&apos;s picks</p>
                 <h2 className="heading-section text-2xl sm:text-3xl">
                   <Star size={18} className="inline mr-2 text-gold-light mb-0.5" fill="currentColor" />
                   Highest binge factor
                 </h2>
               </div>
-              <Link href="/browse?sort=highest_rated" className="text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
-                Full rankings <ArrowRight size={14} />
+              <Link href="/best-true-crime-podcasts" className="text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
+                See the best true crime podcasts <ArrowRight size={14} />
               </Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">

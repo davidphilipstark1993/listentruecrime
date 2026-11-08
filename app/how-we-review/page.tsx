@@ -7,9 +7,9 @@ import { BASE, ORG_ID, WEBSITE_ID, personId } from '@/lib/seo/config'
 import { buildBreadcrumbSchema } from '@/lib/seo/content'
 import { getAuthor } from '@/lib/authors'
 
-// Editorial date for this page's copy. Change it when the method or wording changes.
-const UPDATED = '2026-11-08'
-const UPDATED_LABEL = '8 November 2026'
+import { HOW_WE_REVIEW_UPDATED as UPDATED } from '@/lib/seo/page-dates'
+
+const UPDATED_LABEL = new Date(`${UPDATED}T12:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
 
 export const metadata: Metadata = {
   title: 'How We Review True Crime Podcasts',
