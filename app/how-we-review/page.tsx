@@ -3,7 +3,13 @@ import Link from 'next/link'
 import { Star, Search, Mic, Volume2, Zap, Shield, BarChart3, CheckCircle } from 'lucide-react'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
-import { BASE } from '@/lib/seo/config'
+import { BASE, ORG_ID, WEBSITE_ID, personId } from '@/lib/seo/config'
+import { buildBreadcrumbSchema } from '@/lib/seo/content'
+import { getAuthor } from '@/lib/authors'
+
+// Editorial date for this page's copy. Change it when the method or wording changes.
+const UPDATED = '2026-11-08'
+const UPDATED_LABEL = '8 November 2026'
 
 export const metadata: Metadata = {
   title: 'How We Review True Crime Podcasts',
@@ -95,28 +101,38 @@ const verdicts = [
 ]
 
 export default function HowWeReviewPage() {
+  const editor = getAuthor('david-stark')
   const methodologySchema = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: 'How We Review True Crime Podcasts — Our Editorial Methodology',
-    description: 'A full explanation of the ListenTrueCrime editorial scoring system, covering editorial verdicts, the Binge Factor score and the six community rating dimensions.',
-    author: {
-      '@type': 'Organization',
-      name: 'ListenTrueCrime',
-      url: BASE,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'ListenTrueCrime',
-      url: BASE,
-    },
-    url: `${BASE}/how-we-review`,
-    mainEntityOfPage: `${BASE}/how-we-review`,
+    '@graph': [
+      {
+        '@type': 'Article',
+        '@id': `${BASE}/how-we-review#article`,
+        headline: 'How We Review True Crime Podcasts — Our Editorial Methodology',
+        description: 'How ListenTrueCrime scores true crime podcasts: the editorial verdict, the editorial Binge Factor, and separate six-dimension community ratings.',
+        author: { '@id': personId(editor.slug) },
+        publisher: { '@id': ORG_ID },
+        isPartOf: { '@id': WEBSITE_ID },
+        inLanguage: 'en-GB',
+        dateModified: UPDATED,
+        url: `${BASE}/how-we-review`,
+        mainEntityOfPage: `${BASE}/how-we-review`,
+        breadcrumb: { '@id': `${BASE}/how-we-review#breadcrumb` },
+      },
+      {
+        ...buildBreadcrumbSchema([
+          { name: 'Home', url: BASE },
+          { name: 'About', url: `${BASE}/about` },
+          { name: 'How We Review', url: `${BASE}/how-we-review` },
+        ]),
+        '@id': `${BASE}/how-we-review#breadcrumb`,
+      },
+    ],
   }
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(methodologySchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(methodologySchema).replace(/</g, '\\u003c') }} />
       <Header />
       <main id="main-content" className="pt-24 pb-16">
 
@@ -138,6 +154,10 @@ export default function HowWeReviewPage() {
             Every podcast carries two kinds of rating, kept separate: our editorial verdict and Binge Factor score,
             and community ratings on six dimensions. Here is what each one means.
           </p>
+          <p className="text-stone-subtle text-sm mt-4">
+            Method set by <Link href={`/authors/${editor.slug}`} className="text-stone-muted hover:text-stone underline underline-offset-2">{editor.name}</Link>, {editor.role}
+            {' · '}Last updated <time dateTime={UPDATED}>{UPDATED_LABEL}</time>
+          </p>
         </section>
 
         {/* Principles */}
@@ -158,6 +178,57 @@ export default function HowWeReviewPage() {
                 </li>
               ))}
             </ul>
+          </div>
+        </section>
+
+        {/* The three signals at a glance */}
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-16" aria-labelledby="signals-h">
+          <h2 id="signals-h" className="heading-section text-2xl sm:text-3xl mb-2">The three signals at a glance</h2>
+          <p className="text-stone-muted text-sm mb-6 max-w-2xl">Editorial and community signals are kept apart. Neither replaces the other.</p>
+          <div className="card overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <caption className="sr-only">Editorial verdict, Binge Factor and community ratings compared</caption>
+              <thead>
+                <tr className="text-stone-subtle text-xs uppercase tracking-wide border-b border-white/[0.06]">
+                  <th scope="col" className="p-4 font-semibold">Signal</th>
+                  <th scope="col" className="p-4 font-semibold">Who sets it</th>
+                  <th scope="col" className="p-4 font-semibold">What it is</th>
+                </tr>
+              </thead>
+              <tbody className="text-stone-muted align-top">
+                <tr className="border-b border-white/[0.06]">
+                  <th scope="row" className="p-4 text-stone font-medium">Editorial verdict</th>
+                  <td className="p-4">The editor</td>
+                  <td className="p-4">A short label such as <em>Must listen</em>, or a line saying who the show suits.</td>
+                </tr>
+                <tr className="border-b border-white/[0.06]">
+                  <th scope="row" className="p-4 text-stone font-medium">Binge Factor</th>
+                  <td className="p-4">The editor (listeners can also rate it)</td>
+                  <td className="p-4">A 1 to 10 score for how compulsively listenable a show is. It orders our best-of lists.</td>
+                </tr>
+                <tr>
+                  <th scope="row" className="p-4 text-stone font-medium">Community ratings</th>
+                  <td className="p-4">Listeners</td>
+                  <td className="p-4">Six dimensions plus an overall score, each 1 to 10, averaged and shown separately on every podcast page.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* How Binge Factor is assigned */}
+        <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-16" aria-labelledby="binge-h">
+          <h2 id="binge-h" className="heading-section text-2xl sm:text-3xl mb-4">How Binge Factor is assigned</h2>
+          <div className="card p-6 space-y-4 text-stone-muted text-sm leading-relaxed">
+            <p>
+              The editor assigns every scored podcast a Binge Factor from 1 to 10, based on how strong the pull to keep listening is.
+              A 9 or 10 means you lose track of time; a 7 or 8 is a strong &ldquo;one more episode&rdquo; pull; a 4 or lower means it is easy to stop mid-series.
+              The score is informed by what listeners and critics say in public reviews, and it is revisited when a show changes or we find an error.
+            </p>
+            <p>
+              It is the one dimension we score editorially, and it sets the order within our{' '}
+              <Link href="/best-true-crime-podcasts" className="text-crimson hover:underline">best true crime podcasts</Link> lists.
+            </p>
           </div>
         </section>
 

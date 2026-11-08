@@ -5,7 +5,8 @@ import { GoogleAnalytics } from '@next/third-parties/google'
 import { ExitIntent } from '@/components/newsletter/exit-intent'
 import '@/app/globals.css'
 
-import { BASE } from '@/lib/seo/config'
+import { BASE, ORG_ID, WEBSITE_ID, personId } from '@/lib/seo/config'
+import { getAuthor } from '@/lib/authors'
 import { SOCIAL_PROFILES } from '@/lib/seo/social-profiles'
 
 const inter = Inter({
@@ -52,12 +53,19 @@ export const metadata: Metadata = {
   alternates: { canonical: BASE },
 }
 
+const editor = getAuthor('david-stark')
+
+// One entity graph shared by every page. Other templates point at these nodes
+// by @id (publisher, author, isPartOf) instead of redefining them.
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
+  '@id': WEBSITE_ID,
   name: 'ListenTrueCrime',
   url: BASE,
   description: 'Discover, rate, and review the best true crime podcasts.',
+  inLanguage: 'en-GB',
+  publisher: { '@id': ORG_ID },
   potentialAction: {
     '@type': 'SearchAction',
     target: {
@@ -71,14 +79,17 @@ const websiteSchema = {
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
+  '@id': ORG_ID,
   name: 'ListenTrueCrime',
   url: BASE,
+  description: 'ListenTrueCrime is an independent true crime podcast discovery and review site with editorial verdicts, Binge Factor scores and community ratings.',
   logo: {
     '@type': 'ImageObject',
     url: `${BASE}/icon.png`,
     width: 1254,
     height: 1254,
   },
+  founder: { '@type': 'Person', '@id': personId(editor.slug), name: editor.name, url: `${BASE}/authors/${editor.slug}` },
   ...(SOCIAL_PROFILES.length > 0 && { sameAs: [...SOCIAL_PROFILES] }),
 }
 
