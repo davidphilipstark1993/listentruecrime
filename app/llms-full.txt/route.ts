@@ -18,8 +18,9 @@ export async function GET() {
   const header = [
     '# ListenTrueCrime — Full Podcast Listing',
     '',
-    `> ${podcasts.length} reviewed true crime podcasts, ranked by binge factor`,
-    `> Full reviews at ${BASE}/browse`,
+    `> ${podcasts.length} true crime podcasts in the ListenTrueCrime directory, ordered by editorial Binge Factor.`,
+    `> Verdicts and Binge Factor are the editor's opinion; method at ${BASE}/how-we-review`,
+    `> Curated picks: ${BASE}/best-true-crime-podcasts · Browse and filter: ${BASE}/browse`,
     '',
     '---',
     '',
@@ -27,8 +28,8 @@ export async function GET() {
 
   const entries = podcasts.map(p => [
     `## ${p.title}`,
-    `- Verdict: ${p.quick_verdict ?? 'Not yet rated'}`,
-    `- Binge score: ${p.binge_factor != null ? `${p.binge_factor}/10` : 'N/A'}`,
+    `- Verdict: ${p.quick_verdict?.trim() || 'No verdict yet'}`,
+    `- Binge Factor (editorial): ${p.binge_factor != null ? `${p.binge_factor}/10` : 'not scored'}`,
     `- Type: ${p.case_types?.join(', ') ?? 'True Crime'}`,
     `- ${p.short_description ?? 'See full review for details'}`,
     `- URL: ${BASE}/podcasts/${p.slug}`,
