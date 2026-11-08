@@ -18,6 +18,7 @@ import { listenLinks } from '@/lib/platform-urls'
 import { listenActionSchema } from '@/lib/seo/listen-action'
 import { buildPodcastMeta } from '@/lib/seo/podcast-meta'
 import { getPros, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
+import { audienceFitVerdict, formatLabel, isEpisodic, isSerialised, whoIsItFor as deriveWhoIsItFor } from '@/lib/podcast-facets'
 import { getAuthor } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
 import { countryFlag, formatRelativeDate, scoreBg, cn, stripHtml } from '@/lib/utils'
@@ -123,22 +124,12 @@ function getPodcastCategories(podcast: any) {
   return cats
 }
 
-// Derive "who it's for" text from podcast attributes
+// "Who it's for", derived from editor-entered fields only (shared, case-insensitive helper).
+// The editor's audience-fit verdict (e.g. "Good if UK true crime interests you") leads when present.
 function getWhoIsItFor(podcast: any): string[] {
-  const lines: string[] = []
-  if (podcast.format_type === 'Serialized') lines.push('Listeners who enjoy following a single case from start to finish')
-  if (podcast.format_type === 'Episodic') lines.push('Listeners who prefer variety — a new case with every episode')
-  if (podcast.case_types?.includes('Cold Case')) lines.push('Cold case enthusiasts who love decades-old unsolved mysteries')
-  if (podcast.case_types?.includes('Missing Person')) lines.push('Anyone fascinated by missing persons investigations')
-  if (podcast.case_types?.includes('Investigative')) lines.push('Fans of original investigative journalism over retold news')
-  if (podcast.case_types?.includes('Courtroom') || podcast.case_types?.includes('Wrongful Conviction')) lines.push('Legal procedure enthusiasts and wrongful conviction advocates')
-  if (podcast.case_types?.includes('Serial Killer')) lines.push('Those interested in the psychology of serial offenders')
-  if (podcast.case_types?.includes('Fraud') || podcast.case_types?.includes('White-Collar Crime')) lines.push('Fans of financial crime and corporate misconduct stories')
-  if (podcast.host_style === 'Dual Host') lines.push('Listeners who enjoy a conversational, back-and-forth dynamic')
-  if (podcast.factual_style === 'Purely Factual') lines.push('Those who prefer straight reporting over host commentary')
-  if (podcast.country === 'UK') lines.push('Listeners interested in British cases and the UK criminal justice system')
-  if (podcast.country === 'AU') lines.push('Fans of Australian true crime and its unique landscape and culture')
-  return lines.slice(0, 4)
+  const fit = audienceFitVerdict(podcast)
+  const lines = deriveWhoIsItFor(podcast)
+  return (fit ? [fit, ...lines] : lines).slice(0, 4)
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -211,7 +202,6 @@ export default async function PodcastPage({ params }: Props) {
   const relatedCases = getCasesForPodcast(slug)
   const stats = ratingStatsOf(podcast.rating_stats)
   const overallScore = stats?.avg_overall
-  const year = new Date().getFullYear()
   const pros = getPros(podcast, stats)
   const hostInfo = getHostDescription(podcast)
   // Only platforms with an editor-entered URL count as available
@@ -238,8 +228,8 @@ export default async function PodcastPage({ params }: Props) {
     {
       q: `What is the best episode of ${podcast.title} to start with?`,
       a: podcast.best_episode_to_start
-        ? `We recommend starting with ${podcast.best_episode_to_start}. ${podcast.format_type === 'Serialized' ? 'As a serialized show, it\'s best to listen from the beginning of a season.' : 'Episodes can generally be enjoyed in any order.'}`
-        : `${podcast.format_type === 'Serialized' ? `${podcast.title} is a serialized podcast — start from Episode 1 of any season for the full experience.` : 'Start with whichever case title sounds most interesting to you.'}`,
+        ? `We recommend starting with ${podcast.best_episode_to_start}. ${isSerialised(podcast) ? 'As a serialised show, it\'s best to listen from the beginning of a season.' : 'Episodes can generally be enjoyed in any order.'}`
+        : `${isSerialised(podcast) ? `${podcast.title} is a serialised podcast — start from Episode 1 of any season for the full experience.` : 'Start with whichever case title sounds most interesting to you.'}`,
     },
     {
       q: `Where can I listen to ${podcast.title}?`,
@@ -261,6 +251,7 @@ export default async function PodcastPage({ params }: Props) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'PodcastSeries',
+    '@id': `${BASE}/podcasts/${slug}#podcast`,
     name: podcast.title,
     description: podcast.description,
     image: podcast.image_url,
@@ -384,7 +375,8 @@ export default async function PodcastPage({ params }: Props) {
 
                 <h1 className="heading-display text-3xl sm:text-4xl mb-2">{podcast.title}</h1>
                 <p className="text-stone-subtle text-sm mb-1">
-                  True crime podcast review — {year}
+                  True crime podcast review
+                  {podcast.updated_at && <> · Listing updated <time dateTime={podcast.updated_at.slice(0, 10)}>{new Date(podcast.updated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}</time></>}
                 </p>
                 {/* Score row */}
                 <div className="flex items-center gap-4 flex-wrap mt-3">
@@ -417,6 +409,11 @@ export default async function PodcastPage({ params }: Props) {
                         ({stats?.rating_count} rating{stats?.rating_count === 1 ? '' : 's'})
                       </span>
                     </div>
+                  )}
+                  {podcast.binge_factor != null && (
+                    <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-ink-700 text-stone-muted" title="Our editorial Binge Factor score: how compulsively listenable the show is">
+                      Binge Factor {podcast.binge_factor}/10 <span className="text-stone-subtle">(editorial)</span>
+                    </span>
                   )}
                   {podcast.quick_verdict && (
                     <span className={cn(
@@ -569,11 +566,13 @@ export default async function PodcastPage({ params }: Props) {
                   </div>
                   <div className="bg-ink-800 rounded-lg p-4">
                     <p className="text-stone font-medium text-sm">{podcast.best_episode_to_start}</p>
-                    <p className="text-stone-subtle text-xs mt-1">
-                      {podcast.format_type === 'Serialized'
-                        ? 'Serialized format — listen from the beginning for the full experience'
-                        : 'Episodic format — episodes can generally be enjoyed in any order'}
-                    </p>
+                    {(isSerialised(podcast) || isEpisodic(podcast)) && (
+                      <p className="text-stone-subtle text-xs mt-1">
+                        {isSerialised(podcast)
+                          ? 'Serialised format — listen from the beginning for the full experience'
+                          : 'Episodic format — episodes can generally be enjoyed in any order'}
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
@@ -670,7 +669,8 @@ export default async function PodcastPage({ params }: Props) {
                 <h3 className="font-serif text-sm text-stone mb-4 uppercase tracking-wide">Quick facts</h3>
                 <dl className="space-y-3">
                   {[
-                    { label: 'Format', value: podcast.format_type },
+                    { label: 'Format', value: formatLabel(podcast) },
+                    { label: 'Binge Factor', value: podcast.binge_factor != null ? `${podcast.binge_factor}/10 (editorial)` : null },
                     { label: 'Host style', value: podcast.host_style },
                     { label: 'Style', value: podcast.factual_style },
                     { label: 'Episode length', value: podcast.episode_length },
@@ -730,6 +730,15 @@ export default async function PodcastPage({ params }: Props) {
                   </div>
                 </div>
               )}
+
+              {/* Hub link back to the primary recommendation page */}
+              <div className="card p-5">
+                <h3 className="font-serif text-sm text-stone mb-3 uppercase tracking-wide">Our best picks</h3>
+                <Link href="/best-true-crime-podcasts" className="flex items-center gap-2 text-stone-muted hover:text-stone text-xs transition-colors">
+                  <span>Best true crime podcasts: editor’s picks by genre</span>
+                  <ArrowRight size={12} className="ml-auto shrink-0" />
+                </Link>
+              </div>
 
               {/* Country link */}
               {podcast.country && COUNTRIES[podcast.country] && (
