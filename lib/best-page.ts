@@ -179,9 +179,9 @@ export const BEST_SECTIONS: BestSectionDef[] = [
     shortLabel: 'Spotify',
     quickLabel: 'Best on Spotify',
     heading: 'Best true crime podcasts on Spotify',
-    blurb: 'Must listen shows with an editor-entered Spotify link.',
-    rule: 'Seeded by our Spotify guide, then filled with Must listen shows that have a Spotify listen link.',
-    predicate: p => must(p) && !!spotifyUrl(p),
+    blurb: 'Must listen shows that are listed on Spotify. Open a show page for its listen links.',
+    rule: 'Seeded by our Spotify guide, then filled with Must listen shows listed on Spotify.',
+    predicate: p => must(p) && listedOn(p, 'Spotify'),
     curatedFrom: 'true-crime-podcasts-spotify',
     platform: 'Spotify',
     more: [
@@ -195,12 +195,14 @@ export const BEST_SECTIONS: BestSectionDef[] = [
     quickLabel: 'Best on Apple Podcasts',
     heading: 'Best true crime podcasts on Apple Podcasts',
     blurb: 'Nearly every show in our directory is on Apple Podcasts, so this list is the top of the whole ranking with Apple links.',
-    rule: 'Must listen shows with an editor-entered Apple Podcasts link, highest Binge Factor first.',
-    predicate: p => must(p) && !!applePodcastsUrl(p),
+    rule: 'Must listen shows listed on Apple Podcasts, highest Binge Factor first.',
+    predicate: p => must(p) && listedOn(p, 'Apple Podcasts'),
     platform: 'Apple Podcasts',
     more: [{ href: '/platform/apple-podcasts', label: 'All Apple Podcasts true crime shows' }],
   },
 ]
+
+export const listedOn = (p: BestPodcast, platform: string) => (p.platforms ?? []).includes(platform)
 
 function urlFor(p: BestPodcast, platform: string): string | null {
   const urls = p.platform_urls as Record<string, string> | null
@@ -240,7 +242,7 @@ export function buildSections(
     const seen = new Set<string>()
     for (const slug of (def.curatedFrom ? curated[def.curatedFrom] : undefined) ?? []) {
       const p = bySlug.get(slug)
-      if (p && !seen.has(slug) && chosen.length < perSection) { chosen.push(p); seen.add(slug) }
+      if (p && (!def.platform || listedOn(p, def.platform)) && !seen.has(slug) && chosen.length < perSection) { chosen.push(p); seen.add(slug) }
     }
     const matching = all.filter(def.predicate).sort(compareBest)
     for (const p of matching) {
