@@ -85,6 +85,14 @@ const organizationSchema = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-GB" className={`dark ${inter.variable} ${playfairDisplay.variable}`}>
+      <head>
+        {/* Google AdSense: site verification and Auto ads. Plain script (not next/script) so it is in the server-rendered <head>. */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1521157758368352"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="antialiased">
         <a href="#main-content" className="skip-link">Skip to content</a>
         <script
