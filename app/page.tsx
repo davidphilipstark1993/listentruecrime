@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { Search, ArrowRight, TrendingUp, Star, Zap, BookOpen } from 'lucide-react'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
@@ -13,7 +14,21 @@ import { getPostBySlug } from '@/lib/blog'
 import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
 import { stripHtml } from '@/lib/utils'
 import { shopEnabled } from '@/lib/shop/config'
+import { BASE } from '@/lib/seo/config'
 import { HomepageShopPromo } from '@/components/shop/homepage-promo'
+
+// The homepage owns the head term "true crime podcasts"; /best-true-crime-podcasts
+// owns "best" (and "top"/"good"), /new-true-crime-podcasts owns "new".
+const HOME_TITLE = 'True Crime Podcasts: Reviews & Ratings | ListenTrueCrime'
+const HOME_DESCRIPTION = 'Honest reviews of true crime podcasts: expert verdicts, a Binge Factor score out of 10 and community ratings. Browse by case type, country or what\'s new.'
+export const metadata: Metadata = {
+  title: { absolute: HOME_TITLE },
+  description: HOME_DESCRIPTION,
+  // Full objects: a page-level openGraph/twitter replaces the layout's, it does not merge.
+  openGraph: { type: 'website', locale: 'en_GB', url: BASE, siteName: 'ListenTrueCrime', title: HOME_TITLE, description: HOME_DESCRIPTION, images: [{ url: '/og', width: 1200, height: 630, alt: 'ListenTrueCrime' }] },
+  twitter: { card: 'summary_large_image', title: HOME_TITLE, description: HOME_DESCRIPTION, images: ['/og'] },
+  alternates: { canonical: BASE },
+}
 
 export const revalidate = 3600
 
@@ -130,6 +145,7 @@ export default async function HomePage() {
       : []),
     { href: '/how-we-review', label: 'How We Review Podcasts' },
     { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
+    { href: '/new-true-crime-podcasts', label: 'New True Crime Podcasts' },
   ]
 
   return (
@@ -157,7 +173,7 @@ export default async function HomePage() {
             </h1>
 
             <p className="text-stone-muted text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-              Expert reviews, community ratings, and curated recommendations.
+              Expert reviews, community ratings and curated picks for {podcastCountLabel} true crime podcasts.
               Discover your next obsession — no algorithms, just honest takes.
             </p>
 
@@ -323,8 +339,8 @@ export default async function HomePage() {
                   Highest binge factor
                 </h2>
               </div>
-              <Link href="/browse?sort=highest_rated" className="text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
-                Full rankings <ArrowRight size={14} />
+              <Link href="/best-true-crime-podcasts" className="text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
+                Top true crime podcasts <ArrowRight size={14} />
               </Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -341,6 +357,11 @@ export default async function HomePage() {
             <div className="mb-8">
               <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Fresh</p>
               <h2 className="heading-section text-2xl sm:text-3xl">Newest additions</h2>
+            </div>
+            <div className="-mt-6 mb-8">
+              <Link href="/new-true-crime-podcasts" className="text-sm text-stone-muted hover:text-stone transition-colors inline-flex items-center gap-1">
+                All new true crime podcasts <ArrowRight size={14} />
+              </Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {(newest as (Podcast & { rating_stats: RatingStats | null })[]).map(p => (

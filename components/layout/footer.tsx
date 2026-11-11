@@ -7,6 +7,7 @@ const FOOTER_LINKS = {
   discover: [
     { href: '/browse', label: 'Browse All Podcasts' },
     { href: '/best-true-crime-podcasts', label: 'Best Podcasts' },
+    { href: '/new-true-crime-podcasts', label: 'New True Crime Podcasts' },
     { href: '/category/cold-cases', label: 'Cold Case Podcasts' },
     { href: '/category/missing-persons', label: 'Missing Persons Podcasts' },
     { href: '/category/investigative', label: 'Investigative Podcasts' },

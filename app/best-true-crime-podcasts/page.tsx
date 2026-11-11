@@ -195,7 +195,7 @@ export default async function BestTrueCrimePodcastsPage() {
           <p className="text-stone-muted text-lg max-w-2xl mx-auto leading-relaxed">
             {top5.length === 5 ? (
               <>
-                The best true crime podcasts right now are{' '}
+                Looking for good true crime podcasts? The best true crime podcasts right now are{' '}
                 {top5.map((p, i) => (
                   <span key={p.id}>
                     {i > 0 && (i === 4 ? ' and ' : ', ')}
@@ -205,7 +205,7 @@ export default async function BestTrueCrimePodcastsPage() {
                 . Below are our {picks.length} favourites, each with cover art, our verdict, episode count and the best episode to start with.
               </>
             ) : (
-              <>Our ranked list of the true crime podcasts most worth your time, each with our verdict and where to start.</>
+              <>Looking for good true crime podcasts? Our ranked list of the ones most worth your time, each with our verdict and where to start.</>
             )}
           </p>
           <p className="text-stone-subtle text-sm mt-4">
@@ -219,7 +219,7 @@ export default async function BestTrueCrimePodcastsPage() {
         {picks.length > 0 && (
           <section aria-labelledby="quick-picks" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-14">
             <h2 id="quick-picks" className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-4 text-center">
-              At a glance: our top 10
+              At a glance: the top true crime podcasts
             </h2>
             <ol className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
               {picks.slice(0, 10).map((p, i) => (
@@ -379,6 +379,9 @@ export default async function BestTrueCrimePodcastsPage() {
             <div className="mb-6">
               <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Just added</p>
               <h2 className="heading-section text-2xl sm:text-3xl">Newest reviews</h2>
+              <Link href="/new-true-crime-podcasts" className="text-sm text-stone-muted hover:text-stone transition-colors inline-flex items-center gap-1 mt-1">
+                See all new true crime podcasts <ArrowRight size={14} />
+              </Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
               {fresh.map((p) => <PodcastCard key={p.id} podcast={p as any} />)}

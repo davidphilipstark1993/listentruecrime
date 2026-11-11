@@ -330,6 +330,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
               <ShareButtons title={post.title} url={postUrl} />
 
+              {/* Monthly new-release roundups point to the always-current list (template link, not article copy) */}
+              {post.category === 'New Releases' && (
+                <p className="mt-10 rounded-xl border border-white/[0.07] bg-ink-800/40 p-5 text-sm text-stone-muted">
+                  Want the latest additions as they happen?{' '}
+                  <Link href="/new-true-crime-podcasts" className="text-crimson hover:underline">See all new true crime podcasts</Link>, updated automatically.
+                </p>
+              )}
+
               {/* FAQs */}
               {post.faqs && post.faqs.length > 0 && <FAQ faqs={post.faqs} />}
 
@@ -376,6 +384,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <ul className="space-y-2.5">
                   {[
                     { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
+                    { href: '/new-true-crime-podcasts', label: 'New True Crime Podcasts' },
                     { href: '/category/cold-cases', label: 'Cold Case Podcasts' },
                     { href: '/category/investigative', label: 'Investigative Podcasts' },
                     { href: '/country/UK', label: 'British True Crime' },
