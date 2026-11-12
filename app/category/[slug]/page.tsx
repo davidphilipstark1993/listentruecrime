@@ -12,6 +12,7 @@ import { CATEGORIES, CATEGORY_TO_CASE_TYPES, CATEGORY_CURATED_SLUGS } from '@/li
 import { CATEGORY_SEO, buildFAQSchema, buildBreadcrumbSchema, buildItemListSchema } from '@/lib/seo/content'
 import { BASE, CURRENT_YEAR, ogDefaults } from '@/lib/seo/config'
 import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
+import { clampMeta } from '@/lib/seo/new-podcasts'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { RelatedBooks } from '@/components/affiliates/related-books'
 
@@ -48,10 +49,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${h1} (${year})`,
-    description: seo?.metaDescription ?? (baseDescription + descriptionSuffix).slice(0, 160),
+    description: seo?.metaDescription ?? clampMeta(baseDescription + descriptionSuffix),
     openGraph: {
       title: `${h1} (${year}) | ListenTrueCrime`,
-      description: baseDescription.slice(0, 160),
+      description: clampMeta(baseDescription),
       url: `${BASE}/category/${slug}`,
       ...ogDefaults(`${h1} (${year})`),
     },

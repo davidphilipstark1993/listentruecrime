@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const listingCounts = await getListingCounts()
   const { data: podcasts } = await supabase
     .from('podcasts')
-    .select('slug, updated_at')
+    .select('slug, updated_at, created_at, binge_factor')
     .eq('is_published', true)
 
   // Redirected and noindexed pages must not be in the sitemap. These columns/tables
@@ -32,6 +32,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { data: noindexRows } = await supabase.from('podcasts').select('slug').eq('noindex', true)
   const noindexed = new Set((noindexRows ?? []).map(r => r.slug))
   const isListed = (path: string) => !redirected.has(path)
+  const newestAdded = (podcasts ?? [])
+    .filter(p => p.binge_factor != null && p.created_at && !noindexed.has(p.slug))
+    .map(p => new Date(p.created_at as string))
+    .sort((a, b) => b.getTime() - a.getTime())[0] ?? now
 
   const podcastUrls: MetadataRoute.Sitemap = (podcasts ?? []).filter(p => isListed(`/podcasts/${p.slug}`) && !noindexed.has(p.slug)).map(p => ({
     url: `${BASE}/podcasts/${p.slug}`,
@@ -153,6 +157,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: BASE, changeFrequency: 'daily', priority: 1.0, lastModified: new Date() },
     { url: `${BASE}/browse`, changeFrequency: 'daily', priority: 0.9, lastModified: new Date() },
     { url: `${BASE}/best-true-crime-podcasts`, changeFrequency: 'weekly', priority: 0.95, lastModified: new Date() },
+    // Fed by created_at: lastmod is the date the newest scored show was added.
+    { url: `${BASE}/new-true-crime-podcasts`, changeFrequency: 'daily', priority: 0.9, lastModified: newestAdded },
     { url: `${BASE}/how-we-review`, changeFrequency: 'monthly', priority: 0.6, lastModified: now },
     { url: `${BASE}/editors-choice`, changeFrequency: 'weekly', priority: 0.7, lastModified: now },
     { url: `${BASE}/blog`, changeFrequency: 'daily', priority: 0.85, lastModified: new Date() },
