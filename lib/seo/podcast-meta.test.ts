@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { buildPodcastMeta, fitSentences, generatedDescription } from './podcast-meta'
+import { buildPodcastMeta, fitSentences, generatedDescription, generatedTitle } from './podcast-meta'
 
 const base = {
   title: 'Example', short_description: null, description: null, host_name: null, producer: null,
@@ -35,9 +35,41 @@ describe('buildPodcastMeta', () => {
     }, 'casefile', 'https://x.test')
     expect(m.description).toBe('Casefile review: An anonymous host delivers fully scripted episodes on criminal cases from around the world.')
   })
+  it('never uses a "True crime fans who…" audience line as the description', () => {
+    const audience = 'True crime fans who want concise, well-researched episodes without excessive banter or filler; great for commuters.'
+    const withFull = buildPodcastMeta({
+      ...base, title: 'Crime Junkie', short_description: audience,
+      description: 'A weekly show in which two friends tell the story of one case per episode.',
+    }, 'crime-junkie', 'https://x.test')
+    expect(withFull.description).toBe('Crime Junkie review: A weekly show in which two friends tell the story of one case per episode.')
+    // No long description either: fall through to the facts-only sentence, not the audience line.
+    const bare = buildPodcastMeta({ ...base, title: 'Crime Junkie', short_description: audience, host_name: 'A B', format_type: 'Episodic' }, 'crime-junkie', 'https://x.test')
+    expect(bare.description).toBe('Crime Junkie is an episodic true crime podcast, hosted by A B.')
+  })
   it('keeps an ordinary short_description unchanged', () => {
     const m = buildPodcastMeta({ ...base, short_description: 'Covers one Florida case in forensic detail.', description: 'Long text.' }, 'x', 'https://x.test')
     expect(m.description).toBe('Covers one Florida case in forensic detail.')
+  })
+})
+
+describe('generatedTitle', () => {
+  it('adds "True Crime Podcast" when the full title fits', () => {
+    expect(generatedTitle({ title: 'Serial' })).toBe('Serial Review: True Crime Podcast | ListenTrueCrime')
+    expect(buildPodcastMeta({ ...base, title: 'Crime Junkie' }, 'crime-junkie', 'https://x.test').title)
+      .toEqual({ absolute: 'Crime Junkie Review: True Crime Podcast | ListenTrueCrime' })
+  })
+  it('falls back to the short pattern for long names, without truncating them', () => {
+    // 64 characters with the phrase, so it still fits.
+    expect(generatedTitle({ title: 'Mother Knows Murder' })).toBe('Mother Knows Murder Review: True Crime Podcast | ListenTrueCrime')
+    expect(generatedTitle({ title: 'The Woman in the Woods' })).toBe('The Woman in the Woods Review | ListenTrueCrime')
+    const long = 'They Walk Among Us: UK True Crime Stories From Ordinary Streets'
+    expect(generatedTitle({ title: long })).toBe(`${long} Review | ListenTrueCrime`)
+  })
+  it('never exceeds 65 characters when the phrase is added', () => {
+    for (const title of ['Serial', 'In the Dark', 'The Woman in the Woods', 'Casefile True Crime']) {
+      const t = generatedTitle({ title })
+      if (t.includes('True Crime Podcast')) expect(t.length).toBeLessThanOrEqual(65)
+    }
   })
 })
 

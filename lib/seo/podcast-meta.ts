@@ -15,9 +15,27 @@ const clean = (v: string | null | undefined) => v?.trim() || null
 
 const MAX_DESCRIPTION = 160
 
-// short_description is sometimes an audience note ("Listeners who prefer...") rather than
-// a sentence about the show; as a meta description it reads as a fragment.
-const AUDIENCE_BLURB = /^(listeners|fans|anyone|people|those|readers|viewers|audiences|perfect for|ideal for|best for|great for|suited|for )/i
+const MAX_TITLE = 65
+const BRAND = ' | ListenTrueCrime'
+
+// short_description is sometimes an audience note ("Listeners who prefer...", "True crime
+// fans who want...") rather than a sentence about the show; as a meta description it reads
+// as a fragment.
+const AUDIENCE_BLURB = /^(listeners|fans|anyone|people|those|readers|viewers|audiences|perfect for|ideal for|best for|great for|suited|for |true[- ]crime (fans|listeners|lovers|enthusiasts|obsessives|newcomers|podcast fans))/i
+
+/** True when the text describes who a show is for, not the show itself. */
+export function isAudienceBlurb(text: string | null | undefined): boolean {
+  return AUDIENCE_BLURB.test((text ?? '').trim())
+}
+
+/**
+ * Complete <title>, brand included. "True Crime Podcast" is added only when the whole
+ * title stays within MAX_TITLE; the show name is never truncated.
+ */
+export function generatedTitle(p: Pick<MetaSource, 'title'>): string {
+  const withPhrase = `${p.title} Review: True Crime Podcast${BRAND}`
+  return withPhrase.length <= MAX_TITLE ? withPhrase : `${p.title} Review${BRAND}`
+}
 
 /** Whole sentences up to `max` characters; otherwise a word-boundary cut with an ellipsis. */
 export function fitSentences(text: string, max = MAX_DESCRIPTION): string {
@@ -39,7 +57,7 @@ export function generatedDescription(p: MetaSource): string {
   const host = clean(p.host_name)
   const producer = clean(p.producer)
   const credit = [host && `hosted by ${host}`, producer && `produced by ${producer}`].filter(Boolean).join(' and ')
-  return `${p.title} is ${format ? `a ${format}` : 'a'} true crime podcast${credit ? `, ${credit}` : ''}.`
+  return `${p.title} is ${format ? `${/^[aeiou]/.test(format) ? 'an' : 'a'} ${format}` : 'a'} true crime podcast${credit ? `, ${credit}` : ''}.`
 }
 
 export function buildPodcastMeta(p: MetaSource, slug: string, base: string) {
@@ -49,13 +67,14 @@ export function buildPodcastMeta(p: MetaSource, slug: string, base: string) {
   const full = clean(p.description)
   const description =
     clean(p.meta_description) ??
-    (short && !(AUDIENCE_BLURB.test(short) && full) ? short : null) ??
-    (full ? fitSentences(`${p.title} review: ${full}`) : null) ??
+    // An audience note is never the description, even when there is nothing longer to use.
+    (short && !isAudienceBlurb(short) ? short : null) ??
+    (full && !isAudienceBlurb(full) ? fitSentences(`${p.title} review: ${full}`) : null) ??
     generatedDescription(p)
 
   return {
-    // Same pattern the pages have always used, so rankings are not disturbed.
-    title: clean(p.seo_title) ? { absolute: clean(p.seo_title)! } : `${p.title} Review`,
+    // Absolute, so the layout template does not append the brand a second time.
+    title: { absolute: clean(p.seo_title) ?? generatedTitle(p) },
     description,
     ogTitle: clean(p.og_title) ?? clean(p.seo_title) ?? `${p.title} | ListenTrueCrime`,
     ogDescription: clean(p.og_description) ?? description,
