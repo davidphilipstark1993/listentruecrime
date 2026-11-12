@@ -5,6 +5,7 @@ import type { Podcast } from '@/lib/types/database'
 import { COUNTRIES } from '@/lib/types/database'
 import { countryFlag } from '@/lib/utils'
 import { audienceLine, clean, isMustListen } from '@/lib/best-page-picks'
+import { guardClaims } from '@/lib/seo/unsourced-claims'
 
 export type RankedPodcast = Pick<
   Podcast,
@@ -30,14 +31,15 @@ function formatLabel(format: string | null): string | null {
 
 /** One ranked pick: artwork, key facts, our verdict and where to start. Lines render only when the field exists. */
 export function RankedPodcastEntry({ podcast: p, rank, priority = false }: Props) {
-  const verdict = clean(p.newsletter_worthy_summary)
-  const bestFor = audienceLine(p.short_description)
-  const synopsis = bestFor ? null : clean(p.short_description)
+  // Record text is shown without uncited download or chart claims (see lib/seo/unsourced-claims.ts).
+  const verdict = guardClaims(clean(p.newsletter_worthy_summary))
+  const bestFor = guardClaims(audienceLine(p.short_description))
+  const synopsis = bestFor ? null : guardClaims(clean(p.short_description))
   const country = p.country_name || (p.country ? COUNTRIES[p.country] : null)
   const format = formatLabel(p.format_type)
-  const start = clean(p.best_episode_to_start)
-  const length = clean(p.episode_length)
-  const episodes = clean(p.episode_count)
+  const start = guardClaims(clean(p.best_episode_to_start))
+  const length = guardClaims(clean(p.episode_length))
+  const episodes = guardClaims(clean(p.episode_count))
   const platforms = (p.platforms ?? []).filter(Boolean)
   const urls = p.platform_urls ?? {}
 
