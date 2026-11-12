@@ -47,14 +47,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const descriptionSuffix = geoNote[slug] ?? ' Expert-reviewed and community-rated.'
   const baseDescription = seo?.metaDescription ?? seo?.intro[0] ?? `Discover the best ${cat.label.toLowerCase()} true crime podcasts. ${cat.description}`
 
+  // A `title` override marks a browse page that must not compete with a "Best …" guide; it gets no year suffix.
+  const title = seo?.title ?? `${h1} (${year})`
+
   return {
-    title: `${h1} (${year})`,
+    title,
     description: seo?.metaDescription ?? clampMeta(baseDescription + descriptionSuffix),
     openGraph: {
-      title: `${h1} (${year}) | ListenTrueCrime`,
+      title: `${title} | ListenTrueCrime`,
       description: clampMeta(baseDescription),
       url: `${BASE}/category/${slug}`,
-      ...ogDefaults(`${h1} (${year})`),
+      ...ogDefaults(title),
     },
     alternates: { canonical: `${BASE}${CANONICAL_COUNTRY_PAGE[slug] ?? `/category/${slug}`}` },
   }
@@ -135,7 +138,7 @@ export default async function CategoryPage({ params }: Props) {
 
             <div className="text-4xl mb-4">{cat.emoji}</div>
             <h1 className="heading-display text-3xl sm:text-4xl lg:text-5xl mb-4">
-              {h1} <span className="text-stone-subtle text-2xl font-sans font-normal">({year})</span>
+              {h1}{!seo?.title && <> <span className="text-stone-subtle text-2xl font-sans font-normal">({year})</span></>}
             </h1>
 
             {seo?.intro ? (
