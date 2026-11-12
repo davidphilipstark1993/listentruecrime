@@ -3,15 +3,15 @@ import { BASE } from '@/lib/seo/config'
 export async function GET() {
   const content = `# ListenTrueCrime
 
-> The internet's most comprehensive true crime podcast database. Expert-reviewed and community-rated.
+> ListenTrueCrime is a true crime podcast directory and review site. Editorial verdicts and a Binge Factor score (1–10), plus community ratings where listeners have submitted them.
 
 ## What this site is
 
-ListenTrueCrime is a discovery and review platform for true crime podcasts. We help listeners find, rate, and discuss true crime shows through expert editorial reviews and community ratings.
+ListenTrueCrime is a discovery and review site for true crime podcasts. We help listeners find, rate and discuss true crime shows through editorial reviews and community ratings.
 
 ## How ratings work
 
-Every podcast has an editorial verdict and an editorial Binge Factor score (1–10). Registered community members can also rate each podcast 1–10 on six dimensions, shown separately from the editorial verdict:
+Reviewed podcasts carry an editorial verdict and an editorial Binge Factor score (1–10). Newer listings may not have either yet, and say so. Registered community members can also rate each podcast 1–10 on six dimensions, shown separately from the editorial verdict:
 
 - **Storytelling** — narrative structure, pacing, how the case is told
 - **Research Quality** — depth of sourcing, use of primary documents and interviews
@@ -54,11 +54,11 @@ Beyond podcast reviews, we publish original editorial coverage of major true cri
 
 ## Full podcast listing
 
-A compact listing of every podcast in our database (name, verdict, binge score, description, URL) is available at: ${BASE}/llms-full.txt
+A compact listing of every published podcast in our directory (name, verdict, binge score, description, URL) is available at: ${BASE}/llms-full.txt
 
 ## About us
 
-ListenTrueCrime was built to cut through the noise of podcast discovery. Every show in our database is reviewed on consistent dimensions — giving listeners the signal, not the noise.
+ListenTrueCrime was built to make true crime podcasts easier to choose between. Shows are assessed on the same dimensions, so listings can be compared like for like.
 
 Contact: info@listentruecrime.com
 `

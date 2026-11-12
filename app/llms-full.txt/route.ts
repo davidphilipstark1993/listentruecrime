@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { BASE } from '@/lib/seo/config'
+import { llmsBlurb } from '@/lib/seo/llms'
 
 export const revalidate = 3600
 
@@ -18,7 +19,8 @@ export async function GET() {
   const header = [
     '# ListenTrueCrime — Full Podcast Listing',
     '',
-    `> ${podcasts.length} reviewed true crime podcasts, ranked by binge factor`,
+    // Generated from the query above (published listings), not a marketing figure.
+    `> ${podcasts.length} published podcasts in our directory, ordered by editorial Binge Factor`,
     `> Full reviews at ${BASE}/browse`,
     '',
     '---',
@@ -27,10 +29,10 @@ export async function GET() {
 
   const entries = podcasts.map(p => [
     `## ${p.title}`,
-    `- Verdict: ${p.quick_verdict ?? 'Not yet rated'}`,
-    `- Binge score: ${p.binge_factor != null ? `${p.binge_factor}/10` : 'N/A'}`,
-    `- Type: ${p.case_types?.join(', ') ?? 'True Crime'}`,
-    `- ${p.short_description ?? 'See full review for details'}`,
+    `- Verdict: ${p.quick_verdict?.trim() || 'Not yet rated'}`,
+    `- Binge score: ${p.binge_factor != null ? `${p.binge_factor}/10` : 'Not yet rated'}`,
+    `- Type: ${p.case_types?.filter(Boolean).join(', ') || 'True Crime'}`,
+    `- ${llmsBlurb(p.short_description) ?? 'See full review for details'}`,
     `- URL: ${BASE}/podcasts/${p.slug}`,
     '',
   ].join('\n')).join('\n')

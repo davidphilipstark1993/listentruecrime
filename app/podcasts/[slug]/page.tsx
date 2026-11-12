@@ -17,6 +17,8 @@ import { countryDisplayName } from '@/lib/country-names'
 import { listenLinks } from '@/lib/platform-urls'
 import { listenActionSchema } from '@/lib/seo/listen-action'
 import { buildPodcastMeta } from '@/lib/seo/podcast-meta'
+import { getWhoIsItFor } from '@/lib/seo/who-is-it-for'
+import { podcastSeriesSchema, podcastReviewSchema } from '@/lib/seo/podcast-schema'
 import { getPros, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
 import { getAuthor } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
@@ -28,7 +30,7 @@ import { getGuidesForPodcast } from '@/lib/blog'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
 import { AdSlot } from '@/components/ads/ad-slot'
-import { ratingStatsOf, MIN_RATINGS_FOR_SCHEMA } from '@/lib/rating-stats'
+import { ratingStatsOf } from '@/lib/rating-stats'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -122,24 +124,6 @@ function getPodcastCategories(podcast: any) {
     else if (caseTypes.length > 0 && podcast.case_types?.some((t: string) => caseTypes.includes(t))) cats.push(cat)
   }
   return cats
-}
-
-// Derive "who it's for" text from podcast attributes
-function getWhoIsItFor(podcast: any): string[] {
-  const lines: string[] = []
-  if (podcast.format_type === 'Serialized') lines.push('Listeners who enjoy following a single case from start to finish')
-  if (podcast.format_type === 'Episodic') lines.push('Listeners who prefer variety — a new case with every episode')
-  if (podcast.case_types?.includes('Cold Case')) lines.push('Cold case enthusiasts who love decades-old unsolved mysteries')
-  if (podcast.case_types?.includes('Missing Person')) lines.push('Anyone fascinated by missing persons investigations')
-  if (podcast.case_types?.includes('Investigative')) lines.push('Fans of original investigative journalism over retold news')
-  if (podcast.case_types?.includes('Courtroom') || podcast.case_types?.includes('Wrongful Conviction')) lines.push('Legal procedure enthusiasts and wrongful conviction advocates')
-  if (podcast.case_types?.includes('Serial Killer')) lines.push('Those interested in the psychology of serial offenders')
-  if (podcast.case_types?.includes('Fraud') || podcast.case_types?.includes('White-Collar Crime')) lines.push('Fans of financial crime and corporate misconduct stories')
-  if (podcast.host_style === 'Dual Host') lines.push('Listeners who enjoy a conversational, back-and-forth dynamic')
-  if (podcast.factual_style === 'Purely Factual') lines.push('Those who prefer straight reporting over host commentary')
-  if (podcast.country === 'UK') lines.push('Listeners interested in British cases and the UK criminal justice system')
-  if (podcast.country === 'AU') lines.push('Fans of Australian true crime and its unique landscape and culture')
-  return lines.slice(0, 4)
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -260,59 +244,14 @@ export default async function PodcastPage({ params }: Props) {
 
   const ratingCount = stats?.rating_count ?? 0
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'PodcastSeries',
-    name: podcast.title,
-    description: podcast.description,
-    image: podcast.image_url,
-    url: `${BASE}/podcasts/${slug}`,
-    inLanguage: 'en',
-    datePublished: podcast.created_at?.split('T')[0],
-    dateModified: podcast.updated_at?.split('T')[0],
-    ...(podcast.case_types?.length && { genre: podcast.case_types }),
-    ...(countryName && { countryOfOrigin: { '@type': 'Country', name: countryName } }),
-    // ListenAction targets are the real, editor-entered listen URLs only
-    ...(listenAction && { potentialAction: listenAction }),
-    // Only emit aggregateRating once there is a meaningful number of community ratings
-    ...(ratingCount >= MIN_RATINGS_FOR_SCHEMA && overallScore != null && {
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: overallScore,
-        bestRating: 10,
-        worstRating: 1,
-        ratingCount,
-      },
-    }),
-  }
+  const pageUrl = `${BASE}/podcasts/${slug}`
+  const jsonLd = podcastSeriesSchema(podcast, { url: pageUrl, countryName, listenAction, ratingCount, overallScore })
 
-  // Editorial review schema — only when we have editorial content
-  // A Review needs a real, final editor rating: omitted when no rating is entered or it is provisional.
-  const reviewSchema = podcast.rating != null && !podcast.rating_is_provisional ? {
-    '@context': 'https://schema.org',
-    '@type': 'Review',
-    itemReviewed: {
-      '@type': 'PodcastSeries',
-      name: podcast.title,
-      url: `${BASE}/podcasts/${slug}`,
-    },
-    author: {
-      '@type': 'Person',
-      name: getAuthor('david-stark').name,
-      url: `${BASE}/authors/david-stark`,
-    },
-    reviewRating: {
-      '@type': 'Rating',
-      ratingValue: podcast.rating,
-      bestRating: 10,
-      worstRating: 0,
-      name: 'Editorial rating',
-      ...(podcast.quick_verdict && { description: podcast.quick_verdict }),
-    },
-    ...(podcast.newsletter_worthy_summary && { reviewBody: podcast.newsletter_worthy_summary }),
-    datePublished: podcast.created_at?.split('T')[0],
-    dateModified: podcast.updated_at?.split('T')[0],
-  } : null
+  // Editorial review schema: only with a real, final editor rating (see lib/seo/podcast-schema.ts).
+  const reviewSchema = podcastReviewSchema(podcast, {
+    url: pageUrl,
+    author: { name: getAuthor('david-stark').name, url: `${BASE}/authors/david-stark` },
+  })
 
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', url: BASE },
