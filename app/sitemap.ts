@@ -9,9 +9,13 @@ import { shopEnabled, SHOP_CATEGORIES, SHOP_COLLECTIONS } from '@/lib/shop/confi
 import { normalisePath } from '@/lib/redirects'
 import { getIndexablePodcastsLike, getListingCounts, MIN_INDEXABLE_COUNTRY_PODCASTS, MIN_INDEXABLE_PLATFORM_PODCASTS } from '@/lib/seo/indexability'
 
-// Regenerate hourly (and on admin saves) so unpublished, redirected and noindexed
-// pages leave the sitemap without waiting for the next deploy.
-export const revalidate = 3600
+// Regenerated at most every 15 minutes, so a show published today is in the sitemap the
+// same day and unpublished, redirected or noindexed pages leave it without a deploy.
+// Regeneration is stale-while-revalidate: the first request after the window still gets
+// the old copy and triggers the rebuild, so worst case a new URL appears on the second
+// request after 15 minutes. Shows added straight to the database (scripts, imports) rely
+// on this window alone, as nothing revalidates the route for them.
+export const revalidate = 900
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createAdminClient()

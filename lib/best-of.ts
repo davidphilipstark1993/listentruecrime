@@ -98,7 +98,8 @@ export const BEST_OF_PAGES: BestOfPage[] = [
   },
   {
     slug: 'uk-true-crime',
-    canonicalOverride: `${BASE}/category/uk-crime`,
+    // Straight to the owner: /category/uk-crime itself canonicalises to /country/UK.
+    canonicalOverride: `${BASE}/country/UK`,
     title: `Best UK True Crime Podcasts ${CURRENT_YEAR}`,
     h1: 'Best UK True Crime Podcasts',
     description: 'The best British true crime podcasts covering UK murders, cold cases, and criminal justice stories. Ranked by community ratings.',
@@ -107,7 +108,8 @@ export const BEST_OF_PAGES: BestOfPage[] = [
   },
   {
     slug: 'australian-true-crime',
-    canonicalOverride: `${BASE}/category/australian-crime`,
+    // Straight to the owner: /category/australian-crime itself canonicalises to /country/AU.
+    canonicalOverride: `${BASE}/country/AU`,
     title: `Best Australian True Crime Podcasts ${CURRENT_YEAR}`,
     h1: 'Best Australian True Crime Podcasts',
     description: 'The top Australian true crime podcasts — from landmark murders to cold cases from across the Lucky Country.',
