@@ -138,8 +138,10 @@ export const CATEGORY_SEO: Record<string, PageSeoContent> = {
   },
 
   'cults': {
-    h1: 'Best Cult Podcasts',
-    metaDescription: 'The best cult podcasts, with binge scores: NXIVM, Heaven\'s Gate, Twin Flames, John of God and more — how high-control groups recruit, and how people get out.',
+    h1: 'Cult Podcasts',
+    // Browse page: the ranked "Best Cult Podcasts" guide lives at /blog/best-cult-podcasts.
+    title: 'Cult Podcasts: Shows About High-Control Groups',
+    metaDescription: 'Browse cult podcasts with binge scores: shows on NXIVM, Heaven\'s Gate, Twin Flames, John of God and other high-control groups. Our ranked guide is linked below.',
     intro: [
       'Cult podcasts are about one question: how does it happen? Not to the gullible — to ordinary, intelligent people who joined a community, a course or a cause and found, years later, that they could not leave. The best shows here answer it through the people who were inside.',
       'This is a curated list, not a keyword filter: each show is here because cults or high-control groups are its subject, in editorial order. Our written guide, Best Cult Podcasts, explains how to choose between them.',
@@ -313,7 +315,10 @@ export const CATEGORY_SEO: Record<string, PageSeoContent> = {
   },
 
   'serial-killers': {
-    h1: 'Best Serial Killer Podcasts',
+    h1: 'Serial Killer Podcasts',
+    // Browse page: the ranked lists live at /best/serial-killer and /blog/best-serial-killer-podcasts.
+    title: 'Serial Killer Podcasts: Browse Shows & Reviews',
+    metaDescription: 'Browse serial killer podcasts with binge scores, from Ted Bundy and BTK to lesser-known cases. For our ranked picks, see Best Serial Killer Podcasts.',
     intro: [
       'Serial killer podcasts explore the darkest corners of human psychology — the minds of men and women who killed repeatedly, often evading detection for years or decades. These shows go beyond the crime itself to ask the harder question: how do people become capable of this?',
       'The best serial killer podcasts balance forensic detail with psychological insight, treating victims as human beings rather than statistics. From Ted Bundy and BTK to lesser-known offenders whose stories have never been told properly, this genre continues to attract some of the strongest true crime storytelling.',
@@ -341,6 +346,7 @@ export const CATEGORY_SEO: Record<string, PageSeoContent> = {
       },
     ],
     relatedLinks: [
+      { href: '/best/serial-killer', label: 'Best Serial Killer Podcasts: Ranked' },
       { href: '/blog/best-serial-killer-podcasts', label: 'Best Serial Killer Podcasts: The Guide' },
       { href: '/blog/best-murder-mystery-podcasts', label: 'Best Murder Mystery Podcasts' },
       { href: '/category/cold-cases', label: 'Cold Case Podcasts' },
