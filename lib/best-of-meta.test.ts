@@ -45,3 +45,20 @@ describe('rankPodcasts', () => {
     expect(out.map(p => p.title)).toEqual(['Serial', 'A', 'B', 'Z'])
   })
 })
+
+describe('/best canonical owners', () => {
+  const override = (slug: string) => BEST_OF_PAGES.find(p => p.slug === slug)?.canonicalOverride
+
+  it('sends the UK and Australian lists straight to their country pages', () => {
+    expect(override('uk-true-crime')).toMatch(/\/country\/UK$/)
+    expect(override('australian-true-crime')).toMatch(/\/country\/AU$/)
+  })
+  it('leaves the cold-case list on its category', () => {
+    expect(override('cold-case')).toMatch(/\/category\/cold-cases$/)
+  })
+  it('never points at a category that itself canonicalises elsewhere', () => {
+    for (const page of BEST_OF_PAGES) {
+      expect(page.canonicalOverride ?? '').not.toMatch(/\/category\/(uk-crime|australian-crime)$/)
+    }
+  })
+})
