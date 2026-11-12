@@ -17,6 +17,7 @@ import { countryDisplayName } from '@/lib/country-names'
 import { listenLinks } from '@/lib/platform-urls'
 import { listenActionSchema } from '@/lib/seo/listen-action'
 import { buildPodcastMeta } from '@/lib/seo/podcast-meta'
+import { getWhoIsItFor } from '@/lib/seo/who-is-it-for'
 import { getPros, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
 import { getAuthor } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
@@ -122,24 +123,6 @@ function getPodcastCategories(podcast: any) {
     else if (caseTypes.length > 0 && podcast.case_types?.some((t: string) => caseTypes.includes(t))) cats.push(cat)
   }
   return cats
-}
-
-// Derive "who it's for" text from podcast attributes
-function getWhoIsItFor(podcast: any): string[] {
-  const lines: string[] = []
-  if (podcast.format_type === 'Serialized') lines.push('Listeners who enjoy following a single case from start to finish')
-  if (podcast.format_type === 'Episodic') lines.push('Listeners who prefer variety — a new case with every episode')
-  if (podcast.case_types?.includes('Cold Case')) lines.push('Cold case enthusiasts who love decades-old unsolved mysteries')
-  if (podcast.case_types?.includes('Missing Person')) lines.push('Anyone fascinated by missing persons investigations')
-  if (podcast.case_types?.includes('Investigative')) lines.push('Fans of original investigative journalism over retold news')
-  if (podcast.case_types?.includes('Courtroom') || podcast.case_types?.includes('Wrongful Conviction')) lines.push('Legal procedure enthusiasts and wrongful conviction advocates')
-  if (podcast.case_types?.includes('Serial Killer')) lines.push('Those interested in the psychology of serial offenders')
-  if (podcast.case_types?.includes('Fraud') || podcast.case_types?.includes('White-Collar Crime')) lines.push('Fans of financial crime and corporate misconduct stories')
-  if (podcast.host_style === 'Dual Host') lines.push('Listeners who enjoy a conversational, back-and-forth dynamic')
-  if (podcast.factual_style === 'Purely Factual') lines.push('Those who prefer straight reporting over host commentary')
-  if (podcast.country === 'UK') lines.push('Listeners interested in British cases and the UK criminal justice system')
-  if (podcast.country === 'AU') lines.push('Fans of Australian true crime and its unique landscape and culture')
-  return lines.slice(0, 4)
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -268,8 +251,9 @@ export default async function PodcastPage({ params }: Props) {
     image: podcast.image_url,
     url: `${BASE}/podcasts/${slug}`,
     inLanguage: 'en',
-    datePublished: podcast.created_at?.split('T')[0],
-    dateModified: podcast.updated_at?.split('T')[0],
+    // No datePublished/dateModified here: on a PodcastSeries they describe the show, and
+    // the only dates on the record are when our listing was created and last edited. We
+    // do not store a premiere date, so the properties are omitted rather than wrong.
     ...(podcast.case_types?.length && { genre: podcast.case_types }),
     ...(countryName && { countryOfOrigin: { '@type': 'Country', name: countryName } }),
     // ListenAction targets are the real, editor-entered listen URLs only
@@ -310,6 +294,7 @@ export default async function PodcastPage({ params }: Props) {
       ...(podcast.quick_verdict && { description: podcast.quick_verdict }),
     },
     ...(podcast.newsletter_worthy_summary && { reviewBody: podcast.newsletter_worthy_summary }),
+    // These are Review properties: when our review was first published and last edited.
     datePublished: podcast.created_at?.split('T')[0],
     dateModified: podcast.updated_at?.split('T')[0],
   } : null
