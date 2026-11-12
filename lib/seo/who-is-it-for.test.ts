@@ -30,4 +30,19 @@ describe('getWhoIsItFor', () => {
       format_type: 'Episodic', case_types: ['Cold Case', 'Missing Person', 'Investigative', 'Serial Killer'], country: 'UK',
     })).toHaveLength(4)
   })
+  it.each([
+    'UK true crime listeners who want a careful, family-centred documentary about a case that changed British law, rather than a graphic retelling of the crime.',
+    'Canadian true crime fans; international listeners curious about crime north of the border; those who appreciate a lighter touch on dark material.',
+    'Criminal justice reform advocates; true crime fans troubled by prosecutorial misconduct and the fallibility of the justice system.',
+    'History and current affairs enthusiasts who want true crime-style storytelling applied to institutional corruption and political failures.',
+  ])('leads with the live editor line: %s', line => {
+    expect(getWhoIsItFor({ short_description: line, case_types: ['Courtroom'] })[0]).toBe(line.replace(/\.$/, ''))
+  })
+  it.each([
+    'For fifteen years, a Manhattan phone line let anonymous callers confess anything — until the man on the other end became consumed by his own creation.',
+    'Stories of people who have completely vanished, covering both crime disappearances and chosen disappearances.',
+    'A multi-award-winning BBC investigation into ISIS recruitment, told through the people who were pulled in.',
+  ])('does not use a synopsis as the audience line: %s', line => {
+    expect(getWhoIsItFor({ short_description: line })).toEqual([])
+  })
 })
