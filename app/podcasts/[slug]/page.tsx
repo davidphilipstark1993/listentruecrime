@@ -18,6 +18,7 @@ import { listenLinks } from '@/lib/platform-urls'
 import { listenActionSchema } from '@/lib/seo/listen-action'
 import { buildPodcastMeta } from '@/lib/seo/podcast-meta'
 import { getWhoIsItFor } from '@/lib/seo/who-is-it-for'
+import { podcastSeriesSchema, podcastReviewSchema } from '@/lib/seo/podcast-schema'
 import { getPros, getHostDescription, getPodcastPersonSchema } from '@/lib/seo/podcast-analysis'
 import { getAuthor } from '@/lib/authors'
 import { BASE } from '@/lib/seo/config'
@@ -29,7 +30,7 @@ import { getGuidesForPodcast } from '@/lib/blog'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
 import { AdSlot } from '@/components/ads/ad-slot'
-import { ratingStatsOf, MIN_RATINGS_FOR_SCHEMA } from '@/lib/rating-stats'
+import { ratingStatsOf } from '@/lib/rating-stats'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -243,61 +244,14 @@ export default async function PodcastPage({ params }: Props) {
 
   const ratingCount = stats?.rating_count ?? 0
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'PodcastSeries',
-    name: podcast.title,
-    description: podcast.description,
-    image: podcast.image_url,
-    url: `${BASE}/podcasts/${slug}`,
-    inLanguage: 'en',
-    // No datePublished/dateModified here: on a PodcastSeries they describe the show, and
-    // the only dates on the record are when our listing was created and last edited. We
-    // do not store a premiere date, so the properties are omitted rather than wrong.
-    ...(podcast.case_types?.length && { genre: podcast.case_types }),
-    ...(countryName && { countryOfOrigin: { '@type': 'Country', name: countryName } }),
-    // ListenAction targets are the real, editor-entered listen URLs only
-    ...(listenAction && { potentialAction: listenAction }),
-    // Only emit aggregateRating once there is a meaningful number of community ratings
-    ...(ratingCount >= MIN_RATINGS_FOR_SCHEMA && overallScore != null && {
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: overallScore,
-        bestRating: 10,
-        worstRating: 1,
-        ratingCount,
-      },
-    }),
-  }
+  const pageUrl = `${BASE}/podcasts/${slug}`
+  const jsonLd = podcastSeriesSchema(podcast, { url: pageUrl, countryName, listenAction, ratingCount, overallScore })
 
-  // Editorial review schema — only when we have editorial content
-  // A Review needs a real, final editor rating: omitted when no rating is entered or it is provisional.
-  const reviewSchema = podcast.rating != null && !podcast.rating_is_provisional ? {
-    '@context': 'https://schema.org',
-    '@type': 'Review',
-    itemReviewed: {
-      '@type': 'PodcastSeries',
-      name: podcast.title,
-      url: `${BASE}/podcasts/${slug}`,
-    },
-    author: {
-      '@type': 'Person',
-      name: getAuthor('david-stark').name,
-      url: `${BASE}/authors/david-stark`,
-    },
-    reviewRating: {
-      '@type': 'Rating',
-      ratingValue: podcast.rating,
-      bestRating: 10,
-      worstRating: 0,
-      name: 'Editorial rating',
-      ...(podcast.quick_verdict && { description: podcast.quick_verdict }),
-    },
-    ...(podcast.newsletter_worthy_summary && { reviewBody: podcast.newsletter_worthy_summary }),
-    // These are Review properties: when our review was first published and last edited.
-    datePublished: podcast.created_at?.split('T')[0],
-    dateModified: podcast.updated_at?.split('T')[0],
-  } : null
+  // Editorial review schema: only with a real, final editor rating (see lib/seo/podcast-schema.ts).
+  const reviewSchema = podcastReviewSchema(podcast, {
+    url: pageUrl,
+    author: { name: getAuthor('david-stark').name, url: `${BASE}/authors/david-stark` },
+  })
 
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', url: BASE },
