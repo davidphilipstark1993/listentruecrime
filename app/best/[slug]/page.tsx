@@ -2,7 +2,6 @@ export const revalidate = 3600
 
 import { cache } from 'react'
 import { notFound } from 'next/navigation'
-import { ratingStatsOf, MIN_RATINGS_FOR_SCHEMA } from '@/lib/rating-stats'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Star, ChevronRight } from 'lucide-react'
@@ -93,29 +92,14 @@ export default async function BestOfPage({ params }: Props) {
     description: meta.description,
     url: `${BASE}/best/${slug}`,
     numberOfItems: podcasts.length,
-    itemListElement: podcasts.map((p, i) => {
-      const stats = ratingStatsOf(p.rating_stats)
-      return {
-        '@type': 'ListItem',
-        position: i + 1,
-        name: p.title,
-        url: `${BASE}/podcasts/${p.slug}`,
-        ...(stats?.avg_overall && stats.rating_count >= MIN_RATINGS_FOR_SCHEMA ? {
-          item: {
-            '@type': 'PodcastSeries',
-            name: p.title,
-            url: `${BASE}/podcasts/${p.slug}`,
-            image: p.image_url,
-            aggregateRating: {
-              '@type': 'AggregateRating',
-              ratingValue: stats.avg_overall.toFixed(1),
-              bestRating: '10',
-              ratingCount: stats.rating_count,
-            },
-          },
-        } : {}),
-      }
-    }),
+    // Plain list items: Google's review snippet guidelines rule out ratings on a
+    // list of items, so ratings are marked up only on each podcast's own page.
+    itemListElement: podcasts.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: p.title,
+      url: `${BASE}/podcasts/${p.slug}`,
+    })),
   }
 
   return (
