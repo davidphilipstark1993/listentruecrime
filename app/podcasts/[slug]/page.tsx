@@ -24,7 +24,7 @@ import { countryFlag, formatRelativeDate, scoreBg, cn, stripHtml } from '@/lib/u
 import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
-import { getGuidesForPodcast } from '@/lib/blog'
+import { getGuidesForPodcastPage } from '@/lib/blog'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
 import { AdSlot } from '@/components/ads/ad-slot'
@@ -210,7 +210,7 @@ export default async function PodcastPage({ params }: Props) {
   const podcastCategories = getPodcastCategories(podcast)
   const whoIsItFor = getWhoIsItFor(podcast)
   const relatedCases = getCasesForPodcast(slug)
-  const guides = getGuidesForPodcast(slug)
+  const guides = getGuidesForPodcastPage(slug, podcast.case_types)
   const stats = ratingStatsOf(podcast.rating_stats)
   const overallScore = stats?.avg_overall
   const year = new Date().getFullYear()

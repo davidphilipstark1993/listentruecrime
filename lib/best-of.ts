@@ -28,29 +28,10 @@ export interface BestOfPage {
   related?: { href: string; label: string }[]
 }
 
+// murder-mystery, serial-killer and investigative were retired on 15 Nov 2026
+// and 301 to their hand-written /blog guides (next.config.js), which were
+// competing with them for the same searches.
 export const BEST_OF_PAGES: BestOfPage[] = [
-  {
-    slug: 'murder-mystery',
-    title: `Best Murder Mystery Podcasts ${CURRENT_YEAR}`,
-    h1: 'Best Murder Mystery True Crime Podcasts',
-    description: 'The best murder mystery podcasts, ranked by binge-worthiness and investigative depth. Community-rated and expert-reviewed.',
-    intro: 'The best murder mystery podcasts right now are {top3}, based on our binge factor ranking of {count} shows. Each one follows a real killing and the question that survived it: who did it, was the right person convicted, or what really happened. Start at the top of the list if you want the most compulsive listens, or use the case details on each review to find a style that suits you. For a shorter, hand-picked set with episode details, see our editor\'s guide to the best murder mystery podcasts.',
-    faqs: [
-      { q: 'What are the best murder mystery podcasts?', a: 'The highest-ranked murder mystery podcasts on this page are {top3}, ordered by binge factor across {count} shows. Every show listed covers a real case, not fiction.' },
-      { q: 'Are these murder mystery podcasts true or fictional?', a: 'They are true crime. Each show covers a real murder or a real investigation. Scripted whodunits are a different genre and are not included here.' },
-      { q: 'How is the list ranked?', a: 'Shows are ordered by our binge factor score, which reflects how compulsively listenable a show is. Each podcast links to a full review with an editorial verdict and community ratings where they exist.' },
-    ],
-    related: [{ href: '/blog/best-murder-mystery-podcasts', label: 'Editor\'s guide: nine true murder mysteries with open questions' }],
-    caseTypes: ['Murder'],
-  },
-  {
-    slug: 'serial-killer',
-    title: `Best Serial Killer Podcasts ${CURRENT_YEAR}`,
-    h1: 'Best Serial Killer True Crime Podcasts',
-    description: 'In-depth true crime podcasts covering the most notorious serial killers and the investigations that caught them. Ranked by community ratings.',
-    intro: 'Serial killer podcasts explore some of the most disturbing and complex criminal investigations in history. The best don\'t just sensationalise — they examine the psychology, the failures of law enforcement, and the communities left behind. These are the highest-rated serial killer podcasts in our database.',
-    caseTypes: ['Serial Killer'],
-  },
   {
     slug: 'cold-case',
     canonicalOverride: `${BASE}/category/cold-cases`,
@@ -68,15 +49,6 @@ export const BEST_OF_PAGES: BestOfPage[] = [
     description: 'Podcasts investigating missing persons cases, unexplained disappearances, and the communities left searching for answers.',
     intro: 'Missing persons podcasts document some of the most emotionally devastating cases in true crime. These shows dig into disappearances that were dismissed, ignored, or inadequately investigated — and often bring new evidence to light. These are the most highly-rated missing persons podcasts in our database.',
     caseTypes: ['Missing Person'],
-  },
-  {
-    slug: 'investigative',
-    title: `Best Investigative True Crime Podcasts ${CURRENT_YEAR}`,
-    h1: 'Best Investigative True Crime Podcasts',
-    description: 'Award-winning investigative journalism podcasts that hold institutions accountable, expose systemic failures, and pursue justice.',
-    intro: 'Investigative true crime podcasts represent the journalism end of the spectrum — rigorous, evidence-led, and willing to challenge official narratives. These shows have broken real stories, secured overturned convictions, and changed laws. The highest-rated investigative podcasts, ranked by our community.',
-    related: [{ href: '/blog/best-investigative-journalism-podcasts', label: 'Guide: investigative podcasts that changed cases' }, { href: '/category/investigative', label: 'All investigative podcasts' }],
-    caseTypes: ['Investigative', 'Systemic Injustice'],
   },
   {
     slug: 'fraud-and-scams',

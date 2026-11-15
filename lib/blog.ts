@@ -171,6 +171,24 @@ export function getGuidesForPodcast(podcastSlug: string, limit = 3): BlogPost[] 
     .slice(0, limit)
 }
 
+// Main guide per topic (chosen Nov 2026 when the competing /best lists were
+// retired). Podcast pages link to the first one that matches their case types.
+const TOPIC_GUIDES: { slug: string; caseTypes: string[] }[] = [
+  { slug: 'best-serial-killer-podcasts', caseTypes: ['serial killer'] },
+  { slug: 'best-investigative-journalism-podcasts', caseTypes: ['investigative', 'journalism', 'systemic injustice'] },
+  { slug: 'best-murder-mystery-podcasts', caseTypes: ['mystery', 'wrongful conviction'] },
+]
+
+/** Podcast-page guide list: guides that feature the show, plus the main topic guide for its case types. */
+export function getGuidesForPodcastPage(podcastSlug: string, caseTypes: string[] | null, limit = 3): BlogPost[] {
+  const guides = getGuidesForPodcast(podcastSlug, limit)
+  const types = (caseTypes ?? []).map(t => t.toLowerCase())
+  const topic = TOPIC_GUIDES.find(g => g.caseTypes.some(t => types.includes(t)))
+  if (!topic || guides.some(g => g.slug === topic.slug)) return guides
+  const post = getPostBySlug(topic.slug)
+  return post ? [...guides.slice(0, limit - 1), post] : guides
+}
+
 export function getRelatedPosts(post: BlogPost, limit = 3): BlogPost[] {
   const all = getAllPosts().filter(p => p.slug !== post.slug)
   return all
