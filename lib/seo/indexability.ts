@@ -51,7 +51,7 @@ export async function getListingCounts(): Promise<{
 export const MIN_INCOMING_RECS = 3
 
 /** Pages with proven Search Console clicks that the demand proxy would miss. */
-export const PODCASTS_LIKE_ALLOWLIST = new Set<string>(['love-trapped'])
+export const PODCASTS_LIKE_ALLOWLIST = new Set<string>(['love-trapped', 'wind-of-change'])
 
 type RecRow = { slug: string; if_you_liked_this: string[] | null }
 

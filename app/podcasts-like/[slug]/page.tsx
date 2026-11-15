@@ -14,6 +14,7 @@ import { getPodcastNarrative } from '@/lib/seo/podcast-analysis'
 import { BASE, ogDefaults } from '@/lib/seo/config'
 import { getAllPosts } from '@/lib/blog'
 import { getIndexablePodcastsLike } from '@/lib/seo/indexability'
+import { PODCASTS_LIKE_META } from '@/lib/seo/podcasts-like-meta'
 import { countryFlag, cn, scoreBg, stripHtml } from '@/lib/utils'
 import { COUNTRIES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
@@ -97,11 +98,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const indexable = (await getIndexablePodcastsLike(getAllPosts().map(p => p.slug))).includes(slug)
 
-  const title = `Podcasts Like ${podcast.title} (${new Date().getFullYear()})`
-  const description = `Loved ${podcast.title}? These are the true crime podcasts to hear next, matched on case type, storytelling style and listener ratings — each with a binge score.`
+  const override = PODCASTS_LIKE_META[slug]
+  const title = override?.title ?? `Podcasts Like ${podcast.title} (${new Date().getFullYear()})`
+  const description = override?.description ?? `Loved ${podcast.title}? These are the true crime podcasts to hear next, matched on case type, storytelling style and listener ratings — each with a binge score.`
 
   return {
-    title,
+    // Overrides are complete titles; the site template would push them past 60 characters.
+    title: override ? { absolute: title } : title,
     description,
     openGraph: {
       title,
