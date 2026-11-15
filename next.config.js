@@ -48,6 +48,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'images-api.printify.com' },
       { protocol: 'https', hostname: '**.printify.com' },
       { protocol: 'https', hostname: '**.redcircle.com' },
+      { protocol: 'https', hostname: 'images.castfire.com' },
     ],
   },
   compress: true,
