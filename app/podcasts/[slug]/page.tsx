@@ -24,11 +24,12 @@ import { countryFlag, formatRelativeDate, scoreBg, cn, stripHtml } from '@/lib/u
 import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { getCasesForPodcast } from '@/lib/cases'
-import { getGuidesForPodcast } from '@/lib/blog'
+import { getGuidesForPodcastPage } from '@/lib/blog'
+import { podcastRatingSchema } from '@/lib/seo/podcast-rating-schema'
 import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
 import { AdSlot } from '@/components/ads/ad-slot'
-import { ratingStatsOf, MIN_RATINGS_FOR_SCHEMA } from '@/lib/rating-stats'
+import { ratingStatsOf } from '@/lib/rating-stats'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -210,7 +211,7 @@ export default async function PodcastPage({ params }: Props) {
   const podcastCategories = getPodcastCategories(podcast)
   const whoIsItFor = getWhoIsItFor(podcast)
   const relatedCases = getCasesForPodcast(slug)
-  const guides = getGuidesForPodcast(slug)
+  const guides = getGuidesForPodcastPage(slug, podcast.case_types)
   const stats = ratingStatsOf(podcast.rating_stats)
   const overallScore = stats?.avg_overall
   const year = new Date().getFullYear()
@@ -274,45 +275,12 @@ export default async function PodcastPage({ params }: Props) {
     ...(countryName && { countryOfOrigin: { '@type': 'Country', name: countryName } }),
     // ListenAction targets are the real, editor-entered listen URLs only
     ...(listenAction && { potentialAction: listenAction }),
-    // Only emit aggregateRating once there is a meaningful number of community ratings
-    ...(ratingCount >= MIN_RATINGS_FOR_SCHEMA && overallScore != null && {
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: overallScore,
-        bestRating: 10,
-        worstRating: 1,
-        ratingCount,
-      },
-    }),
+    // aggregateRating (community) and the editor's review, nested; see lib/seo/podcast-rating-schema.ts
+    ...podcastRatingSchema(
+      { ...podcast, avg_overall: overallScore ?? null, rating_count: ratingCount },
+      { name: getAuthor('david-stark').name, url: `${BASE}/authors/david-stark` },
+    ),
   }
-
-  // Editorial review schema — only when we have editorial content
-  // A Review needs a real, final editor rating: omitted when no rating is entered or it is provisional.
-  const reviewSchema = podcast.rating != null && !podcast.rating_is_provisional ? {
-    '@context': 'https://schema.org',
-    '@type': 'Review',
-    itemReviewed: {
-      '@type': 'PodcastSeries',
-      name: podcast.title,
-      url: `${BASE}/podcasts/${slug}`,
-    },
-    author: {
-      '@type': 'Person',
-      name: getAuthor('david-stark').name,
-      url: `${BASE}/authors/david-stark`,
-    },
-    reviewRating: {
-      '@type': 'Rating',
-      ratingValue: podcast.rating,
-      bestRating: 10,
-      worstRating: 0,
-      name: 'Editorial rating',
-      ...(podcast.quick_verdict && { description: podcast.quick_verdict }),
-    },
-    ...(podcast.newsletter_worthy_summary && { reviewBody: podcast.newsletter_worthy_summary }),
-    datePublished: podcast.created_at?.split('T')[0],
-    dateModified: podcast.updated_at?.split('T')[0],
-  } : null
 
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', url: BASE },
@@ -335,7 +303,6 @@ export default async function PodcastPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      {reviewSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }} />}
       {personSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />}
 
       <Header />

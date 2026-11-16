@@ -14,7 +14,7 @@ import { getPostBySlug } from '@/lib/blog'
 import { POPULAR_GUIDES } from '@/lib/seo/popular-guides'
 import { stripHtml } from '@/lib/utils'
 import { shopEnabled } from '@/lib/shop/config'
-import { BASE } from '@/lib/seo/config'
+import { BASE, CURRENT_YEAR } from '@/lib/seo/config'
 import { HomepageShopPromo } from '@/components/shop/homepage-promo'
 
 // The homepage owns the head term "true crime podcasts"; /best-true-crime-podcasts
@@ -175,6 +175,12 @@ export default async function HomePage() {
             <p className="text-stone-muted text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
               Expert reviews, community ratings and curated picks for {podcastCountLabel} true crime podcasts.
               Discover your next obsession — no algorithms, just honest takes.
+            </p>
+            <p className="text-stone-muted text-sm max-w-2xl mx-auto -mt-6 mb-10">
+              New to the genre? Start with our{' '}
+              <Link href="/best-true-crime-podcasts" className="text-stone hover:text-white underline decoration-white/20 underline-offset-4">
+                best true crime podcasts of {CURRENT_YEAR}, ranked
+              </Link>.
             </p>
 
             {/* Search bar */}
@@ -340,7 +346,7 @@ export default async function HomePage() {
                 </h2>
               </div>
               <Link href="/best-true-crime-podcasts" className="text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
-                Top true crime podcasts <ArrowRight size={14} />
+                Best true crime podcasts, ranked <ArrowRight size={14} />
               </Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">

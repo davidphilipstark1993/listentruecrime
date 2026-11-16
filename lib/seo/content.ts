@@ -100,8 +100,10 @@ export const CATEGORY_SEO: Record<string, PageSeoContent> = {
   },
 
   'investigative': {
-    h1: 'Best Investigative Podcasts',
-    metaDescription: 'The best investigative podcasts, ranked: true crime shows doing original reporting, from Serial to In the Dark. Binge scores, verdicts and community ratings.',
+    h1: 'Investigative Podcasts',
+    // Browse page: the editor's ranked picks live at /blog/best-investigative-journalism-podcasts.
+    title: 'Investigative Podcasts: Browse Shows & Reviews',
+    metaDescription: 'Browse investigative true crime podcasts with binge scores and reviews, from Serial to In the Dark. For our top picks, see Best Investigative Podcasts.',
     intro: [
       'Investigative true crime podcasts do what great journalism has always done — they hold power to account. These shows go beyond surface-level reporting to interview sources nobody else could reach, obtain documents nobody thought to request, and ask questions that make the powerful uncomfortable.',
       'The genre has produced some of podcasting\'s most significant cultural moments, from Serial\'s influence on a real criminal case to In the Dark\'s pressure on the US justice system. These are the podcasts that change things.',
@@ -129,7 +131,7 @@ export const CATEGORY_SEO: Record<string, PageSeoContent> = {
       },
     ],
     relatedLinks: [
-      { href: '/blog/best-investigative-journalism-podcasts', label: 'Best Investigative Journalism Podcasts: The Guide' },
+      { href: '/blog/best-investigative-journalism-podcasts', label: 'Best Investigative Podcasts: Our Picks' },
       { href: '/category/cold-cases', label: 'Cold Case Podcasts' },
       { href: '/category/courtroom', label: 'Courtroom Podcasts' },
       { href: '/category/missing-persons', label: 'Missing Persons Podcasts' },
@@ -316,7 +318,7 @@ export const CATEGORY_SEO: Record<string, PageSeoContent> = {
 
   'serial-killers': {
     h1: 'Serial Killer Podcasts',
-    // Browse page: the ranked lists live at /best/serial-killer and /blog/best-serial-killer-podcasts.
+    // Browse page: the editor's ranked picks live at /blog/best-serial-killer-podcasts.
     title: 'Serial Killer Podcasts: Browse Shows & Reviews',
     metaDescription: 'Browse serial killer podcasts with binge scores, from Ted Bundy and BTK to lesser-known cases. For our ranked picks, see Best Serial Killer Podcasts.',
     intro: [
@@ -346,8 +348,7 @@ export const CATEGORY_SEO: Record<string, PageSeoContent> = {
       },
     ],
     relatedLinks: [
-      { href: '/best/serial-killer', label: 'Best Serial Killer Podcasts: Ranked' },
-      { href: '/blog/best-serial-killer-podcasts', label: 'Best Serial Killer Podcasts: The Guide' },
+      { href: '/blog/best-serial-killer-podcasts', label: 'Best Serial Killer Podcasts: Our Picks' },
       { href: '/blog/best-murder-mystery-podcasts', label: 'Best Murder Mystery Podcasts' },
       { href: '/category/cold-cases', label: 'Cold Case Podcasts' },
       { href: '/category/investigative', label: 'Investigative Podcasts' },

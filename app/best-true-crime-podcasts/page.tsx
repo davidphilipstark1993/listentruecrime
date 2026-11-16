@@ -215,6 +215,34 @@ export default async function BestTrueCrimePodcastsPage() {
           </p>
         </section>
 
+        {/* How we chose: unique editorial intro (150-250 words). Shows named here are
+            all in BEST_PICKS; update this copy if they leave the list. */}
+        <section aria-labelledby="how-we-chose" className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-14 space-y-4 text-stone-muted leading-relaxed">
+          <h2 id="how-we-chose" className="heading-section text-xl sm:text-2xl text-stone">How we chose</h2>
+          <p>
+            Every podcast on this list was picked by our editor, not by an algorithm or a download chart.
+            We looked for three things: reporting that adds something new, storytelling that holds up across a
+            whole series, and shows that have aged well rather than simply arrived recently. That is why Serial,
+            first released in 2014, still sits near the top alongside much newer work.
+          </p>
+          <p>
+            The list mixes formats on purpose. Some picks are investigations that changed real cases, such as
+            Your Own Backyard and In the Dark. Some are long-running shows that usually cover a new case each episode,
+            like Casefile and Crime Junkie. There are picks from Britain, Ireland and Australia as well as the US,
+            including Murder Mile, West Cork and The Teacher&apos;s Pet.
+          </p>
+          <p>
+            If you already know what you like, our guides go deeper:{' '}
+            <Link href="/blog/best-investigative-journalism-podcasts" className="text-stone hover:text-white underline decoration-white/20 underline-offset-4">investigative podcasts</Link>,{' '}
+            <Link href="/blog/best-serial-killer-podcasts" className="text-stone hover:text-white underline decoration-white/20 underline-offset-4">serial killer podcasts</Link>,{' '}
+            <Link href="/blog/best-murder-mystery-podcasts" className="text-stone hover:text-white underline decoration-white/20 underline-offset-4">murder mystery podcasts</Link>{' '}
+            and{' '}
+            <Link href="/blog/best-short-true-crime-podcasts" className="text-stone hover:text-white underline decoration-white/20 underline-offset-4">short true crime podcasts</Link>.
+            To search everything we have reviewed, use the{' '}
+            <Link href="/browse" className="text-stone hover:text-white underline decoration-white/20 underline-offset-4">full podcast directory</Link>.
+          </p>
+        </section>
+
         {/* Quick picks: cover-art grid that jumps to each entry */}
         {picks.length > 0 && (
           <section aria-labelledby="quick-picks" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-14">

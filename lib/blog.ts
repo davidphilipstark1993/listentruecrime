@@ -171,6 +171,33 @@ export function getGuidesForPodcast(podcastSlug: string, limit = 3): BlogPost[] 
     .slice(0, limit)
 }
 
+// Main guide per topic (chosen Nov 2026 when the competing /best lists were
+// retired, plus existing guides for other common case types). Podcast and
+// /podcasts-like pages link to the first one that matches their case types.
+const TOPIC_GUIDES: { slug: string; caseTypes: string[] }[] = [
+  { slug: 'best-serial-killer-podcasts', caseTypes: ['serial killer'] },
+  { slug: 'best-investigative-journalism-podcasts', caseTypes: ['investigative', 'journalism', 'systemic injustice'] },
+  { slug: 'best-murder-mystery-podcasts', caseTypes: ['mystery', 'wrongful conviction'] },
+  { slug: 'best-fraud-scam-podcasts', caseTypes: ['fraud', 'scam', 'white-collar crime', 'financial crime'] },
+  { slug: 'best-cold-case-podcasts', caseTypes: ['cold case'] },
+  { slug: 'best-missing-persons-podcasts', caseTypes: ['missing person'] },
+]
+
+/** Podcast-page guide list: guides that feature the show, plus the main topic guide for its case types. */
+export function getGuidesForPodcastPage(podcastSlug: string, caseTypes: string[] | null, limit = 3): BlogPost[] {
+  const guides = getGuidesForPodcast(podcastSlug, limit)
+  const post = getTopicGuide(caseTypes)
+  if (!post || guides.some(g => g.slug === post.slug)) return guides
+  return [...guides.slice(0, limit - 1), post]
+}
+
+/** The main topic guide for a show's case types, if one matches. */
+export function getTopicGuide(caseTypes: string[] | null): BlogPost | null {
+  const types = (caseTypes ?? []).map(t => t.toLowerCase())
+  const topic = TOPIC_GUIDES.find(g => g.caseTypes.some(t => types.includes(t)))
+  return topic ? getPostBySlug(topic.slug) : null
+}
+
 export function getRelatedPosts(post: BlogPost, limit = 3): BlogPost[] {
   const all = getAllPosts().filter(p => p.slug !== post.slug)
   return all

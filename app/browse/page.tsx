@@ -7,6 +7,7 @@ import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { BrowseControls } from '@/components/browse/browse-controls'
 import { Pagination } from '@/components/ui/pagination'
 import { BASE, ogDefaults } from '@/lib/seo/config'
+import { getPodcastCount, roundedPodcastCount } from '@/lib/podcast-count'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 
 const PAGE_SIZE = 48
@@ -52,23 +53,26 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const filtered = hasNonPageParams(sp)
 
   const pageNum = Math.max(1, Number(sp.page ?? 1) || 1)
-  const title = `Browse True Crime Podcasts${pageNum > 1 ? ` — Page ${pageNum}` : ''}`
-  const description = 'Search and filter our complete database of reviewed true crime podcasts. Filter by case type, country, platform, binge factor, format, and more.'
+  // Directory focus: /best-true-crime-podcasts owns "best true crime podcasts", so
+  // this page targets the full catalogue rather than a ranked list.
+  const total = roundedPodcastCount(await getPodcastCount())
+  const title = `All True Crime Podcasts: Search & Filter ${total} Shows${pageNum > 1 ? ` (Page ${pageNum})` : ''}`
+  const description = `Search all ${total} true crime podcasts we have reviewed. Filter by case type, country, platform, format and binge score to find your next listen.`
 
   return {
-    title,
+    title: { absolute: title },
     description,
     alternates: { canonical: canonicalUrl(sp) },
     robots: filtered ? { index: false, follow: true } : { index: true, follow: true },
     openGraph: {
-      title: `${title} | ListenTrueCrime`,
+      title,
       description,
       url: canonicalUrl(sp),
       ...ogDefaults(title, 'Browse True Crime Podcasts'),
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${title} | ListenTrueCrime`,
+      title,
       description,
     },
   }

@@ -48,6 +48,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'images-api.printify.com' },
       { protocol: 'https', hostname: '**.printify.com' },
       { protocol: 'https', hostname: '**.redcircle.com' },
+      { protocol: 'https', hostname: 'images.castfire.com' },
     ],
   },
   compress: true,
@@ -61,6 +62,11 @@ const nextConfig = {
       { source: '/podcasts/cults-parcast', destination: '/podcasts/cults', permanent: true },
       { source: '/podcasts/serial-killers-parcast', destination: '/podcasts/serial-killers', permanent: true },
       { source: '/podcasts/unsolved-murders-parcast', destination: '/podcasts/unsolved-murders-true-crime-stories', permanent: true },
+      // Overlap cleanup, 15 Nov 2026: each /best list competed with a hand-written
+      // guide for the same searches (GSC 18 Aug - 13 Nov 2026, all on page 5-6).
+      { source: '/best/investigative', destination: '/blog/best-investigative-journalism-podcasts', permanent: true },
+      { source: '/best/serial-killer', destination: '/blog/best-serial-killer-podcasts', permanent: true },
+      { source: '/best/murder-mystery', destination: '/blog/best-murder-mystery-podcasts', permanent: true },
     ]
   },
 }

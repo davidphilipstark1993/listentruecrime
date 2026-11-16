@@ -26,15 +26,15 @@ describe('best-of meta', () => {
   })
 
   it('names three shows from the list in the description', () => {
-    const page = BEST_OF_PAGES.find(p => p.slug === 'murder-mystery')!
+    const page = BEST_OF_PAGES.find(p => p.slug === 'fraud-and-scams')!
     expect(bestOfMeta(page, names).description).toContain('Serial, West Cork and Bear Brook')
   })
 
   it('falls back to the static copy when the list is empty', () => {
-    const page = BEST_OF_PAGES.find(p => p.slug === 'murder-mystery')!
+    const page = BEST_OF_PAGES.find(p => p.slug === 'fraud-and-scams')!
     const m = bestOfMeta(page, [])
     expect(m.description).toBe(page.description)
-    expect(m.title).toBe(`Best Murder Mystery Podcasts (${CURRENT_YEAR})`)
+    expect(m.title).toBe(`Best Fraud and Financial Crime Podcasts (${CURRENT_YEAR})`)
   })
 })
 

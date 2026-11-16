@@ -12,10 +12,11 @@ import { NewsletterForm } from '@/components/newsletter/newsletter-form'
 import { buildFAQSchema, buildBreadcrumbSchema } from '@/lib/seo/content'
 import { getPodcastNarrative } from '@/lib/seo/podcast-analysis'
 import { BASE, ogDefaults } from '@/lib/seo/config'
-import { getAllPosts } from '@/lib/blog'
+import { getAllPosts, getTopicGuide } from '@/lib/blog'
 import { getIndexablePodcastsLike } from '@/lib/seo/indexability'
+import { PODCASTS_LIKE_META } from '@/lib/seo/podcasts-like-meta'
 import { countryFlag, cn, scoreBg, stripHtml } from '@/lib/utils'
-import { COUNTRIES } from '@/lib/types/database'
+import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
 import { ratingStatsOf } from '@/lib/rating-stats'
 import { RelatedBooks } from '@/components/affiliates/related-books'
@@ -97,11 +98,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const indexable = (await getIndexablePodcastsLike(getAllPosts().map(p => p.slug))).includes(slug)
 
-  const title = `Podcasts Like ${podcast.title} (${new Date().getFullYear()})`
-  const description = `Loved ${podcast.title}? These are the true crime podcasts to hear next, matched on case type, storytelling style and listener ratings — each with a binge score.`
+  const override = PODCASTS_LIKE_META[slug]
+  const title = override?.title ?? `Podcasts Like ${podcast.title} (${new Date().getFullYear()})`
+  const description = override?.description ?? `Loved ${podcast.title}? These are the true crime podcasts to hear next, matched on case type, storytelling style and listener ratings — each with a binge score.`
 
   return {
-    title,
+    // Overrides are complete titles; the site template would push them past 60 characters.
+    title: override ? { absolute: title } : title,
     description,
     openGraph: {
       title,
@@ -125,6 +128,32 @@ export default async function PodcastsLikePage({ params }: Props) {
   if (!podcast) notFound()
 
   const recommendations = await getRecommendations(podcast)
+
+  // "Keep exploring": 3-5 links to the main topic guide, the ranked hub and
+  // other indexable "podcasts like" pages for shows recommended here.
+  const indexableLike = new Set(await getIndexablePodcastsLike(getAllPosts().map(p => p.slug)))
+  const topicGuide = getTopicGuide(podcast.case_types)
+  const likeGuides = getAllPosts()
+    .filter(p => p.slug.startsWith('podcasts-like-'))
+    .map(p => ({ slug: p.slug, title: p.title, topic: p.slug.slice('podcasts-like-'.length) }))
+  // "Murder" and "Organised Crime" are too loose to place a show in the serial
+  // killer category, so they are ignored when picking the fallback category.
+  const LOOSE_TYPES = new Set(['Murder', 'Organised Crime'])
+  const category = CATEGORIES.find(c =>
+    (CATEGORY_TO_CASE_TYPES[c.slug] ?? []).some(t => !LOOSE_TYPES.has(t) && podcast.case_types?.includes(t)))
+  const exploreLinks: { href: string; label: string }[] = [
+    ...(topicGuide ? [{ href: `/blog/${topicGuide.slug}`, label: topicGuide.seoTitle ?? topicGuide.title }] : []),
+    { href: '/best-true-crime-podcasts', label: `The best true crime podcasts of ${new Date().getFullYear()}, ranked` },
+    ...recommendations
+      .filter(r => indexableLike.has(r.slug))
+      .map(r => ({ href: `/podcasts-like/${r.slug}`, label: `Podcasts like ${r.title}` })),
+    // Hand-written "podcasts like" guides for recommended shows (e.g. /blog/podcasts-like-serial)
+    ...likeGuides
+      .filter(g => recommendations.some(r => r.slug === g.topic || r.slug.startsWith(`${g.topic}-`)))
+      .map(g => ({ href: `/blog/${g.slug}`, label: g.title })),
+    // Fallback so every page has at least three: the category this show belongs to
+    ...(category ? [{ href: `/category/${category.slug}`, label: `${category.label} podcasts` }] : []),
+  ].slice(0, 5)
   const year = new Date().getFullYear()
   const stats = ratingStatsOf(podcast.rating_stats)
 
@@ -396,6 +425,21 @@ export default async function PodcastsLikePage({ params }: Props) {
             </div>
           </section>
         )}
+
+        {/* ── Keep exploring ── */}
+        <section aria-labelledby="keep-exploring" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <h2 id="keep-exploring" className="heading-section text-xl mb-4">Keep exploring</h2>
+          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {exploreLinks.map(l => (
+              <li key={l.href}>
+                <Link href={l.href} className="card p-4 flex items-start gap-2 text-sm text-stone-muted hover:text-white transition-colors">
+                  <ArrowRight size={13} className="text-crimson shrink-0 mt-0.5" />
+                  <span>{l.label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
 
         {/* ── Newsletter CTA ── */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
