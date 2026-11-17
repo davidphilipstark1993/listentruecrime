@@ -218,3 +218,13 @@ These 99 rows are unpublished, so none of these scores is visible on the site un
 | U97 | The Murder Sheet | **5** | 3.8★ from 2,889 ratings, and polarised: "keeps me hooked from start to finish" vs "Irresponsible garbage". | [Apple Podcasts](https://podcasts.apple.com/us/podcast/id1538289354) |
 | U98 | Cold Case Canada | **5** | 4.7★ from 200 ratings (Canada), but reviewers say the content is good while the host is "not a good story teller". | [Apple Podcasts CA](https://podcasts.apple.com/ca/podcast/id1521533343) |
 | U99 | Rough Diamond (duplicate - do not use) | **NEEDS MANUAL REVIEW** | **Duplicate.** Titled "Rough Diamond (duplicate - do not use)". Delete it. | — |
+
+## Clean-up, 17 November 2026
+
+`scripts/one-off/ltc-stub-cleanup-2026-11-17.js` deleted 7 unpublished junk stubs. They had never been published, nothing referenced them, and a backup was taken first. The 7 were:
+- the duplicates `amanda-knox-hosts-doubt`, `the-teachers-pet-related` and `unravel-series`
+- the placeholders `the-binge-cases-the-binge-crimes-series`, `full-trial-audio-series-various-cases`, `this-american-life-select-true-crime-eps` and `vanished-podcast-various`
+
+The script's safety checks deliberately kept 2:
+- `crime-next-door` is still in the "if you liked this" lists of the-pitcairn-trials and coining-it.
+- `rough-diamondrough-diamond` has editorial text.
