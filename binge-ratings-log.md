@@ -228,3 +228,42 @@ These 99 rows are unpublished, so none of these scores is visible on the site un
 The script's safety checks deliberately kept 2:
 - `crime-next-door` is still in the "if you liked this" lists of the-pitcairn-trials and coining-it.
 - `rough-diamondrough-diamond` has editorial text.
+
+## Follow-up, 17 November 2026
+
+This was a second research pass on everything marked NEEDS MANUAL REVIEW. It added press reviews and Reddit to the Apple Podcasts sources, and every quote was checked on its source page. Where this section disagrees with a row above, this section is the current state. It was applied with `scripts/one-off/ltc-podcast-fixes-2026-11-17.js`.
+
+### Newly rated
+
+| Podcast | Rating | Reason | Sources |
+|---|---|---|---|
+| Heart | **5** | 3.6★ from 264 ratings, and both listeners and critics are split. "Gripping… Suspense wrapped up in a "who did it," right to the end" vs "I heard the same thing over and over again." The Guardian calls it "a gripping true-crime saga", but Podcast Review says it is "packed with mindless repetition". | [Apple Podcasts](https://podcasts.apple.com/us/podcast/id6805984512) · [Guardian pick (via AOL)](https://www.aol.co.uk/articles/fascinating-tale-heart-died-twice-060020000.html) · [Podcast Review](https://podcastreview.org/review/heart/) |
+| Foul Play: A Historical True Crime Podcast | **5** | 4.5★ from 947 ratings (US) but 4.3★ from 46 (UK). The readable reviews criticise the delivery: "the delivery of the female presenter is very wooden and amateur"; "Dull host an edit is bad too." | [Apple Podcasts UK](https://podcasts.apple.com/gb/podcast/id1118716786) · [Apple Podcasts US](https://podcasts.apple.com/us/podcast/id1118716786) |
+| Blood Relatives (In the Dark), unpublished | **7** | Critic: "Blake's riveting, rigorous reporting", and even her unsuccessful attempts "make for engrossing listening". The whole *In the Dark* feed has 4.7★ from 1,834 ratings. Full episodes are for New Yorker subscribers. | [Podcast Review](https://podcastreview.org/review/in-the-dark-blood-relatives/) · [Apple Podcasts UK](https://podcasts.apple.com/gb/podcast/id1148175292) |
+
+### Data fixes
+- `true-crime-guys`: corrected its Apple ID to 1192864007; the old ID 1594254870 doesn't exist.
+- `gone-cold`: set its Apple ID to 1214679007 (Gone Cold – Texas True Crime). Its artwork is the same image file as that feed's.
+- The "if you liked this" lists of `the-pitcairn-trials` and `coining-it` pointed at the unpublished `crime-next-door` stub. Both now point at `crime-next-door-beast-of-birkenhead`.
+
+### Deleted unpublished stubs (17 in total, each backed up first, all unpublished and unreferenced)
+- **Duplicates:** `crime-next-door` (parent feed of published series), `rough-diamondrough-diamond` (an exact copy of `rough-diamond`), `gone-cold-texas-true-crime` (same show as `gone-cold`).
+- **Not true crime:** `broomgate`, `factinate`, `snook`, `solved-murders-true-crime-stories`.
+- **No matching podcast found** (title and listed host searched on Apple Podcasts and the web): `the-dating-game-killer`, `not-a-very-good-murderer`, `the-greatest-menace`, `mr-big`, `mystery-mondays`, `best-served-cold`, `crossing-the-line`, `unseen`, `midweek-murders`, `hasina-36-days-in-july`.
+- Plus the 7 deleted earlier the same day (see above).
+
+### Still NEEDS MANUAL REVIEW (27)
+There still isn't enough listener opinion to support a score for any of these. No rating has been set.
+
+**Published (14):**
+- **Too few ratings or reviews:** A Moment In Crime, Back To The Wall, Bad Mad & Northern, Black Effect's Bloodline Crimes, Canadian CrimeCast, Coining It, Rough Diamond, Crime & Conspiracies with Coffee.
+- **Too new:** Ada. The only review clearly about it says "Too many episodes for the amount of actual content".
+- **Feed moved:** Hands Off My Podcast. It has moved to a new Apple feed with 0 ratings.
+- **No reviews for the series:** Crime Next Door: The Beast of Birkenhead and Gangster: The Story of The Milkman. Only their parent feeds have reviews, and I found no press reviews.
+- **No listener opinion at all:** Secret Devon: The McGinty Mystery.
+- **Editorial decision:** The Cold-Case Christianity Podcast is Christian apologetics, not true crime. Whether it stays listed is the owner's call.
+
+**Unpublished (13):**
+- Too few ratings: Cup of Coffee and Crime, Strewth, Kurupt (0), Who Dunnit Sisters, Nerdery and Murdery, Theatre Of Crime, Clean Crime, 12 Minute True Crime, Vintage Homicide, Never Light Up A Room, Addicted to Murder.
+- Dead Man Running: probably a BBC show (Myles Bonnar) that isn't on Apple Podcasts.
+- Blood on the Tracks: a season of *Unravel* with no reviews of the season itself.
