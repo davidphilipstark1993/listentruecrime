@@ -267,3 +267,27 @@ There still isn't enough listener opinion to support a score for any of these. N
 - Too few ratings: Cup of Coffee and Crime, Strewth, Kurupt (0), Who Dunnit Sisters, Nerdery and Murdery, Theatre Of Crime, Clean Crime, 12 Minute True Crime, Vintage Homicide, Never Light Up A Room, Addicted to Murder.
 - Dead Man Running: probably a BBC show (Myles Bonnar) that isn't on Apple Podcasts.
 - Blood on the Tracks: a season of *Unravel* with no reviews of the season itself.
+
+## Page corrections, 18 November 2026
+
+Show makers' replies to the 17 November outreach email showed that some pages described the wrong show or the wrong case. I checked every show emailed after a title-only feed match (138) by comparing our page with the show's own feed. Script: `scripts/one-off/ltc-page-corrections-2026-11-18.js`. Each corrected page now stores its feed in `rss_url`, so future matching doesn't depend on the title.
+
+**Rewritten from the show's own feed (11):**
+
+| Page | What was wrong |
+|---|---|
+| dear-alana | Described a fentanyl death; the show is about Alana Chen's disappearance and conversion therapy. No artwork. |
+| devil-in-the-dorm | Described the Christian Aguilar murder; the show is about Larry Ray and the Sarah Lawrence cult. |
+| murder-in-apartment-12 | Described the Kelsey Berreth case; the show is about the murder of Nona Dirksmeyer. |
+| the-night-driver | Described Rachel Antonio with the wrong host; the show is Hedley Thomas on Janine Vaughan. |
+| trace-evidence | Named the wrong host (Steve Huff) and made claims about research time; the host is Steven Pacheco. |
+| true-crime-and-cocktails | Wrong hosts (Kristen and Hallie); they are Lauren Ash and Christy Oxborrow. |
+| i-could-murder-a-podcast | Wrong hosts; they are Tom, Ben and Dan. |
+| true-crime-france | Said French-language; it is told in English. |
+| conviction | Described an Innocence Project show that we couldn't find; the artwork and feed are RNZ's Christchurch Civic Creche series. |
+| out-from-the-cold-searching-for-elaine | Described an "Elaine Park" case in California that we couldn't verify; the show is about Elaine Johnson, missing from Sydney since 1980. |
+| death-row-stories | Described a CNN TV series that has no podcast; the podcast with this name and artwork is François Picard's. |
+
+**Unpublished (3):** blood-memory (described an investigation that doesn't exist; the only show by that name isn't true crime), the-detail (RNZ daily news), crime-pays-but-botany-doesnt (botany show).
+
+Binge Factor scores on these pages were not part of this project and weren't changed. A backup of the rows before the change is kept outside the repo.
