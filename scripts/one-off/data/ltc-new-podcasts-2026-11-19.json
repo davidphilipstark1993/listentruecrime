@@ -2,8 +2,8 @@
   {
     "title": "Father Wants Us Dead",
     "slug": "father-wants-us-dead",
-    "description": "NJ.com reporters Rebecca Everett and Jessica Remo investigate New Jersey family murders. Season 1 covers John List, the accountant and Sunday school teacher who killed his wife, mother and three children in 1971, then vanished and lived under a new name for 18 years. Season 2, Uncle Paul, covers the 2018 killings of Keith, Jennifer, Jesse and Sophia Caneiro, which first looked like a mansion fire in Colts Neck.",
-    "short_description": "Two NJ.com reporters investigate New Jersey family murders, from John List in 1971 to the Caneiro killings in 2018.",
+    "description": "NJ.com investigative reporter Rebecca Everett looks into New Jersey family murders. Season 1, co-hosted with Jessica Remo, covers John List, the accountant and Sunday school teacher who killed his wife, mother and three children in 1971, then vanished and lived under a new name for 18 years. Season 2, Uncle Paul, covers the 2018 killings of Keith, Jennifer, Jesse and Sophia Caneiro, which first looked like a mansion fire in Colts Neck.",
+    "short_description": "NJ.com reporter Rebecca Everett investigates New Jersey family murders, from John List in 1971 to the Caneiro killings in 2018.",
     "country": "US",
     "country_name": "United States",
     "case_types": [
@@ -11,10 +11,9 @@
       "Family Murder"
     ],
     "format_type": "Serialized",
-    "host_style": "Dual Host",
-    "host_name": "Rebecca Everett and Jessica Remo",
+    "host_name": "Rebecca Everett",
     "producer": "NJ.com",
-    "episode_count": "19 episodes (2 seasons)",
+    "episode_count": "13 episodes over 2 seasons, plus 3 bonus episodes",
     "platforms": [
       "Apple Podcasts"
     ],

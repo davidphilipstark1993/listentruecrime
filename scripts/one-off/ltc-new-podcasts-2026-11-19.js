@@ -1,5 +1,8 @@
 // One-off: add Father Wants Us Dead (NJ.com), requested 19 Nov 2026 after the creators got in touch.
-// Details checked against the show's Apple Podcasts page and Megaphone feed on 19 Nov 2026.
+// Details checked against the show's Apple Podcasts page, Megaphone feed and website on 19 Nov 2026.
+// Season 1 (2022): 9 episodes + 3 bonus, hosted by Rebecca Everett and Jessica Remo (per the show website).
+// Season 2 (Uncle Paul): 4 episodes released 12 Nov 2026; the feed credits Rebecca Everett as host.
+// host_style is left blank because the format changed from two hosts to one between seasons.
 // Editorial fields are left blank on purpose; image_url is left blank so artwork recovery fills it.
 //
 // Insert-only: skips the show if its slug or title is already on the site. Dry run unless --apply is passed.
