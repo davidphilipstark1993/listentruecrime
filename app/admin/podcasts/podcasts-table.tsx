@@ -19,11 +19,12 @@ interface Podcast {
 export function PodcastsTable({ podcasts }: { podcasts: Podcast[] }) {
   const [query, setQuery] = useState('')
 
-  const filtered = query.trim()
+  const q = query.trim().toLowerCase()
+  const filtered = q
     ? podcasts.filter(p =>
-        p.title.toLowerCase().includes(query.toLowerCase()) ||
-        p.slug.includes(query.toLowerCase()) ||
-        p.country?.toLowerCase().includes(query.toLowerCase())
+        p.title.toLowerCase().includes(q) ||
+        p.slug.toLowerCase().includes(q) ||
+        p.country?.toLowerCase().includes(q)
       )
     : podcasts
 
@@ -36,6 +37,8 @@ export function PodcastsTable({ podcasts }: { podcasts: Podcast[] }) {
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder="Search title, slug, country…"
+          aria-label="Search podcasts"
+          autoFocus
           className="input-base pl-9 text-sm py-2"
         />
       </div>
