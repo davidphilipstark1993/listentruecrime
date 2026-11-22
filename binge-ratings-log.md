@@ -291,3 +291,12 @@ Show makers' replies to the 17 November outreach email showed that some pages de
 **Unpublished (3):** blood-memory (described an investigation that doesn't exist; the only show by that name isn't true crime), the-detail (RNZ daily news), crime-pays-but-botany-doesnt (botany show).
 
 Binge Factor scores on these pages were not part of this project and weren't changed. A backup of the rows before the change is kept outside the repo.
+
+## 22 November 2026: promotion-enquiry listings
+
+Both shows were listed on 22 Nov 2026 from free-listing enquiries. The owner asked for scores, so they are set here. There is very little listener opinion for either show, so both were kept at the site norm of 6 rather than marked NEEDS MANUAL REVIEW. Check them again once more reviews come in.
+
+| Podcast | Rating | Reason | Sources |
+|---|---|---|---|
+| True Crime Culinary | **6** | 4.8★ from 12 ratings (US) and 5★ from 1 (Canada), with 6 written reviews, all 5★. Reviewers like the format ("Great little bite size nuggets to help you get through the day", "great storytelling!"). One is working through the back catalogue ("I still have many more to listen to"). The episodes are short and stand alone, so they're easy to queue but there's no serial hook. | [Apple Podcasts US](https://podcasts.apple.com/us/podcast/id1845736042) |
+| Shadows of Éire | **6** | 5★ from 8 Apple ratings (6 Ireland, 1 US, 1 UK) and no written reviews. It was shortlisted in the True Crime category of the All Ireland Podcast Awards 2027, but that's an award, not listener opinion. The episodes are about 30 minutes, stand alone and come out more than once a week. | [Apple Podcasts IE](https://podcasts.apple.com/ie/podcast/id1896889671) |
