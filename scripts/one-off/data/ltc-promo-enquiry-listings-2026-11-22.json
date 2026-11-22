@@ -1,0 +1,64 @@
+[
+  {
+    "enquiry_id": "f50bbf5f-904e-4b99-9917-dd25984de213",
+    "artwork_file": "true-crime-culinary.jpg",
+    "similar_slug_candidates": ["bite-sized-crime", "crime-bites", "dark-histories", "foul-play-a-historical-true-crime-podcast"],
+    "podcast": {
+      "title": "True Crime Culinary",
+      "slug": "true-crime-culinary",
+      "description": "True Crime Culinary pairs a real crime with the history of a food. Host Leah Llach tells a short true story, from Nannie Doss and her prune cake to the Chesapeake oyster wars and the Mafia's grip on the artichoke trade, then traces where the food itself came from. Episodes cover poisonings, heists, survival stories and food scandals, and run about 10 to 20 minutes. New episodes come out every Thursday, with a monthly bonus episode.",
+      "short_description": "Listeners who want short, light true crime with a side of food history, in episodes of about 15 minutes.",
+      "country": "US",
+      "country_name": "United States",
+      "case_types": ["Historical Crime", "Murder"],
+      "format_type": "Episodic",
+      "host_style": "Single Host",
+      "host_name": "Leah Llach",
+      "episode_length": "About 10–20 minutes (most around 13–15 min); weekly on Thursdays plus monthly bonus episodes",
+      "episode_count": "64 episodes (Nov 2026)",
+      "best_episode_to_start": "Episode 1 - Nannie Doss & Prune Cake, or any episode about a food you like: each one stands alone",
+      "platforms": ["Apple Podcasts", "Spotify", "YouTube"],
+      "platform_urls": {
+        "Apple Podcasts": "https://podcasts.apple.com/us/podcast/true-crime-culinary/id1845736042",
+        "Spotify": "https://open.spotify.com/show/2uAkaW8TNb4ivObCjbZbY5",
+        "YouTube": "https://www.youtube.com/@TrueCrimeCulinary"
+      },
+      "website_url": "https://www.truecrimeculinarypodcast.com/",
+      "rss_url": "https://anchor.fm/s/10a64ced0/podcast/rss",
+      "apple_collection_id": 1845736042,
+      "newsletter_worthy_summary": "True Crime Culinary is a weekly, bite-sized show that pairs a real crime with the history of a food, from prune cake poisonings to the oyster wars.",
+      "is_published": true,
+      "is_featured": false
+    }
+  },
+  {
+    "enquiry_id": "fe185666-5e13-4f3f-969c-6e43ed7c1a28",
+    "artwork_file": "shadows-of-eire.jpg",
+    "similar_slug_candidates": ["true-crime-ireland", "irish-murders", "ireland-crimes-and-mysteries", "crime-world-nicola-tallant"],
+    "podcast": {
+      "title": "Shadows of Éire",
+      "slug": "shadows-of-eire",
+      "description": "Shadows of Éire is an independent Irish true crime podcast that covers one case per episode, from recent murders to cases centuries old. Episodes have covered the kidnapping of Mariora Rostas, the murder of Irene White, the Sligo killings of Aidan Moffitt and Michael Snee, the 1973 Mountjoy helicopter escape and Chinese triads in Ireland. A bonus series, The Scott Medal Series, tells the stories of Gardaí awarded the Scott Medal for bravery. The show was shortlisted in the True Crime category of the All Ireland Podcast Awards 2027.",
+      "short_description": "Listeners who want Irish cases, from gangland crime to historical murders, told in single episodes of about 30 minutes.",
+      "country": "IE",
+      "country_name": "Ireland",
+      "case_types": ["Murder", "Organised Crime", "Historical Crime"],
+      "format_type": "Episodic",
+      "producer": "Tracepoint Independent Media",
+      "episode_length": "About 25–40 minutes (most around 30 min); Scott Medal bonus episodes run 11–18 minutes",
+      "episode_count": "32 main episodes + 6 Scott Medal Series bonus episodes (Nov 2026)",
+      "best_episode_to_start": "Episode 1. Four Winters in the Earth: The Kidnapping of Mariora Rostas, or any case you know: each episode stands alone",
+      "platforms": ["Apple Podcasts", "Spotify"],
+      "platform_urls": {
+        "Apple Podcasts": "https://podcasts.apple.com/ie/podcast/shadows-of-%C3%A9ire-an-irish-true-crime-podcast/id1896889671",
+        "Spotify": "https://open.spotify.com/show/033kdOCexAUlDmfy4G0Mas"
+      },
+      "website_url": "https://www.shadowsofeire.ie",
+      "rss_url": "https://anchor.fm/s/112d5d064/podcast/rss",
+      "apple_collection_id": 1896889671,
+      "newsletter_worthy_summary": "Shadows of Éire is an independent weekly Irish true crime podcast covering one case per episode, from gangland Dublin to 19th-century murders.",
+      "is_published": true,
+      "is_featured": false
+    }
+  }
+]
