@@ -43,11 +43,8 @@ jobs:
           ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
 
       # This job only ever sends when: (a) exactly 5 podcasts are
-      # individually approved, AND (b) newsletters.status='approved' — set
-      # either by explicitly clicking "Approve for Sunday Sending" in
-      # /admin/weekly-newsletter, or by weekly-newsletter-autofill.yml's
-      # 07:00 UTC last-minute catch (same day, one hour before this job)
-      # auto-picking 5 directory podcasts if nothing was added that week.
-      # Any other state — including the separate discovery automation
-      # simply having run — results in a "not sent" notification email,
-      # never a send.
+      # individually approved, AND (b) newsletters.status='approved' (set by
+      # "Approve for Sunday Sending" in /admin/weekly-newsletter or by the
+      # Grok bot). It never sends if an issue dated this Sunday has already
+      # been sent. The directory auto-fill fallback was removed on
+      # 22 Nov 2026, so an unfilled week now just gets a "not sent" email.
