@@ -13,6 +13,23 @@ async function main() {
 
   console.log(`=== Weekly manual newsletter send — targeting ${publicationDate} ===`)
 
+  // One newsletter per Sunday. If this Sunday's issue has already gone out
+  // (e.g. the Grok bot triggered this workflow by hand earlier in the day,
+  // and the scheduled run fires later because GitHub delayed it), stop here
+  // instead of sending a second issue to the same subscribers.
+  const { data: alreadySent } = await supabase
+    .from('newsletters')
+    .select('issue_number, sent_at')
+    .eq('publication_date', publicationDate)
+    .eq('status', 'sent')
+    .limit(1)
+    .maybeSingle()
+
+  if (alreadySent) {
+    console.log(`Issue #${alreadySent.issue_number} was already sent for ${publicationDate} at ${alreadySent.sent_at} — not sending again.`)
+    return
+  }
+
   const { data: newsletter } = await supabase
     .from('newsletters')
     .select('*')
