@@ -211,7 +211,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         itemListElement: post.books.map((b, i) => ({
           '@type': 'ListItem',
           position: i + 1,
-          item: { '@type': 'Book', name: b.title, author: { '@type': 'Person', name: b.author } },
+          item: {
+            '@type': 'Book',
+            name: b.title,
+            // "A and B" / "A, B and C" → one Person per author
+            author: b.author.split(/,\s*|\s+and\s+/).filter(Boolean).map(name => ({ '@type': 'Person', name })),
+          },
         })),
       }
     : null
