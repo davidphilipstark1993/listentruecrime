@@ -17,6 +17,9 @@ export function autolinkPodcasts(
   const titles = new Set(sorted.map(pod => pod.title))
 
   let inCodeBlock = false
+  // Inside a multi-line MDX component tag (<Foo\n  prop="..."\n/>): its props are
+  // JavaScript, so a link inserted there would show up as literal [text](url).
+  let inComponentTag = false
   const lines = content.split('\n')
 
   return lines
@@ -28,8 +31,17 @@ export function autolinkPodcasts(
       }
       if (inCodeBlock) return line
 
+      if (inComponentTag) {
+        if (/\/?>\s*$/.test(line)) inComponentTag = false
+        return line
+      }
+
       // Skip headings, MDX component tags, import statements
-      if (/^#{1,6}\s/.test(line) || /^<[A-Z]/.test(line) || /^import\s/.test(line)) {
+      if (/^<[A-Z]/.test(line)) {
+        if (!/>\s*$/.test(line)) inComponentTag = true
+        return line
+      }
+      if (/^#{1,6}\s/.test(line) || /^import\s/.test(line)) {
         return line
       }
 
@@ -59,7 +71,9 @@ export function autolinkPodcasts(
       for (const pod of sorted) {
         const escaped = pod.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         const re = new RegExp(`\\b${escaped}\\b`, 'g')
-        result = result.replace(re, match => `[${match}](/podcasts/${pod.slug})`)
+        // Protect each new link straight away, so a shorter title can't match
+        // inside it (e.g. "The Missing" inside "The Missing Cryptoqueen").
+        result = result.replace(re, match => protect(`[${match}](/podcasts/${pod.slug})`))
       }
 
       // Restore protected segments
