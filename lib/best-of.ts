@@ -28,9 +28,9 @@ export interface BestOfPage {
   related?: { href: string; label: string }[]
 }
 
-// murder-mystery, serial-killer and investigative were retired on 15 Nov 2026
-// and 301 to their hand-written /blog guides (next.config.js), which were
-// competing with them for the same searches.
+// murder-mystery, serial-killer and investigative were retired on 15 Nov 2026,
+// and beginners on 23 Nov 2026. Each 301s to its hand-written /blog guide
+// (next.config.js), which was competing with it for the same searches.
 export const BEST_OF_PAGES: BestOfPage[] = [
   {
     slug: 'cold-case',
@@ -92,17 +92,8 @@ export const BEST_OF_PAGES: BestOfPage[] = [
     title: `Most Binge-Worthy True Crime Podcasts ${CURRENT_YEAR}`,
     h1: 'Most Binge-Worthy True Crime Podcasts',
     description: 'The most compulsively listenable true crime podcasts with the highest binge factors — once you start, you cannot stop.',
-    intro: 'Binge-worthy true crime podcasts are the ones where you listen to three episodes before you realise it. They\'re paced brilliantly, told with urgency, and leave every episode on a hook. These are the podcasts with the highest binge factor scores in our community — rated by listeners who genuinely couldn\'t stop.',
+    intro: 'Binge-worthy true crime podcasts are the ones where you listen to three episodes before you realise it. They\'re paced brilliantly, told with urgency, and leave every episode on a hook. These are the podcasts we rate 8/10 or higher for binge factor, our editorial score for how hard a show is to stop listening to.',
     minBinge: 8,
-  },
-  {
-    slug: 'beginners',
-    title: `Best True Crime Podcasts for Beginners ${CURRENT_YEAR}`,
-    h1: 'Best True Crime Podcasts for Beginners',
-    description: 'New to true crime podcasts? Start with these highly-rated, accessible shows recommended for first-time listeners.',
-    intro: 'If you\'re new to true crime podcasts, it can be hard to know where to start. The best beginner podcasts are accessible, well-produced, and don\'t assume prior knowledge of the case. These episodic shows let you dip in anywhere — perfect for building your true crime habit.',
-    minBinge: 7,
-    format: 'Episodic',
   },
   {
     slug: 'serialized',

@@ -30,6 +30,8 @@ export interface BlogPost {
   image?: string
   author?: string          // author slug — defaults to 'david-stark'
   relatedPodcasts?: string[]
+  /** Recommendation guide: relatedPodcasts (in order) are its picks, emitted as ItemList structured data. */
+  podcastList?: boolean
   faqs?: BlogFAQ[]
   books?: BlogBook[]
   content: string
@@ -63,6 +65,7 @@ export function getAllPosts(): BlogPost[] {
         image: data.image,
         author: data.author ?? 'david-stark',
         relatedPodcasts: data.relatedPodcasts ?? [],
+        podcastList: data.podcastList === true,
         faqs: data.faqs ?? [],
         books: data.books ?? [],
         content,
@@ -178,6 +181,7 @@ const TOPIC_GUIDES: { slug: string; caseTypes: string[] }[] = [
   { slug: 'best-serial-killer-podcasts', caseTypes: ['serial killer'] },
   { slug: 'best-investigative-journalism-podcasts', caseTypes: ['investigative', 'journalism', 'systemic injustice'] },
   { slug: 'best-murder-mystery-podcasts', caseTypes: ['mystery', 'wrongful conviction'] },
+  { slug: 'best-cult-podcasts', caseTypes: ['cult', 'cults'] },
   { slug: 'best-fraud-scam-podcasts', caseTypes: ['fraud', 'scam', 'white-collar crime', 'financial crime'] },
   { slug: 'best-cold-case-podcasts', caseTypes: ['cold case'] },
   { slug: 'best-missing-persons-podcasts', caseTypes: ['missing person'] },

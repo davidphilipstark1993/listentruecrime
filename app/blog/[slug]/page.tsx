@@ -221,12 +221,41 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       }
     : null
 
+  // Recommendation guides (frontmatter `podcastList`) list their picks, in the
+  // order of relatedPodcasts, skipping any that are missing or unpublished.
+  const listedPodcasts = post.podcastList
+    ? (post.relatedPodcasts ?? [])
+        .map(s => relatedPodcastData.find((p: { slug: string }) => p.slug === s) as { slug: string; title: string } | undefined)
+        .filter((p): p is { slug: string; title: string } => Boolean(p))
+    : []
+  const podcastListSchema = listedPodcasts.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: post.title,
+        url: postUrl,
+        numberOfItems: listedPodcasts.length,
+        itemListElement: listedPodcasts.map((p, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          url: `${BASE}/podcasts/${p.slug}`,
+          name: p.title,
+        })),
+      }
+    : null
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
+      {podcastListSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(podcastListSchema) }}
+        />
+      )}
       {booksSchema && (
         <script
           type="application/ld+json"
