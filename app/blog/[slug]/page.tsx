@@ -52,6 +52,13 @@ const MDX_COMPONENTS = {
     const id = slugifyText(getHeadingText(children))
     return <h3 id={id} className="scroll-mt-24">{children}</h3>
   },
+  // Wide markdown tables scroll inside the article on small screens instead of
+  // widening the page.
+  table: ({ children }: { children?: ReactNode }) => (
+    <div className="overflow-x-auto">
+      <table>{children}</table>
+    </div>
+  ),
   a: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
     if (href?.startsWith('/')) {
       return <Link href={href} {...props}>{children}</Link>
@@ -221,14 +228,18 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       }
     : null
 
-  // Recommendation guides (frontmatter `podcastList`) list their picks, in the
-  // order of relatedPodcasts, skipping any that are missing or unpublished.
-  const listedPodcasts = post.podcastList
-    ? (post.relatedPodcasts ?? [])
-        .map(s => relatedPodcastData.find((p: { slug: string }) => p.slug === s) as { slug: string; title: string } | undefined)
-        .filter((p): p is { slug: string; title: string } => Boolean(p))
-    : []
-  const podcastListSchema = listedPodcasts.length
+  // Podcast-list articles describe the shows they recommend. Explicit
+  // frontmatter `podcasts` (name + url) wins; otherwise a guide marked
+  // `podcastList` lists its relatedPodcasts, in order, skipping unpublished ones.
+  const listedPodcasts: { name: string; url: string }[] = post.podcasts?.length
+    ? post.podcasts.map(p => ({ name: p.name, url: p.url }))
+    : post.podcastList
+      ? (post.relatedPodcasts ?? [])
+          .map(s => relatedPodcastData.find((p: { slug: string }) => p.slug === s) as { slug: string; title: string } | undefined)
+          .filter((p): p is { slug: string; title: string } => Boolean(p))
+          .map(p => ({ name: p.title, url: `${BASE}/podcasts/${p.slug}` }))
+      : []
+  const podcastsSchema = listedPodcasts.length
     ? {
         '@context': 'https://schema.org',
         '@type': 'ItemList',
@@ -238,8 +249,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         itemListElement: listedPodcasts.map((p, i) => ({
           '@type': 'ListItem',
           position: i + 1,
-          url: `${BASE}/podcasts/${p.slug}`,
-          name: p.title,
+          item: { '@type': 'PodcastSeries', name: p.name, url: p.url },
         })),
       }
     : null
@@ -250,10 +260,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      {podcastListSchema && (
+      {podcastsSchema && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(podcastListSchema) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(podcastsSchema) }}
         />
       )}
       {booksSchema && (

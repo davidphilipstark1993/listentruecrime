@@ -48,7 +48,7 @@ export const CASES: CaseData[] = [
     summary: [
       'In January 1999, 18-year-old Hae Min Lee disappeared from Woodlawn High School in Baltimore, Maryland. Her body was found six weeks later in Leakin Park. Her ex-boyfriend, Adnan Syed, was arrested and convicted of first-degree murder in 2000. He maintained his innocence throughout his 23-year imprisonment.',
       'The case became the subject of Serial Season 1 (2014), the most downloaded podcast in history, which raised serious questions about the reliability of key witness Jay Wilds\' testimony and the cell tower evidence used at trial. The podcast generated worldwide attention and prompted renewed legal examination of the conviction.',
-      'In September 2022, a Maryland court vacated Syed\'s conviction after prosecutors acknowledged they had withheld evidence about two alternative suspects, including Ronald Lee Moore, and he was released after 23 years. The vacatur didn\'t hold: a Maryland appellate court reinstated his conviction in March 2023 on procedural grounds — Hae Min Lee\'s family hadn\'t been given adequate notice to attend the original hearing — a ruling the state\'s highest court later upheld. In February 2025, Baltimore\'s newly elected State\'s Attorney withdrew the motion to vacate entirely. The following month, a judge granted Syed a reduced sentence of time served under Maryland\'s Juvenile Restoration Act, keeping the conviction on his record but allowing him to remain free on five years of supervised probation. Hae Min Lee\'s murder remains officially unsolved.',
+      'In September 2022, a Maryland court vacated Syed\'s conviction after prosecutors said evidence about two alternative suspects had been withheld from his defence, and he was released after 23 years. The vacatur didn\'t hold: a Maryland appellate court reinstated his conviction in March 2023 on procedural grounds — Hae Min Lee\'s family hadn\'t been given adequate notice to attend the original hearing — a ruling the state\'s highest court later upheld. In February 2025, Baltimore\'s newly elected State\'s Attorney withdrew the motion to vacate entirely. The following month, a judge granted Syed a reduced sentence of time served under Maryland\'s Juvenile Restoration Act, keeping the conviction on his record but allowing him to remain free on five years of supervised probation. He maintains his innocence, and no one else has been charged.',
     ],
     podcasts: [
       { slug: 'serial', bestStart: true, note: 'The definitive investigation — start here' },
@@ -65,7 +65,7 @@ export const CASES: CaseData[] = [
       },
       {
         q: 'Who killed Hae Min Lee?',
-        a: 'The murder of Hae Min Lee is officially unsolved. Adnan Syed\'s conviction was vacated in 2022. Prosecutors have not charged anyone else. The case remains open.',
+        a: 'In law, Adnan Syed: his 2000 conviction for her murder was vacated in 2022 but reinstated on appeal, and it stands. He has always denied killing her. No one else has been charged, and in 2025 Baltimore\'s State\'s Attorney said his office believes in the jury\'s verdict.',
       },
     ],
   },

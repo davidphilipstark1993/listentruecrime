@@ -30,6 +30,7 @@ import { getAffiliateProductsForPage } from '@/lib/affiliates/queries'
 import { FurtherReading } from '@/components/affiliates/further-reading'
 import { AdSlot } from '@/components/ads/ad-slot'
 import { ratingStatsOf } from '@/lib/rating-stats'
+import { getProfileExtras } from '@/lib/seo/podcast-profile-extras'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -209,7 +210,8 @@ export default async function PodcastPage({ params }: Props) {
     getAffiliateProductsForPage('podcast', slug),
   ])
   const podcastCategories = getPodcastCategories(podcast)
-  const whoIsItFor = getWhoIsItFor(podcast)
+  const extras = getProfileExtras(slug)
+  const whoIsItFor = extras?.whoFor ?? getWhoIsItFor(podcast)
   const relatedCases = getCasesForPodcast(slug)
   const guides = getGuidesForPodcastPage(slug, podcast.case_types)
   const stats = ratingStatsOf(podcast.rating_stats)
@@ -256,8 +258,14 @@ export default async function PodcastPage({ params }: Props) {
         : `Browse our ${podcast.case_types?.slice(0, 1)[0] ?? 'true crime'} category for similar podcasts.`,
     },
   ]
-  // A question with nothing to say is hidden rather than shown with an empty answer
-  const faqs = allFaqs.filter(f => f.a.trim().length > 0)
+  // A question with nothing to say is hidden rather than shown with an empty answer.
+  // Hand-written questions (lib/seo/podcast-profile-extras.ts) come first.
+  const extraFaqs = extras?.faqs ?? []
+  const faqs = [
+    ...extraFaqs,
+    // Generated questions assume a podcast feed, so a not-a-podcast profile uses only its own
+    ...(extras?.notAPodcast ? [] : allFaqs.filter(f => !extraFaqs.some(e => e.q.toLowerCase() === f.q.toLowerCase()))),
+  ].filter(f => f.a.trim().length > 0)
 
   const ratingCount = stats?.rating_count ?? 0
 
@@ -300,7 +308,8 @@ export default async function PodcastPage({ params }: Props) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      {/* No PodcastSeries markup for a profile that is about a TV show with no podcast feed */}
+      {!extras?.notAPodcast && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       {personSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />}
@@ -353,8 +362,11 @@ export default async function PodcastPage({ params }: Props) {
 
                 <h1 className="heading-display text-3xl sm:text-4xl mb-2">{podcast.title}</h1>
                 <p className="text-stone-subtle text-sm mb-1">
-                  True crime podcast review — {year}
+                  {extras?.subtitle ?? `True crime podcast review — ${year}`}
                 </p>
+                {extras?.intro && (
+                  <p className="text-stone-muted text-sm sm:text-base leading-relaxed mt-3 max-w-2xl">{extras.intro}</p>
+                )}
                 {/* Score row */}
                 <div className="flex items-center gap-4 flex-wrap mt-3">
                   {podcast.rating != null && (
@@ -746,6 +758,25 @@ export default async function PodcastPage({ params }: Props) {
                 </Link>
                 <p className="text-stone-subtle text-xs mt-2">Find your next obsession</p>
               </div>
+
+              {/* Hand-picked related pages for this profile */}
+              {extras?.related && extras.related.length > 0 && (
+                <div className="card p-5">
+                  <h3 className="font-serif text-sm text-stone mb-3 uppercase tracking-wide">Related</h3>
+                  <div className="space-y-2">
+                    {extras.related.map(r => (
+                      <Link
+                        key={r.href}
+                        href={r.href}
+                        className="flex items-start gap-2 text-stone-muted hover:text-white text-sm transition-colors"
+                      >
+                        <ArrowRight size={11} className="text-crimson shrink-0 mt-1" />
+                        <span>{r.label}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Guides that feature this show */}
               {guides.length > 0 && (

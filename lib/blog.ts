@@ -16,6 +16,12 @@ export interface BlogBook {
   author: string
 }
 
+/** A podcast recommended in a list article — emitted as ItemList/PodcastSeries structured data. */
+export interface BlogPodcast {
+  name: string
+  url: string
+}
+
 export interface BlogPost {
   slug: string
   title: string
@@ -34,6 +40,7 @@ export interface BlogPost {
   podcastList?: boolean
   faqs?: BlogFAQ[]
   books?: BlogBook[]
+  podcasts?: BlogPodcast[]
   content: string
   readingTime: string
   wordCount: number
@@ -68,6 +75,7 @@ export function getAllPosts(): BlogPost[] {
         podcastList: data.podcastList === true,
         faqs: data.faqs ?? [],
         books: data.books ?? [],
+        podcasts: data.podcasts ?? [],
         content,
         readingTime: rt.text,
         wordCount: rt.words,
@@ -103,6 +111,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
     relatedPodcasts: data.relatedPodcasts ?? [],
     faqs: data.faqs ?? [],
     books: data.books ?? [],
+    podcasts: data.podcasts ?? [],
     content,
     readingTime: rt.text,
     wordCount: rt.words,
