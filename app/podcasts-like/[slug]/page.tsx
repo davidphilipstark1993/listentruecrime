@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, ChevronDown, ChevronUp, Headphones, Star } from 'lucide-react'
+import { ArrowRight, ChevronDown, ChevronUp, ExternalLink, Headphones, Star } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { Header } from '@/components/layout/header'
@@ -15,6 +15,8 @@ import { BASE, ogDefaults } from '@/lib/seo/config'
 import { getAllPosts, getTopicGuide } from '@/lib/blog'
 import { getIndexablePodcastsLike } from '@/lib/seo/indexability'
 import { PODCASTS_LIKE_META } from '@/lib/seo/podcasts-like-meta'
+import { PODCASTS_LIKE_EDITORIAL, type PodcastsLikeEditorial } from '@/lib/seo/podcasts-like-editorial'
+import { getAuthor } from '@/lib/authors'
 import { countryFlag, cn, scoreBg, stripHtml } from '@/lib/utils'
 import { COUNTRIES, CATEGORIES, CATEGORY_TO_CASE_TYPES } from '@/lib/types/database'
 import type { Podcast, RatingStats } from '@/lib/types/database'
@@ -91,6 +93,19 @@ async function getRecommendations(podcast: PodcastWithStats): Promise<PodcastWit
   return results.slice(0, 12)
 }
 
+// Hand-picked recommendations, in the editorial order. Unpublished slugs drop out.
+async function getEditorialPicks(editorial: PodcastsLikeEditorial): Promise<PodcastWithStats[]> {
+  const supabase = await createClient()
+  const slugs = editorial.picks.map(p => p.slug)
+  const { data } = await supabase
+    .from('podcasts')
+    .select(`*, rating_stats:podcast_rating_stats(*)`)
+    .in('slug', slugs)
+    .eq('is_published', true)
+  const bySlug = new Map((data as PodcastWithStats[] | null ?? []).map(p => [p.slug, p]))
+  return slugs.map(s => bySlug.get(s)).filter((p): p is PodcastWithStats => !!p)
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const podcast = await getSourcePodcast(slug)
@@ -127,7 +142,12 @@ export default async function PodcastsLikePage({ params }: Props) {
   const podcast = await getSourcePodcast(slug)
   if (!podcast) notFound()
 
-  const recommendations = await getRecommendations(podcast)
+  const editorial = PODCASTS_LIKE_EDITORIAL[slug]
+  const recommendations = editorial ? await getEditorialPicks(editorial) : await getRecommendations(podcast)
+  const picks = editorial
+    ? recommendations.map(p => ({ podcast: p, pick: editorial.picks.find(e => e.slug === p.slug)! }))
+    : []
+  const author = getAuthor('david-stark')
 
   // "Keep exploring": 3-5 links to the main topic guide, the ranked hub and
   // other indexable "podcasts like" pages for shows recommended here.
@@ -141,7 +161,7 @@ export default async function PodcastsLikePage({ params }: Props) {
   const LOOSE_TYPES = new Set(['Murder', 'Organised Crime'])
   const category = CATEGORIES.find(c =>
     (CATEGORY_TO_CASE_TYPES[c.slug] ?? []).some(t => !LOOSE_TYPES.has(t) && podcast.case_types?.includes(t)))
-  const exploreLinks: { href: string; label: string }[] = [
+  const exploreLinks: { href: string; label: string }[] = editorial ? editorial.explore : [
     ...(topicGuide ? [{ href: `/blog/${topicGuide.slug}`, label: topicGuide.seoTitle ?? topicGuide.title }] : []),
     { href: '/best-true-crime-podcasts', label: `The best true crime podcasts of ${new Date().getFullYear()}, ranked` },
     ...recommendations
@@ -159,7 +179,7 @@ export default async function PodcastsLikePage({ params }: Props) {
 
   // Only ask a question when this podcast's data actually gives a distinct
   // answer — a generic fallback repeated across 160 pages is filler, not FAQ content.
-  const faqs = [
+  const faqs = editorial ? editorial.faqs : [
     {
       q: `What podcasts are similar to ${podcast.title}?`,
       a: `The best alternatives to ${podcast.title} are podcasts that share its ${podcast.case_types?.join(', ') ?? 'true crime'} focus and ${podcast.format_type?.toLowerCase() ?? 'compelling'} format. ${podcast.if_you_liked_this?.length ? 'Our editorial team has hand-picked the most similar shows based on content type, storytelling style, and community ratings.' : 'We\'ve matched alternatives based on case types, storytelling format, and community ratings from our database.'}`,
@@ -198,13 +218,14 @@ export default async function PodcastsLikePage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: `Podcasts Like ${podcast.title}`,
-    description: `Best alternatives to ${podcast.title} for true crime listeners`,
+    description: editorial?.subtitle ?? `Best alternatives to ${podcast.title} for true crime listeners`,
     numberOfItems: recommendations.length,
     itemListElement: recommendations.map((p, i) => ({
       '@type': 'ListItem',
       position: i + 1,
       name: p.title,
       url: `${BASE}/podcasts/${p.slug}`,
+      ...(editorial && { description: picks[i]?.pick.caseSummary }),
     })),
   }
 
@@ -267,19 +288,60 @@ export default async function PodcastsLikePage({ params }: Props) {
             <h1 className="heading-display text-3xl sm:text-4xl lg:text-5xl mb-4">
               Podcasts Like <em className="text-crimson not-italic">{podcast.title}</em>
             </h1>
-            <p className="text-stone-muted text-sm sm:text-base max-w-2xl leading-relaxed">
-              If you loved {podcast.title}, here are the best podcasts to try next. Matched by case type,
-              storytelling style, and community ratings from our database of {podcast.case_types?.join(', ') ?? 'true crime'} shows.
-            </p>
+            {editorial ? (
+              <>
+                <p className="text-stone font-serif text-lg sm:text-xl mb-4">{editorial.subtitle}</p>
+                <p className="text-stone-muted text-sm sm:text-base max-w-2xl leading-relaxed">{editorial.intro}</p>
+                <p className="text-stone-subtle text-xs mt-4">
+                  By <Link href={`/authors/${author.slug}`} className="text-stone-muted hover:text-stone underline-offset-2 hover:underline">{author.name}</Link>
+                  {' · '}Updated <time dateTime={editorial.updated}>{new Date(editorial.updated).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time>
+                </p>
+              </>
+            ) : (
+              <p className="text-stone-muted text-sm sm:text-base max-w-2xl leading-relaxed">
+                If you loved {podcast.title}, here are the best podcasts to try next. Matched by case type,
+                storytelling style, and community ratings from our database of {podcast.case_types?.join(', ') ?? 'true crime'} shows.
+              </p>
+            )}
           </div>
         </section>
 
         {/* ── Why people love the original ── */}
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <h2 className="heading-section text-xl mb-4">Why listeners love {podcast.title}</h2>
+          {editorial && (
+            <div className="card p-5 mb-10 border-l-2 border-l-crimson">
+              <h2 className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-2">Quick answer</h2>
+              <p className="text-stone text-sm sm:text-base leading-relaxed">{editorial.quickAnswer}</p>
+            </div>
+          )}
+
+          <h2 className="heading-section text-xl mb-4">{editorial ? `What makes ${podcast.title} different` : `Why listeners love ${podcast.title}`}</h2>
+
+          {editorial && (
+            <>
+              {editorial.about.map((para, i) => (
+                <p key={i} className="text-stone-muted text-sm sm:text-base leading-relaxed mb-4 max-w-2xl">{para}</p>
+              ))}
+              {editorial.sourceListen.length > 0 && (
+                <p className="text-stone-muted text-sm mb-6">
+                  Listen to {podcast.title} on{' '}
+                  {editorial.sourceListen.map((l, i) => (
+                    <span key={l.href}>
+                      {i > 0 && (i === editorial.sourceListen.length - 1 ? ' or ' : ', ')}
+                      <a href={l.href} target="_blank" rel="noopener noreferrer" className="text-crimson hover:underline">{l.label}</a>
+                    </span>
+                  ))}.
+                </p>
+              )}
+              <h3 className="text-stone font-semibold text-base mb-2">How we chose these podcasts</h3>
+              <ul className="list-disc pl-5 space-y-1 text-stone-muted text-sm mb-8 max-w-2xl">
+                {editorial.criteria.map(c => <li key={c}>{c}</li>)}
+              </ul>
+            </>
+          )}
 
           {/* Narrative paragraph */}
-          {(() => {
+          {!editorial && (() => {
             const narrative = getPodcastNarrative(podcast, stats)
             return narrative ? (
               <p className="text-stone-muted text-sm sm:text-base leading-relaxed mb-6 max-w-2xl">
@@ -355,7 +417,62 @@ export default async function PodcastsLikePage({ params }: Props) {
             </Link>
           </div>
 
-          {recommendations.length > 0 ? (
+          {editorial ? (
+            <ol className="space-y-6 max-w-4xl">
+              {picks.map(({ podcast: p, pick }, i) => (
+                <li key={p.id} id={p.slug} className="card p-5 sm:p-6 scroll-mt-24">
+                  <div className="flex items-start gap-4 mb-4">
+                    <Link href={`/podcasts/${p.slug}`} className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-ink-700 shrink-0">
+                      {p.image_url ? (
+                        <Image src={p.image_url} alt={`${p.title} podcast artwork`} fill className="object-cover" sizes="80px" priority={i < 2} />
+                      ) : (
+                        <span className="absolute inset-0 flex items-center justify-center"><Headphones size={22} className="text-ink-500" /></span>
+                      )}
+                    </Link>
+                    <div className="min-w-0">
+                      <h3 className="font-serif text-lg sm:text-xl text-stone font-semibold leading-snug">
+                        <span className="text-crimson mr-1.5">{i + 1}.</span>
+                        <Link href={`/podcasts/${p.slug}`} className="hover:text-white transition-colors">{p.title}</Link>
+                      </h3>
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {p.country && <span className="tag">{countryFlag(p.country)} {COUNTRIES[p.country] ?? p.country}</span>}
+                        <span className="tag">{pick.table.format}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <dl className="grid gap-3 text-sm">
+                    {([
+                      ['The case', pick.caseSummary],
+                      ['How investigative', pick.approach],
+                      ['Format', pick.format],
+                      [`Compared with ${podcast.title}`, pick.comparison],
+                      ['Why listen', pick.whyListen],
+                    ] as const).map(([label, text]) => (
+                      <div key={label}>
+                        <dt className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-0.5">{label}</dt>
+                        <dd className="text-stone-muted leading-relaxed">{text}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 pt-4 border-t border-white/[0.06] text-sm">
+                    {pick.listen.map(l => (
+                      <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-crimson hover:underline">
+                        Listen on {l.label} <ExternalLink size={12} />
+                      </a>
+                    ))}
+                    <Link href={`/podcasts/${p.slug}`} className="inline-flex items-center gap-1 text-stone-muted hover:text-stone">
+                      Our {p.title} review <ArrowRight size={12} />
+                    </Link>
+                    {pick.related && (
+                      <Link href={pick.related.href} className="inline-flex items-center gap-1 text-stone-muted hover:text-stone">
+                        {pick.related.label} <ArrowRight size={12} />
+                      </Link>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          ) : recommendations.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {recommendations.map((p, i) => (
                 <PodcastCard key={p.id} podcast={p} priority={i < 6} />
@@ -364,14 +481,53 @@ export default async function PodcastsLikePage({ params }: Props) {
           ) : (
             <div className="text-center py-16 card">
               <p className="text-stone-muted mb-2">No recommendations yet for this podcast.</p>
-              <p className="text-stone-subtle text-sm mb-4">We're constantly expanding our recommendation network.</p>
+              <p className="text-stone-subtle text-sm mb-4">We&apos;re constantly expanding our recommendation network.</p>
               <Link href="/browse" className="btn-ghost inline-flex">Browse all podcasts</Link>
             </div>
           )}
         </section>
 
         {/* ── Comparison table ── */}
-        {recommendations.length > 0 && (
+        {editorial && picks.length > 0 && (
+          <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <h2 className="heading-section text-xl mb-6">Podcasts like {podcast.title} compared</h2>
+            <div className="overflow-x-auto -mx-4 px-4">
+              <table className="w-full min-w-[640px] text-sm">
+                <thead>
+                  <tr className="border-b border-white/[0.08]">
+                    {['Podcast', 'Case', 'Format', 'Where the case stands'].map(h => (
+                      <th key={h} scope="col" className="text-left py-3 pr-4 text-stone-subtle font-medium text-xs uppercase tracking-wider">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-white/[0.06] bg-crimson/5 align-top">
+                    <th scope="row" className="py-3 pr-4 text-left font-medium">
+                      <Link href={`/podcasts/${podcast.slug}`} className="text-crimson hover:underline">
+                        {podcast.title} <span className="text-stone-subtle text-xs">(Season 1)</span>
+                      </Link>
+                    </th>
+                    <td className="py-3 pr-4 text-stone-muted">{editorial.sourceRow.case}</td>
+                    <td className="py-3 pr-4 text-stone-muted">{editorial.sourceRow.format}</td>
+                    <td className="py-3 pr-4 text-stone-muted">{editorial.sourceRow.outcome}</td>
+                  </tr>
+                  {picks.map(({ podcast: p, pick }) => (
+                    <tr key={p.id} className="border-b border-white/[0.04] align-top">
+                      <th scope="row" className="py-3 pr-4 text-left font-medium">
+                        <a href={`#${p.slug}`} className="text-stone hover:text-white transition-colors">{p.title}</a>
+                      </th>
+                      <td className="py-3 pr-4 text-stone-muted">{pick.table.case}</td>
+                      <td className="py-3 pr-4 text-stone-muted">{pick.table.format}</td>
+                      <td className="py-3 pr-4 text-stone-muted">{pick.table.outcome}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+
+        {!editorial && recommendations.length > 0 && (
           <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <h2 className="heading-section text-xl mb-6">How they compare</h2>
             <div className="overflow-x-auto">

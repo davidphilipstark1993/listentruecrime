@@ -12,9 +12,11 @@ export const PODCASTS_LIKE_META: Record<string, { title: string; description: st
       'Liked Love Trapped? More podcasts about romance scams, controlling partners and relationships that turned criminal, each with a binge score.',
   },
   'up-and-vanished': {
-    title: 'Podcasts Like Up and Vanished: Missing Person Shows (2026)',
+    // GSC Nov 2026: "podcasts like / podcast like / podcasts similar to up and
+    // vanished" at positions 7–9. These picks are fixed in podcasts-like-editorial.ts.
+    title: 'Podcasts Like Up and Vanished: Investigative Cold Case Shows',
     description:
-      'If Up and Vanished hooked you, try Your Own Backyard, Bear Brook and Someone Knows Something: reporter-led podcasts on missing people and cold cases.',
+      'Podcasts like Up and Vanished that investigate one disappearance or cold case over many episodes: Your Own Backyard, The Teacher\'s Pet, Cold and more.',
   },
   'wind-of-change': {
     title: 'Podcasts Like Wind of Change (2026): Slow Burn and More',
