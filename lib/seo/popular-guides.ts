@@ -3,6 +3,8 @@
 // internal links point at them consistently — edit here, not per page.
 export const POPULAR_GUIDES: { href: string; label: string }[] = [
   { href: '/blog/true-crime-podcasts-spotify', label: 'Best True Crime Podcasts on Spotify' },
+  { href: '/blog/best-true-crime-podcasts-for-beginners', label: 'True Crime Podcasts for Beginners' },
+  { href: '/blog/best-true-crime-podcasts-binge-weekend', label: 'True Crime Podcasts to Binge' },
   { href: '/blog/best-short-true-crime-podcasts', label: 'Best Short True Crime Podcasts' },
   { href: '/blog/podcasts-like-serial', label: 'Podcasts Like Serial' },
   { href: '/blog/podcasts-like-crime-junkie', label: 'Podcasts Like Crime Junkie' },

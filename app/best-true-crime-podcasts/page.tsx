@@ -238,6 +238,10 @@ export default async function BestTrueCrimePodcastsPage() {
             <Link href="/blog/best-murder-mystery-podcasts" className="text-stone hover:text-white underline decoration-white/20 underline-offset-4">murder mystery podcasts</Link>{' '}
             and{' '}
             <Link href="/blog/best-short-true-crime-podcasts" className="text-stone hover:text-white underline decoration-white/20 underline-offset-4">short true crime podcasts</Link>.
+            New to the genre? Start with our{' '}
+            <Link href="/blog/best-true-crime-podcasts-for-beginners" className="text-stone hover:text-white underline decoration-white/20 underline-offset-4">guide for beginners</Link>,
+            or pick a complete series from our list of{' '}
+            <Link href="/blog/best-true-crime-podcasts-binge-weekend" className="text-stone hover:text-white underline decoration-white/20 underline-offset-4">true crime podcasts to binge</Link>.
             To search everything we have reviewed, use the{' '}
             <Link href="/browse" className="text-stone hover:text-white underline decoration-white/20 underline-offset-4">full podcast directory</Link>.
           </p>

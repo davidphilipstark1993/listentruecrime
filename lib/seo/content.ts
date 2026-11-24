@@ -360,35 +360,31 @@ export const CATEGORY_SEO: Record<string, PageSeoContent> = {
   'binge-worthy': {
     h1: 'Best Binge-Worthy True Crime Podcasts',
     intro: [
-      'Binge-worthy true crime podcasts are the ones you start on a Friday and finish by Sunday — serialized stories with the narrative pull of a thriller, where every episode ends with you immediately pressing play on the next.',
-      'These shows are built for momentum. Each episode reveals a new layer, introduces a new suspect, or upends what you thought you knew. The binge factor is our community\'s highest-rated dimension, and the podcasts on this page score highest across our listener base.',
+      'These are the true crime podcasts we rate 8/10 or higher for binge factor: our editorial score for how hard a show is to stop listening to. The list mixes finished limited series with long-running weekly shows, so it includes podcasts you could binge for months as well as ones you can finish in a weekend.',
+      'If you want a complete story you can start on Friday and finish by Sunday, our guide to the best true crime podcasts to binge in a weekend picks nine finished series and says how long each one takes.',
     ],
     faqs: [
       {
         q: 'What are the most binge-worthy true crime podcasts?',
-        a: 'Serial, Crime Junkie, Casefile, Teacher\'s Pet, and Dr Death are among the most consistently binge-listened podcasts in the genre. Serialized shows covering a single case tend to score highest for binge factor because the narrative builds across episodes rather than resetting each week.',
+        a: 'Serial, In the Dark, The Teacher\'s Pet, Sweet Bobby and S-Town are among the highest-rated shows on this page. Serialised shows that follow one case usually score highest, because each episode builds on the last instead of starting again.',
       },
       {
         q: 'What makes a true crime podcast binge-worthy?',
-        a: 'Binge-worthiness comes from narrative momentum — each episode should answer some questions while raising new ones. Strong character development (of victims, suspects, and investigators), unexpected reveals, and a host who creates genuine suspense all contribute. Short episode run times also help.',
+        a: 'Momentum. Each episode answers some questions and raises new ones, the people in the story are drawn clearly, and the host builds suspense without padding. Tight editing and episodes under an hour also help.',
       },
       {
-        q: 'Should I start with a serialized or episodic podcast?',
-        a: 'For maximum binge potential, start with a serialized show — one season, one case, full narrative arc. Serial Season 1 is the classic choice. If you prefer variety or want to listen casually without commitment, episodic shows like Crime Junkie deliver new cases each week.',
+        q: 'Should I start with a serialised or episodic podcast?',
+        a: 'For a binge, start with a serialised show: one season, one case, a full story. Serial Season 1 is the classic choice. If you would rather dip in and out, an episodic show with a new case each week suits you better.',
       },
       {
-        q: 'Are binge-worthy podcasts appropriate for daily listening?',
-        a: 'That depends entirely on you. Some listeners find that daily true crime exposure affects their mood or outlook. Others treat it like any engaging drama. Pay attention to how you feel and build in breaks if content about crime and suffering starts to weigh heavily.',
-      },
-      {
-        q: 'What is a "binge factor" score?',
-        a: 'Our binge factor score (1–10) reflects community ratings on how compelling and addictive a podcast feels during listening. A high binge factor means listeners consistently reported feeling pulled to continue to the next episode immediately rather than stopping at natural pause points.',
+        q: 'What is a binge factor score?',
+        a: 'Binge factor is our editorial rating from 1 to 10 of how compulsively listenable a podcast is. This page lists every published podcast we rate 8 or above. Listener ratings are shown separately on each podcast page.',
       },
     ],
     relatedLinks: [
+      { href: '/blog/best-true-crime-podcasts-binge-weekend', label: 'Podcasts to Binge in a Weekend' },
       { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
       { href: '/category/cold-cases', label: 'Cold Case Podcasts' },
-      { href: '/category/missing-persons', label: 'Missing Persons Podcasts' },
       { href: '/category/investigative', label: 'Investigative Podcasts' },
     ],
   },

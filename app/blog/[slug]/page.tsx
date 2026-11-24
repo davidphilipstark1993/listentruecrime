@@ -228,14 +228,25 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       }
     : null
 
-  // Podcast-list articles (frontmatter `podcasts`) describe the shows they recommend
-  const podcastsSchema = post.podcasts?.length
+  // Podcast-list articles describe the shows they recommend. Explicit
+  // frontmatter `podcasts` (name + url) wins; otherwise a guide marked
+  // `podcastList` lists its relatedPodcasts, in order, skipping unpublished ones.
+  const listedPodcasts: { name: string; url: string }[] = post.podcasts?.length
+    ? post.podcasts.map(p => ({ name: p.name, url: p.url }))
+    : post.podcastList
+      ? (post.relatedPodcasts ?? [])
+          .map(s => relatedPodcastData.find((p: { slug: string }) => p.slug === s) as { slug: string; title: string } | undefined)
+          .filter((p): p is { slug: string; title: string } => Boolean(p))
+          .map(p => ({ name: p.title, url: `${BASE}/podcasts/${p.slug}` }))
+      : []
+  const podcastsSchema = listedPodcasts.length
     ? {
         '@context': 'https://schema.org',
         '@type': 'ItemList',
         name: post.title,
         url: postUrl,
-        itemListElement: post.podcasts.map((p, i) => ({
+        numberOfItems: listedPodcasts.length,
+        itemListElement: listedPodcasts.map((p, i) => ({
           '@type': 'ListItem',
           position: i + 1,
           item: { '@type': 'PodcastSeries', name: p.name, url: p.url },

@@ -70,6 +70,8 @@ const nextConfig = {
       { source: '/best/investigative', destination: '/blog/best-investigative-journalism-podcasts', permanent: true },
       { source: '/best/serial-killer', destination: '/blog/best-serial-killer-podcasts', permanent: true },
       { source: '/best/murder-mystery', destination: '/blog/best-murder-mystery-podcasts', permanent: true },
+      // 23 Nov 2026: same title as the beginners guide, which is the page we want ranking.
+      { source: '/best/beginners', destination: '/blog/best-true-crime-podcasts-for-beginners', permanent: true },
     ]
   },
 }
