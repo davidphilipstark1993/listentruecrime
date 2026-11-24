@@ -121,7 +121,7 @@ export function Footer() {
                 { href: '/podcasts-like/serial', label: 'Podcasts Like Serial' },
                 { href: '/podcasts-like/casefile-true-crime', label: 'Podcasts Like Casefile' },
                 { href: '/podcasts-like/the-teachers-pet', label: 'Podcasts Like Teacher\'s Pet' },
-                { href: '/podcasts-like/crime-junkie', label: 'Podcasts Like Crime Junkie' },
+                { href: '/blog/podcasts-like-crime-junkie', label: 'Podcasts Like Crime Junkie' },
                 { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
               ].map(link => (
                 <li key={link.href}>
