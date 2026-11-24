@@ -109,6 +109,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
     image: data.image,
     author: data.author ?? 'david-stark',
     relatedPodcasts: data.relatedPodcasts ?? [],
+    podcastList: data.podcastList === true,
     faqs: data.faqs ?? [],
     books: data.books ?? [],
     podcasts: data.podcasts ?? [],

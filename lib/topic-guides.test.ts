@@ -21,3 +21,10 @@ describe('getGuidesForPodcastPage', () => {
     expect(new Set(slugs).size).toBe(slugs.length)
   })
 })
+
+describe('getPostBySlug', () => {
+  it('reads the podcastList flag used for ItemList schema', async () => {
+    const { getPostBySlug } = await import('./blog')
+    expect(getPostBySlug('best-serial-killer-podcasts')?.podcastList).toBe(true)
+  })
+})
