@@ -52,6 +52,13 @@ const MDX_COMPONENTS = {
     const id = slugifyText(getHeadingText(children))
     return <h3 id={id} className="scroll-mt-24">{children}</h3>
   },
+  // Wide markdown tables scroll inside the article on small screens instead of
+  // widening the page.
+  table: ({ children }: { children?: ReactNode }) => (
+    <div className="overflow-x-auto">
+      <table>{children}</table>
+    </div>
+  ),
   a: ({ href, children, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
     if (href?.startsWith('/')) {
       return <Link href={href} {...props}>{children}</Link>
@@ -221,12 +228,33 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       }
     : null
 
+  // Podcast-list articles (frontmatter `podcasts`) describe the shows they recommend
+  const podcastsSchema = post.podcasts?.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: post.title,
+        url: postUrl,
+        itemListElement: post.podcasts.map((p, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          item: { '@type': 'PodcastSeries', name: p.name, url: p.url },
+        })),
+      }
+    : null
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
+      {podcastsSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(podcastsSchema) }}
+        />
+      )}
       {booksSchema && (
         <script
           type="application/ld+json"
