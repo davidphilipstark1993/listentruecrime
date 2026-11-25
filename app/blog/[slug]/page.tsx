@@ -370,7 +370,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               />
 
               {/* Cross-promotion (managed in /admin/ads) */}
-              <AdSlot placement="article" className="mt-10" />
+              {post.crossPromo !== false && <AdSlot placement="article" className="mt-10" />}
 
               <ShareButtons title={post.title} url={postUrl} />
 
@@ -408,7 +408,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   Your weekly true crime briefing
                 </h3>
                 <p className="text-sm text-stone-muted mb-4">
-                  New podcast reviews, hidden gems, and community picks. No filler.
+                  {post.newsletterPitch ?? 'New podcast reviews, hidden gems, and community picks. No filler.'}
                 </p>
                 <NewsletterForm source="blog-post" />
               </div>
