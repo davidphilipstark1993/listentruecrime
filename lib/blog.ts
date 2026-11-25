@@ -38,6 +38,10 @@ export interface BlogPost {
   relatedPodcasts?: string[]
   /** Recommendation guide: relatedPodcasts (in order) are its picks, emitted as ItemList structured data. */
   podcastList?: boolean
+  /** false hides the cross-promotion ad slot on this article (other pages unaffected). */
+  crossPromo?: boolean
+  /** Article-specific line under the newsletter heading; omitted → the default copy. */
+  newsletterPitch?: string
   faqs?: BlogFAQ[]
   books?: BlogBook[]
   podcasts?: BlogPodcast[]
@@ -73,6 +77,8 @@ export function getAllPosts(): BlogPost[] {
         author: data.author ?? 'david-stark',
         relatedPodcasts: data.relatedPodcasts ?? [],
         podcastList: data.podcastList === true,
+        crossPromo: data.crossPromo !== false,
+        newsletterPitch: typeof data.newsletterPitch === 'string' ? data.newsletterPitch : undefined,
         faqs: data.faqs ?? [],
         books: data.books ?? [],
         podcasts: data.podcasts ?? [],
@@ -110,6 +116,8 @@ export function getPostBySlug(slug: string): BlogPost | null {
     author: data.author ?? 'david-stark',
     relatedPodcasts: data.relatedPodcasts ?? [],
     podcastList: data.podcastList === true,
+    crossPromo: data.crossPromo !== false,
+    newsletterPitch: typeof data.newsletterPitch === 'string' ? data.newsletterPitch : undefined,
     faqs: data.faqs ?? [],
     books: data.books ?? [],
     podcasts: data.podcasts ?? [],
