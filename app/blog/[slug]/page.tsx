@@ -15,6 +15,7 @@ import { ShareButtons } from '@/components/blog/ShareButtons'
 import { Callout } from '@/components/blog/Callout'
 import { PodcastRecommendation } from '@/components/blog/PodcastRecommendation'
 import { WhereToListen } from '@/components/blog/WhereToListen'
+import { EpisodeCard } from '@/components/blog/EpisodeCard'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
@@ -44,6 +45,7 @@ const MDX_COMPONENTS = {
   Callout,
   PodcastRecommendation,
   WhereToListen,
+  EpisodeCard,
   h2: ({ children }: { children?: ReactNode }) => {
     const id = slugifyText(getHeadingText(children))
     return <h2 id={id} className="scroll-mt-24">{children}</h2>
