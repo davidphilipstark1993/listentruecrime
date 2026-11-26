@@ -154,82 +154,120 @@ export default async function HomePage() {
 
       <main id="main-content">
         {/* ═══════════════ HERO ═══════════════ */}
-        <section className="relative min-h-[80vh] flex flex-col items-center justify-center px-4 pt-24 pb-16 overflow-hidden">
+        {/* Full-viewport hero from sm up; on phones it's content-height so the
+            first podcasts appear within a short scroll of the headline. */}
+        <section className="relative sm:min-h-[80vh] flex flex-col items-center justify-center px-4 pt-24 pb-10 sm:pb-16 overflow-hidden">
           {/* Background layers */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(190,18,60,0.12),transparent)]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_30%_at_50%_100%,rgba(190,18,60,0.06),transparent)]" />
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:64px_64px]" />
 
           <div className="relative z-10 max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-crimson/10 border border-crimson/20 text-crimson text-xs font-medium mb-8">
-              <Zap size={11} fill="currentColor" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-crimson/10 border border-crimson/20 text-crimson text-xs font-medium mb-5 sm:mb-8">
+              <Zap size={11} fill="currentColor" aria-hidden="true" />
               {podcastCountLabel} podcasts reviewed and rated
             </div>
 
-            <h1 className="heading-display text-5xl sm:text-6xl lg:text-7xl mb-6 leading-[1.05]">
+            <h1 className="heading-display text-[2.5rem] sm:text-6xl lg:text-7xl mb-4 sm:mb-6 leading-[1.05]">
               Find your next{' '}
               <em className="text-crimson not-italic">true crime</em>{' '}
               podcast
             </h1>
 
-            <p className="text-stone-muted text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+            <p className="text-stone-muted text-base sm:text-xl max-w-2xl mx-auto mb-4 sm:mb-6 leading-relaxed">
               Expert reviews, community ratings and curated picks for {podcastCountLabel} true crime podcasts.
               Discover your next obsession — no algorithms, just honest takes.
             </p>
-            <p className="text-stone-muted text-sm max-w-2xl mx-auto -mt-6 mb-10">
+            <p className="text-stone-muted text-sm max-w-2xl mx-auto mb-6 sm:mb-10">
               New to the genre? Start with our{' '}
               <Link href="/best-true-crime-podcasts" className="text-stone hover:text-white underline decoration-white/20 underline-offset-4">
                 best true crime podcasts of {CURRENT_YEAR}, ranked
               </Link>.
             </p>
 
-            {/* Search bar */}
-            <div className="relative max-w-xl mx-auto mb-8">
-              <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-subtle pointer-events-none" />
-              <Link href="/browse">
-                <div className="input-base pl-11 pr-4 py-3.5 cursor-text text-stone-subtle hover:border-white/20 transition-colors text-[15px]">
-                  Search podcasts, case types, hosts…
-                </div>
-              </Link>
-            </div>
+            {/* Search — a real GET form so typing here searches immediately
+                (and works without JavaScript); /browse reads ?q= */}
+            <form action="/browse" method="get" role="search" className="relative max-w-xl mx-auto mb-4 sm:mb-8">
+              <label htmlFor="hero-search" className="sr-only">Search podcasts</label>
+              <Search size={18} aria-hidden="true" className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-subtle pointer-events-none" />
+              <input
+                id="hero-search"
+                name="q"
+                type="search"
+                enterKeyHint="search"
+                autoComplete="off"
+                placeholder="Search podcasts, case types, hosts…"
+                className="input-base h-[52px] pl-11 pr-28 sm:text-[15px]"
+              />
+              <button type="submit" className="absolute right-1.5 top-1/2 -translate-y-1/2 h-10 px-4 rounded-md bg-ink-700 text-stone text-sm font-medium hover:bg-ink-600 transition-colors">
+                Search
+              </button>
+            </form>
 
             {/* CTAs */}
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link href="/browse" className="btn-primary px-6 py-3 text-sm">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center justify-center gap-3 max-w-xl mx-auto">
+              <Link href="/browse" className="btn-primary px-6 py-3 h-12 sm:h-auto text-sm">
                 Browse Podcasts
-                <ArrowRight size={15} />
+                <ArrowRight size={15} aria-hidden="true" />
               </Link>
-              <div className="flex flex-col sm:flex-row items-center gap-2">
-                <NewsletterForm source="hero" variant="minimal" className="w-64" />
-              </div>
+              <NewsletterForm source="hero" variant="minimal" className="w-full sm:w-80 text-left" />
             </div>
             <p className="text-stone-subtle text-xs mt-3">
               <span className="text-crimson font-semibold">Free newsletter</span> — 5 podcast picks emailed every Sunday
             </p>
 
             {/* Social proof */}
-            <div className="flex items-center justify-center gap-6 mt-12 text-stone-subtle text-sm">
-              <div className="flex flex-col items-center">
-                <span className="text-stone font-semibold text-2xl font-serif">{podcastCountLabel}</span>
+            <div className="flex items-start justify-center gap-4 sm:gap-6 mt-8 sm:mt-12 text-stone-subtle text-sm">
+              <div className="flex flex-col items-center text-center">
+                <span className="text-stone font-semibold text-xl sm:text-2xl font-serif">{podcastCountLabel}</span>
                 <span className="text-xs">Podcasts reviewed</span>
               </div>
-              <div className="w-px h-8 bg-white/[0.06]" />
-              <div className="flex flex-col items-center">
-                <span className="text-stone font-semibold text-2xl font-serif">6</span>
+              <div className="w-px h-8 bg-white/[0.06] self-center" aria-hidden="true" />
+              <div className="flex flex-col items-center text-center">
+                <span className="text-stone font-semibold text-xl sm:text-2xl font-serif">6</span>
                 <span className="text-xs">Community rating dimensions</span>
               </div>
-              <div className="w-px h-8 bg-white/[0.06]" />
-              <div className="flex flex-col items-center">
-                <span className="text-stone font-semibold text-2xl font-serif">Free</span>
+              <div className="w-px h-8 bg-white/[0.06] self-center" aria-hidden="true" />
+              <div className="flex flex-col items-center text-center">
+                <span className="text-stone font-semibold text-xl sm:text-2xl font-serif">Free</span>
                 <span className="text-xs">Always</span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ═══════════════ NEWSLETTER CTA ═══════════════ */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="relative overflow-hidden rounded-2xl bg-ink-800 border border-white/[0.06] p-8 lg:p-10">
+        {/* ═══════════════ TRENDING / FEATURED ═══════════════ */}
+        {featured.length > 0 && (
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+            <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1 mb-5 sm:mb-8">
+              <div>
+                <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Featured</p>
+                <h2 className="heading-section text-2xl sm:text-3xl">
+                  <TrendingUp size={20} aria-hidden="true" className="inline mr-2 text-crimson mb-0.5" />
+                  Trending podcasts
+                </h2>
+              </div>
+              <Link href="/browse" className="min-h-[44px] text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
+                View all <ArrowRight size={14} aria-hidden="true" />
+              </Link>
+            </div>
+            {/* Phones: a swipeable rail (cards peek in from the right) instead of
+                a 2-up grid that strands the fifth card on its own row. */}
+            <ul className="flex sm:grid sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 pb-2 sm:pb-0 scroll-px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {(featured as (Podcast & { rating_stats: RatingStats | null })[]).map((p, i) => (
+                <li key={p.id} className="w-[44%] min-[480px]:w-[30%] shrink-0 snap-start sm:w-auto">
+                  <PodcastCard podcast={p} priority={i < 3} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* ═══════════════ NEWSLETTER CTA ═══════════════
+            Sits after Trending: discovery first (what visitors came for),
+            then the subscribe ask once they've seen the kind of picks we send. */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
+          <div className="relative overflow-hidden rounded-2xl bg-ink-800 border border-white/[0.06] p-5 sm:p-8 lg:p-10">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(190,18,60,0.1),transparent_60%)]" />
             <div className="relative z-10 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               <div>
@@ -262,32 +300,9 @@ export default async function HomePage() {
         {/* Cross-promotion (managed in /admin/ads) — renders nothing when no advert is live */}
         <AdSlot placement="homepage_promo" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6" />
 
-        {/* ═══════════════ TRENDING / FEATURED ═══════════════ */}
-        {featured.length > 0 && (
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div className="flex items-end justify-between mb-8">
-              <div>
-                <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Featured</p>
-                <h2 className="heading-section text-2xl sm:text-3xl">
-                  <TrendingUp size={20} className="inline mr-2 text-crimson mb-0.5" />
-                  Trending podcasts
-                </h2>
-              </div>
-              <Link href="/browse" className="text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
-                View all <ArrowRight size={14} />
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-              {(featured as (Podcast & { rating_stats: RatingStats | null })[]).map((p, i) => (
-                <PodcastCard key={p.id} podcast={p} priority={i < 3} />
-              ))}
-            </div>
-          </section>
-        )}
-
         {/* ═══════════════ CATEGORIES ═══════════════ */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 section-divider">
-          <div className="mb-8">
+        <section id="categories" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 section-divider">
+          <div className="mb-5 sm:mb-8">
             <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Browse by type</p>
             <h2 className="heading-section text-2xl sm:text-3xl">Explore categories</h2>
           </div>
@@ -296,9 +311,9 @@ export default async function HomePage() {
               <Link
                 key={cat.slug}
                 href={`/category/${cat.slug}`}
-                className="card-hover group p-5 flex flex-col gap-2"
+                className="card-hover group p-4 sm:p-5 flex flex-col gap-1.5 sm:gap-2"
               >
-                <span className="text-2xl">{cat.emoji}</span>
+                <span className="text-2xl" aria-hidden="true">{cat.emoji}</span>
                 <h3 className="text-stone text-sm font-semibold group-hover:text-white transition-colors">
                   {cat.label}
                 </h3>
@@ -311,11 +326,11 @@ export default async function HomePage() {
         </section>
 
         {/* ═══════════════ GUIDES & RECOMMENDATIONS ═══════════════ */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 section-divider">
-          <div className="mb-8">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 section-divider">
+          <div className="mb-5 sm:mb-8">
             <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Guides</p>
             <h2 className="heading-section text-2xl sm:text-3xl">
-              <BookOpen size={20} className="inline mr-2 text-crimson mb-0.5" />
+              <BookOpen size={20} aria-hidden="true" className="inline mr-2 text-crimson mb-0.5" />
               Guides &amp; recommendations
             </h2>
           </div>
@@ -324,7 +339,7 @@ export default async function HomePage() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="card-hover p-4 flex items-center text-stone-muted text-sm font-medium hover:text-white transition-colors"
+                className="card-hover p-4 min-h-[56px] flex items-center text-stone-muted text-sm font-medium hover:text-white transition-colors"
               >
                 {link.label}
               </Link>
@@ -336,17 +351,17 @@ export default async function HomePage() {
 
         {/* ═══════════════ TOP COMMUNITY RATED ═══════════════ */}
         {topRated.length > 0 && (
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 section-divider">
-            <div className="flex items-end justify-between mb-8">
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 section-divider">
+            <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1 mb-5 sm:mb-8">
               <div>
                 <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Community</p>
                 <h2 className="heading-section text-2xl sm:text-3xl">
-                  <Star size={18} className="inline mr-2 text-gold-light mb-0.5" fill="currentColor" />
+                  <Star size={18} aria-hidden="true" className="inline mr-2 text-gold-light mb-0.5" fill="currentColor" />
                   Highest binge factor
                 </h2>
               </div>
-              <Link href="/best-true-crime-podcasts" className="text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
-                Best true crime podcasts, ranked <ArrowRight size={14} />
+              <Link href="/best-true-crime-podcasts" className="min-h-[44px] text-sm text-stone-muted hover:text-stone transition-colors flex items-center gap-1">
+                Best true crime podcasts, ranked <ArrowRight size={14} aria-hidden="true" />
               </Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -359,14 +374,14 @@ export default async function HomePage() {
 
         {/* ═══════════════ NEWEST ADDITIONS ═══════════════ */}
         {newest.length > 0 && (
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 section-divider">
-            <div className="mb-8">
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 section-divider">
+            <div className="mb-5 sm:mb-8">
               <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Fresh</p>
               <h2 className="heading-section text-2xl sm:text-3xl">Newest additions</h2>
             </div>
-            <div className="-mt-6 mb-8">
-              <Link href="/new-true-crime-podcasts" className="text-sm text-stone-muted hover:text-stone transition-colors inline-flex items-center gap-1">
-                All new true crime podcasts <ArrowRight size={14} />
+            <div className="-mt-4 sm:-mt-6 mb-5 sm:mb-8">
+              <Link href="/new-true-crime-podcasts" className="min-h-[44px] text-sm text-stone-muted hover:text-stone transition-colors inline-flex items-center gap-1">
+                All new true crime podcasts <ArrowRight size={14} aria-hidden="true" />
               </Link>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -379,12 +394,12 @@ export default async function HomePage() {
 
         {/* ═══════════════ RECENT REVIEWS ═══════════════ */}
         {recentReviews.length > 0 && (
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 section-divider">
-            <div className="mb-8">
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 section-divider">
+            <div className="mb-5 sm:mb-8">
               <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Community</p>
               <h2 className="heading-section text-2xl sm:text-3xl">Recent reviews</h2>
             </div>
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {recentReviews.map((review: any) => (
                 <div key={review.id} className="card p-4">
                   <div className="flex items-start gap-3">
@@ -392,10 +407,10 @@ export default async function HomePage() {
                       {(review.profile?.username?.[0] ?? '?').toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mb-1 min-w-0">
                         <span className="text-stone text-xs font-medium">{review.profile?.username ?? 'Anonymous'}</span>
                         <span className="text-stone-subtle text-xs">on</span>
-                        <Link href={`/podcasts/${review.podcast?.slug}`} className="text-xs text-stone hover:text-crimson transition-colors truncate font-medium">
+                        <Link href={`/podcasts/${review.podcast?.slug}`} className="inline-block py-2 -my-2 text-xs text-stone hover:text-crimson transition-colors truncate font-medium">
                           {review.podcast?.title}
                         </Link>
                       </div>

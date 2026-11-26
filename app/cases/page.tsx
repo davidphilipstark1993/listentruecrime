@@ -83,7 +83,7 @@ export default function CasesIndexPage() {
           </header>
 
           {cases.length > 0 && (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {cases.map(c => (
                 <Link
                   key={c.slug}

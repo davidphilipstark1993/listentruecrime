@@ -24,7 +24,11 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
   const [firstName, setFirstName] = useState('')
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
+  // Shown inline (and announced) as well as in the toast: a toast in the
+  // corner is easy to miss on a phone, especially with the keyboard open.
+  const [error, setError] = useState<string | null>(null)
   const uid = useId()
+  const errorId = `${uid}-error`
   const emailId = `${uid}-email`
   const nameId = `${uid}-name`
   const refId = `${uid}-ref`
@@ -53,6 +57,7 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
     e.preventDefault()
     if (!email || loading) return
     setLoading(true)
+    setError(null)
 
     try {
       const res = await fetch('/api/newsletter', {
@@ -65,7 +70,9 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
       setDone(true)
       toast.success('Check your inbox to confirm!')
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Something went wrong')
+      const message = err instanceof Error ? err.message : 'Something went wrong'
+      setError(message)
+      toast.error(message)
     } finally {
       setLoading(false)
     }
@@ -87,15 +94,38 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
         className="input-base w-40 font-mono text-sm uppercase tracking-wider"
       />
       {refState !== 'idle' && (
-        <p id={`${refId}-status`} className={cn('mt-1 text-2xs', refState === 'valid' ? 'text-emerald-400' : 'text-stone-subtle')}>
+        <p id={`${refId}-status`} aria-live="polite" className={cn('mt-1 text-xs', refState === 'valid' ? 'text-emerald-400' : 'text-stone-subtle')}>
           {refState === 'valid' ? 'Code recognised. Thanks for joining via a friend.' : "We don't recognise that code, but you can still subscribe."}
         </p>
       )}
     </div>
   )
 
+  const errorNote = error && (
+    <p id={errorId} role="alert" className="mt-2 text-xs text-red-400">{error}</p>
+  )
+
+  // Shared props for every email field: email keyboard on phones, no
+  // auto-capitalisation/correction, and the error wired up for screen readers.
+  const emailProps = {
+    id: emailId,
+    type: 'email' as const,
+    inputMode: 'email' as const,
+    enterKeyHint: 'send' as const,
+    autoCapitalize: 'none',
+    autoCorrect: 'off',
+    spellCheck: false,
+    value: email,
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => { setEmail(e.target.value); if (error) setError(null) },
+    placeholder: 'your@email.com',
+    autoComplete: 'email',
+    required: true,
+    'aria-invalid': error ? true : undefined,
+    'aria-describedby': error ? errorId : undefined,
+  }
+
   const consentNote = (
-    <p className="text-2xs text-stone-subtle mt-2 leading-snug">
+    <p className="text-xs text-stone-subtle mt-2 leading-snug">
       By subscribing you agree to receive the weekly ListenTrueCrime newsletter. We will email you a link to confirm. See our{' '}
       <Link href="/privacy" className="underline hover:text-stone">Privacy Policy</Link>. Unsubscribe anytime.
     </p>
@@ -103,8 +133,8 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
 
   if (done) {
     return (
-      <div className={cn('flex items-center gap-3 text-emerald-400 text-sm', className)}>
-        <div className="w-5 h-5 rounded-full bg-emerald-400 flex items-center justify-center text-ink-950">
+      <div role="status" className={cn('flex items-center gap-3 min-h-[44px] text-emerald-400 text-sm', className)}>
+        <div className="w-5 h-5 shrink-0 rounded-full bg-emerald-400 flex items-center justify-center text-ink-950" aria-hidden="true">
           <svg viewBox="0 0 12 12" fill="none" className="w-3 h-3">
             <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
@@ -117,23 +147,16 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
   if (variant === 'minimal') {
     return (
       <div className={className}>
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        {/* Wraps instead of squeezing: on a narrow card the button drops below a full-width field */}
+        <form onSubmit={handleSubmit} className="flex flex-wrap gap-2">
           <label htmlFor={emailId} className="sr-only">Email address</label>
-          <input
-            id={emailId}
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="your@email.com"
-            autoComplete="email"
-            required
-            className="input-base flex-1 text-sm py-2"
-          />
-          <button type="submit" disabled={loading} className="btn-primary py-2 px-4 text-sm">
-            {loading ? '…' : 'Subscribe'}
+          <input {...emailProps} className="input-base flex-1 min-w-[12rem]" />
+          <button type="submit" disabled={loading} className="btn-primary px-4 text-sm grow sm:grow-0">
+            {loading ? 'Subscribing…' : 'Subscribe'}
           </button>
         </form>
-        <p className="text-2xs text-stone-subtle mt-1.5">
+        {errorNote}
+        <p className="text-xs text-stone-subtle mt-1.5">
           You can unsubscribe anytime. See our <Link href="/privacy" className="underline hover:text-stone">Privacy Policy</Link>.
         </p>
       </div>
@@ -153,29 +176,20 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
               onChange={e => setFirstName(e.target.value)}
               placeholder="First name (optional)"
               autoComplete="given-name"
-              className="input-base sm:w-40"
+              className="input-base sm:w-40 h-12 sm:h-auto"
             />
           </>
         )}
         <div className="relative flex-1">
           <label htmlFor={emailId} className="sr-only">Email address</label>
           <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-subtle pointer-events-none" />
-          <input
-            id={emailId}
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="your@email.com"
-            autoComplete="email"
-            required
-            className="input-base pl-9"
-          />
+          <input {...emailProps} className="input-base pl-9 h-12 sm:h-auto" />
         </div>
         <button
           type="submit"
           disabled={loading || !email}
           className={cn(
-            'btn-primary shrink-0',
+            'btn-primary shrink-0 h-12 sm:h-auto',
             variant === 'hero' && 'px-6'
           )}
         >
@@ -183,6 +197,7 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
           {!loading && <ArrowRight size={14} />}
         </button>
       </form>
+      {errorNote}
       {referralField}
       {consentNote}
     </div>

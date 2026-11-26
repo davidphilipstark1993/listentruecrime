@@ -2,7 +2,7 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { User, BookMarked, LogOut, Shield } from 'lucide-react'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
-import { createClient } from '@/lib/supabase/client'
+import { getSupabase } from '@/lib/supabase/lazy-client'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { getInitials } from '@/lib/utils'
@@ -13,10 +13,9 @@ interface UserMenuProps {
 
 export function UserMenu({ user }: UserMenuProps) {
   const router = useRouter()
-  const supabase = createClient()
 
   const signOut = async () => {
-    await supabase.auth.signOut()
+    await (await getSupabase()).auth.signOut()
     toast.success('Signed out')
     router.refresh()
   }
@@ -26,8 +25,11 @@ export function UserMenu({ user }: UserMenuProps) {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button className="flex items-center justify-center w-8 h-8 rounded-full bg-crimson/20 border border-crimson/30 text-crimson text-xs font-semibold hover:bg-crimson/30 transition-colors focus:outline-none focus:ring-2 focus:ring-crimson/30">
-          {initials}
+        {/* 44px hit area around the 32px avatar */}
+        <button aria-label="Account menu" className="group flex items-center justify-center w-11 h-11 rounded-full focus:outline-none">
+          <span className="flex items-center justify-center w-8 h-8 rounded-full bg-crimson/20 border border-crimson/30 text-crimson text-xs font-semibold group-hover:bg-crimson/30 transition-colors group-focus-visible:ring-2 group-focus-visible:ring-crimson/60">
+            {initials}
+          </span>
         </button>
       </DropdownMenu.Trigger>
 
@@ -42,13 +44,13 @@ export function UserMenu({ user }: UserMenuProps) {
           </div>
           <DropdownMenu.Separator className="h-px bg-white/[0.06] my-1" />
 
-          <DropdownMenu.Item className="flex items-center gap-2 px-3 py-2 text-sm text-stone-muted hover:text-stone hover:bg-ink-700 data-[highlighted]:text-stone data-[highlighted]:bg-ink-700 rounded-md cursor-pointer outline-none transition-colors">
+          <DropdownMenu.Item className="flex items-center gap-2 px-3 py-2.5 text-sm text-stone-muted hover:text-stone hover:bg-ink-700 data-[highlighted]:text-stone data-[highlighted]:bg-ink-700 rounded-md cursor-pointer outline-none transition-colors">
             <BookMarked size={14} />
             Favourites
           </DropdownMenu.Item>
 
           <DropdownMenu.Item
-            className="flex items-center gap-2 px-3 py-2 text-sm text-stone-muted hover:text-stone hover:bg-ink-700 data-[highlighted]:text-stone data-[highlighted]:bg-ink-700 rounded-md cursor-pointer outline-none transition-colors"
+            className="flex items-center gap-2 px-3 py-2.5 text-sm text-stone-muted hover:text-stone hover:bg-ink-700 data-[highlighted]:text-stone data-[highlighted]:bg-ink-700 rounded-md cursor-pointer outline-none transition-colors"
             onClick={() => router.push('/admin')}
           >
             <Shield size={14} />
@@ -59,7 +61,7 @@ export function UserMenu({ user }: UserMenuProps) {
 
           <DropdownMenu.Item
             onClick={signOut}
-            className="flex items-center gap-2 px-3 py-2 text-sm text-stone-muted hover:text-red-400 hover:bg-red-900/20 data-[highlighted]:text-red-400 data-[highlighted]:bg-red-900/20 rounded-md cursor-pointer outline-none transition-colors"
+            className="flex items-center gap-2 px-3 py-2.5 text-sm text-stone-muted hover:text-red-400 hover:bg-red-900/20 data-[highlighted]:text-red-400 data-[highlighted]:bg-red-900/20 rounded-md cursor-pointer outline-none transition-colors"
           >
             <LogOut size={14} />
             Sign out

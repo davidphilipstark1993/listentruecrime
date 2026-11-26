@@ -25,7 +25,7 @@ export function ReferralShare({ link, rewards }: { link: string; rewards: string
       </p>
       <div className="flex gap-2">
         <label htmlFor="referral-link" className="sr-only">Your referral link</label>
-        <input id="referral-link" readOnly value={link} onFocus={e => e.currentTarget.select()} className="input-base flex-1 text-xs" />
+        <input id="referral-link" readOnly value={link} onFocus={e => e.currentTarget.select()} className="input-base flex-1 text-base sm:text-xs" />
         <button type="button" onClick={copy} className="btn-outline px-3 text-sm shrink-0" aria-live="polite">
           {copied ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy</>}
         </button>

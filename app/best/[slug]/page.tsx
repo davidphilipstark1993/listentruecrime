@@ -189,7 +189,7 @@ export default async function BestOfPage({ params }: Props) {
         {/* Browse other best-of lists */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 section-divider pt-12">
           <h2 className="heading-section text-2xl mb-6">More best-of lists</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {BEST_OF_PAGES.filter(p => p.slug !== slug).slice(0, 6).map(p => (
               <Link key={p.slug} href={`/best/${p.slug}`} className="card-hover p-4 flex flex-col gap-1">
                 <span className="text-stone text-sm font-semibold group-hover:text-white">{p.h1}</span>

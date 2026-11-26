@@ -171,16 +171,16 @@ export default async function BrowsePage({ searchParams }: Props) {
   return (
     <>
       <Header />
-      <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 min-h-screen">
-        <div className="mb-8">
+      <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-16 min-h-screen">
+        <div className="mb-5 sm:mb-8">
           <h1 className="heading-display text-3xl sm:text-4xl mb-2">Browse podcasts</h1>
-          <p className="text-stone-muted text-sm">{total} podcasts in the database</p>
+          <p className="text-stone-muted text-sm" aria-live="polite">{total} podcasts in the database</p>
         </div>
 
         <BrowseControls />
 
         {podcasts.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
             {podcasts.map((p, i) => (
               <PodcastCard key={p.id} podcast={p} priority={page === 1 && i < 6} />
             ))}

@@ -11,6 +11,11 @@
 
   html {
     scroll-behavior: smooth;
+    /* Anchor targets (#rate, TOC links) land below the fixed 64px header */
+    scroll-padding-top: 5rem;
+    /* Stop iOS/Android inflating text after an orientation change */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {
@@ -37,6 +42,24 @@
     outline: 2px solid #be123c;
     outline-offset: 2px;
   }
+
+  /* Respect the OS "reduce motion" setting: no smooth scrolling, no
+     entrance/hover animations, no shimmer. Content is never hidden behind
+     an animation, so nothing needs to be re-shown here. */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Breadcrumbs (used on most templates): wrap on narrow screens and give
+     each link a taller hit area without changing the visual size. */
+  nav[aria-label="Breadcrumb"] { flex-wrap: wrap; row-gap: 0; }
+  nav[aria-label="Breadcrumb"] a { display: inline-block; padding-block: 0.625rem; }
 
   /* Skip-to-content link — visually hidden until it receives focus */
   .skip-link {
@@ -73,6 +96,12 @@
            hover:-translate-y-0.5;
   }
 
+  /* Touch devices have no real hover: skip the lift so a tap doesn't leave
+     a card stuck in its raised state. */
+  @media (hover: none) {
+    .card-hover:hover { transform: none; }
+  }
+
   /* ——— Score badge ——— */
   .score-badge {
     @apply inline-flex items-center justify-center
@@ -80,31 +109,36 @@
   }
 
   /* ——— Buttons ——— */
+  /* Buttons — all variants keep a 44px minimum height so they remain
+     comfortable touch targets on phones. */
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-lg
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-lg
            bg-crimson text-white font-medium text-sm
            transition-all duration-200 hover:bg-crimson-hover
            active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg
+    @apply inline-flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-lg
            text-stone-muted font-medium text-sm
            transition-all duration-200 hover:bg-ink-700 hover:text-stone
            active:scale-[0.98];
   }
 
   .btn-outline {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-lg
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 min-h-[44px] rounded-lg
            border border-white/10 text-stone font-medium text-sm
            transition-all duration-200 hover:border-white/20 hover:bg-ink-700
            active:scale-[0.98];
   }
 
-  /* ——— Input ——— */
+  /* ——— Input ———
+     16px text below the sm breakpoint: iOS Safari zooms the whole page
+     when a focused field's font-size is under 16px. 14px from sm up keeps
+     the existing desktop look. */
   .input-base {
-    @apply w-full bg-ink-800 border border-white/10 rounded-lg px-4 py-2.5
-           text-stone placeholder:text-stone-subtle text-sm
+    @apply w-full min-h-[44px] bg-ink-800 border border-white/10 rounded-lg px-4 py-2.5
+           text-stone placeholder:text-stone-subtle text-base sm:text-sm
            outline-none focus:border-crimson/50 focus:ring-1 focus:ring-crimson/20
            transition-colors duration-200;
   }
@@ -136,6 +170,18 @@
 
   .tag-crimson {
     @apply tag bg-crimson/10 text-crimson border-crimson/20;
+  }
+
+  /* Tappable filter/choice chip — the .tag look at a size a thumb can hit
+     (44px tall on phones, compact from md up where a mouse is likely). */
+  .chip {
+    @apply inline-flex items-center gap-1.5 px-3.5 min-h-[44px] md:min-h-[32px] rounded-full
+           text-xs font-medium bg-ink-700 text-stone-muted border border-white/[0.08]
+           transition-colors hover:text-stone hover:border-white/20;
+  }
+
+  .chip-active {
+    @apply bg-crimson/15 text-stone border-crimson/40;
   }
 
   /* ——— Star rating ——— */

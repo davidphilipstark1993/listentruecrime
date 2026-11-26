@@ -30,7 +30,7 @@ export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
             <li key={i} className="flex items-center gap-1">
               {i > 0 && <ChevronRight className="w-3 h-3 text-stone-faint flex-shrink-0" />}
               {item.href && i < items.length - 1 ? (
-                <Link href={item.href} className="hover:text-stone transition-colors">
+                <Link href={item.href} className="inline-block py-2 hover:text-stone transition-colors">
                   {item.label}
                 </Link>
               ) : (

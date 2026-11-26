@@ -350,7 +350,7 @@ export default async function PodcastsLikePage({ params }: Props) {
             ) : null
           })()}
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {podcast.binge_factor && (
               <div className="card p-4">
                 <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Binge Factor</p>
@@ -585,7 +585,7 @@ export default async function PodcastsLikePage({ params }: Props) {
         {/* ── Keep exploring ── */}
         <section aria-labelledby="keep-exploring" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <h2 id="keep-exploring" className="heading-section text-xl mb-4">Keep exploring</h2>
-          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {exploreLinks.map(l => (
               <li key={l.href}>
                 <Link href={l.href} className="card p-4 flex items-start gap-2 text-sm text-stone-muted hover:text-white transition-colors">

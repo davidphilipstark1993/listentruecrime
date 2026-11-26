@@ -77,7 +77,7 @@ export default function AboutPage() {
 
         {/* Pillars */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {pillars.map(p => (
               <div key={p.title} className="card p-6">
                 <div className="w-10 h-10 rounded-lg bg-crimson/10 border border-crimson/20 flex items-center justify-center mb-4">
@@ -98,7 +98,7 @@ export default function AboutPage() {
               Community members rate podcasts across six dimensions on a 1–10 scale, plus an overall score.
               These are averaged to produce the community scores you see on each podcast page.
             </p>
-            <div className="grid sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {['Storytelling', 'Research Quality', 'Host Quality', 'Production / Audio', 'Binge Factor', 'Factual Accuracy'].map(dim => (
                 <div key={dim} className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-crimson flex-shrink-0" />

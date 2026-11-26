@@ -20,6 +20,9 @@ export function ExitIntent() {
 
   useEffect(() => {
     if (onSubscribePage) return
+    // Exit intent is a desktop pattern (cursor heading for the tab bar).
+    // Never arm it on touch screens, where it can only ever be intrusive.
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
 
     // Don't show if already dismissed
     try {
@@ -52,6 +55,15 @@ export function ExitIntent() {
     setVisible(false)
     try { localStorage.setItem(STORAGE_KEY, '1') } catch {}
   }
+
+  // Escape closes the dialog, like every other modal on the site.
+  useEffect(() => {
+    if (!visible) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') dismiss() }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -89,10 +101,10 @@ export function ExitIntent() {
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
 
       {/* Panel */}
-      <div className="relative w-full max-w-md bg-ink-900 border border-white/[0.10] rounded-2xl p-8 shadow-2xl animate-fade-in">
+      <div className="relative w-full max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto bg-ink-900 border border-white/[0.10] rounded-2xl p-6 sm:p-8 shadow-2xl animate-fade-in">
         <button
           onClick={dismiss}
-          className="absolute top-4 right-4 text-stone-subtle hover:text-stone transition-colors"
+          className="absolute top-2 right-2 w-11 h-11 flex items-center justify-center rounded-md text-stone-subtle hover:text-stone hover:bg-ink-700 transition-colors"
           aria-label="Close"
         >
           <X size={18} />
@@ -122,6 +134,9 @@ export function ExitIntent() {
               <input
                 id={emailId}
                 type="email"
+                inputMode="email"
+                autoCapitalize="none"
+                spellCheck={false}
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="your@email.com"
@@ -142,7 +157,7 @@ export function ExitIntent() {
 
             <button
               onClick={dismiss}
-              className="mt-4 w-full text-center text-stone-subtle text-xs hover:text-stone transition-colors"
+              className="mt-2 w-full min-h-[44px] text-center text-stone-subtle text-xs hover:text-stone transition-colors"
             >
               No thanks, I'll find podcasts on my own
             </button>

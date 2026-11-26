@@ -215,7 +215,7 @@ export default function PromoteYourPodcastPage() {
               to get your podcast discovered.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {benefits.map(b => (
               <div key={b.title} className="card p-6">
                 <div className="w-10 h-10 rounded-lg bg-crimson/10 border border-crimson/20 flex items-center justify-center mb-4">
@@ -231,7 +231,7 @@ export default function PromoteYourPodcastPage() {
         {/* Free listing */}
         <section id="free-listing" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-20 scroll-mt-24" aria-labelledby="free-listing-heading">
           <div className="card p-6 sm:p-10">
-            <div className="grid md:grid-cols-[1fr_auto] gap-8 md:gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 md:gap-12">
               <div>
                 <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-2">Free</p>
                 <h2 id="free-listing-heading" className="heading-section text-2xl sm:text-3xl mb-3">List your podcast for free</h2>
@@ -274,7 +274,7 @@ export default function PromoteYourPodcastPage() {
               editorial endorsement.
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {promotionPackages.map(pkg => (
               <article
                 key={pkg.id}
@@ -339,7 +339,7 @@ export default function PromoteYourPodcastPage() {
         {/* How it works */}
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-20" aria-labelledby="process-heading">
           <h2 id="process-heading" className="heading-section text-2xl sm:text-3xl mb-8">How it works</h2>
-          <ol className="grid sm:grid-cols-3 gap-6">
+          <ol className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {steps.map((step, i) => (
               <li key={step.title} className="border-t border-white/[0.08] pt-5">
                 <p className="text-crimson font-serif text-lg mb-2 tabular-nums">{String(i + 1).padStart(2, '0')}</p>
@@ -370,7 +370,7 @@ export default function PromoteYourPodcastPage() {
         {/* Explore */}
         <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-20" aria-labelledby="explore-heading">
           <h2 id="explore-heading" className="font-serif text-lg text-stone mb-4">See how listeners use ListenTrueCrime</h2>
-          <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-2.5">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2.5">
             {exploreLinks.map(link => (
               <li key={link.href}>
                 <Link href={link.href} className="text-stone-muted hover:text-stone text-sm transition-colors">

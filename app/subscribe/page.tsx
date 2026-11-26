@@ -126,7 +126,7 @@ export default async function SubscribePage() {
         {/* ═══════════════ WHAT YOU GET ═══════════════ */}
         <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <h2 className="heading-section text-2xl sm:text-3xl text-center mb-8">What you&apos;ll get</h2>
-          <div className="grid sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {BENEFITS.map(b => (
               <div key={b.title} className="card p-6">
                 <b.icon size={20} className="text-crimson mb-3" />

@@ -148,7 +148,7 @@ export function BrowseClient() {
         {/* Filter panel */}
         {filtersOpen && (
           <div className="card p-5 mb-6 animate-fade-in">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {/* Case types */}
               <div>
                 <p className="text-xs font-semibold text-stone mb-3 uppercase tracking-wide">Case type</p>

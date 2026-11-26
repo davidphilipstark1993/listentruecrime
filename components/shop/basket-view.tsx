@@ -183,7 +183,7 @@ export function BasketView({ checkoutOpen }: { checkoutOpen: boolean }) {
                   spellCheck={false}
                   aria-describedby={quote?.discountError ? 'discount-code-error' : undefined}
                   aria-invalid={quote?.discountError ? true : undefined}
-                  className="input-base flex-1 font-mono text-sm uppercase"
+                  className="input-base flex-1 font-mono text-base sm:text-sm uppercase"
                 />
                 <button type="submit" disabled={!codeInput.trim() || loading} className="btn-outline px-4 text-sm">Apply</button>
               </div>

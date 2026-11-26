@@ -60,7 +60,7 @@ export default async function NewsletterArchivePage() {
           <NewsletterForm source="newsletter_archive" showFirstName />
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {issues.map(issue => {
             const featuredTitles = (issue.newsletter_podcasts as unknown as { position: number; podcast: { title: string } | null; submission: { podcast_name: string } | null }[] | null)
               ?.sort((a, b) => a.position - b.position)

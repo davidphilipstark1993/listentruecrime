@@ -137,7 +137,7 @@ export function PromotionEnquiryForm({ initialInterest }: EnquiryFormProps) {
 
   return (
     <form method="post" onSubmit={handleSubmit} onFocus={onFirstInteraction} noValidate className="card relative p-6 sm:p-8 space-y-5">
-      <div className="grid sm:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label htmlFor="enquiry-name" className={labelClass}>Your name</label>
           <input id="enquiry-name" name="name" type="text" autoComplete="name" maxLength={100} required className="input-base" {...errorProps('name')} />
@@ -156,7 +156,7 @@ export function PromotionEnquiryForm({ initialInterest }: EnquiryFormProps) {
         {fieldError('podcast_name')}
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label htmlFor="enquiry-podcast_website" className={labelClass}>
             Podcast website <span className="text-stone-subtle font-normal">(optional)</span>
@@ -175,7 +175,7 @@ export function PromotionEnquiryForm({ initialInterest }: EnquiryFormProps) {
 
       <fieldset>
         <legend className={labelClass}>What are you interested in?</legend>
-        <div className="grid sm:grid-cols-2 gap-2.5" {...errorProps('package_interest')}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5" {...errorProps('package_interest')}>
           {PROMOTION_INTEREST_OPTIONS.map(opt => (
             <label
               key={opt.value}

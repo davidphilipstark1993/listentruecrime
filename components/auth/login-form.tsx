@@ -1,7 +1,7 @@
 'use client'
 import { useState, useId } from 'react'
 import { Mail } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
+import { getSupabase } from '@/lib/supabase/lazy-client'
 import toast from 'react-hot-toast'
 
 interface LoginFormProps {
@@ -13,7 +13,6 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
   const emailId = useId()
-  const supabase = createClient()
 
   const nextParam = `?next=${encodeURIComponent(redirectTo)}`
 
@@ -21,7 +20,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
     e.preventDefault()
     if (!email) return
     setLoading(true)
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await (await getSupabase()).auth.signInWithOtp({
       email,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback${nextParam}`,
@@ -37,7 +36,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
 
   const handleGoogle = async () => {
     setLoading(true)
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { error } = await (await getSupabase()).auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: `${window.location.origin}/auth/callback${nextParam}` },
     })

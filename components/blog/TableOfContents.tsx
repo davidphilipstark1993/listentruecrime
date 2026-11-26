@@ -32,7 +32,7 @@ export function TableOfContents({ entries }: { entries: TOCEntry[] }) {
           Contents
         </span>
       </div>
-      <ol className="space-y-1.5">
+      <ol className="lg:space-y-1.5">
         {entries.map(entry => (
           <li
             key={entry.id}
@@ -41,7 +41,7 @@ export function TableOfContents({ entries }: { entries: TOCEntry[] }) {
             <a
               href={`#${entry.id}`}
               className={cn(
-                'block text-sm leading-snug transition-colors py-0.5',
+                'block text-sm leading-snug transition-colors py-2.5 lg:py-0.5',
                 activeId === entry.id
                   ? 'text-crimson font-medium'
                   : 'text-stone-subtle hover:text-stone'

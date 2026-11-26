@@ -183,10 +183,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const RatingBar = ({ label, value }: { label: string; value: number | null }) => (
   <div className="flex items-center gap-3">
-    <span className="text-xs text-stone-muted w-32 shrink-0">{label}</span>
+    <span className="text-xs text-stone-muted w-28 sm:w-32 shrink-0">{label}</span>
     <div className="flex-1 h-1.5 bg-ink-700 rounded-full overflow-hidden">
       <div
-        className="h-full bg-gradient-to-r from-crimson to-gold-DEFAULT rounded-full transition-all duration-700"
+        className="h-full bg-gradient-to-r from-crimson to-gold rounded-full transition-all duration-700"
         style={{ width: value ? `${value * 10}%` : '0%' }}
       />
     </div>
@@ -327,48 +327,57 @@ export default async function PodcastPage({ params }: Props) {
           )}
           <div className="absolute inset-0 h-72 bg-gradient-to-b from-transparent via-ink-950/50 to-ink-950" />
 
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-0">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-10 pb-0">
             {/* Breadcrumb */}
-            <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-stone-subtle mb-6">
-              <Link href="/" className="hover:text-stone transition-colors">Home</Link>
-              <span>/</span>
-              <Link href="/browse" className="hover:text-stone transition-colors">Browse</Link>
-              <span>/</span>
-              <span className="text-stone-muted truncate max-w-[200px]">{podcast.title}</span>
+            <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-stone-subtle mb-4 sm:mb-6 min-w-0">
+              <Link href="/" className="py-2 hover:text-stone transition-colors">Home</Link>
+              <span aria-hidden="true">/</span>
+              <Link href="/browse" className="py-2 hover:text-stone transition-colors">Browse</Link>
+              <span aria-hidden="true">/</span>
+              <span aria-current="page" className="text-stone-muted truncate min-w-0">{podcast.title}</span>
             </nav>
 
-            <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 items-start">
+            {/* Phones: artwork beside the title (no wasted row), then tags and
+                the rest full width. From sm: artwork in its own column with
+                tags, title and details stacked beside it, as before. */}
+            <div className="grid grid-cols-[5.5rem_minmax(0,1fr)] sm:grid-cols-[10rem_minmax(0,1fr)] gap-x-4 sm:gap-x-8 items-start">
               {/* Cover */}
-              <div className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] shrink-0 bg-ink-700">
+              <div className="relative col-start-1 row-start-1 sm:row-span-3 w-[5.5rem] h-[5.5rem] sm:w-40 sm:h-40 rounded-xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.5)] bg-ink-700">
                 {podcast.image_url ? (
-                  <Image src={podcast.image_url} alt={`${podcast.title} podcast artwork`} fill className="object-cover" priority sizes="(max-width: 640px) 128px, 160px" />
+                  <Image src={podcast.image_url} alt={`${podcast.title} podcast artwork`} fill className="object-cover" priority sizes="(max-width: 640px) 88px, 160px" />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Headphones size={40} className="text-ink-500" />
+                    <Headphones size={32} aria-hidden="true" className="text-ink-500" />
                   </div>
                 )}
               </div>
 
-              {/* Title block */}
-              <div className="flex-1 pt-2">
-                <div className="flex flex-wrap gap-1.5 mb-3">
-                  {podcast.country && countryName && (
-                    <span className="tag">
-                      {countryFlag(podcast.country)} {countryName}
-                    </span>
-                  )}
-                  {podcast.case_types?.map((t: string) => <span key={t} className="tag">{t}</span>)}
-                </div>
+              {/* Tags */}
+              <div className="col-span-2 row-start-2 sm:col-span-1 sm:col-start-2 sm:row-start-1 flex flex-wrap gap-1.5 mt-4 sm:mt-2 sm:mb-3">
+                {podcast.country && countryName && (
+                  <span className="tag">
+                    {countryFlag(podcast.country)} {countryName}
+                  </span>
+                )}
+                {podcast.case_types?.map((t: string) => <span key={t} className="tag">{t}</span>)}
+              </div>
 
-                <h1 className="heading-display text-3xl sm:text-4xl mb-2">{podcast.title}</h1>
-                <p className="text-stone-subtle text-sm mb-1">
+              {/* Title */}
+              <div className="col-start-2 row-start-1 sm:row-start-2 self-center sm:self-start min-w-0">
+                <h1 className="heading-display text-[1.75rem] leading-tight sm:text-4xl mb-1 sm:mb-2 break-words">{podcast.title}</h1>
+                <p className="text-stone-subtle text-sm">
                   {extras?.subtitle ?? `True crime podcast review — ${year}`}
                 </p>
-                {extras?.intro && (
-                  <p className="text-stone-muted text-sm sm:text-base leading-relaxed mt-3 max-w-2xl">{extras.intro}</p>
+              </div>
+
+              {/* Details */}
+              <div className="col-span-2 row-start-3 sm:col-span-1 sm:col-start-2 min-w-0">
+                {/* Short description: the hand-written intro when there is one, else the listing's own summary */}
+                {(extras?.intro || podcast.short_description) && (
+                  <p className="text-stone-muted text-[15px] sm:text-base leading-relaxed mt-3 max-w-2xl">{extras?.intro ?? podcast.short_description}</p>
                 )}
-                {/* Score row */}
-                <div className="flex items-center gap-4 flex-wrap mt-3">
+                {/* Score row — editorial rating, Binge Factor, community score, verdict */}
+                <div className="flex items-center gap-x-4 gap-y-2.5 flex-wrap mt-4">
                   {podcast.rating != null && (
                     <div className="flex items-center gap-2">
                       <span className={cn('score-badge text-sm', scoreBg(podcast.rating))}>
@@ -379,12 +388,22 @@ export default async function PodcastPage({ params }: Props) {
                       </span>
                     </div>
                   )}
+                  {podcast.binge_factor != null && (
+                    <div className="flex items-center gap-2">
+                      <span className="score-badge text-sm bg-gold-faint text-gold-light border border-gold/30">
+                        {Number(podcast.binge_factor).toFixed(0)}
+                      </span>
+                      <span className="text-stone-subtle text-xs">
+                        <Link href="/how-we-review" className="hover:text-stone underline decoration-white/20 underline-offset-2">Binge Factor</Link> /10
+                      </span>
+                    </div>
+                  )}
                   {overallScore && (
                     <div className="flex items-center gap-2">
                       <span className={cn('score-badge text-sm', scoreBg(overallScore))}>
                         {overallScore.toFixed(1)}
                       </span>
-                      <div className="flex">
+                      <div className="hidden min-[400px]:flex" aria-hidden="true">
                         {[...Array(10)].map((_, i) => (
                           <Star
                             key={i}
@@ -395,7 +414,7 @@ export default async function PodcastPage({ params }: Props) {
                         ))}
                       </div>
                       <span className="text-stone-subtle text-xs">
-                        ({stats?.rating_count} rating{stats?.rating_count === 1 ? '' : 's'})
+                        <span className="sr-only">Community score out of 10, from </span>({stats?.rating_count} rating{stats?.rating_count === 1 ? '' : 's'})
                       </span>
                     </div>
                   )}
@@ -410,6 +429,31 @@ export default async function PodcastPage({ params }: Props) {
                     </span>
                   )}
                 </div>
+
+                {/* Listen on — the main thing a visitor wants next, so it sits in
+                    the hero as full-size buttons (real anchors, only platforms
+                    with an entered URL). Two-up on phones, inline from sm. */}
+                {listenOn.length > 0 && (
+                  <div className="mt-5">
+                    <h2 className="text-2xs text-stone-subtle font-semibold uppercase tracking-widest mb-2">Listen on</h2>
+                    <ul className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+                      {listenOn.map(l => (
+                        <li key={l.name} className="min-w-0">
+                          <a
+                            href={l.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 min-h-[44px] px-2.5 sm:px-4 rounded-lg bg-ink-800 border border-white/10 text-sm font-medium text-stone hover:border-white/25 hover:bg-ink-700 transition-colors"
+                          >
+                            <Headphones size={15} aria-hidden="true" className="hidden min-[360px]:block text-crimson shrink-0" />
+                            <span className="truncate">{l.name}</span>
+                            <span className="sr-only">(opens in a new tab)</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -417,14 +461,38 @@ export default async function PodcastPage({ params }: Props) {
 
         {/* ═══ CONTENT ═══ */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-          <div className="grid lg:grid-cols-3 gap-8">
+          {/* One column on phones/tablets (minmax(0,1fr) so wide children can't
+              stretch it past the viewport), three from lg. Quick facts is its
+              own grid item so it comes straight after the hero on phones while
+              still heading the sidebar column on desktop. */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-[auto_1fr] gap-8 lg:gap-x-8 lg:gap-y-5">
+
+              {/* Quick facts */}
+              <div className="card p-5 lg:col-start-3 lg:row-start-1 self-start min-w-0">
+                <h2 className="font-serif text-sm text-stone mb-4 uppercase tracking-wide">Quick facts</h2>
+                <dl className="grid grid-cols-2 lg:grid-cols-1 gap-x-4 gap-y-3">
+                  {[
+                    { label: 'Format', value: podcast.format_type },
+                    { label: 'Host style', value: podcast.host_style },
+                    { label: 'Style', value: podcast.factual_style },
+                    { label: 'Episode length', value: podcast.episode_length },
+                    { label: 'Episodes', value: podcast.episode_count },
+                    { label: 'Country', value: countryName },
+                  ].filter(i => i.value).map(item => (
+                    <div key={item.label} className="flex flex-col lg:flex-row lg:justify-between gap-0.5 lg:gap-3 min-w-0">
+                      <dt className="text-stone-subtle text-xs">{item.label}</dt>
+                      <dd className="text-stone text-sm lg:text-xs lg:text-right break-words">{item.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
 
             {/* Main column */}
-            <div className="lg:col-span-2 space-y-8">
+            <div className="lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:row-span-2 space-y-6 sm:space-y-8 min-w-0">
 
               {/* Editorial Quick Verdict */}
               {(podcast.newsletter_worthy_summary || podcast.quick_verdict) && (
-                <div className="card p-6 border-crimson/20 bg-crimson/5">
+                <div className="card p-5 sm:p-6 border-crimson/20 bg-crimson/5">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-2xs text-crimson font-semibold uppercase tracking-widest">Quick Verdict</span>
                     {podcast.quick_verdict && (
@@ -443,11 +511,11 @@ export default async function PodcastPage({ params }: Props) {
                       "{podcast.newsletter_worthy_summary}"
                     </blockquote>
                   )}
-                  <div className="mt-3 pt-3 border-t border-white/[0.06] flex items-center justify-between">
+                  <div className="mt-3 pt-3 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
                     <span className="text-stone-subtle text-xs">
                       By <Link href="/authors/david-stark" className="text-stone-muted hover:text-crimson transition-colors">David Stark</Link>
                     </span>
-                    <Link href="/how-we-review" className="text-xs text-stone-subtle hover:text-crimson transition-colors">
+                    <Link href="/how-we-review" className="inline-flex items-center min-h-[44px] text-xs text-stone-subtle hover:text-crimson transition-colors">
                       How we review →
                     </Link>
                   </div>
@@ -456,7 +524,7 @@ export default async function PodcastPage({ params }: Props) {
 
               {/* Who is it for */}
               {whoIsItFor.length > 0 && (
-                <div className="card p-6">
+                <div className="card p-5 sm:p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <Users size={16} className="text-crimson" />
                     <h2 className="font-serif text-lg text-stone">Who is this podcast for?</h2>
@@ -472,7 +540,7 @@ export default async function PodcastPage({ params }: Props) {
                   <div className="mt-4 pt-4 border-t border-white/[0.06]">
                     <Link
                       href={`/podcasts-like/${slug}`}
-                      className="inline-flex items-center gap-1.5 text-crimson text-sm hover:underline"
+                      className="inline-flex items-center gap-1.5 min-h-[44px] text-crimson text-sm hover:underline"
                     >
                       Find podcasts like {podcast.title} <ArrowRight size={13} />
                     </Link>
@@ -482,7 +550,7 @@ export default async function PodcastPage({ params }: Props) {
 
               {/* Pros & Cons */}
               {pros.length > 0 && (
-                <div className="card p-6">
+                <div className="card p-5 sm:p-6">
                   <h2 className="font-serif text-lg text-stone mb-5">Pros</h2>
                   <div className="grid gap-5">
                     {pros.length > 0 && (
@@ -507,7 +575,7 @@ export default async function PodcastPage({ params }: Props) {
 
               {/* Host information */}
               {hostInfo && (
-                <div className="card p-6">
+                <div className="card p-5 sm:p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <Mic size={15} className="text-crimson" />
                     <h2 className="font-serif text-lg text-stone">About the host</h2>
@@ -535,7 +603,7 @@ export default async function PodcastPage({ params }: Props) {
 
               {/* Description */}
               {podcast.description && (
-                <div className="card p-6">
+                <div className="card p-5 sm:p-6">
                   <h2 className="font-serif text-lg text-stone mb-3">About this podcast</h2>
                   <p className="text-stone-muted text-sm leading-relaxed">{podcast.description}</p>
                 </div>
@@ -543,7 +611,7 @@ export default async function PodcastPage({ params }: Props) {
 
               {/* Best episode to start */}
               {podcast.best_episode_to_start && (
-                <div className="card p-6">
+                <div className="card p-5 sm:p-6">
                   <div className="flex items-center gap-2 mb-3">
                     <Play size={15} className="text-crimson" />
                     <h2 className="font-serif text-lg text-stone">Best episode to start with</h2>
@@ -561,7 +629,7 @@ export default async function PodcastPage({ params }: Props) {
 
               {/* Community ratings breakdown */}
               {stats && stats.rating_count > 0 && (
-                <div className="card p-6">
+                <div className="card p-5 sm:p-6">
                   <div className="flex items-center justify-between mb-5">
                     <h2 className="font-serif text-lg text-stone">Community ratings</h2>
                     <span className="text-stone-subtle text-xs">{stats.rating_count} rating{stats.rating_count === 1 ? '' : 's'}</span>
@@ -581,7 +649,7 @@ export default async function PodcastPage({ params }: Props) {
 
               {/* Rate this — #rate is linked directly from newsletter emails */}
               <div id="rate" className="scroll-mt-24">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-4">
                   <h2 className="font-serif text-xl text-stone">Rate this podcast</h2>
                   <HelpfulWidget podcastSlug={podcast.slug} />
                 </div>
@@ -604,8 +672,8 @@ export default async function PodcastPage({ params }: Props) {
                         <div className="w-7 h-7 rounded-full bg-crimson/20 border border-crimson/20 flex items-center justify-center text-crimson text-xs font-semibold shrink-0">
                           {(review.profile?.username?.[0] ?? '?').toUpperCase()}
                         </div>
-                        <div>
-                          <div className="flex items-center gap-2 mb-1.5">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mb-1.5">
                             <span className="text-stone text-xs font-semibold">{review.profile?.username ?? 'Anonymous'}</span>
                             <span className="text-stone-subtle text-xs">{formatRelativeDate(review.created_at)}</span>
                           </div>
@@ -624,18 +692,18 @@ export default async function PodcastPage({ params }: Props) {
 
               {/* FAQ Section */}
               <div>
-                <h2 className="font-serif text-xl text-stone mb-5">
+                <h2 className="font-serif text-xl text-stone mb-4 sm:mb-5">
                   Frequently Asked Questions about {podcast.title}
                 </h2>
                 <div className="space-y-3">
                   {faqs.map((faq, i) => (
-                    <details key={i} className="card p-5 group">
-                      <summary className="flex items-center justify-between cursor-pointer list-none gap-4">
+                    <details key={i} className="card group">
+                      <summary className="flex items-center justify-between cursor-pointer list-none gap-4 p-4 sm:p-5 min-h-[56px] [&::-webkit-details-marker]:hidden">
                         <span className="text-stone font-medium text-sm">{faq.q}</span>
                         <ChevronDown size={16} className="text-stone-subtle shrink-0 group-open:hidden" />
                         <ChevronUp size={16} className="text-stone-subtle shrink-0 hidden group-open:block" />
                       </summary>
-                      <p className="text-stone-muted text-sm leading-relaxed mt-3 pt-3 border-t border-white/[0.06]">
+                      <p className="text-stone-muted text-sm leading-relaxed mx-4 sm:mx-5 mb-4 sm:mb-5 pt-3 border-t border-white/[0.06]">
                         {faq.a}
                       </p>
                     </details>
@@ -645,47 +713,7 @@ export default async function PodcastPage({ params }: Props) {
             </div>
 
             {/* Sidebar */}
-            <div className="space-y-5">
-              {/* Quick facts */}
-              <div className="card p-5">
-                <h3 className="font-serif text-sm text-stone mb-4 uppercase tracking-wide">Quick facts</h3>
-                <dl className="space-y-3">
-                  {[
-                    { label: 'Format', value: podcast.format_type },
-                    { label: 'Host style', value: podcast.host_style },
-                    { label: 'Style', value: podcast.factual_style },
-                    { label: 'Episode length', value: podcast.episode_length },
-                    { label: 'Episodes', value: podcast.episode_count },
-                                    { label: 'Country', value: countryName },
-                  ].filter(i => i.value).map(item => (
-                    <div key={item.label} className="flex justify-between gap-3">
-                      <dt className="text-stone-subtle text-xs">{item.label}</dt>
-                      <dd className="text-stone text-xs text-right">{item.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-
-              {/* Listen links: real anchors, only for platforms with an entered URL */}
-              {listenOn.length > 0 && (
-                <div className="card p-5">
-                  <h3 className="font-serif text-sm text-stone mb-3 uppercase tracking-wide">Listen on</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {listenOn.map(l => (
-                      <a
-                        key={l.name}
-                        href={l.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="tag hover:border-white/20 transition-colors"
-                      >
-                        {l.name}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
-
+            <div className="lg:col-start-3 lg:row-start-2 space-y-5 min-w-0">
               {/* Editorially chosen affiliate products — only when added in /admin/affiliates */}
               <FurtherReading products={affiliateProducts.products} note={affiliateProducts.note} placement="podcast-sidebar" variant="sidebar" headingAs="h3" />
 
@@ -701,9 +729,9 @@ export default async function PodcastPage({ params }: Props) {
                       <Link
                         key={cat.slug}
                         href={`/category/${cat.slug}`}
-                        className="flex items-center gap-2 text-stone-muted hover:text-stone text-xs transition-colors"
+                        className="flex items-center gap-2 min-h-[44px] lg:min-h-0 lg:py-0.5 text-stone-muted hover:text-stone text-sm lg:text-xs transition-colors"
                       >
-                        <span>{cat.emoji}</span>
+                        <span aria-hidden="true">{cat.emoji}</span>
                         <span>{cat.label}</span>
                         <ArrowRight size={12} className="ml-auto" />
                       </Link>
@@ -718,9 +746,9 @@ export default async function PodcastPage({ params }: Props) {
                   <h3 className="font-serif text-sm text-stone mb-3 uppercase tracking-wide">Region</h3>
                   <Link
                     href={`/country/${podcast.country}`}
-                    className="flex items-center gap-2 text-stone-muted hover:text-stone text-sm transition-colors"
+                    className="flex items-center gap-2 min-h-[44px] lg:min-h-0 text-stone-muted hover:text-stone text-sm transition-colors"
                   >
-                    <span>{countryFlag(podcast.country)}</span>
+                    <span aria-hidden="true">{countryFlag(podcast.country)}</span>
                     <span>{COUNTRIES[podcast.country]} True Crime</span>
                     <ArrowRight size={12} className="ml-auto" />
                   </Link>
@@ -736,7 +764,7 @@ export default async function PodcastPage({ params }: Props) {
                       <Link
                         key={c.slug}
                         href={`/cases/${c.slug}`}
-                        className="flex items-start gap-2 text-stone-muted hover:text-stone text-xs transition-colors group"
+                        className="flex items-start gap-2 py-2 lg:py-0.5 text-stone-muted hover:text-stone text-sm lg:text-xs transition-colors group"
                       >
                         <ArrowRight size={11} className="text-crimson shrink-0 mt-0.5" />
                         <span>{c.name}</span>
@@ -751,7 +779,7 @@ export default async function PodcastPage({ params }: Props) {
                 <h3 className="font-serif text-sm text-stone mb-3 uppercase tracking-wide">Liked this?</h3>
                 <Link
                   href={`/podcasts-like/${slug}`}
-                  className="flex items-center gap-2 text-crimson hover:text-crimson/80 text-sm transition-colors font-medium"
+                  className="flex items-center gap-2 min-h-[44px] lg:min-h-0 text-crimson hover:text-crimson/80 text-sm transition-colors font-medium"
                 >
                   <span>Podcasts Like {podcast.title}</span>
                   <ArrowRight size={12} className="ml-auto" />
@@ -768,7 +796,7 @@ export default async function PodcastPage({ params }: Props) {
                       <Link
                         key={r.href}
                         href={r.href}
-                        className="flex items-start gap-2 text-stone-muted hover:text-white text-sm transition-colors"
+                        className="flex items-start gap-2 py-2 lg:py-0.5 text-stone-muted hover:text-white text-sm transition-colors"
                       >
                         <ArrowRight size={11} className="text-crimson shrink-0 mt-1" />
                         <span>{r.label}</span>
@@ -787,7 +815,7 @@ export default async function PodcastPage({ params }: Props) {
                       <Link
                         key={g.slug}
                         href={`/blog/${g.slug}`}
-                        className="flex items-start gap-2 text-stone-muted hover:text-white text-sm transition-colors"
+                        className="flex items-start gap-2 py-2 lg:py-0.5 text-stone-muted hover:text-white text-sm transition-colors"
                       >
                         <ArrowRight size={11} className="text-crimson shrink-0 mt-1" />
                         <span>{g.seoTitle ?? g.title}</span>
@@ -806,7 +834,7 @@ export default async function PodcastPage({ params }: Props) {
                   </p>
                   <Link
                     href="/badge"
-                    className="flex items-center gap-2 text-crimson hover:text-crimson/80 text-sm font-medium transition-colors"
+                    className="flex items-center gap-2 min-h-[44px] lg:min-h-0 text-crimson hover:text-crimson/80 text-sm font-medium transition-colors"
                   >
                     Get your badge
                     <ArrowRight size={12} className="ml-auto" />
@@ -826,19 +854,19 @@ export default async function PodcastPage({ params }: Props) {
 
           {/* Similar podcasts */}
           {similar.length > 0 && (
-            <div className="mt-12 pt-12 border-t border-white/[0.06]">
-              <div className="flex items-center justify-between mb-6">
+            <div className="mt-10 sm:mt-12 pt-10 sm:pt-12 border-t border-white/[0.06]">
+              <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-1 mb-5 sm:mb-6">
                 <h2 className="heading-section text-2xl">
                   If you liked this, try…
                 </h2>
                 <Link
                   href={`/podcasts-like/${slug}`}
-                  className="text-sm text-crimson hover:text-crimson/80 transition-colors flex items-center gap-1"
+                  className="min-h-[44px] text-sm text-crimson hover:text-crimson/80 transition-colors flex items-center gap-1"
                 >
                   See all alternatives <ArrowRight size={14} />
                 </Link>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
                 {similar.map((p: PodcastWithStats) => (
                   <PodcastCard key={p.id} podcast={p} />
                 ))}
@@ -848,21 +876,21 @@ export default async function PodcastPage({ params }: Props) {
 
           {/* Category cross-links */}
           {podcastCategories.length > 0 && (
-            <div className="mt-12 pt-12 border-t border-white/[0.06]">
+            <div className="mt-10 sm:mt-12 pt-10 sm:pt-12 border-t border-white/[0.06]">
               <p className="text-stone-subtle text-sm mb-4">Explore more in these categories:</p>
               <div className="flex flex-wrap gap-3">
                 {podcastCategories.map(cat => (
                   <Link
                     key={cat.slug}
                     href={`/category/${cat.slug}`}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-ink-800 border border-white/[0.08] text-stone-muted hover:text-stone hover:border-white/20 text-sm transition-colors"
+                    className="inline-flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-full bg-ink-800 border border-white/[0.08] text-stone-muted hover:text-stone hover:border-white/20 text-sm transition-colors"
                   >
                     {cat.emoji} {cat.label} <ArrowRight size={13} />
                   </Link>
                 ))}
                 <Link
                   href="/best-true-crime-podcasts"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-ink-800 border border-white/[0.08] text-stone-muted hover:text-stone hover:border-white/20 text-sm transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-full bg-ink-800 border border-white/[0.08] text-stone-muted hover:text-stone hover:border-white/20 text-sm transition-colors"
                 >
                   ⭐ Best True Crime Podcasts <ArrowRight size={13} />
                 </Link>

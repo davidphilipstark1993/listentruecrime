@@ -186,12 +186,12 @@ export default async function CasePage({ params }: Props) {
             </h1>
           </header>
 
-          <div className="grid lg:grid-cols-[1fr_300px] gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] gap-10">
             {/* Main content */}
             <div className="space-y-8">
               {/* Summary */}
               <section>
-                <div className="prose prose-invert prose-sm max-w-none
+                <div className="prose prose-invert prose-base max-w-none
                   prose-p:text-stone-muted prose-p:leading-relaxed prose-p:my-3">
                   {c.summary.map((para, i) => (
                     <p key={i}>{para}</p>
@@ -339,7 +339,7 @@ export default async function CasePage({ params }: Props) {
                       <li key={p.slug}>
                         <Link
                           href={`/podcasts/${p.slug}`}
-                          className="flex items-center gap-2 text-stone-muted hover:text-stone text-xs transition-colors"
+                          className="flex items-center gap-2 py-2.5 lg:py-0.5 text-stone-muted hover:text-stone text-sm lg:text-xs transition-colors"
                         >
                           <ArrowRight size={11} className="text-crimson shrink-0" />
                           {p.title}
@@ -375,7 +375,7 @@ export default async function CasePage({ params }: Props) {
                       <li key={rc.slug}>
                         <Link
                           href={`/cases/${rc.slug}`}
-                          className="flex items-start gap-2 text-stone-muted hover:text-stone text-xs transition-colors group"
+                          className="flex items-start gap-2 py-2.5 lg:py-0.5 text-stone-muted hover:text-stone text-sm lg:text-xs transition-colors group"
                         >
                           <ArrowRight size={11} className="text-crimson shrink-0 mt-0.5" />
                           <span>
@@ -393,19 +393,19 @@ export default async function CasePage({ params }: Props) {
                 <h3 className="font-serif text-sm text-stone mb-3 uppercase tracking-wide">Browse more</h3>
                 <ul className="space-y-2">
                   <li>
-                    <Link href="/cases" className="flex items-center gap-2 text-stone-muted hover:text-stone text-xs transition-colors">
+                    <Link href="/cases" className="flex items-center gap-2 py-2.5 lg:py-0.5 text-stone-muted hover:text-stone text-sm lg:text-xs transition-colors">
                       <ArrowRight size={11} className="text-crimson shrink-0" />
                       All true crime cases
                     </Link>
                   </li>
                   <li>
-                    <Link href="/browse" className="flex items-center gap-2 text-stone-muted hover:text-stone text-xs transition-colors">
+                    <Link href="/browse" className="flex items-center gap-2 py-2.5 lg:py-0.5 text-stone-muted hover:text-stone text-sm lg:text-xs transition-colors">
                       <ArrowRight size={11} className="text-crimson shrink-0" />
                       Browse all podcasts
                     </Link>
                   </li>
                   <li>
-                    <Link href="/best-true-crime-podcasts" className="flex items-center gap-2 text-stone-muted hover:text-stone text-xs transition-colors">
+                    <Link href="/best-true-crime-podcasts" className="flex items-center gap-2 py-2.5 lg:py-0.5 text-stone-muted hover:text-stone text-sm lg:text-xs transition-colors">
                       <ArrowRight size={11} className="text-crimson shrink-0" />
                       Best true crime podcasts
                     </Link>
