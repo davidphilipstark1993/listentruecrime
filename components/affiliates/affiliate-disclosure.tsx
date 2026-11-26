@@ -18,7 +18,7 @@ export function AffiliateDisclosure({ providers, variant = 'page', className }: 
 
   if (variant === 'compact') {
     return (
-      <p className={cn('text-2xs text-stone-subtle leading-relaxed', className)}>
+      <p className={cn('text-xs sm:text-2xs text-stone-subtle leading-relaxed', className)}>
         Affiliate link: we may earn a commission if you buy, at no extra cost to you.
         {statements.length > 0 && <> {statements.join(' ')}</>}
       </p>

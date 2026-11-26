@@ -176,7 +176,7 @@ export function NewsletterLeadMagnet({
             required
             className="input-base flex-1"
           />
-          <button type="submit" disabled={loading || !email} className="btn-primary shrink-0">
+          <button type="submit" disabled={loading} className="btn-primary shrink-0">
             {loading ? 'Sending…' : 'Get the free list'}
             {!loading && <ArrowRight size={14} />}
           </button>

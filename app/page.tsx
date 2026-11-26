@@ -44,12 +44,14 @@ function isCompleteRecord(p: Podcast): boolean {
   return hasVerdict && hasHost && hasDescription
 }
 
-const TRENDING_COUNT = 5
+const TRENDING_COUNT = 6
 
-// Trending shows exactly TRENDING_COUNT featured podcasts. Fully complete
-// records come first; if there aren't enough (many featured shows have no
-// host_name yet), it tops up from the remaining featured podcasts that still
-// have a binge score and a description — never from unfeatured or thin ones.
+// Trending shows exactly TRENDING_COUNT podcasts (a 3-above-3 grid). Fully
+// complete featured records come first; if there aren't enough (many featured
+// shows have no host_name yet), it tops up from the remaining featured
+// podcasts that still have a binge score and a description. Only if the
+// featured pool is still short does it fall back to complete (never thin)
+// unfeatured records, highest Binge Factor first, so the grid stays even.
 async function getFeaturedPodcasts() {
   const supabase = createAdminClient()
   const { data } = await supabase
@@ -67,7 +69,23 @@ async function getFeaturedPodcasts() {
   const candidates = (data ?? []).filter(p => stripHtml(p.short_description ?? p.description).length > 0)
   const complete = candidates.filter(isCompleteRecord)
   const topUp = candidates.filter(p => !isCompleteRecord(p))
-  return [...complete, ...topUp].slice(0, TRENDING_COUNT)
+  const picked = [...complete, ...topUp].slice(0, TRENDING_COUNT)
+  if (picked.length >= TRENDING_COUNT) return picked
+
+  const { data: extra } = await supabase
+    .from('podcasts')
+    .select(`
+      *,
+      rating_stats:podcast_rating_stats(*)
+    `)
+    .eq('is_published', true)
+    .eq('is_featured', false)
+    .not('binge_factor', 'is', null)
+    .not('host_name', 'is', null)
+    .order('binge_factor', { ascending: false })
+    .limit(20)
+  const fill = (extra ?? []).filter(isCompleteRecord)
+  return [...picked, ...fill].slice(0, TRENDING_COUNT)
 }
 
 async function getTopRated() {
@@ -251,12 +269,12 @@ export default async function HomePage() {
                 View all <ArrowRight size={14} aria-hidden="true" />
               </Link>
             </div>
-            {/* Phones: a swipeable rail (cards peek in from the right) instead of
-                a 2-up grid that strands the fifth card on its own row. */}
-            <ul className="flex sm:grid sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 pb-2 sm:pb-0 scroll-px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {/* Six picks, three above three at every size: compact artwork-led
+                cards on phones/tablets, horizontal cards from lg. */}
+            <ul className="grid grid-cols-3 gap-2.5 sm:gap-4">
               {(featured as (Podcast & { rating_stats: RatingStats | null })[]).map((p, i) => (
-                <li key={p.id} className="w-[44%] min-[480px]:w-[30%] shrink-0 snap-start sm:w-auto">
-                  <PodcastCard podcast={p} priority={i < 3} />
+                <li key={p.id} className="min-w-0">
+                  <PodcastCard podcast={p} variant="compact" priority={i < 3} />
                 </li>
               ))}
             </ul>
@@ -293,12 +311,6 @@ export default async function HomePage() {
             </div>
           </div>
         </section>
-
-        {/* ═══════════════ SHOP PROMO (only when the shop is enabled) ═══════════════ */}
-        {shopEnabled() && <HomepageShopPromo />}
-
-        {/* Cross-promotion (managed in /admin/ads) — renders nothing when no advert is live */}
-        <AdSlot placement="homepage_promo" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6" />
 
         {/* ═══════════════ CATEGORIES ═══════════════ */}
         <section id="categories" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 section-divider">
@@ -347,7 +359,14 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <AdSlot placement="homepage_between" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12" />
+        {/* ═══════════════ SHOP PROMO (only when the shop is enabled) ═══════════════
+            Below categories and guides so phone visitors reach discovery
+            before any promotional block. */}
+        {shopEnabled() && <HomepageShopPromo />}
+
+        {/* Cross-promotion (managed in /admin/ads) — renders nothing when no advert is live */}
+        <AdSlot placement="homepage_promo" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6" />
+
 
         {/* ═══════════════ TOP COMMUNITY RATED ═══════════════ */}
         {topRated.length > 0 && (
@@ -371,6 +390,8 @@ export default async function HomePage() {
             </div>
           </section>
         )}
+
+        <AdSlot placement="homepage_between" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10" />
 
         {/* ═══════════════ NEWEST ADDITIONS ═══════════════ */}
         {newest.length > 0 && (
