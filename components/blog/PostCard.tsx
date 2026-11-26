@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Clock, Tag } from 'lucide-react'
 import type { BlogPost } from '@/lib/blog'
 import { cn } from '@/lib/utils'
@@ -19,6 +20,17 @@ export function PostCard({ post, featured = false }: { post: BlogPost; featured?
         featured && 'sm:col-span-2'
       )}
     >
+      {post.image && (
+        <div className={cn('relative overflow-hidden border-b border-white/[0.07] bg-ink-900', featured ? 'aspect-[16/9] sm:aspect-[21/9]' : 'aspect-[16/9]')}>
+          <Image
+            src={post.image}
+            alt={post.imageAlt ?? ''}
+            fill
+            sizes={featured ? '(min-width: 1024px) 640px, 100vw' : '(min-width: 1024px) 320px, (min-width: 640px) 50vw, 100vw'}
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        </div>
+      )}
       <div className="p-6">
         <div className="flex items-center gap-2 mb-3">
           <span className="text-2xs font-semibold uppercase tracking-widest text-crimson">

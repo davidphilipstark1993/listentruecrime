@@ -162,6 +162,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/how-we-review`, changeFrequency: 'monthly', priority: 0.6, lastModified: now },
     { url: `${BASE}/editors-choice`, changeFrequency: 'weekly', priority: 0.7, lastModified: now },
     { url: `${BASE}/blog`, changeFrequency: 'daily', priority: 0.85, lastModified: new Date() },
+    { url: `${BASE}/true-crime-documentaries`, changeFrequency: 'weekly', priority: 0.8, lastModified: new Date() },
     { url: `${BASE}/newsletter`, changeFrequency: 'daily', priority: 0.85, lastModified: new Date() },
     { url: `${BASE}/subscribe`, changeFrequency: 'monthly', priority: 0.7, lastModified: now },
     { url: `${BASE}/about`, changeFrequency: 'monthly', priority: 0.4, lastModified: now },
