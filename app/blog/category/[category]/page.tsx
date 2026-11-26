@@ -52,7 +52,7 @@ export default function CategoryPage({ params }: { params: { category: string } 
             <h1 className="text-3xl font-serif font-bold text-stone mb-2">{cat.name}</h1>
             <p className="text-stone-subtle text-sm">{cat.count} article{cat.count !== 1 ? 's' : ''}</p>
           </header>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {posts.map(post => (
               <PostCard key={post.slug} post={post} />
             ))}

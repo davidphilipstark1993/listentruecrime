@@ -142,7 +142,7 @@ export default async function BlogIndexPage({ searchParams }: Props) {
                       Featured
                     </p>
                   </div>
-                  <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {featured.map((post, i) => (
                       <PostCard key={post.slug} post={post} featured={i === 0} />
                     ))}
@@ -158,7 +158,7 @@ export default async function BlogIndexPage({ searchParams }: Props) {
                     {pageNum === 1 ? 'Latest Articles' : `Articles — Page ${pageNum}`}
                   </p>
                 </div>
-                <div className="grid sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {latest.map(post => (
                     <PostCard key={post.slug} post={post} />
                   ))}

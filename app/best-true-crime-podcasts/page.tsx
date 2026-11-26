@@ -411,7 +411,7 @@ export default async function BestTrueCrimePodcastsPage() {
             <div className="mb-6">
               <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-1">Just added</p>
               <h2 className="heading-section text-2xl sm:text-3xl">Newest reviews</h2>
-              <Link href="/new-true-crime-podcasts" className="text-sm text-stone-muted hover:text-stone transition-colors inline-flex items-center gap-1 mt-1">
+              <Link href="/new-true-crime-podcasts" className="min-h-[44px] text-sm text-stone-muted hover:text-stone transition-colors inline-flex items-center gap-1">
                 See all new true crime podcasts <ArrowRight size={14} />
               </Link>
             </div>

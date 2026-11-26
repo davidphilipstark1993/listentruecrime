@@ -184,7 +184,7 @@ export default function HowWeReviewPage() {
                       <span className="text-stone-subtle text-xs bg-ink-700 px-2 py-0.5 rounded">Score: {dim.score}</span>
                     </div>
                     <p className="text-stone-muted text-sm leading-relaxed mb-4">{dim.description}</p>
-                    <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="bg-emerald-950/30 border border-emerald-900/30 rounded-lg p-3">
                         <p className="text-emerald-400 text-2xs font-semibold uppercase tracking-wider mb-1">High scores</p>
                         <p className="text-stone-muted text-xs leading-relaxed">{dim.what_high}</p>

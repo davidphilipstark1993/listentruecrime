@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
 import Link from 'next/link'
+import { ChevronDown } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { getAllPosts, getPostBySlug, getRelatedPosts, extractTOC } from '@/lib/blog'
 import { getAuthor } from '@/lib/authors'
@@ -276,10 +277,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       )}
       <Header />
       <main id="main-content" className="min-h-screen bg-ink-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-12">
-            {/* Article */}
-            <article>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-16 sm:pb-20">
+          {/* minmax(0,1fr): a wide table or long URL in the article can't widen
+              the column past the viewport (grid items default to min-width:auto). */}
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_280px] gap-12">
+            {/* Article — capped at a ~70-character measure for comfortable reading */}
+            <article className="min-w-0 max-w-[42rem]">
               <Breadcrumbs
                 items={[
                   { label: 'Home', href: '/' },
@@ -289,7 +292,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 ]}
               />
 
-              <header className="mt-6 mb-6">
+              <header className="mt-4 sm:mt-6 mb-6">
                 <div className="flex items-center gap-2 mb-3">
                   <Link
                     href={`/blog/category/${post.category.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
@@ -298,7 +301,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     {post.category}
                   </Link>
                 </div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-stone leading-tight mb-4">
+                <h1 className="text-[1.75rem] sm:text-3xl lg:text-4xl font-serif font-bold text-stone leading-tight mb-4 break-words">
                   {post.title}
                 </h1>
                 <p className="text-base text-stone-muted leading-relaxed max-w-2xl mb-5">
@@ -317,12 +320,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
               {/* Tags */}
               {post.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mb-8">
+                <div className="flex flex-wrap gap-2 mb-8">
                   {post.tags.map(tag => (
                     <Link
                       key={tag}
                       href={`/blog/tag/${tag.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-                      className="text-xs px-2.5 py-1 rounded-full border border-white/[0.08] text-stone-subtle hover:text-stone hover:border-white/[0.15] transition-all"
+                      className="inline-flex items-center min-h-[44px] sm:min-h-[36px] text-xs px-3 rounded-full border border-white/[0.08] text-stone-subtle hover:text-stone hover:border-white/[0.15] transition-all"
                     >
                       {tag}
                     </Link>
@@ -331,22 +334,31 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               )}
 
               {/* Mobile TOC */}
+              {/* Collapsed by default so the article starts on the first screen */}
               {toc.length > 2 && (
-                <div className="lg:hidden mb-8">
-                  <TableOfContents entries={toc} />
-                </div>
+                <details className="lg:hidden mb-8 group rounded-xl border border-white/[0.07] bg-ink-800/60">
+                  <summary className="flex items-center justify-between gap-3 min-h-[52px] px-4 cursor-pointer list-none [&::-webkit-details-marker]:hidden text-sm font-medium text-stone">
+                    <span>In this article <span className="text-stone-subtle font-normal">({toc.length} sections)</span></span>
+                    <ChevronDown size={16} aria-hidden="true" className="text-stone-subtle transition-transform group-open:rotate-180" />
+                  </summary>
+                  <div className="px-1 pb-1 [&>nav]:border-0 [&>nav]:bg-transparent [&>nav]:pt-0">
+                    <TableOfContents entries={toc} />
+                  </div>
+                </details>
               )}
 
               {/* MDX Content */}
-              <div className="prose prose-invert prose-sm sm:prose-base max-w-none
+              <div className="prose prose-invert prose-base lg:prose-lg max-w-none
+                prose-p:leading-[1.7] lg:prose-p:leading-[1.75]
                 prose-headings:font-serif prose-headings:text-stone prose-headings:font-semibold
-                prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:scroll-mt-24
-                prose-h3:text-lg prose-h3:mt-7 prose-h3:mb-3 prose-h3:scroll-mt-24
+                prose-h2:text-[1.35rem] sm:prose-h2:text-2xl prose-h2:leading-snug prose-h2:mt-10 prose-h2:mb-4 prose-h2:scroll-mt-24
+                prose-h3:text-lg sm:prose-h3:text-xl prose-h3:leading-snug prose-h3:mt-7 prose-h3:mb-3 prose-h3:scroll-mt-24
                 prose-p:text-stone-muted prose-p:leading-relaxed
                 prose-strong:text-stone prose-strong:font-semibold
-                prose-a:text-crimson prose-a:no-underline hover:prose-a:underline
+                prose-a:text-crimson prose-a:underline prose-a:decoration-crimson/40 prose-a:underline-offset-[3px] hover:prose-a:decoration-crimson prose-a:break-words
                 prose-ul:text-stone-muted prose-ol:text-stone-muted
-                prose-li:leading-relaxed prose-li:my-1
+                prose-li:leading-relaxed prose-li:my-1.5
+                prose-img:rounded-lg prose-img:w-full prose-img:h-auto prose-figcaption:text-sm prose-figcaption:text-stone-subtle
                 prose-blockquote:border-l-crimson prose-blockquote:text-stone-subtle prose-blockquote:not-italic
                 prose-code:text-crimson prose-code:bg-ink-700 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:font-normal
                 prose-hr:border-white/[0.07]
@@ -393,7 +405,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   <h2 className="font-serif text-xl font-semibold text-stone mb-5">
                     Podcasts mentioned in this article
                   </h2>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                     {relatedPodcastData.map((pod: any) => (
                       <PodcastCard key={pod.slug} podcast={pod} />
                     ))}
@@ -402,13 +414,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               )}
 
               {/* Newsletter */}
-              <div className="mt-12 rounded-xl border border-crimson/20 bg-crimson/[0.04] p-6">
+              <div className="mt-12 rounded-xl border border-crimson/20 bg-crimson/[0.04] p-5 sm:p-6">
                 <p className="text-2xs font-semibold uppercase tracking-widest text-crimson mb-2">
                   Newsletter
                 </p>
-                <h3 className="text-lg font-serif font-semibold text-stone mb-1">
+                <h2 className="text-lg font-serif font-semibold text-stone mb-1">
                   Your weekly true crime briefing
-                </h3>
+                </h2>
                 <p className="text-sm text-stone-muted mb-4">
                   {post.newsletterPitch ?? 'New podcast reviews, hidden gems, and community picks. No filler.'}
                 </p>

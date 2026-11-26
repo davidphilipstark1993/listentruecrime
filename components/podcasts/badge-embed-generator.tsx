@@ -62,7 +62,7 @@ export function BadgeEmbedGenerator({ podcasts }: { podcasts: PodcastOption[] })
               setQuery(e.target.value)
             }}
             placeholder="Start typing your podcast's name…"
-            className="w-full bg-ink-800 border border-white/[0.1] rounded-lg pl-10 pr-4 py-2.5 text-stone text-sm placeholder:text-stone-faint focus:outline-none focus:border-crimson/60 transition-colors"
+            className="w-full bg-ink-800 border border-white/[0.1] rounded-lg pl-10 pr-4 py-2.5 text-stone text-base sm:text-sm placeholder:text-stone-faint focus:outline-none focus:border-crimson/60 transition-colors"
           />
         </div>
 

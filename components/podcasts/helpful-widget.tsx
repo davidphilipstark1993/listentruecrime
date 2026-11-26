@@ -34,7 +34,7 @@ export function HelpfulWidget({ podcastSlug }: HelpfulWidgetProps) {
   if (!mounted) return null
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
       <span className="text-xs text-stone-subtle">Was this review helpful?</span>
       {vote ? (
         <span className="text-xs text-stone-muted">
@@ -46,22 +46,22 @@ export function HelpfulWidget({ podcastSlug }: HelpfulWidgetProps) {
             onClick={() => handleVote('yes')}
             aria-label="Yes, helpful"
             className={cn(
-              'flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border transition-all',
+              'flex items-center gap-1 min-h-[44px] sm:min-h-[32px] text-xs px-3.5 rounded-full border transition-all',
               'border-white/[0.1] text-stone-subtle hover:border-green-500/50 hover:text-green-400'
             )}
           >
-            <ThumbsUp size={12} />
+            <ThumbsUp size={12} aria-hidden="true" />
             Yes
           </button>
           <button
             onClick={() => handleVote('no')}
             aria-label="No, not helpful"
             className={cn(
-              'flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border transition-all',
+              'flex items-center gap-1 min-h-[44px] sm:min-h-[32px] text-xs px-3.5 rounded-full border transition-all',
               'border-white/[0.1] text-stone-subtle hover:border-red-500/40 hover:text-red-400'
             )}
           >
-            <ThumbsDown size={12} />
+            <ThumbsDown size={12} aria-hidden="true" />
             No
           </button>
         </div>

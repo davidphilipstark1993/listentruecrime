@@ -2,7 +2,7 @@
 import { useState, useId } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { X, Mail, Chrome } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
+import { getSupabase } from '@/lib/supabase/lazy-client'
 import toast from 'react-hot-toast'
 import { cn } from '@/lib/utils'
 
@@ -17,13 +17,12 @@ export function AuthModal({ open, onClose, message }: AuthModalProps) {
   const [loading, setLoading] = useState(false)
   const [sent, setSent] = useState(false)
   const emailId = useId()
-  const supabase = createClient()
 
   const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!email) return
     setLoading(true)
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await (await getSupabase()).auth.signInWithOtp({
       email,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
@@ -39,7 +38,7 @@ export function AuthModal({ open, onClose, message }: AuthModalProps) {
 
   const handleGoogle = async () => {
     setLoading(true)
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { error } = await (await getSupabase()).auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     })
@@ -55,11 +54,14 @@ export function AuthModal({ open, onClose, message }: AuthModalProps) {
     <Dialog.Root open={open} onOpenChange={v => { if (!v) { onClose(); reset() } }}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm animate-fade-in" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm animate-slide-up">
-          <div className="bg-ink-800 border border-white/10 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] p-6">
+        {/* The centring transform lives on Content and the entrance animation on
+            the inner panel, so the slide-up keyframes never override the
+            translate. 1rem gutters keep the panel off the screen edges on phones. */}
+        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] max-w-sm max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-xl">
+          <div className="relative bg-ink-800 border border-white/10 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] p-6 animate-slide-up">
             {/* Close */}
-            <Dialog.Close className="absolute top-4 right-4 p-1.5 text-stone-subtle hover:text-stone hover:bg-ink-700 rounded-md transition-colors">
-              <X size={16} />
+            <Dialog.Close aria-label="Close" className="absolute top-2 right-2 w-11 h-11 flex items-center justify-center text-stone-subtle hover:text-stone hover:bg-ink-700 rounded-md transition-colors">
+              <X size={18} />
             </Dialog.Close>
 
             {!sent ? (

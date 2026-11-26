@@ -9,12 +9,12 @@ export function BasketLink() {
   return (
     <Link
       href="/shop/basket"
-      className="relative p-2 text-stone-muted hover:text-stone hover:bg-ink-700 rounded-md transition-colors"
+      className="relative flex items-center justify-center w-11 h-11 text-stone-muted hover:text-stone hover:bg-ink-700 rounded-md transition-colors"
       aria-label={count ? `Basket, ${count} item${count === 1 ? '' : 's'}` : 'Basket'}
     >
       <ShoppingBag size={18} />
       {count > 0 && (
-        <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-crimson px-1 text-[10px] font-semibold text-white">{count}</span>
+        <span className="absolute right-0.5 top-0.5 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-crimson px-1 text-[10px] font-semibold text-white">{count}</span>
       )}
     </Link>
   )

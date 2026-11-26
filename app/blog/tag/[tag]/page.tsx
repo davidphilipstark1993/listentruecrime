@@ -51,7 +51,7 @@ export default function TagPage({ params }: { params: { tag: string } }) {
             <h1 className="text-3xl font-serif font-bold text-stone mb-2">#{tag.name}</h1>
             <p className="text-stone-subtle text-sm">{tag.count} article{tag.count !== 1 ? 's' : ''}</p>
           </header>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {posts.map(post => (
               <PostCard key={post.slug} post={post} />
             ))}

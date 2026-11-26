@@ -120,7 +120,7 @@ export function RankedPodcastEntry({ podcast: p, rank, priority = false }: Props
           <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
             <Link
               href={`/podcasts/${p.slug}`}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-crimson text-white font-medium hover:bg-crimson/90 transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 min-h-[44px] rounded-lg bg-crimson text-white font-medium hover:bg-crimson/90 transition-colors"
             >
               Read our {p.title} review <ArrowRight size={14} aria-hidden />
             </Link>

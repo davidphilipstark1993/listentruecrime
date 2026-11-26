@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { Star } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
+import { getSupabase } from '@/lib/supabase/lazy-client'
 import { AuthModal } from '@/components/auth/auth-modal'
 import toast from 'react-hot-toast'
 import type { Rating } from '@/lib/types/database'
@@ -69,17 +69,16 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
   const [saving, setSaving] = useState(false)
   const [loaded, setLoaded] = useState(false)
 
-  const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
+    getSupabase().then(s => s.auth.getUser()).then(async ({ data: { user } }) => {
       setUser(user)
       if (user) {
         // Move this browser's anonymous rating onto the account, then drop
         // the anonymous copy so it isn't counted twice.
         const pending = readLocal()
         if (pending && Object.keys(pending).length > 0) {
-          const { error } = await supabase
+          const { error } = await (await getSupabase())
             .from('ratings')
             .upsert({ user_id: user.id, podcast_id: podcastId, ...pending }, { onConflict: 'user_id,podcast_id' })
           if (!error) {
@@ -125,7 +124,7 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
   }
 
   const fetchExisting = async (userId: string) => {
-    const { data } = await supabase
+    const { data } = await (await getSupabase())
       .from('ratings')
       .select('*')
       .eq('user_id', userId)
@@ -164,7 +163,7 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
 
     setSaving(true)
     const payload = { user_id: user.id, podcast_id: podcastId, ...scores }
-    const { error } = await supabase
+    const { error } = await (await getSupabase())
       .from('ratings')
       .upsert(payload, { onConflict: 'user_id,podcast_id' })
 
@@ -180,24 +179,33 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
   const StarRow = ({ field }: { field: typeof RATING_FIELDS[number] }) => {
     const current = scores[field.key] ?? 0
     return (
-      <div className="flex items-center justify-between gap-4">
-        <span className="text-sm text-stone-muted w-36 shrink-0">{field.label}</span>
-        <div className="flex items-center gap-1">
+      // Phones: label above a full-width row of 10 stars, each a 44px-tall
+      // target sharing the width (min 24px wide). From sm: label beside stars.
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4">
+        <div className="flex items-center justify-between sm:block">
+          <span id={`rate-${field.key}`} className="text-sm text-stone-muted sm:w-36 sm:shrink-0 sm:inline-block">{field.label}</span>
+          <span className="sm:hidden text-sm text-stone tabular-nums" aria-hidden="true">{current > 0 ? `${current}/10` : '—'}</span>
+        </div>
+        <div className="flex items-center gap-0 sm:gap-1 -mx-1 sm:mx-0" role="radiogroup" aria-labelledby={`rate-${field.key}`}>
           {[...Array(10)].map((_, i) => (
             <button
               key={i}
+              type="button"
+              role="radio"
+              aria-checked={current === i + 1}
               onClick={() => setScores(prev => ({ ...prev, [field.key]: i + 1 }))}
-              className="p-0.5 rounded-sm transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-crimson/60"
-              aria-label={`Rate ${field.label} ${i + 1}`}
+              className="flex-1 sm:flex-none min-w-[24px] h-11 sm:h-auto sm:p-0.5 flex items-center justify-center rounded-sm transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-crimson/60"
+              aria-label={`${i + 1} out of 10`}
             >
               <Star
-                size={16}
-                className={i < current ? 'text-gold-light' : 'text-ink-500'}
+                size={18}
+                className={cn('sm:w-4 sm:h-4', i < current ? 'text-gold-light' : 'text-ink-500')}
                 fill={i < current ? 'currentColor' : 'none'}
+                aria-hidden="true"
               />
             </button>
           ))}
-          <span className="ml-2 text-sm text-stone-muted w-6 text-right tabular-nums">
+          <span className="hidden sm:inline ml-2 text-sm text-stone-muted w-6 text-right tabular-nums">
             {current > 0 ? current : '—'}
           </span>
         </div>
@@ -209,13 +217,13 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
 
   return (
     <>
-      <div className="card p-5">
-        <h3 className="font-serif text-lg text-stone mb-1">Rate this podcast</h3>
-        <p className="text-stone-subtle text-xs mb-5">
+      <div className="card p-4 sm:p-5">
+        <h3 className="font-serif text-lg text-stone mb-1">Your rating</h3>
+        <p className="text-stone-subtle text-xs mb-4 sm:mb-5">
           {user ? 'Your ratings are saved to your account.' : 'No account needed — rate anonymously.'}
         </p>
 
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {RATING_FIELDS.map(field => (
             <StarRow key={field.key} field={field} />
           ))}
@@ -228,7 +236,7 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
           {!user && (
             <button
               onClick={() => setAuthOpen(true)}
-              className="text-xs text-stone-subtle hover:text-stone underline"
+              className="min-h-[44px] text-xs text-stone-subtle hover:text-stone underline"
             >
               Sign in to sync across devices
             </button>

@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useId } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { getSupabase } from '@/lib/supabase/lazy-client'
 import { AuthModal } from '@/components/auth/auth-modal'
 import toast from 'react-hot-toast'
 
@@ -18,13 +18,12 @@ export function ReviewForm({ podcastId, podcastTitle, onSubmitted }: ReviewFormP
   const [saving, setSaving] = useState(false)
   const [authOpen, setAuthOpen] = useState(false)
   const [existing, setExisting] = useState(false)
-  const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
+    getSupabase().then(s => s.auth.getUser()).then(async ({ data: { user } }) => {
       setUser(user)
       if (user) {
-        const { data } = await supabase
+        const { data } = await (await getSupabase())
           .from('reviews')
           .select('content')
           .eq('user_id', user.id)
@@ -41,7 +40,7 @@ export function ReviewForm({ podcastId, podcastTitle, onSubmitted }: ReviewFormP
     if (!content.trim()) return
 
     setSaving(true)
-    const { error } = await supabase
+    const { error } = await (await getSupabase())
       .from('reviews')
       .upsert(
         { user_id: user.id, podcast_id: podcastId, content: content.trim(), approved: false },
@@ -75,16 +74,16 @@ export function ReviewForm({ podcastId, podcastTitle, onSubmitted }: ReviewFormP
             rows={3}
             onClick={() => { if (!user) setAuthOpen(true) }}
             readOnly={!user}
-            className="input-base resize-none text-sm leading-relaxed mb-2 cursor-text"
+            className="input-base resize-none text-base sm:text-sm leading-relaxed mb-2 cursor-text"
           />
-          <div className="flex items-center justify-between">
-            <span className={`text-xs ${remaining < 20 ? 'text-crimson' : 'text-stone-subtle'}`}>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span aria-live="polite" className={`text-xs ${remaining < 20 ? 'text-crimson' : 'text-stone-subtle'}`}>
               {remaining} characters remaining
             </span>
             <button
               type="submit"
               disabled={saving || !content.trim()}
-              className="btn-primary py-1.5 px-4 text-xs"
+              className="btn-primary px-4 text-sm sm:text-xs"
             >
               {!user ? 'Sign in to review' : saving ? 'Submitting…' : 'Submit review'}
             </button>

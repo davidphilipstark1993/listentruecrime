@@ -48,16 +48,29 @@ const FOOTER_LINKS = {
   ],
 }
 
+// Footer links: 44px-tall rows with 14px text on phones (comfortable thumb
+// targets), back to the compact 12px list from md up.
+const LINK = 'flex items-center min-h-[44px] md:min-h-0 md:py-0.5 text-sm md:text-xs text-stone-subtle hover:text-stone transition-colors'
+const HEADING = 'text-stone text-xs font-semibold uppercase tracking-widest mb-2 md:mb-4'
+
+const PODCASTS_LIKE = [
+  { href: '/blog/podcasts-like-serial', label: 'Podcasts Like Serial' },
+  { href: '/podcasts-like/casefile-true-crime', label: 'Podcasts Like Casefile' },
+  { href: '/podcasts-like/the-teachers-pet', label: 'Podcasts Like Teacher\'s Pet' },
+  { href: '/blog/podcasts-like-crime-junkie', label: 'Podcasts Like Crime Junkie' },
+  { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
+]
+
 export function Footer() {
   const showShop = shopEnabled()
   return (
-    <footer className="border-t border-white/[0.06] bg-ink-950 mt-24">
+    <footer className="border-t border-white/[0.06] bg-ink-950 mt-16 sm:mt-24">
       {/* Newsletter bar */}
       <div className="border-b border-white/[0.06]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
           <div className="max-w-xl">
             <p className="text-2xs text-crimson font-semibold uppercase tracking-widest mb-2">Newsletter</p>
-            <h3 className="heading-section text-xl mb-1">Your weekly true crime briefing</h3>
+            <h2 className="heading-section text-xl mb-1">Your weekly true crime briefing</h2>
             <p className="text-stone-muted text-sm mb-5">
               New podcast reviews, community picks, and hidden gems. No filler.
             </p>
@@ -67,33 +80,35 @@ export function Footer() {
       </div>
 
       {/* Links grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <nav aria-label="Footer" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-8 md:gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="mb-3">
-              <Link href="/">
-                <Image src="/logo.png" alt="ListenTrueCrime" width={100} height={100} className="h-10 w-auto object-contain" />
+              <Link href="/" className="inline-block">
+                <Image src="/logo.png" alt="ListenTrueCrime home" width={100} height={100} className="h-10 w-auto object-contain" />
               </Link>
             </div>
-            <p className="text-stone-subtle text-xs leading-relaxed mb-4">
+            <p className="text-stone-subtle text-sm md:text-xs leading-relaxed mb-3 md:mb-4">
               The best place to discover, rate, and discuss true crime podcasts. Expert reviews and community ratings.
             </p>
-            <div className="space-y-1.5">
+            <ul className="grid grid-cols-2 gap-x-6 md:grid-cols-1 md:space-y-1.5">
               {(showShop ? [...FOOTER_LINKS.shop.slice(0, 1), ...FOOTER_LINKS.site] : FOOTER_LINKS.site).map(link => (
-                <Link key={link.href} href={link.href} className="block text-stone-subtle hover:text-stone text-xs transition-colors">
-                  {link.label}
-                </Link>
+                <li key={link.href}>
+                  <Link href={link.href} className={LINK}>
+                    {link.label}
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
           <div>
-            <p className="text-stone text-xs font-semibold uppercase tracking-widest mb-4">Discover</p>
-            <ul className="space-y-2.5">
+            <p className={HEADING}>Discover</p>
+            <ul className="md:space-y-2">
               {FOOTER_LINKS.discover.map(link => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-stone-subtle hover:text-stone text-xs transition-colors">
+                  <Link href={link.href} className={LINK}>
                     {link.label}
                   </Link>
                 </li>
@@ -102,11 +117,11 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-stone text-xs font-semibold uppercase tracking-widest mb-4">By Region & Platform</p>
-            <ul className="space-y-2.5">
+            <p className={HEADING}>By Region & Platform</p>
+            <ul className="md:space-y-2">
               {FOOTER_LINKS.regions.map(link => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-stone-subtle hover:text-stone text-xs transition-colors">
+                  <Link href={link.href} className={LINK}>
                     {link.label}
                   </Link>
                 </li>
@@ -114,18 +129,12 @@ export function Footer() {
             </ul>
           </div>
 
-          <div>
-            <p className="text-stone text-xs font-semibold uppercase tracking-widest mb-4">Podcasts Like…</p>
-            <ul className="space-y-2.5">
-              {[
-                { href: '/blog/podcasts-like-serial', label: 'Podcasts Like Serial' },
-                { href: '/podcasts-like/casefile-true-crime', label: 'Podcasts Like Casefile' },
-                { href: '/podcasts-like/the-teachers-pet', label: 'Podcasts Like Teacher\'s Pet' },
-                { href: '/blog/podcasts-like-crime-junkie', label: 'Podcasts Like Crime Junkie' },
-                { href: '/best-true-crime-podcasts', label: 'Best True Crime Podcasts' },
-              ].map(link => (
+          <div className="col-span-2 md:col-span-1">
+            <p className={HEADING}>Podcasts Like…</p>
+            <ul className="md:space-y-2">
+              {PODCASTS_LIKE.map(link => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-stone-subtle hover:text-stone text-xs transition-colors">
+                  <Link href={link.href} className={LINK}>
                     {link.label}
                   </Link>
                 </li>
@@ -134,22 +143,25 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3">
+        {/* Bottom bar — wraps freely so the legal links never push past the viewport */}
+        <div className="mt-10 md:mt-12 pt-6 border-t border-white/[0.06] flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <p className="text-stone-subtle text-xs">
             © {new Date().getFullYear()} ListenTrueCrime. All rights reserved.
           </p>
-          <div className="flex items-center gap-4">
+          <ul className="flex flex-wrap items-center gap-x-5 md:gap-x-4 gap-y-0">
             {(showShop ? [...FOOTER_LINKS.legal, ...FOOTER_LINKS.shop.slice(3)] : FOOTER_LINKS.legal).map(link => (
-              <Link key={link.href} href={link.href} className="text-stone-subtle hover:text-stone text-xs transition-colors">
-                {link.label}
-              </Link>
+              <li key={link.href}>
+                <Link href={link.href} className="flex items-center min-h-[44px] md:min-h-0 text-stone-subtle hover:text-stone text-xs transition-colors">
+                  {link.label}
+                </Link>
+              </li>
             ))}
-            <p className="text-stone-subtle text-xs">
-              Helping you find your next obsession, one episode at a time.
-            </p>
-          </div>
+          </ul>
+          <p className="text-stone-subtle text-xs">
+            Helping you find your next obsession, one episode at a time.
+          </p>
         </div>
-      </div>
+      </nav>
     </footer>
   )
 }

@@ -59,23 +59,26 @@ export function NewsletterLeadMagnet({
   if (variant === 'inline') {
     return (
       <div className={className}>
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        <form onSubmit={handleSubmit} className="flex flex-wrap gap-2">
           <label htmlFor={emailId} className="sr-only">Email address</label>
           <input
             id={emailId}
             type="email"
+            inputMode="email"
+            autoCapitalize="none"
+            spellCheck={false}
             value={email}
             onChange={e => setEmail(e.target.value)}
             placeholder="your@email.com"
             autoComplete="email"
             required
-            className="input-base flex-1 text-sm py-2"
+            className="input-base flex-1 min-w-[12rem]"
           />
-          <button type="submit" disabled={loading} className="btn-primary py-2 px-4 text-sm shrink-0">
-            {loading ? '…' : 'Get the list'}
+          <button type="submit" disabled={loading} className="btn-primary px-4 text-sm grow sm:grow-0">
+            {loading ? 'Sending…' : 'Get the list'}
           </button>
         </form>
-        <p className="text-2xs text-stone-subtle mt-1.5">
+        <p className="text-xs text-stone-subtle mt-1.5">
           Plus our weekly newsletter. Unsubscribe anytime. See our <Link href="/privacy" className="underline hover:text-stone">Privacy Policy</Link>.
         </p>
       </div>
@@ -97,23 +100,26 @@ export function NewsletterLeadMagnet({
             </div>
           </div>
           <div className="sm:w-auto w-full">
-            <form onSubmit={handleSubmit} className="flex gap-2">
+            <form onSubmit={handleSubmit} className="flex flex-wrap gap-2">
               <label htmlFor={emailId} className="sr-only">Email address</label>
               <input
                 id={emailId}
                 type="email"
+                inputMode="email"
+                autoCapitalize="none"
+                spellCheck={false}
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 autoComplete="email"
                 required
-                className="input-base flex-1 sm:w-48 text-sm py-2"
+                className="input-base flex-1 sm:w-48"
               />
-              <button type="submit" disabled={loading} className="btn-primary py-2 px-3 text-sm shrink-0">
+              <button type="submit" disabled={loading} aria-label="Get the free list" className="btn-primary w-11 px-0 text-sm shrink-0">
                 {loading ? '…' : <><ArrowRight size={14} /></>}
               </button>
             </form>
-            <p className="text-2xs text-stone-subtle mt-1.5">
+            <p className="text-xs text-stone-subtle mt-1.5">
               Plus our weekly newsletter. Unsubscribe anytime. See our <Link href="/privacy" className="underline hover:text-stone">Privacy Policy</Link>.
             </p>
           </div>
@@ -124,7 +130,7 @@ export function NewsletterLeadMagnet({
 
   // Default: card
   return (
-    <div className={cn('relative overflow-hidden rounded-2xl bg-ink-800 border border-white/[0.08] p-8', className)}>
+    <div className={cn('relative overflow-hidden rounded-2xl bg-ink-800 border border-white/[0.08] p-5 sm:p-8', className)}>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(190,18,60,0.1),transparent_60%)]" />
       <div className="relative">
         <div className="flex items-center gap-3 mb-4">
@@ -160,6 +166,9 @@ export function NewsletterLeadMagnet({
           <input
             id={emailId}
             type="email"
+            inputMode="email"
+            autoCapitalize="none"
+            spellCheck={false}
             value={email}
             onChange={e => setEmail(e.target.value)}
             placeholder="your@email.com"
