@@ -35,6 +35,7 @@ const MOBILE_LINKS = [
   { href: '/new-true-crime-podcasts', label: 'New podcasts' },
   { href: '/cases', label: 'Cases' },
   { href: '/blog', label: 'Guides & blog' },
+  { href: '/true-crime-documentaries', label: 'Documentaries' },
   { href: '/about', label: 'About' },
   ...(SHOP_ENABLED ? [{ href: '/shop', label: 'Shop' }] : []),
 ]
