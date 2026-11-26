@@ -43,6 +43,8 @@ Run through this before publishing anything new — a blog post, a case page, a 
 
 **New blog post** (`content/blog/*.mdx`) — frontmatter has `title`, `slug`, `date`, `description`, `category`, `tags`, 3+ `faqs`; `relatedPodcasts` populated if the post discusses specific shows (auto-generates a "podcasts mentioned" section); don't manually hyperlink podcast names in body text, the autolinker (`lib/podcast-autolink.ts`) handles it.
 
+**Netflix / TV documentary guide** — tag it `Netflix` (or `TV documentary`) so it appears on `/true-crime-documentaries`. For cover art, add a set to `scripts/blog-art/generate.mjs` (original illustration only: no posters, stills or likenesses of real people) and run `node scripts/blog-art/generate.mjs <slug>`, then set `image` and `imageAlt` in the frontmatter. Break up long articles with `<ArticleImage src="..." alt="..." variant="scene|banner" />` (decorative shared banners take `alt=""`).
+
 **New case page** (`content/cases/data.ts`) — start with `published: false`, fill `summary` (2–3 paragraphs, factual), link real `podcasts.slug` values, add `aliases` covering how people actually search for the case, review the summary for accuracy/sensitivity, only then flip `published: true`.
 
 **New category/country/platform** — add the slug to `lib/types/database.ts`, then a full `PageSeoContent` entry (H1, 2-paragraph intro, 4–6 FAQs, related links) to the matching record in `lib/seo/content.ts`. Nothing else needed.

@@ -169,6 +169,20 @@ export default async function BlogIndexPage({ searchParams }: Props) {
 
             {/* Sidebar */}
             <aside className="space-y-8">
+              {/* Netflix & TV documentaries section */}
+              <Link
+                href="/true-crime-documentaries"
+                className="group block rounded-xl border border-crimson/25 bg-crimson/[0.05] p-5 hover:border-crimson/45 transition-colors"
+              >
+                <p className="text-2xs font-semibold uppercase tracking-widest text-crimson mb-2">
+                  Netflix &amp; TV documentaries
+                </p>
+                <p className="text-sm font-medium text-stone mb-1">Just watched a documentary?</p>
+                <p className="text-xs text-stone-muted leading-relaxed">
+                  The real cases behind the films, what they leave out, and the podcasts to hear next. →
+                </p>
+              </Link>
+
               {/* Case deep-dive series */}
               {series.length > 0 && (
                 <div className="rounded-xl border border-white/[0.07] bg-ink-800/40 p-5">
