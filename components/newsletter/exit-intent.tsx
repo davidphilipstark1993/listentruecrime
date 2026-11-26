@@ -147,7 +147,7 @@ export function ExitIntent() {
               />
               <button
                 type="submit"
-                disabled={loading || !email}
+                disabled={loading}
                 className="btn-primary w-full justify-center"
               >
                 {loading ? 'Subscribing…' : 'Get the free list'}

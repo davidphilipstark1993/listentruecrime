@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { Star } from 'lucide-react'
+import { ChevronDown, Star } from 'lucide-react'
 import { getSupabase } from '@/lib/supabase/lazy-client'
 import { AuthModal } from '@/components/auth/auth-modal'
 import toast from 'react-hot-toast'
@@ -16,6 +16,9 @@ const RATING_FIELDS: { key: keyof Omit<Rating, 'id' | 'user_id' | 'anonymous_rat
   { key: 'factual_accuracy_score', label: 'Factual Accuracy' },
   { key: 'overall_score', label: 'Overall Score' },
 ]
+
+const OVERALL_FIELD = RATING_FIELDS.find(f => f.key === 'overall_score')!
+const DETAIL_FIELDS = RATING_FIELDS.filter(f => f.key !== 'overall_score')
 
 interface RatingWidgetProps {
   podcastId: string
@@ -223,11 +226,22 @@ export function RatingWidget({ podcastId, podcastTitle }: RatingWidgetProps) {
           {user ? 'Your ratings are saved to your account.' : 'No account needed — rate anonymously.'}
         </p>
 
-        <div className="space-y-3 sm:space-y-4">
-          {RATING_FIELDS.map(field => (
-            <StarRow key={field.key} field={field} />
-          ))}
-        </div>
+        {/* Overall first — one row is all most people want to give. The six
+            detailed dimensions are one tap away (open already if this visitor
+            has rated any of them), which keeps the card ~1 screen on a phone. */}
+        <StarRow field={OVERALL_FIELD} />
+
+        <details className="group mt-4 border-t border-white/[0.06]" open={DETAIL_FIELDS.some(f => existing[f.key])}>
+          <summary className="flex items-center justify-between gap-3 min-h-[48px] cursor-pointer list-none [&::-webkit-details-marker]:hidden text-sm text-stone-muted hover:text-stone">
+            <span>Rate in more detail <span className="text-stone-subtle">(optional)</span></span>
+            <ChevronDown size={16} aria-hidden="true" className="text-stone-subtle transition-transform group-open:rotate-180" />
+          </summary>
+          <div className="space-y-3 sm:space-y-4 pt-1">
+            {DETAIL_FIELDS.map(field => (
+              <StarRow key={field.key} field={field} />
+            ))}
+          </div>
+        </details>
 
         <div className="mt-6 flex items-center gap-3 flex-wrap">
           <button onClick={handleSave} disabled={saving} className="btn-primary">

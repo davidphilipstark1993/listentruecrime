@@ -187,7 +187,7 @@ export function NewsletterForm({ source = 'unknown', variant = 'default', showFi
         </div>
         <button
           type="submit"
-          disabled={loading || !email}
+          disabled={loading}
           className={cn(
             'btn-primary shrink-0 h-12 sm:h-auto',
             variant === 'hero' && 'px-6'

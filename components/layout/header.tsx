@@ -200,15 +200,22 @@ export function Header() {
               )}
 
               {/* Mobile / tablet menu toggle */}
+              {/* Large, labelled button: the main way around the site on a phone */}
               <button
                 ref={toggleRef}
-                className={cn(iconButton, 'lg:hidden -mr-2')}
+                className={cn(
+                  'lg:hidden flex items-center justify-center gap-2 h-12 pl-3.5 pr-4 ml-1 rounded-xl border text-base font-semibold transition-colors',
+                  menuOpen
+                    ? 'bg-crimson border-crimson text-white hover:bg-crimson-hover'
+                    : 'bg-ink-800 border-white/15 text-stone hover:bg-ink-700 hover:border-white/25'
+                )}
                 onClick={() => setMenuOpen(o => !o)}
                 aria-label={menuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={menuOpen}
                 aria-controls="mobile-menu"
               >
-                {menuOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
+                {menuOpen ? <X size={26} strokeWidth={2.25} aria-hidden="true" /> : <Menu size={26} strokeWidth={2.25} aria-hidden="true" />}
+                <span>{menuOpen ? 'Close' : 'Menu'}</span>
               </button>
             </div>
           </div>
