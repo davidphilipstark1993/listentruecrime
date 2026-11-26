@@ -63,8 +63,12 @@ export function PodcastCard({ podcast, priority = false, className, variant = 'd
 
         {/* Community score badge */}
         {score && (
-          <div className={cn('absolute top-2 right-2 score-badge text-xs', compact && 'max-lg:w-8 max-lg:h-8 max-lg:top-1.5 max-lg:right-1.5', scoreBg(score))} aria-hidden="true">
-            {score.toFixed(1)}
+          // The colour tint is translucent, so it sits on an opaque dark base to
+          // stay legible over busy or light artwork.
+          <div className={cn('absolute top-2 right-2 rounded-lg bg-ink-950/90 shadow-card ring-1 ring-white/10', compact && 'max-lg:top-1.5 max-lg:right-1.5')} aria-hidden="true">
+            <div className={cn('score-badge text-xs', compact && 'max-lg:w-8 max-lg:h-8', scoreBg(score))}>
+              {score.toFixed(1)}
+            </div>
           </div>
         )}
 
