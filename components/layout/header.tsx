@@ -20,6 +20,7 @@ const NAV_LINKS = [
   { href: '/best-true-crime-podcasts', label: 'Best Podcasts' },
   { href: '/cases', label: 'Cases' },
   { href: '/blog', label: 'Blog' },
+  { href: '/true-crime-documentaries', label: 'Documentaries' },
   { href: '/category/cold-cases', label: 'Cold Cases' },
   { href: '/about', label: 'About' },
   ...(SHOP_ENABLED ? [{ href: '/shop', label: 'Shop' }] : []),

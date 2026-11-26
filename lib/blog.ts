@@ -34,6 +34,8 @@ export interface BlogPost {
   tags: string[]
   featured?: boolean
   image?: string
+  /** Alt text for `image` (cover art). */
+  imageAlt?: string
   author?: string          // author slug — defaults to 'david-stark'
   relatedPodcasts?: string[]
   /** Recommendation guide: relatedPodcasts (in order) are its picks, emitted as ItemList structured data. */
@@ -74,6 +76,7 @@ export function getAllPosts(): BlogPost[] {
         tags: data.tags ?? [],
         featured: data.featured ?? false,
         image: data.image,
+        imageAlt: typeof data.imageAlt === 'string' ? data.imageAlt : undefined,
         author: data.author ?? 'david-stark',
         relatedPodcasts: data.relatedPodcasts ?? [],
         podcastList: data.podcastList === true,
@@ -113,6 +116,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
     tags: data.tags ?? [],
     featured: data.featured ?? false,
     image: data.image,
+    imageAlt: typeof data.imageAlt === 'string' ? data.imageAlt : undefined,
     author: data.author ?? 'david-stark',
     relatedPodcasts: data.relatedPodcasts ?? [],
     podcastList: data.podcastList === true,
@@ -137,6 +141,15 @@ export function getPostsByTag(tag: string): BlogPost[] {
   return getAllPosts().filter(p =>
     p.tags.map(t => t.toLowerCase()).includes(tag.toLowerCase())
   )
+}
+
+/** Tags that put a post in the Netflix & TV documentaries section (/true-crime-documentaries). */
+export const DOCUMENTARY_TAGS = ['Netflix', 'TV documentary']
+
+/** Case guides built around a Netflix or TV documentary, newest first. */
+export function getDocumentaryPosts(): BlogPost[] {
+  const wanted = new Set(DOCUMENTARY_TAGS.map(t => t.toLowerCase()))
+  return getAllPosts().filter(p => p.tags.some(t => wanted.has(t.toLowerCase())))
 }
 
 export function getAllCategories(): { name: string; slug: string; count: number }[] {

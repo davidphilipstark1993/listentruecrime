@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Clock } from 'lucide-react'
 import type { BlogPost } from '@/lib/blog'
 
@@ -14,6 +15,11 @@ export function RelatedPosts({ posts }: { posts: BlogPost[] }) {
             href={`/blog/${post.slug}`}
             className="group rounded-xl border border-white/[0.07] bg-ink-800/40 p-4 hover:bg-ink-700/50 hover:border-white/[0.12] transition-all"
           >
+            {post.image && (
+              <div className="relative aspect-[16/9] -mx-4 -mt-4 mb-3 overflow-hidden rounded-t-xl border-b border-white/[0.07]">
+                <Image src={post.image} alt={post.imageAlt ?? ''} fill sizes="(min-width: 1024px) 240px, (min-width: 640px) 50vw, 100vw" className="object-cover" />
+              </div>
+            )}
             <p className="text-2xs font-semibold uppercase tracking-wider text-crimson mb-2">
               {post.category}
             </p>

@@ -15,6 +15,8 @@ import { RelatedPosts } from '@/components/blog/RelatedPosts'
 import { ShareButtons } from '@/components/blog/ShareButtons'
 import { Callout } from '@/components/blog/Callout'
 import { PodcastRecommendation } from '@/components/blog/PodcastRecommendation'
+import { ArticleImage } from '@/components/blog/ArticleImage'
+import Image from 'next/image'
 import { WhereToListen } from '@/components/blog/WhereToListen'
 import { EpisodeCard } from '@/components/blog/EpisodeCard'
 import { PodcastCard } from '@/components/podcasts/podcast-card'
@@ -44,6 +46,7 @@ function getHeadingText(children: ReactNode): string {
 
 const MDX_COMPONENTS = {
   Callout,
+  ArticleImage,
   PodcastRecommendation,
   WhereToListen,
   EpisodeCard,
@@ -114,7 +117,8 @@ export async function generateMetadata({
   const author = getAuthor(post.author ?? 'david-stark')
   const ogParams = new URLSearchParams({ title: post.title })
   ogParams.set('sub', post.category)
-  const ogImage = `${BASE}/og?${ogParams.toString()}`
+  // Posts with cover art share it; everything else keeps the generated title card.
+  const ogImage = post.image ? `${BASE}${post.image}` : `${BASE}/og?${ogParams.toString()}`
 
   // seoTitle is the complete <title> (it bypasses the site-wide " | ListenTrueCrime" template).
   const pageTitle = post.seoTitle ?? post.title
@@ -132,7 +136,7 @@ export async function generateMetadata({
       modifiedTime: post.updated ?? post.date,
       authors: [`${BASE}/authors/${author.slug}`],
       tags: post.tags,
-      images: [{ url: ogImage, width: 1200, height: 630 }],
+      images: [post.image ? { url: ogImage, width: 1600, height: 900, alt: post.imageAlt ?? post.title } : { url: ogImage, width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
@@ -183,7 +187,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   // recomputed here since Article/BlogPosting rich results require `image`.
   const schemaImageParams = new URLSearchParams({ title: post.title })
   schemaImageParams.set('sub', post.category)
-  const schemaImage = `${BASE}/og?${schemaImageParams.toString()}`
+  const schemaImage = post.image ? `${BASE}${post.image}` : `${BASE}/og?${schemaImageParams.toString()}`
 
   const schema = {
     '@context': 'https://schema.org',
@@ -317,6 +321,20 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   <AffiliateDisclosure providers={affiliateProviders} className="mt-4" />
                 )}
               </header>
+
+              {post.image && (
+                <figure className="mb-8">
+                  <Image
+                    src={post.image}
+                    alt={post.imageAlt ?? ''}
+                    width={1600}
+                    height={900}
+                    priority
+                    sizes="(min-width: 1024px) 760px, 100vw"
+                    className="w-full h-auto rounded-xl border border-white/[0.07]"
+                  />
+                </figure>
+              )}
 
               {/* Tags */}
               {post.tags.length > 0 && (
